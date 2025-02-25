@@ -1,7 +1,7 @@
 
 import './index.css'
-import Header from './components/layout/Header'
 
+import Home from './components/pages/Home'
 
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <Header/>
+      <Home/>
       
       
     </>
