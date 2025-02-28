@@ -1,4 +1,5 @@
 import { PropertyListingProps } from "../interface";
+import { Link } from "react-router-dom";
 const PropertyListingCard:React.FC<PropertyListingProps>= ({
     propertyName,
 price,
@@ -9,8 +10,9 @@ image,
 
 }) =>{
     return(
-       
-<div className="w-[305px] h-[347px]">
+        
+<Link to="/propertydetail">
+<div className="w-[305px] h-[347px] hover:cursor-pointer" >
 <img src={image} alt="Property Image" className="w-full h-[230px]" />
 <div className="flex flex-row justify-around mt-2 ">
 <p className="font-[400] text-[16px] mb-2">{propertyName}</p>
@@ -22,6 +24,10 @@ image,
 <p><strong className="font-[7000]">NGN {price}</strong>/night</p>
 </div>
 </div>
+     </Link>
+       
+     
+
         
 
     )
