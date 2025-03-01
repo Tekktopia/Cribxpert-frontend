@@ -25,6 +25,7 @@ import arrowright from "../../assets/icons/arrow-right.png"
 import map from "../../assets/images/map.png"
 import location from "../../assets/icons/location.png"
 import carIcon from "../../assets/icons/Car-icon.png"
+
 const PropertyDetail:React.FC= () => {
     return(
 <section className="m-5 w-full  ">

@@ -1,6 +1,7 @@
 import calender from "../assets/icons/calendar.png"
 import certified from "../assets/icons/certified.png"
 import arrowdown from "../assets/icons/arrow-down.png";
+import {Link } from "react-router";
 const BookinForm:React.FC=()=>{
     return(
 <div className="w-[480px] bg-white shadow-md border border-[#E6E6E6] rounded-lg p-5">
@@ -57,9 +58,12 @@ const BookinForm:React.FC=()=>{
   </div>
 
   {/* CTA Button */}
+  <Link to="/BookingPage">
   <button className="bg-[#730071] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#5a0056] transition">
     Book Now
   </button>
+  </Link>
+ 
 
   {/* Confidence Guarantee */}
   <div className="flex items-center justify-center mt-3 text-[#070707] text-[14px]">
