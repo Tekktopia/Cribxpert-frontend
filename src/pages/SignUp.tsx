@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import StepOne from "../components/sign-up/StepOne";
 import StepTwo from "../components/sign-up/StepTwo";
+import StepThree from "../components/sign-up/StepThree";
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -15,6 +16,7 @@ const SignUp: React.FC = () => {
   const nextStep = () => {
     setStep((prev) => prev + 1);
   };
+
 
   return (
     <div className='flex h-screen'>
@@ -43,6 +45,9 @@ const SignUp: React.FC = () => {
           setEmail={setEmail}
           setPhoneNumber={setPhoneNumber}
         />
+      )}
+      {step === 3 && (
+        <StepThree nextStep={nextStep} methodSelected={methodSelected} />
       )}
     </div>
   );
