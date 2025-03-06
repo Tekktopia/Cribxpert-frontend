@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import makinwa from "../../../assets/images/Makinwaa.png";
+import makinwa from "../../assets/images/Makinwaa.png";  
 const OrderSummary: React.FC = () => {
   return (
     <div className=' border border-[#E6E6E6] p-4  rounded-lg '>

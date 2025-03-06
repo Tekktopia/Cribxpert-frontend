@@ -1,9 +1,9 @@
 import "./index.css";
-import PaymentMethod from "./components/pages/booking/PaymentMethod";
-import BookingPage from "./components/pages/booking";
-import Home from "./components/pages/Home";
+import PaymentMethod from "./pages/booking/PaymentMethod";
+import BookingPage from "./pages/booking";
+import Home from "./pages/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PropertyDetail from "./components/pages/PropertyDetail";
+import PropertyDetail from "./pages/PropertyDetail";
 function App() {
   return (
     <>
