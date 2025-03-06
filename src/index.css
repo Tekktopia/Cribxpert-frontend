@@ -1,9 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
-    font-family: "DM Sans", serif;
+body {
+  font-family: "DM Sans", serif;
 }
-#PAYSTACK-GATEWAY{
-    font-family: "Saira Stencil One", serif;
+#PAYSTACK-GATEWAY {
+  font-family: "Saira Stencil One", serif;
 }
