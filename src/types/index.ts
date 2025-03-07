@@ -1,5 +1,5 @@
 export interface PropertyListingProps {
-  image: string;
+  image: any;
   rating: number;
   location: string;
   propertyName: string;
