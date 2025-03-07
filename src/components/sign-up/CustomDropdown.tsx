@@ -8,12 +8,11 @@ type CustomDropdownProps = {
 };
 
 const options = [
-  { id: 1, name: "Sign Up with Email" },
-  { id: 2, name: "Sign Up with Phone Number" },
+  { id: 1, name: "Email Address" },
+  { id: 2, name: "Phone Number" },
 ];
 
 export default function CustomDropdown({
-  nextStep,
   methodSelected,
   setMethodSelected,
 }: CustomDropdownProps) {
@@ -25,23 +24,20 @@ export default function CustomDropdown({
 
   const handleClose = () => {
     setIsOpen(false);
-    if (methodSelected) nextStep();
   };
 
   return (
     <div className='relative w-full z-20'>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full p-3 border ${methodSelected ? "bg-[#730071] text-white" : ""}  border-[#730071] rounded-md flex justify-between items-center`}
+        className={`w-full p-3 border border-[#730071] rounded-md flex justify-between items-center`}
       >
         {methodSelected || "Select"}
-        <ChevronDown
-          className={`w-5 h-5 ${methodSelected ? "text-white" : "text-[#730071]"}`}
-        />
+        <ChevronDown className={`w-5 h-5`} />
       </button>
 
       {isOpen && (
-        <div className='absolute mt-1 -right-[10%] w-2/3 p-4 bg-white border border-gray-300 rounded-md shadow-lg'>
+        <div className='absolute w-full mt-1 p-4 bg-white border border-gray-300 rounded-md shadow-lg'>
           <label className='cursor-pointer flex justify-between items-center gap-2 p-3 bg-purple-100'>
             <button onClick={handleClose} className='w-4 h-4 accent-[#730071]'>
               Select
@@ -51,7 +47,7 @@ export default function CustomDropdown({
           {options.map((option) => (
             <label
               key={option.id}
-              className='cursor-pointer flex items-center gap-2 p-3'
+              className='cursor-pointer w-full flex items-center gap-2 p-3'
             >
               <input
                 type='checkbox'

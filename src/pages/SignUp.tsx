@@ -6,7 +6,7 @@ import StepFour from "../components/sign-up/StepFour";
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);
-  const [methodSelected, setMethodSelected] = useState<string | null>(null);
+  const [methodSelected, setMethodSelected] = useState<string | null>("Email Address");
 
   //Necessary onboarding info
   const [email, setEmail] = useState("");
@@ -18,13 +18,12 @@ const SignUp: React.FC = () => {
     setStep((prev) => prev + 1);
   };
 
-
   return (
     <div className='flex h-screen'>
       {/* Left Side - Image Section */}
       <div className='w-1/2 h-full relative'>
         <img
-          src='/authsidepane.png'
+          src={`${"/authsidepane" + step + ".png"}`}
           alt='Signup Background'
           className='w-full h-full object-cover'
         />
@@ -37,6 +36,8 @@ const SignUp: React.FC = () => {
           nextStep={nextStep}
           methodSelected={methodSelected}
           setMethodSelected={setMethodSelected}
+          setEmail={setEmail}
+          setPhoneNumber={setPhoneNumber}
         />
       )}
       {step === 2 && (
@@ -51,7 +52,7 @@ const SignUp: React.FC = () => {
         <StepThree nextStep={nextStep} methodSelected={methodSelected} />
       )}
 
-      {step === 4 && <StepFour/>}
+      {step === 4 && <StepFour />}
     </div>
   );
 };
