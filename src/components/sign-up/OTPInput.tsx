@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 
 type OTPInputProps = {
   otp: string[];
@@ -31,33 +31,33 @@ const OTPInput: React.FC<OTPInputProps> = ({ otp, setOtp }) => {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
+    if (e.key === 'Backspace' && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus(); // Move to previous input on backspace
     }
   };
 
   return (
-    <div className='space-y-6'>
-      <div className='flex gap-2 justify-center'>
+    <div className="space-y-6">
+      <div className="flex gap-2 justify-center">
         {otp.map((digit, index) => (
           <input
             key={index}
             ref={(el) => {
               if (el) inputRefs.current[index] = el;
             }}
-            type='text'
+            type="text"
             value={digit}
             maxLength={1}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            className='w-[84px] h-[76px] border border-gray-400 text-center text-xl rounded-md focus:border-black outline-none'
+            className="w-[84px] h-[76px] border border-gray-400 text-center text-xl rounded-md focus:border-black outline-none"
           />
         ))}
       </div>
       {/* Countdown Timer */}
-      <p className='text-red-500'>
+      <p className="text-red-500">
         {timeLeft > 0
-          ? `00:${timeLeft.toString().padStart(2, "0")}`
+          ? `00:${timeLeft.toString().padStart(2, '0')}`
           : "Time's up!"}
       </p>
     </div>
