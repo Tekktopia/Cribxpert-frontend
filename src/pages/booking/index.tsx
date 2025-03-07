@@ -1,6 +1,6 @@
 import React from 'react';
-import danger from '../../assets/icons/danger.png';
-import Header from '../../components/layout/Header';
+import danger from '@/assets/icons/danger.png';
+import Header from '@/components/layout/Header';
 import OrderSummary from './OrderSummary';
 import Booking from './Booking';
 const BookingPage: React.FC = () => {

@@ -1,7 +1,7 @@
-import allShortLet from '../assets/icons/all-shorlet.png';
-import otherFilterIcon from '../assets/icons/otherFilterIcon.png';
-import propertyImage from '../assets/images/property-image.jpeg';
-import { PropertyListingProps } from '../types';
+import allShortLet from '@/assets/icons/all-shorlet.png';
+import otherFilterIcon from '@/assets/icons/otherFilterIcon.png';
+import propertyImage from '@/assets/images/property-image.jpeg';
+import { PropertyListingProps } from '@/types';
 
 const SAMPLE_DATA: PropertyListingProps[] = [
   {

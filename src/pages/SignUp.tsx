@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import StepOne from '../components/sign-up/StepOne';
-import StepFour from '../components/sign-up/StepFour';
-import StepTwoMain from '../components/sign-up/StepTwoMain';
+import StepOne from '@/components/sign-up/StepOne';
+import StepFour from '@/components/sign-up/StepFour';
+import StepTwoMain from '@/components/sign-up/StepTwoMain';
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);

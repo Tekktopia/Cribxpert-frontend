@@ -1,4 +1,4 @@
-import { PropertyListingProps } from '../types';
+import { PropertyListingProps } from '@/types';
 import PropertyListingCard from './common/PropertyCard';
 const PropertyListings = ({
   listings,

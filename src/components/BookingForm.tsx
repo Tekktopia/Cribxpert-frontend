@@ -1,6 +1,6 @@
-import calender from '../assets/icons/calendar.png';
-import certified from '../assets/icons/certified.png';
-import arrowdown from '../assets/icons/arrow-down.png';
+import calender from '@/assets/icons/calendar.png';
+import certified from '@/assets/icons/certified.png';
+import arrowdown from '@/assets/icons/arrow-down.png';
 import { Link } from 'react-router';
 const BookinForm: React.FC = () => {
   return (

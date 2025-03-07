@@ -1,10 +1,10 @@
-import airConditioning from '../assets/icons/air-conditioning.png';
-import kitchenIcon from '../assets/icons/kitchen.png';
-import washer from '../assets/icons/washer.png';
-import wifiIcon from '../assets/icons/wifi.png';
-import dryerIocon from '../assets/icons/dryer.png';
-import parkingIcon from '../assets/icons/parking.png';
-import arrowright from '../assets/icons/arrow-right.png';
+import airConditioning from '@/assets/icons/air-conditioning.png';
+import kitchenIcon from '@/assets/icons/kitchen.png';
+import washer from '@/assets/icons/washer.png';
+import wifiIcon from '@/assets/icons/wifi.png';
+import dryerIocon from '@/assets/icons/dryer.png';
+import parkingIcon from '@/assets/icons/parking.png';
+import arrowright from '@/assets/icons/arrow-right.png';
 const AmenitiesSection = () => (
   <div className="py-8">
     <h3 className="text-[#050505] font-[500] text-[16px]">Popular Amenities</h3>

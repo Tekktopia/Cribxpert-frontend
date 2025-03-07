@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import StepOne from '../components/reset-password/StepOne';
-import StepTwo from '../components/reset-password/StepTwo';
+import StepOne from '@/components/reset-password/StepOne';
+import StepTwo from '@/components/reset-password/StepTwo';
 
 const ResetPassword: React.FC = () => {
   const [step, setStep] = useState(1);

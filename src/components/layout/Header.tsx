@@ -1,8 +1,8 @@
-import messageIcon from '../../assets/icons/message.png';
-import supportIcon from '../../assets/icons/like.png';
-import notificationIcon from '../../assets/icons/notifications.png';
-import profileIcon from '../../assets/icons/Profile.png';
-import humburger from '../../assets/icons/hamburger.png';
+import messageIcon from '@/assets/icons/message.png';
+import supportIcon from '@/assets/icons/like.png';
+import notificationIcon from '@/assets/icons/notifications.png';
+import profileIcon from '@/assets/icons/Profile.png';
+import humburger from '@/assets/icons/hamburger.png';
 
 import React from 'react';
 

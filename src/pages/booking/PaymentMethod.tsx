@@ -1,9 +1,9 @@
 import React from 'react';
-import USSD from '../../assets/icons/USSD.png';
-import Payment from '../../assets/icons/Payment-Link.png';
-import BankCard from '../../assets/icons/Bank-Card.png';
-import BankTransfer from '../../assets/icons/Bank-Transfer.png';
-import copyICon from '../../assets/icons/copyIcon.png';
+import USSD from '@/assets/icons/USSD.png';
+import Payment from '@/assets/icons/Payment-Link.png';
+import BankCard from '@/assets/icons/Bank-Card.png';
+import BankTransfer from '@/assets/icons/Bank-Transfer.png';
+import copyICon from '@/assets/icons/copyIcon.png';
 
 const PaymentMethod: React.FC = () => {
   return (

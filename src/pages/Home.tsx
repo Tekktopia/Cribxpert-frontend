@@ -1,8 +1,8 @@
-import Header from '../components/layout/Header';
-import heroImage from '../assets/images/hero-image.jpeg';
-import { SAMPLE_DATA, Filter } from '../utils/data';
+import Header from '@/components/layout/Header';
+import heroImage from '@/assets/images/hero-image.jpeg';
+import { SAMPLE_DATA, Filter } from '@/utils/data';
 import React from 'react';
-import PropertyListings from '../components/PropertyListing';
+import PropertyListings from '@/components/PropertyListing';
 
 const Home: React.FC = () => {
   return (
