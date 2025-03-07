@@ -7,3 +7,14 @@ body {
 #PAYSTACK-GATEWAY {
   font-family: "Saira Stencil One", serif;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #730071;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}

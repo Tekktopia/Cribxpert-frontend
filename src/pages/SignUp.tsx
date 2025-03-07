@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import StepOne from "../components/sign-up/StepOne";
 import StepTwo from "../components/sign-up/StepTwo";
 import StepThree from "../components/sign-up/StepThree";
+import StepFour from "../components/sign-up/StepFour";
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -49,6 +50,8 @@ const SignUp: React.FC = () => {
       {step === 3 && (
         <StepThree nextStep={nextStep} methodSelected={methodSelected} />
       )}
+
+      {step === 4 && <StepFour/>}
     </div>
   );
 };
