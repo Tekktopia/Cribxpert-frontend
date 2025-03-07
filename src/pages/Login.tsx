@@ -4,9 +4,6 @@ import { Link } from "react-router";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
     email: "",
     password: "",
   });
