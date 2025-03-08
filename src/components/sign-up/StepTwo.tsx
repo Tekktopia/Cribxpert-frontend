@@ -29,7 +29,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
   return (
     <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
-        STEP 03/04
+        STEP 02/03
       </p>
       <div className="w-full max-w-md space-y-6 text-center">
         {methodSelected === 'Email Address' ? (
