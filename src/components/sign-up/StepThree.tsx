@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { Link } from 'react-router';
 
-const StepFour: React.FC = () => {
+const StepThree: React.FC = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -156,4 +156,4 @@ const StepFour: React.FC = () => {
   );
 };
 
-export default StepFour;
+export default StepThree;

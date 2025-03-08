@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import StepOne from '@/components/sign-up/StepOne';
-import StepFour from '@/components/sign-up/StepFour';
-import StepTwoMain from '@/components/sign-up/StepTwoMain';
+import StepTwo from '@/components/sign-up/StepTwo';
+import StepThree from '@/components/sign-up/StepThree';
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -43,14 +43,15 @@ const SignUp: React.FC = () => {
       )}
 
       {step === 2 && (
-        <StepTwoMain
+        <StepTwo
           nextStep={nextStep}
           methodSelected={methodSelected}
           email={email}
+          phoneNumber={phoneNumber}
         />
       )}
 
-      {step === 3 && <StepFour />}
+      {step === 3 && <StepThree />}
     </div>
   );
 };
