@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PreferencesProps } from '../common/profile/types';
+import React from 'react';
 
 const Preference = ({
   initialNotifications,

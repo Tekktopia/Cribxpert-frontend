@@ -1,23 +1,36 @@
 import './index.css';
-import PaymentMethod from './components/pages/booking/PaymentMethod';
-import BookingPage from './components/pages/booking';
-import Home from './components/pages/Home';
+
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import './index.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PropertyDetail from './components/pages/PropertyDetail';
 import ProfilePage from './components/pages/ProfilePage';
+import PaymentMethod from './pages/booking/PaymentMethod';
+import PropertyDetail from './pages/PropertyDetail';
+import BookingPage from './pages/booking';
+import Home from './pages/Home';
 
 function App() {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/propertydetail" element={<PropertyDetail />} />
-          <Route path="/BookingPage" element={<BookingPage />} />
-          <Route path="/paymentmethod" element={<PaymentMethod />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-      </Router>
+    <Router>
+      <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/propertydetail" element={<PropertyDetail />} />
+      <Route path="/BookingPage" element={<BookingPage />} />
+      <Route path="/paymentmethod" element={<PaymentMethod />} />
+      <Route path="/profile" element={<ProfilePage />} />
+    <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+      </Routes>
+    </Router>
+    
+      
+      
     </>
   );
 }
