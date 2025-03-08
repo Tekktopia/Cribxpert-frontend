@@ -45,7 +45,6 @@ const StepOne: React.FC<StepOneProps> = ({
         <div className="space-y-2 text-[#999999]">
           <p className="text-left">Register with</p>
           <CustomDropdown
-            nextStep={nextStep}
             methodSelected={methodSelected}
             setMethodSelected={setMethodSelected}
           />
