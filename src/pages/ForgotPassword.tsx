@@ -1,15 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router';
+import StepOne from '@/components/forgot-password/StepOne';
+import StepTwo from '@/components/forgot-password/StepTwo';
+import React, { useState } from 'react';
 
 const ForgotPassword: React.FC = () => {
+  const [step, setStep] = useState(1);
+
   const [email, setEmail] = React.useState('');
   console.log(email);
+
+  const nextStep = () => {
+    setStep((prev) => prev + 1);
+  };
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
       <div className="w-1/2 h-full relative">
         <img
-          src="/authsidepane.png"
+          src="/authsidepane1.png"
           alt="Login Background"
           className="w-full h-full object-cover"
         />
@@ -17,37 +24,16 @@ const ForgotPassword: React.FC = () => {
       </div>
 
       {/* Right Side - Login Section*/}
-      <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
-        <div className="w-full max-w-md text-center space-y-6">
-          <h2 className="text-[36px] font-bold mb-4">Forgot Password</h2>
+      {step ===1 && (<StepOne
+        nextStep={nextStep}
+        setEmail={setEmail}
+      />)}
 
-          <div>
-            <p className="text-[#313131] mb-6">
-              Enter your registered email, we’II send you a reset link
-            </p>
-
-            <label className="cursor-pointer flex flex-col items-start gap-2">
-              Email
-              <input
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
-              />
-            </label>
-          </div>
-
-          <Link to="/reset-password">
-            <button className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
-              Continue
-            </button>
-          </Link>
-
-          <p>
-            If you didn’t receive a link!{' '}
-            <span className="text-red-500">Resend</span>
-          </p>
-        </div>
-      </div>
+      {step ===2 &&(
+        <StepTwo
+          email={email}
+        />
+      )}
     </div>
   );
 };
