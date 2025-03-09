@@ -1,7 +1,7 @@
 // import { CameraIcon } from '@heroicons/react/16/solid';
+import { ProfileFormProps } from '@/types';
 import { CameraIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { ProfileFormProps } from '../common/profile/types';
 
 const Profile = ({
   initialFirstName,

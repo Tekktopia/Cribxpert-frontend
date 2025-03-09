@@ -1,5 +1,5 @@
+import { Active } from '@/types';
 import ProfileLinks from './ProfileLinks';
-import { Active } from '../../common/profile/types';
 
 type Props = {
   active: Active;
@@ -7,7 +7,6 @@ type Props = {
 };
 
 const ProfileNav = ({ active, setActive }: Props) => {
-  // const flexBetween = " flex items-center justify-between";
   return (
     <nav>
       <div className="flex w-full py-3 gap-[10px] ">

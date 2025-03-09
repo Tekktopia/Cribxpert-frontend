@@ -1,5 +1,6 @@
+import { Active } from '@/types';
 import { Link } from 'react-router';
-import { Active } from '../../common/profile/types';
+
 // import { Link } from "react-router-dom"
 
 type Props = {
