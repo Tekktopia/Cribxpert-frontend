@@ -17,7 +17,7 @@ const ResetPassword: React.FC = () => {
       {/* Left Side - Image Section */}
       <div className="w-1/2 h-full relative">
         <img
-          src="/authsidepane.png"
+          src="/authsidepane1.png"
           alt="Login Background"
           className="w-full h-full object-cover"
         />
