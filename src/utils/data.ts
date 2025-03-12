@@ -161,4 +161,5 @@ const Filter = [
     image: otherFilterIcon,
   },
 ];
+
 export { SAMPLE_DATA, Filter };
