@@ -1,31 +1,32 @@
-import messageIcon from "../../assets/icons/message.png"
-import supportIcon from "../../assets/icons/like.png"
-import notificationIcon from "../../assets/icons/notifications.png"
-import profileIcon from "../../assets/icons/Profile.png"
-import humburger from "../../assets/icons/hamburger.png"
-
-import React from "react"
-import { Link } from "react-router"
+import messageIcon from '@/assets/icons/message.png';
+import supportIcon from '@/assets/icons/like.png';
+import notificationIcon from '@/assets/icons/notifications.png';
+import profileIcon from '@/assets/icons/Profile.png';
+import humburger from '@/assets/icons/hamburger.png';
+import { Link } from 'react-router';
 
 const Header: React.FC = () => {
-    return (
-        <section className="overflow-hidden w-full">
-            <header className="w-full border-b border-b-[#CCCCCC80]/50 bg-white">
-                {/* Navigation Bar */}
-                <nav className="flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
-                    {/* Logo */}
-                    <div className="w-auto">
-                        <h1 className="font-bold text-[20px] text-[#730071]">Shotletapp.ng</h1>
-                    </div>
+  return (
+    <section className="overflow-hidden w-full">
+      <header className="w-full border-b border-b-[#CCCCCC80]/50 bg-white">
+        {/* Navigation Bar */}
+        <nav className="flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
+          {/* Logo */}
+          <div className="w-auto">
+            <h1 className="font-bold text-[20px] text-[#730071]">
+              Shotletapp.ng
+            </h1>
+          </div>
 
-                    {/* Search Input */}
-                    <div className="flex-grow max-w-[500px]">
-                        <input 
-                            type="text" 
-                            className="w-full h-[48px] border border-[#CCCCCC99]/60 rounded-[12px] px-4 text-[14px]" 
-                            placeholder="Search"
-                        />
-                    </div>
+          {/* Search Input */}
+          <div className="flex-grow max-w-[500px]">
+            <input
+              type="text"
+              className="w-full h-[48px] border border-[#CCCCCC99]/60 rounded-[12px] px-4 text-[14px]"
+              placeholder="Search"
+            />
+          </div>
+
 
                     {/* Icons Section */}
                     <div className="w-auto flex flex-row gap-6 py-3">
@@ -63,6 +64,8 @@ const Header: React.FC = () => {
             </header>
         </section>
     )
-}
 
-export default Header
+};
+
+
+export default Header;

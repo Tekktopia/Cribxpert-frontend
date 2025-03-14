@@ -1,0 +1,139 @@
+import CustomDropdown from '@/components/sign-up/CustomDropdown';
+import { Eye, EyeOff } from 'lucide-react';
+import React, { useState } from 'react';
+import { Link } from 'react-router';
+
+const Login: React.FC = () => {
+  const [formData, setFormData] = useState({
+    email: '',
+    phoneNumber: '',
+    password: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const [methodSelected, setMethodSelected] = useState<string | null>(
+    'Email Address'
+  );
+
+  return (
+    <div className="flex h-screen">
+      {/* Left Side - Image Section */}
+      <div className="w-1/2 h-full relative">
+        <img
+          src="/authsidepane2.png"
+          alt="Login Background"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-[#73007166] opacity-50"></div>
+      </div>
+
+      {/* Right Side - Login Section */}
+      <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
+        <div className="w-full max-w-[512px] text-center space-y-6">
+          <div className="text-left w-full max-w-[342px] ">
+            <h2 className="text-[20px] font-semibold mb-4">Login</h2>
+            <p className="text-[#313131] mb-6">
+              Enter your registered email or phone number to log in
+            </p>
+          </div>
+
+          <div className="space-y-2 text-[#999999]">
+            <p className="text-left">Login with</p>
+            <CustomDropdown
+              methodSelected={methodSelected}
+              setMethodSelected={setMethodSelected}
+            />
+
+            {methodSelected === 'Email Address' ? (
+              <div>
+                <label className="cursor-pointer flex flex-col items-start gap-2">
+                  Email
+                  <input
+                    onChange={handleChange}
+                    // value={formData.email}
+                    placeholder="Enter your email"
+                    className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  />
+                </label>
+              </div>
+            ) : (
+              <div>
+                <label className="cursor-pointer flex flex-col items-start gap-2">
+                  Phone Number
+                  <input
+                    onChange={handleChange}
+                    // value={formData.phoneNumber}
+                    placeholder="Enter your Phone Number"
+                    className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  />
+                </label>
+              </div>
+            )}
+          </div>
+
+          {/* Password */}
+          <div className="relative">
+            <label className="block text-left text-gray-700 font-medium mb-1">
+              Password
+            </label>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="********"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+            />
+            {showPassword ? (
+              <EyeOff
+                className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
+                onClick={togglePasswordVisibility}
+              />
+            ) : (
+              <Eye
+                className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
+                onClick={togglePasswordVisibility}
+              />
+            )}
+          </div>
+
+          <div className="flex justify-between items-center mt-2">
+            <label className="block text-left text-gray-700 font-medium mb-1">
+              <input
+                type="checkbox"
+                id="remember"
+                name="remember"
+                className="mr-2 accent-[#730071]"
+              />
+              Remember me
+            </label>
+            <Link to="/forgot-password" className="text-[#730071]">
+              Forgot Password?
+            </Link>
+          </div>
+          {/* Submit Button */}
+          <Link to="/">
+            <button className="w-full mx-auto mt-8 p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2">
+              Login
+            </button>
+          </Link>
+          <p className="text-gray-500 text-[14px]">
+          Don't have an account?
+          <span className="text-[#730071]">Sign up</span>.
+        </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;

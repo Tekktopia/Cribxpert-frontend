@@ -1,6 +1,6 @@
 import Header from "../layout/Header";
 import heroImage from "../../assets/images/hero-image.jpeg";
-import { SAMPLE_DATA, Filter } from "../../constants/data";
+import { SAMPLE_DATA,Filter } from "@/utils/data";
 import React from "react";
 import PropertyListings from "../PropertyListing";
 

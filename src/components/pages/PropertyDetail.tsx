@@ -25,7 +25,7 @@ import arrowright from "../../assets/icons/arrow-right.png"
 import map from "../../assets/images/map.png"
 import carIcon from "../../assets/icons/Car-icon.png"
 import location from "../../assets/icons/location.png"
-import { PropertyListingProps } from "../interface";
+import { PropertyListingProps } from "@/types";
 import PropertyListings from "../PropertyListing";
 const PropertyDetail = ({ listings = [] }: { listings?: PropertyListingProps[] }) => {
   const limitedListings = listings?.slice(0, 4)

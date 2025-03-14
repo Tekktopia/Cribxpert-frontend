@@ -69,7 +69,7 @@ const BookingForm:React.FC=()=>{
 
   {/* Confidence Guarantee */}
   <div className="flex items-center justify-center mt-3 text-[#070707] text-[14px]">
-    <img src={certified} alt="Certified" className="w-[16px] h-[16px] mr-2" />
+  <img src={certified} alt="Certified" className="w-[16px] h-[16px] mr-2" />
     <p>Book with confidence guarantee</p>
   </div>
 
