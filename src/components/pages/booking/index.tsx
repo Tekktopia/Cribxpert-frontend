@@ -14,7 +14,7 @@ return(
 <p className="text-[#6F6F6F] md:text-md text-sm">Price and availability may change. Free cancellation until Jan 17, 2025.</p>
     </div>
     </div>
-    <div className="container mx-auto p-6">     
+    <div className="container mx-auto">     
     <div className="flex flex-col-reverse md:flex-row justify-around gap-8">
     <div className="md:w-1/2">
         <Booking/>

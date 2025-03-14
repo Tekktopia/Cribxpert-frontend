@@ -5,6 +5,7 @@ import profileIcon from "../../assets/icons/Profile.png"
 import humburger from "../../assets/icons/hamburger.png"
 
 import React from "react"
+import { Link } from "react-router"
 
 const Header: React.FC = () => {
     return (
@@ -30,15 +31,15 @@ const Header: React.FC = () => {
                     <div className="w-auto flex flex-row gap-6 py-3">
                         <div className="flex flex-col items-center">
                             <img src={messageIcon} alt="Message Icon" className="w-[20px] h-[20px]" />
-                            <p className="text-[14px] text-[#999999]">Message</p>
+                            <Link to="" className="text-[14px] text-[#999999] cursor-pointer">Message </Link>
                         </div>
                         <div className="flex flex-col items-center">
                             <img src={supportIcon} alt="supportIcon" className="w-[20px] h-[20px]" />
-                            <p className="text-[14px] text-[#999999]">Support</p>
+                            <Link to="" className="text-[14px] text-[#999999] cursor-pointer">Support </Link>
                         </div>
                         <div className="flex flex-col items-center">
                             <img src={notificationIcon} alt="notificationIcon" className="w-[20px] h-[20px]" />
-                            <p className="text-[14px] text-[#999999]">Notifications</p>
+                            <Link to="" className="text-[14px] text-[#999999] cursor-pointer">Notifications </Link>
                         </div>
                         <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
                         <div className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2">
@@ -51,11 +52,12 @@ const Header: React.FC = () => {
                 {/* Navigation Menu */}
                 <div className="px-4 md:px-8 py-4 overflow-x-auto">
                     <div className="flex items-center gap-4 whitespace-nowrap">
-                        <p className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Dashboard</p>
-                        <p className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Discover</p>
-                        <p className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">My Bookings</p>
-                        <p className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Saved Listings</p>
-                        <p className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Payments</p>
+                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Dashboard
+                        </Link>
+                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Discover </Link>
+                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">My Bookings </Link>
+                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Saved Listings </Link>
+                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Payments </Link>
                     </div>
                 </div>
             </header>

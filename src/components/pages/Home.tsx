@@ -73,7 +73,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Property Listings Section */}
-        <div className="py-10 m-5">
+        <div className="py- m-5">
           <PropertyListings listings={SAMPLE_DATA} />
         </div>
       </section>
@@ -81,7 +81,7 @@ const Home: React.FC = () => {
       {/* Continue Exploring Section */}
       <div className="flex justify-center items-center">
         <div>
-          <p className="text-[#6F6F6F] font-[400] text-[14px] mb-4">Continue exploring short let houses</p>
+          <p className="text-[#6F6F6F] font-[400] text-[14px] mb-4 ">Continue exploring short let houses</p>
           <div className="mx-auto flex items-center justify-center">
             <button className="bg-[#730071] px-6 py-2 rounded-md text-white">Shop Now</button>
           </div>

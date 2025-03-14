@@ -10,8 +10,8 @@ const OrderSummary: React.FC=()=> {
 <h2 className="mt-2 text-[#040404] font-[400] text-[14px] ">Makinwaa's Cottag -  Newly Remodeled</h2>
 <p className="text-[#6F6F6F] text-[14px] mb-5">Federal Capital Territory Gombe</p>
 <p className="text-[#999999]">⭐4.5 [115 verified positive feedbacks]</p>
-<div className="w-full border border-[#cccccc] bg-[#f1e6f1]/30 mt-4 p-2">
-<p className="text-[#6F6F6F] font-[400] text-[14px] ">Great choice! Secure your booking now before it’s gone.</p>
+<div className="w-full border border-[#cccccc] bg-[#F1E6F14D]/30 mt-4 p-2 rounded-md">
+<p className="text-[#6F6F6F] font-[400]  text-[14px] ">Great choice! Secure your booking now before it’s gone.</p>
 </div>    
     </div>
 

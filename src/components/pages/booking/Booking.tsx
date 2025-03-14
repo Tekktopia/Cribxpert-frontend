@@ -1,6 +1,6 @@
 const Booking = () => {
     return(
-        <div className="bg-white p-6 shadow-md rounded-lg">
+        <div className=" p-6 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Booking Form</h2>
         <form>
           {/* Contact Information */}

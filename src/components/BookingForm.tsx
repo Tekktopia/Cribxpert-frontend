@@ -2,9 +2,11 @@ import calender from "../assets/icons/calendar.png"
 import certified from "../assets/icons/certified.png"
 import arrowdown from "../assets/icons/arrow-down.png";
 import {Link } from "react-router";
-const BookinForm:React.FC=()=>{
+const BookingForm:React.FC=()=>{
     return(
-<div className="w-[480px] bg-white shadow-md border border-[#E6E6E6] rounded-lg p-5">
+      <>
+<div className="w-full max-w-[480px] bg-white shadow-md border border-[#E6E6E6] rounded-lg p-5">
+
   {/* Price & Cancellation */}
   <div className="mb-4">
     <h4 className="text-[#6F6F6F] text-[14px] font-bold">NGN 85,000 <span className="font-normal">/night</span></h4>
@@ -72,11 +74,13 @@ const BookinForm:React.FC=()=>{
   </div>
 
   {/* Property ID & Contact */}
-  <div className="mt-4 flex flex-col items-center">
-    <p className="text-[#313131] text-[14px]">Property ID <strong>234532</strong></p>
-    <p className="text-[#730071] text-[14px] font-medium cursor-pointer hover:underline mt-1">Contact host</p>
-  </div>
+  
 </div>
+<div className="py-8 text-center ">
+    <p className="text-[#313131] text-[14px]">Property ID <strong>234532</strong></p>
+    <p className="text-[#730071] font-[400] text-[14px] mt-3 cursor-pointer hover:underline">Contact host</p>
+  </div>
+  </>
     )
 }
-export default BookinForm
+export default BookingForm
