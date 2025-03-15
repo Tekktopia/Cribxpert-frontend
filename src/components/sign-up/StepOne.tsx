@@ -4,19 +4,21 @@ import { FcGoogle } from 'react-icons/fc';
 import CustomDropdown from './CustomDropdown';
 
 type StepOneProps = {
-  nextStep: () => void;
+  handleSignUp: (e: React.FormEvent) => Promise<void>;
   methodSelected: string | null;
   setMethodSelected: React.Dispatch<React.SetStateAction<string | null>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const StepOne: React.FC<StepOneProps> = ({
-  nextStep,
+  handleSignUp,
   methodSelected,
   setMethodSelected,
   setEmail,
   setPhoneNumber,
+  setPassword,
 }) => {
   return (
     <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
@@ -45,7 +47,6 @@ const StepOne: React.FC<StepOneProps> = ({
         <div className="space-y-2 text-[#999999]">
           <p className="text-left">Register with</p>
           <CustomDropdown
-            nextStep={nextStep}
             methodSelected={methodSelected}
             setMethodSelected={setMethodSelected}
           />
@@ -67,12 +68,24 @@ const StepOne: React.FC<StepOneProps> = ({
                 Phone Number
                 <input
                   onChange={(e) => setPhoneNumber(e.target.value)}
+                  type='number'
                   placeholder="Enter your Phone Number"
                   className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
                 />
               </label>
             </div>
           )}
+
+          <div>
+            <label className="cursor-pointer flex flex-col items-start gap-2">
+              Password
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your Password"
+                className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+              />
+            </label>
+          </div>
           <p className=" text-[14px] text-left">
             By clicking "Proceed" you agree to our{' '}
             <span className="text-[#730071]">Terms of Service</span>.
@@ -84,7 +97,7 @@ const StepOne: React.FC<StepOneProps> = ({
         </button> */}
 
         <button
-          onClick={nextStep}
+          onClick={handleSignUp}
           className="w-full p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
         >
           Continue

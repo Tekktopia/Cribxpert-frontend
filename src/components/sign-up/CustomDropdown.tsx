@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 type CustomDropdownProps = {
-  nextStep: () => void;
   methodSelected: string | null;
   setMethodSelected: React.Dispatch<React.SetStateAction<string | null>>;
 };

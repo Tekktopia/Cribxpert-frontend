@@ -2,15 +2,19 @@ import React, { useState } from 'react';
 import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { Link } from 'react-router';
 
-const StepFour: React.FC = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    email: '',
-    password: '',
-  });
+type FormData = {
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  email: string;
+  password: string;
+};
+type StepFourProps = {
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+};
 
+const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
