@@ -34,14 +34,24 @@ const SignUpPage: React.FC = () => {
     e.preventDefault();
     try {
       if (methodSelected === 'Email Address') {
-        const result = await signUp?.create({ emailAddress: email, password });
-        console.log(result);
+        if (!email || !password) {
+          throw new Error('Email and password are required');
+        }
+        // const result =
+        await signUp?.create({ emailAddress: email, password });
+        // console.log(result);
 
         await signUp?.prepareEmailAddressVerification({
           strategy: 'email_link',
           redirectUrl: 'http://localhost:5173/onboarding',
         }); // Sends verification email
       } else {
+        if (!phoneNumber || !password) {
+          throw new Error('Phone number and password are required');
+        } else if (phoneNumber.length < 11 || phoneNumber.length > 11) {
+          throw new Error('Phone number must be 11 digits');
+        }
+
         await signUp?.create({ phoneNumber, password });
         await signUp?.preparePhoneNumberVerification(); // Sends verification code
       }

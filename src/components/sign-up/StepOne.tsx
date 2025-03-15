@@ -59,18 +59,20 @@ const StepOne: React.FC<StepOneProps> = ({
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  required
                 />
               </label>
             </div>
           ) : (
             <div>
               <label className="cursor-pointer flex flex-col items-start gap-2">
-                Phone Number
+                Enter mobile Number
                 <input
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  type='number'
-                  placeholder="Enter your Phone Number"
+                  type="number"
+                  placeholder="07068839585"
                   className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  required
                 />
               </label>
             </div>
@@ -83,6 +85,8 @@ const StepOne: React.FC<StepOneProps> = ({
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your Password"
                 className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                required
+                type="password"
               />
             </label>
           </div>
