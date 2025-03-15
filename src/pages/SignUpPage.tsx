@@ -25,7 +25,6 @@ const SignUpPage: React.FC = () => {
   //   const [error, setError] = useState('');
 
   //   console.log(email, phoneNumber, password);
-  
 
   const nextStep = () => {
     setStep((prev) => prev + 1);
@@ -40,7 +39,7 @@ const SignUpPage: React.FC = () => {
 
         await signUp?.prepareEmailAddressVerification({
           strategy: 'email_link',
-          redirectUrl: '/',
+          redirectUrl: 'http://localhost:5173/onboarding',
         }); // Sends verification email
       } else {
         await signUp?.create({ phoneNumber, password });
@@ -51,8 +50,11 @@ const SignUpPage: React.FC = () => {
 
       nextStep();
     } catch (err: Error | unknown) {
-      console.log(err);
-      //   setError(err?.errors[0]?.message || 'Something went wrong');
+      if (err instanceof Error) {
+        console.log(err.message);
+      } else {
+        console.log('An unknown error occurred');
+      }
     }
   };
 
@@ -82,7 +84,7 @@ const SignUpPage: React.FC = () => {
 
       {step === 2 && (
         <StepTwoMain
-          nextStep={nextStep}
+          nextStep={() => setStep(2)}
           methodSelected={methodSelected}
           email={email}
         />

@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import SignUpPage from './pages/SignUpPage';
+import Onboarding from './pages/Onboarding';
 function App() {
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
           <Route path="/paymentmethod" element={<PaymentMethod />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/sign-up-page" element={<SignUpPage />} />
+          <Route path="/onboarding" element={<Onboarding/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
