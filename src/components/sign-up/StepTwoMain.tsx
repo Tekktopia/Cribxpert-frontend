@@ -79,12 +79,13 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
           </div>
         ) : (
           <div>
-            <h2 className="text-[36px] font-bold mb-4">
-              Phone Number Verification
-            </h2>
+            <h2 className="text-[20px] font-bold mb-4">Verification</h2>
             <div className="space-y-2  mb-6">
-              <p className="text-[#313131]">
-                Enter the 4 digit code we sent to your phone
+              <p className="text-[#999999] text-[14px]">
+                We have sent an OTP code to (081****460), Please enter the OTP
+                sent to this number below to confirm your account. . If you
+                haven't received the OTP, click on the resend code to get
+                another OTP
               </p>
               <p className="text-red-500">{error}</p>
             </div>
@@ -93,7 +94,7 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
           </div>
         )}
 
-        <StepTwoResendButton/>
+        <StepTwoResendButton />
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ otp, setOtp }) => {
             maxLength={1}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            className="w-[84px] h-[76px] border border-gray-400 text-center text-xl rounded-md focus:border-black outline-none"
+            className="w-[44px] h-[44px] border border-gray-400 text-center text-xl rounded-md focus:border-black outline-none"
           />
         ))}
       </div>

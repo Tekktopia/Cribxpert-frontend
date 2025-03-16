@@ -1,11 +1,19 @@
 import { useSignUp } from '@clerk/clerk-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoReload } from 'react-icons/io5';
 
 const StepTwoResendButton = () => {
   const [resendDisabled, setResendDisabled] = React.useState(false);
-
   const { signUp } = useSignUp();
+
+  const [timeLeft, setTimeLeft] = useState(120); // Countdown from 60 seconds
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [timeLeft]);
 
   const handleResend = async () => {
     if (resendDisabled) return;
@@ -20,15 +28,30 @@ const StepTwoResendButton = () => {
     }
   };
 
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds
+      .toString()
+      .padStart(2, '0')}`;
+  };
+
   return (
-    <button
-      onClick={handleResend}
-      disabled={resendDisabled}
-      className="w-full max-w-[422px] p-3 mx-auto bg-[#73007179] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
-    >
-      <IoReload />
-      Resend
-    </button>
+    <div>
+      <button className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
+        Proceed
+      </button>
+
+      <button
+        onClick={handleResend}
+        disabled={resendDisabled}
+        className="text-center w-full text-[14px] text-[#999999] mt-2 flex items-center justify-center gap-3"
+      >
+        <IoReload />
+        Resend Link:{' '}
+        {timeLeft > 0 ? formatTime(timeLeft) : ""}
+      </button>
+    </div>
   );
 };
 
