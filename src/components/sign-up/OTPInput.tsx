@@ -55,11 +55,11 @@ const OTPInput: React.FC<OTPInputProps> = ({ otp, setOtp }) => {
         ))}
       </div>
       {/* Countdown Timer */}
-      <p className="text-red-500">
+      {/* <p className="text-red-500">
         {timeLeft > 0
           ? `00:${timeLeft.toString().padStart(2, '0')}`
           : "Time's up!"}
-      </p>
+      </p> */}
     </div>
   );
 };

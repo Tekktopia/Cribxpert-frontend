@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import OTPInput from './OTPInput';
-import { IoReload } from 'react-icons/io5';
-import {
-  useSignUp,
-} from '@clerk/clerk-react';
+import { useSignUp } from '@clerk/clerk-react';
+import StepTwoResendButton from './StepTwoResendButton';
 
 type StepTwoMainProps = {
   methodSelected: string | null;
@@ -14,7 +12,7 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
   const { signUp, setActive } = useSignUp();
   const [otp, setOtp] = React.useState<string[]>(new Array(4).fill(''));
   const [code, setCode] = React.useState<string>('');
-
+  const [error, setError] = React.useState<string>('');
   const handleVerify = async () => {
     try {
       const completeSignUp = await signUp?.attemptPhoneNumberVerification({
@@ -27,21 +25,37 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
     } catch (err: Error | unknown) {
       if (err instanceof Error) {
         console.log(err.message);
+        setError(err.message);
       } else {
         console.log('An unknown error occurred');
       }
     }
   };
 
-  const verify = async () => {
-    const code = otp.join('');
-    if (code.length === 4) {
-      setCode(code);
-      await handleVerify();
-    }
-  };
+  useEffect(() => {
+    const verify = async () => {
+      if (otp.join('').length === 4) {
+        setCode(otp.join(''));
+        try {
+          await handleVerify();
+        } catch (err: Error | unknown) {
+          if (err instanceof Error) {
+            console.log(err.message);
+            setError(err.message);
+          } else {
+            console.log('An unknown error occurred');
+          }
+        }
+      }
+    };
 
-  verify();
+    // Debounce the verification call to prevent multiple rapid requests
+    const timeoutId = setTimeout(() => {
+      verify();
+    }, 1000); // 1-second delay
+
+    return () => clearTimeout(timeoutId);
+  }, [otp]);
 
   return (
     <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
@@ -68,18 +82,18 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
             <h2 className="text-[36px] font-bold mb-4">
               Phone Number Verification
             </h2>
-            <p className="text-[#313131] mb-6">
-              Enter the 4 digit code we sent to your phone
-            </p>
+            <div className="space-y-2  mb-6">
+              <p className="text-[#313131]">
+                Enter the 4 digit code we sent to your phone
+              </p>
+              <p className="text-red-500">{error}</p>
+            </div>
 
             <OTPInput otp={otp} setOtp={setOtp} />
           </div>
         )}
 
-        <button className="w-full max-w-[422px] p-3 mx-auto bg-[#73007179] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
-          <IoReload />
-          Resend
-        </button>
+        <StepTwoResendButton/>
       </div>
     </div>
   );
