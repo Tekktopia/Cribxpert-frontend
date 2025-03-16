@@ -1,11 +1,12 @@
+import CustomDropdown from '@/components/sign-up/CustomDropdown';
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 import { Link } from 'react-router';
 
-
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
     email: '',
+    phoneNumber: '',
     password: '',
   });
 
@@ -19,12 +20,16 @@ const Login: React.FC = () => {
     setShowPassword((prev) => !prev);
   };
 
+  const [methodSelected, setMethodSelected] = useState<string | null>(
+    'Email Address'
+  );
+
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
       <div className="w-1/2 h-full relative">
         <img
-          src="/authsidepane1.png"
+          src="/authsidepane2.png"
           alt="Login Background"
           className="w-full h-full object-cover"
         />
@@ -34,24 +39,45 @@ const Login: React.FC = () => {
       {/* Right Side - Login Section */}
       <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
         <div className="w-full max-w-[512px] text-center space-y-6">
-          <h2 className="text-[36px] font-bold mb-4">Login</h2>
-          <p className="text-[#313131] mb-6">
-            Enter your registered email or phone number to log in
-          </p>
+          <div className="text-left w-full max-w-[342px] ">
+            <h2 className="text-[20px] font-semibold mb-4">Login</h2>
+            <p className="text-[#313131] mb-6">
+              Enter your registered email or phone number to log in
+            </p>
+          </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-left text-gray-700 font-medium mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+          <div className="space-y-2 text-[#999999]">
+            <p className="text-left">Login with</p>
+            <CustomDropdown
+              methodSelected={methodSelected}
+              setMethodSelected={setMethodSelected}
             />
+
+            {methodSelected === 'Email Address' ? (
+              <div>
+                <label className="cursor-pointer flex flex-col items-start gap-2">
+                  Email
+                  <input
+                    onChange={handleChange}
+                    // value={formData.email}
+                    placeholder="Enter your email"
+                    className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  />
+                </label>
+              </div>
+            ) : (
+              <div>
+                <label className="cursor-pointer flex flex-col items-start gap-2">
+                  Phone Number
+                  <input
+                    onChange={handleChange}
+                    // value={formData.phoneNumber}
+                    placeholder="Enter your Phone Number"
+                    className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  />
+                </label>
+              </div>
+            )}
           </div>
 
           {/* Password */}
@@ -64,7 +90,7 @@ const Login: React.FC = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              placeholder="********"
               className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
             />
             {showPassword ? (
@@ -96,10 +122,14 @@ const Login: React.FC = () => {
           </div>
           {/* Submit Button */}
           <Link to="/">
-            <button className="w-full mx-auto mt-8 max-w-[422px] p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2">
+            <button className="w-full mx-auto mt-8 p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2">
               Login
             </button>
           </Link>
+          <p className="text-gray-500 text-[14px]">
+          Don't have an account?
+          <span className="text-[#730071]">Sign up</span>.
+        </p>
         </div>
       </div>
     </div>
