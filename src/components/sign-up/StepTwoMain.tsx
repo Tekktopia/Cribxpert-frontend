@@ -1,6 +1,10 @@
 import React from 'react';
 import OTPInput from './OTPInput';
 import { IoReload } from 'react-icons/io5';
+import {
+  //  useAuth,
+  useSignUp,
+} from '@clerk/clerk-react';
 
 type StepTwoMainProps = {
   nextStep: () => void;
@@ -13,7 +17,47 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
   methodSelected,
   email,
 }) => {
-  const [otp, setOtp] = React.useState<string[]>(new Array(6).fill(''));
+  const { signUp, setActive } = useSignUp();
+  const [otp, setOtp] = React.useState<string[]>(new Array(4).fill(''));
+  const [code, setCode] = React.useState<string>('');
+
+  const handleVerify = async () => {
+    try {
+      const completeSignUp = await signUp?.attemptPhoneNumberVerification({
+        code,
+      });
+      if (completeSignUp?.status === 'complete' && setActive) {
+        await setActive({ session: completeSignUp.createdSessionId });
+        window.location.href = '/onboarding'; // Redirect on success
+      }
+    } catch (err: Error | unknown) {
+      if (err instanceof Error) {
+        console.log(err.message);
+      } else {
+        console.log('An unknown error occurred');
+      }
+    }
+  };
+
+  const verify = async () => {
+    const code = otp.join('');
+    if (code.length === 4) {
+      setCode(code);
+      await handleVerify();
+    }
+  };
+
+  verify();
+
+  // const { signOut } = useAuth();
+
+  // const handleLogout = async () => {
+  //   await signOut();
+  //   window.location.href = "/"; // Redirect after logout (optional)
+  // };
+
+  // handleLogout();
+
   return (
     <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
@@ -40,7 +84,7 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
               Phone Number Verification
             </h2>
             <p className="text-[#313131] mb-6">
-              Enter the 6 digit code we sent to your phone
+              Enter the 4 digit code we sent to your phone
             </p>
 
             <OTPInput otp={otp} setOtp={setOtp} />

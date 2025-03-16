@@ -68,6 +68,8 @@ const SignUpPage: React.FC = () => {
     }
   };
 
+  
+
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
