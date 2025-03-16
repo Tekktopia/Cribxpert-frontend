@@ -32,12 +32,14 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
   };
   return (
     <div className="w-full max-w-md text-center space-y-2">
-      <h2 className="text-[36px] font-bold mb-4">Reset Password</h2>
+      <div className="text-left w-full max-w-[342px] mb-2">
+          <h2 className="text-[20px] font-semibold ">Reset Password</h2>
+          <p className="text-[#999] mb-6">
+          Enter a new password to reset your account
+          </p>
+        </div>
 
       <div className="space-y-6">
-        <p className="text-[#313131] mb-6">
-          Enter a new password to reset your account
-        </p>
 
         {/* Password */}
         <div className="relative">
@@ -49,7 +51,7 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your password"
+            placeholder="*********"
             className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
           />
           {showPassword ? (
@@ -75,7 +77,7 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your password"
+            placeholder="*********"
             className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
           />
           {showPassword ? (
