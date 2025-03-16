@@ -6,9 +6,14 @@ import StepTwoResendButton from './StepTwoResendButton';
 type StepTwoMainProps = {
   methodSelected: string | null;
   email: string;
+  phoneNumber: string;
 };
 
-const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
+const StepTwoMain: React.FC<StepTwoMainProps> = ({
+  methodSelected,
+  email,
+  phoneNumber,
+}) => {
   const { signUp, setActive } = useSignUp();
   const [otp, setOtp] = React.useState<string[]>(new Array(6).fill(''));
   const [code, setCode] = React.useState<string>('');
@@ -59,10 +64,16 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
             <h2 className="text-[20px] font-bold mb-4">Verification</h2>
             <div className="space-y-2  mb-6">
               <p className="text-[#999999] text-[14px]">
-                We have sent an OTP code to (081****460), Please enter the OTP
-                sent to this number below to confirm your account. . If you
-                haven't received the OTP, click on the resend code to get
-                another OTP
+                We have sent an OTP code to{' '}
+                {phoneNumber.slice(0, 3) +
+                  '****' +
+                  phoneNumber.slice(
+                    phoneNumber.length - 3,
+                    phoneNumber.length
+                  )}
+                , Please enter the OTP sent to this number below to confirm your
+                account. . If you haven't received the OTP, click on the resend
+                code to get another OTP
               </p>
               <p className="text-red-500">{error}</p>
             </div>
