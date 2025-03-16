@@ -44,8 +44,8 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
       </p>
 
       <div className="w-full max-w-[512px] text-center">
-        <h2 className="text-[36px] font-bold mb-4">Additional Details</h2>
-        <p className="text-[#313131] mb-6">
+        <h2 className="text-[20px] font-bold mb-4 text-left">Additional Details</h2>
+        <p className="text-[#313131] mb-6 text-left">
           Just a little more information, and you’ll be ready to explore
         </p>
 
@@ -155,7 +155,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
 
         {/* Submit Button */}
         <Link to="/">
-          <button className="w-full mx-auto max-w-[422px] p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
+          <button className="w-full mx-auto p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
             Complete My Profile
           </button>
         </Link>
