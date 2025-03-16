@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
+import React from 'react';
+// import {
+//   EyeOff, Eye,
+//   CheckCircle,
+//   XCircle,
+// } from 'lucide-react';
 import { Link } from 'react-router';
 
 type FormData = {
@@ -15,26 +19,26 @@ type StepFourProps = {
 };
 
 const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
-  const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  // const togglePasswordVisibility = () => {
+  //   setShowPassword((prev) => !prev);
+  // };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Password validation
-  const passwordCriteria = {
-    length: formData.password.length >= 8,
-    uppercase: /[A-Z]/.test(formData.password),
-    number: /\d/.test(formData.password),
-    symbol: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
-  };
+  // // Password validation
+  // const passwordCriteria = {
+  //   length: formData.password.length >= 8,
+  //   uppercase: /[A-Z]/.test(formData.password),
+  //   number: /\d/.test(formData.password),
+  //   symbol: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
+  // };
 
   return (
-    <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
+    <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
         STEP 04/04
       </p>
@@ -92,7 +96,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
           </div>
 
           {/* Email */}
-          <div>
+          {/* <div>
             <label className="block text-left text-gray-700 font-medium mb-1">
               Email
             </label>
@@ -104,10 +108,10 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
             />
-          </div>
+          </div> */}
 
           {/* Password */}
-          <div className="relative">
+          {/* <div className="relative">
             <label className="block text-left text-gray-700 font-medium mb-1">
               Password
             </label>
@@ -130,9 +134,9 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
                 onClick={togglePasswordVisibility}
               />
             )}
-          </div>
+          </div> */}
 
-          {/* Password Requirements */}
+          {/* Password Requirements
           <ul className="text-sm grid grid-cols-2 mt-2">
             {Object.entries(passwordCriteria).map(([key, met]) => (
               <li
@@ -146,7 +150,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
                 {key === 'symbol' && 'Use a symbol (e.g., !@#$)'}
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
 
         {/* Submit Button */}

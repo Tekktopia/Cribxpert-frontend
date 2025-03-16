@@ -21,7 +21,7 @@ const StepOne: React.FC<StepOneProps> = ({
   setPassword,
 }) => {
   return (
-    <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
+    <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
         STEP 01/04
       </p>
@@ -79,6 +79,7 @@ const StepOne: React.FC<StepOneProps> = ({
           )}
 
           <div>
+            {/* <p className='text-red-500'>Password is too weak, Try again.</p> */}
             <label className="cursor-pointer flex flex-col items-start gap-2">
               Password
               <input
@@ -108,7 +109,7 @@ const StepOne: React.FC<StepOneProps> = ({
         </button>
         <p className="text-gray-500 text-[14px]">
           Already have an account?
-          <span className="text-[#730071]">Log in</span>.
+          <a href='/login'><span className="text-[#730071]">Log in</span></a>.
         </p>
       </div>
     </div>

@@ -14,7 +14,7 @@ export default function Onboarding() {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 h-full relative">
+      <div className="lg:w-1/2 h-full relative">
         <img
           src={`${'/authsidepane1.png'}`}
           alt="Signup Background"

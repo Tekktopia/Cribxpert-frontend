@@ -7,16 +7,11 @@ import {
 } from '@clerk/clerk-react';
 
 type StepTwoMainProps = {
-  nextStep: () => void;
   methodSelected: string | null;
   email: string;
 };
 
-const StepTwoMain: React.FC<StepTwoMainProps> = ({
-  nextStep,
-  methodSelected,
-  email,
-}) => {
+const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
   const { signUp, setActive } = useSignUp();
   const [otp, setOtp] = React.useState<string[]>(new Array(4).fill(''));
   const [code, setCode] = React.useState<string>('');
@@ -59,7 +54,7 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
   // handleLogout();
 
   return (
-    <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
+    <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
         STEP 03/04
       </p>
@@ -91,10 +86,7 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
           </div>
         )}
 
-        <button
-          onClick={nextStep}
-          className="w-full max-w-[422px] p-3 mx-auto bg-[#73007179] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
-        >
+        <button className="w-full max-w-[422px] p-3 mx-auto bg-[#73007179] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
           <IoReload />
           Resend
         </button>

@@ -68,12 +68,10 @@ const SignUpPage: React.FC = () => {
     }
   };
 
-  
-
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 h-full relative">
+      <div className="w-1/2 hidden sm:block h-full relative">
         <img
           src={`${'/authsidepane' + step + '.png'}`}
           alt="Signup Background"
@@ -96,7 +94,6 @@ const SignUpPage: React.FC = () => {
 
       {step === 2 && (
         <StepTwoMain
-          nextStep={() => setStep(2)}
           methodSelected={methodSelected}
           email={email}
         />
