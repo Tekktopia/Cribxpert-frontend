@@ -32,6 +32,7 @@ const StepOne: React.FC<StepOneProps> = ({
     // setActive,
     // isLoaded
   } = useSignUp();
+  const [error, setError] = React.useState<string>('');
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +66,7 @@ const StepOne: React.FC<StepOneProps> = ({
     } catch (err: Error | unknown) {
       if (err instanceof Error) {
         console.log(err.message);
+        setError(err.message);
       } else {
         console.log('An unknown error occurred');
       }
@@ -96,6 +98,7 @@ const StepOne: React.FC<StepOneProps> = ({
         </div>
 
         <div className="space-y-2 text-[#999999]">
+          <p className="text-red-500">{error}</p>
           <p className="text-left">Register with</p>
           <CustomDropdown
             methodSelected={methodSelected}
