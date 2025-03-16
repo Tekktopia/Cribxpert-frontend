@@ -3,10 +3,18 @@ import supportIcon from '@/assets/icons/like.png';
 import notificationIcon from '@/assets/icons/notifications.png';
 import profileIcon from '@/assets/icons/Profile.png';
 import humburger from '@/assets/icons/hamburger.png';
+import { useAuth } from '@clerk/clerk-react';
 
 import React from 'react';
 
 const Header: React.FC = () => {
+  const { signOut } = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+    window.location.href = '/login'; // Redirect after logout (optional)
+  };
+
   return (
     <section className="overflow-hidden w-full">
       <header className="w-full border-b border-b-[#CCCCCC80]/50 bg-white">
@@ -55,7 +63,7 @@ const Header: React.FC = () => {
               <p className="text-[14px] text-[#999999]">Notifications</p>
             </div>
             <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
-            <div className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2">
+            <div className="relative w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2">
               <img
                 src={humburger}
                 alt="humburger Icon"
@@ -66,6 +74,15 @@ const Header: React.FC = () => {
                 alt="Profile Icon"
                 className="w-[32px] h-[32px]"
               />
+
+              <div className="absolute top-[35px] p-4 shadow-lg">
+                <button
+                  className="text-[14px] text-red-500"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
         </nav>

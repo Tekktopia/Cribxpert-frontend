@@ -2,7 +2,6 @@ import React from 'react';
 import OTPInput from './OTPInput';
 import { IoReload } from 'react-icons/io5';
 import {
-  //  useAuth,
   useSignUp,
 } from '@clerk/clerk-react';
 
@@ -43,15 +42,6 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
   };
 
   verify();
-
-  // const { signOut } = useAuth();
-
-  // const handleLogout = async () => {
-  //   await signOut();
-  //   window.location.href = "/"; // Redirect after logout (optional)
-  // };
-
-  // handleLogout();
 
   return (
     <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
