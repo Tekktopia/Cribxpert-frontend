@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import StepOne from '@/components/sign-up/StepOne';
 import StepTwoMain from '@/components/sign-up/StepTwoMain';
-import { useSignUp } from '@clerk/clerk-react';
 
 const SignUp: React.FC = () => {
-  const {
-    signUp,
-    // setActive,
-    // isLoaded
-  } = useSignUp();
-
   const [step, setStep] = useState(1);
   const [methodSelected, setMethodSelected] = useState<string | null>(
     'Email Address'
@@ -19,52 +12,9 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
-  //   const [code, setCode] = useState(""); // For email verification
-  //   const [pendingVerification, setPendingVerification] = useState(false);
-  //   const [error, setError] = useState('');
-
-  //   console.log(email, phoneNumber, password);
 
   const nextStep = () => {
     setStep((prev) => prev + 1);
-  };
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (methodSelected === 'Email Address') {
-        if (!email || !password) {
-          throw new Error('Email and password are required');
-        }
-        // const result =
-        await signUp?.create({ emailAddress: email, password });
-        // console.log(result);
-
-        await signUp?.prepareEmailAddressVerification({
-          strategy: 'email_link',
-          redirectUrl: 'http://localhost:5173/onboarding',
-        }); // Sends verification email
-      } else {
-        if (!phoneNumber || !password) {
-          throw new Error('Phone number and password are required');
-        } else if (phoneNumber.length < 11 || phoneNumber.length > 11) {
-          throw new Error('Phone number must be 11 digits');
-        }
-
-        await signUp?.create({ phoneNumber, password });
-        await signUp?.preparePhoneNumberVerification(); // Sends verification code
-      }
-
-      //   setPendingVerification(true);
-
-      nextStep();
-    } catch (err: Error | unknown) {
-      if (err instanceof Error) {
-        console.log(err.message);
-      } else {
-        console.log('An unknown error occurred');
-      }
-    }
   };
 
   return (
@@ -82,9 +32,12 @@ const SignUp: React.FC = () => {
       {/* Right Side - Signup Section */}
       {step === 1 && (
         <StepOne
-          handleSignUp={handleSignUp}
+          nextStep={nextStep}
           methodSelected={methodSelected}
           setMethodSelected={setMethodSelected}
+          email={email}
+          phoneNumber={phoneNumber}
+          password={password}
           setEmail={setEmail}
           setPhoneNumber={setPhoneNumber}
           setPassword={setPassword}
@@ -98,7 +51,6 @@ const SignUp: React.FC = () => {
           phoneNumber={phoneNumber}
         />
       )}
-
     </div>
   );
 };
