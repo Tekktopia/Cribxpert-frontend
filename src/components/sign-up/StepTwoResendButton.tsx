@@ -2,7 +2,11 @@ import { useSignUp } from '@clerk/clerk-react';
 import React, { useEffect, useState } from 'react';
 import { IoReload } from 'react-icons/io5';
 
-const StepTwoResendButton = () => {
+type Props = {
+  methodSelected: string | null;
+  handleVerify: () => void;
+};
+const StepTwoResendButton = ({ methodSelected, handleVerify }: Props) => {
   const [resendDisabled, setResendDisabled] = React.useState(false);
   const { signUp } = useSignUp();
 
@@ -22,7 +26,14 @@ const StepTwoResendButton = () => {
     setTimeout(() => setResendDisabled(false), 120000); // 2-minute cooldown
 
     try {
-      await signUp?.preparePhoneNumberVerification();
+      if (methodSelected === 'Email Address') {
+        await signUp?.prepareEmailAddressVerification({
+          strategy: 'email_link',
+          redirectUrl: 'http://localhost:5173/onboarding',
+        }); // Sends verification email
+      } else {
+        await signUp?.preparePhoneNumberVerification();
+      }
     } catch (err) {
       console.log(err);
     }
@@ -37,21 +48,38 @@ const StepTwoResendButton = () => {
   };
 
   return (
-    <div>
-      <button className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
-        Proceed
-      </button>
+    <>
+      {methodSelected !== 'Email Address' ? (
+        <div>
+          <button
+            onClick={handleVerify}
+            className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+          >
+            Proceed
+          </button>
 
-      <button
-        onClick={handleResend}
-        disabled={resendDisabled}
-        className="text-center w-full text-[14px] text-[#999999] mt-2 flex items-center justify-center gap-3"
-      >
-        <IoReload />
-        Resend Link:{' '}
-        {timeLeft > 0 ? formatTime(timeLeft) : ""}
-      </button>
-    </div>
+          <button
+            onClick={handleResend}
+            disabled={resendDisabled}
+            className="text-center w-full text-[14px] text-[#999999] mt-2 flex items-center justify-center gap-3"
+          >
+            <IoReload />
+            Resend Link: {timeLeft > 0 ? formatTime(timeLeft) : ''}
+          </button>
+        </div>
+      ) : (
+        <div>
+          <button
+            onClick={handleResend}
+            disabled={resendDisabled}
+            className="w-full max-w-[422px] p-3 mx-auto bg-[#73007191] text-white text-[14px] rounded-md flex items-center justify-center gap-2 mt-4"
+          >
+            <IoReload />
+            Resend Link: {timeLeft > 0 ? formatTime(timeLeft) : ''}
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 

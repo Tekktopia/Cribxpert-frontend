@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import OTPInput from './OTPInput';
 import { useSignUp } from '@clerk/clerk-react';
 import StepTwoResendButton from './StepTwoResendButton';
@@ -10,11 +10,13 @@ type StepTwoMainProps = {
 
 const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
   const { signUp, setActive } = useSignUp();
-  const [otp, setOtp] = React.useState<string[]>(new Array(4).fill(''));
+  const [otp, setOtp] = React.useState<string[]>(new Array(6).fill(''));
   const [code, setCode] = React.useState<string>('');
   const [error, setError] = React.useState<string>('');
+
   const handleVerify = async () => {
     try {
+      setCode(otp.join(''));
       const completeSignUp = await signUp?.attemptPhoneNumberVerification({
         code,
       });
@@ -31,31 +33,6 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
       }
     }
   };
-
-  useEffect(() => {
-    const verify = async () => {
-      if (otp.join('').length === 4) {
-        setCode(otp.join(''));
-        try {
-          await handleVerify();
-        } catch (err: Error | unknown) {
-          if (err instanceof Error) {
-            console.log(err.message);
-            setError(err.message);
-          } else {
-            console.log('An unknown error occurred');
-          }
-        }
-      }
-    };
-
-    // Debounce the verification call to prevent multiple rapid requests
-    const timeoutId = setTimeout(() => {
-      verify();
-    }, 1000); // 1-second delay
-
-    return () => clearTimeout(timeoutId);
-  }, [otp]);
 
   return (
     <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
@@ -94,7 +71,10 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({ methodSelected, email }) => {
           </div>
         )}
 
-        <StepTwoResendButton />
+        <StepTwoResendButton
+          methodSelected={methodSelected}
+          handleVerify={handleVerify}
+        />
       </div>
     </div>
   );
