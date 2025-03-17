@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Active } from '@/components/common/profile/types';
 import Header from '@/components/layout/Header';
 import ProfileNav from '@/components/layout/profile/ProfileNav';
 import Profile from '@/components/profileComponents/Profile';
 import Preference from '@/components/profileComponents/Preference';
 import Payment from '@/components/profileComponents/Payment';
 import Password from '@/components/profileComponents/Password';
+import { Active } from '@/types';
 
 
 const ProfilePage = () => {
