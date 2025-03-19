@@ -5,7 +5,6 @@ import { useUser } from '@clerk/clerk-react';
 //   CheckCircle,
 //   XCircle,
 // } from 'lucide-react';
-import { Link } from 'react-router';
 
 type FormData = {
   firstName: string;
@@ -47,8 +46,8 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
 
     try {
       await user?.update({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        firstName: formData?.firstName,
+        lastName: formData?.lastName,
         unsafeMetadata: {
           dateOfBirth: formData.dateOfBirth,
         },
@@ -181,10 +180,8 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               </li>
             ))}
           </ul> */}
-        </form>
 
-        {/* Submit Button */}
-        <Link to="/">
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -192,7 +189,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
           >
             {loading ? 'Saving...' : 'Complete My Profile'}
           </button>
-        </Link>
+        </form>
       </div>
     </div>
   );

@@ -33,7 +33,6 @@ const Login: React.FC = () => {
     e.preventDefault();
     if (!isLoaded) return;
 
-    console.log(formData);
     try {
       let result: SignInResource;
 
