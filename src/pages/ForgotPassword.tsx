@@ -1,11 +1,16 @@
 import StepOne from '@/components/forgot-password/StepOne';
-import StepTwo from '@/components/forgot-password/StepTwo';
+import StepTwoMain from '@/components/sign-up/StepTwoMain';
 import React, { useState } from 'react';
 
 const ForgotPassword: React.FC = () => {
   const [step, setStep] = useState(1);
+  const [methodSelected, setMethodSelected] = useState<string | null>(
+    'Email Address'
+  );
 
   const [email, setEmail] = React.useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
   console.log(email);
 
   const nextStep = () => {
@@ -24,14 +29,23 @@ const ForgotPassword: React.FC = () => {
       </div>
 
       {/* Right Side - Login Section*/}
-      {step ===1 && (<StepOne
-        nextStep={nextStep}
-        setEmail={setEmail}
-      />)}
-
-      {step ===2 &&(
-        <StepTwo
+      {step === 1 && (
+        <StepOne
+          nextStep={nextStep}
+          methodSelected={methodSelected}
+          setMethodSelected={setMethodSelected}
           email={email}
+          phoneNumber={phoneNumber}
+          setPhoneNumber={setPhoneNumber}
+          setEmail={setEmail}
+        />
+      )}
+
+      {step === 2 && (
+        <StepTwoMain
+          methodSelected={methodSelected}
+          email={email}
+          phoneNumber={phoneNumber}
         />
       )}
     </div>

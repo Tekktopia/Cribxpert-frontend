@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import StepOne from '@/components/sign-up/StepOne';
-import StepTwo from '@/components/sign-up/StepTwo';
-import StepThree from '@/components/sign-up/StepThree';
+import StepTwoMain from '@/components/sign-up/StepTwoMain';
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -12,8 +11,7 @@ const SignUp: React.FC = () => {
   //Necessary onboarding info
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-
-  console.log(email, phoneNumber);
+  const [password, setPassword] = useState('');
 
   const nextStep = () => {
     setStep((prev) => prev + 1);
@@ -22,7 +20,7 @@ const SignUp: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 h-full relative">
+      <div className="w-1/2 hidden sm:block h-full relative">
         <img
           src={`${'/authsidepane' + step + '.png'}`}
           alt="Signup Background"
@@ -37,21 +35,22 @@ const SignUp: React.FC = () => {
           nextStep={nextStep}
           methodSelected={methodSelected}
           setMethodSelected={setMethodSelected}
+          email={email}
+          phoneNumber={phoneNumber}
+          password={password}
           setEmail={setEmail}
           setPhoneNumber={setPhoneNumber}
+          setPassword={setPassword}
         />
       )}
 
       {step === 2 && (
-        <StepTwo
-          nextStep={nextStep}
+        <StepTwoMain
           methodSelected={methodSelected}
           email={email}
           phoneNumber={phoneNumber}
         />
       )}
-
-      {step === 3 && <StepThree />}
     </div>
   );
 };
