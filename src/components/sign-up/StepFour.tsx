@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { FormEvent, useState } from 'react';
+import { useUser } from '@clerk/clerk-react';
 // import {
 //   EyeOff, Eye,
 //   CheckCircle,
@@ -37,6 +38,30 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
   //   symbol: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
   // };
 
+  const { user } = useUser();
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await user?.update({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        unsafeMetadata: {
+          dateOfBirth: formData.dateOfBirth,
+        },
+      });
+
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
@@ -44,13 +69,18 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
       </p>
 
       <div className="w-full max-w-[512px] text-center">
-        <h2 className="text-[20px] font-bold mb-4 text-left">Additional Details</h2>
+        <h2 className="text-[20px] font-bold mb-4 text-left">
+          Additional Details
+        </h2>
         <p className="text-[#313131] mb-6 text-left">
           Just a little more information, and you’ll be ready to explore
         </p>
 
         {/* Form */}
-        <div className="w-full space-y-4 px-2 overflow-y-scroll max-h-[60vh] custom-scrollbar">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full space-y-4 px-2 overflow-y-scroll max-h-[60vh] custom-scrollbar"
+        >
           {/* First Name */}
           <div>
             <label className="block text-left text-gray-700 font-medium mb-1">
@@ -151,12 +181,16 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               </li>
             ))}
           </ul> */}
-        </div>
+        </form>
 
         {/* Submit Button */}
         <Link to="/">
-          <button className="w-full mx-auto p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
-            Complete My Profile
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full mx-auto p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+          >
+            {loading ? 'Saving...' : 'Complete My Profile'}
           </button>
         </Link>
       </div>

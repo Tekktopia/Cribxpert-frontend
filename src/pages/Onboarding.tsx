@@ -1,13 +1,22 @@
 import StepFour from '@/components/sign-up/StepFour';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useUser } from '@clerk/clerk-react';
 
 export default function Onboarding() {
+  const { user, isLoaded } = useUser();
+
+  useEffect(() => {
+    if (isLoaded && !user) {
+      // Redirect to /login if user is null
+      window.location.href = '/sign-up';
+    }
+  }, [user, isLoaded]);
 
   const [formData, setFormData] = React.useState({
-    firstName: '',
-    lastName: '',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
     dateOfBirth: '',
-    email: '',
+    email: user?.primaryEmailAddress?.emailAddress || '',
     password: '',
   });
 
