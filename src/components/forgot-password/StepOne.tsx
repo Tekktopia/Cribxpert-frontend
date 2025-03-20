@@ -2,21 +2,23 @@ import React from 'react';
 import CustomDropdown from '../sign-up/CustomDropdown';
 
 type StepOneProps = {
-  nextStep: () => void;
   methodSelected: string | null;
   setMethodSelected: React.Dispatch<React.SetStateAction<string | null>>;
   email: string;
   phoneNumber: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
+  requestReset: (e: React.FormEvent) => Promise<void>;
+  error: string;
 };
 
 export default function StepOne({
-  nextStep,
+  requestReset,
   setEmail,
   setPhoneNumber,
   methodSelected,
   setMethodSelected,
+  error,
 }: StepOneProps) {
   return (
     <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
@@ -33,6 +35,7 @@ export default function StepOne({
         />
         {methodSelected === 'Email Address' ? (
           <div>
+            <p className='text-[14px] text-red-500 text-left'>{error}</p>
             <label className="cursor-pointer flex flex-col items-start gap-2">
               Email
               <input
@@ -59,7 +62,7 @@ export default function StepOne({
         )}
 
         <button
-          onClick={nextStep}
+          onClick={requestReset}
           className="w-full p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
         >
           Continue

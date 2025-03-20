@@ -12,6 +12,13 @@ export default function StepTwo() {
           Your password has been reset successfully
         </p>
       </div>
+
+      <a
+        href="/login"
+        className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-12"
+      >
+        <button>Login</button>
+      </a>
     </div>
   );
 }
