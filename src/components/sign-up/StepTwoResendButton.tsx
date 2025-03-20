@@ -33,6 +33,7 @@ const StepTwoResendButton = ({ methodSelected, handleVerify }: Props) => {
         }); // Sends verification email
       } else {
         await signUp?.preparePhoneNumberVerification();
+        setTimeLeft(120);
       }
     } catch (err) {
       console.log(err);

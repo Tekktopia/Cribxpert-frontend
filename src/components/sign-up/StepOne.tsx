@@ -55,6 +55,7 @@ const StepOne: React.FC<StepOneProps> = ({
         } else if (phoneNumber.length < 11 || phoneNumber.length > 11) {
           throw new Error('Phone number must be 11 digits');
         }
+        phoneNumber = phoneNumber.replace(/^0/, '+234');
 
         await signUp?.create({ phoneNumber, password });
         await signUp?.preparePhoneNumberVerification(); // Sends verification code
