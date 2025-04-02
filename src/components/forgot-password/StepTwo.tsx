@@ -15,9 +15,6 @@ const StepTwo: React.FC<StepTwoProps> = ({ methodSelected, signIn }) => {
   const [error, setError] = React.useState<string>('');
   const [otp, setOtp] = React.useState<string[]>(new Array(6).fill(''));
 
-  // const {signIn} = useSignIn(); // Get the signIn instance from Clerk
-  console.log(signIn);
-
   // ✅ Handles OTP verification for password reset
   const handleVerify = async () => {
     if (!signIn) {
@@ -68,7 +65,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ methodSelected, signIn }) => {
         code: otp.join(''),
       });
 
-      if (completeReset?.status === 'complete') {
+      if (completeReset?.status === 'needs_new_password') {
         window.location.href = '/reset-password'; // Redirect on success
       }
     } catch (err) {

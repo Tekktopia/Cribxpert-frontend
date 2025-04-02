@@ -1,6 +1,6 @@
 import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
+import { useSignIn } from '@clerk/clerk-react';
 
 type StepOneProps = {
   formData: {
@@ -50,16 +50,33 @@ export default function StepOne({
     symbol: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
   };
 
-  const { user } = useUser();
+  const { signIn } = useSignIn();
 
   const handlePasswordUpdate = async () => {
+    if (!signIn) {
+      console.error('Sign-in instance unavailable');
+      return;
+    }
+
     try {
-      // Update the password using the user's updatePassword method
-      await user?.updatePassword({ newPassword: formData.password });
-    } catch (error: Error | unknown) {
-      if (error instanceof Error) {
-        console.error('Error updating password: ', error?.message);
+      // Ensure the signIn instance's status is 'needs_new_password'
+      if (signIn.status !== 'needs_new_password') {
+        console.error('Sign-in instance is not ready for a new password.');
+        return;
       }
+
+      const result = await signIn.resetPassword({
+        password: formData.password,
+      });
+
+      if (result.status === 'complete') {
+        // Password reset successful
+        window.location.href = '/'; // Redirect to login
+      } else {
+        console.error('Unexpected status:', result.status);
+      }
+    } catch (error) {
+      console.error('Error resetting password:', error); // Handle error (e.g., show error message to user)
     }
   };
 
