@@ -58,6 +58,7 @@ export default function StepOne({
                 required
               />
             </label>
+            <p className='text-[14px] text-red-500 text-left'>{error}</p>
           </div>
         )}
 

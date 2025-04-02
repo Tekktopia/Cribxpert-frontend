@@ -1,14 +1,15 @@
 import StepOne from '@/components/forgot-password/StepOne';
-import StepTwoMain from '@/components/sign-up/StepTwoMain';
+import StepTwo from '@/components/forgot-password/StepTwo';
 import React, { useState } from 'react';
 import { useSignIn } from '@clerk/clerk-react';
+import { SignInResource } from '@clerk/types'; // Import the type
 
 const ForgotPassword: React.FC = () => {
   const [step, setStep] = useState(1);
   const [methodSelected, setMethodSelected] = useState<string | null>(
     'Email Address'
   );
-  const [error, setError] = useState("")
+  const [error, setError] = useState('');
 
   const [email, setEmail] = React.useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -16,27 +17,43 @@ const ForgotPassword: React.FC = () => {
   // console.log(email);
 
   const { signIn } = useSignIn();
+  const [signInInstance, setSignInInstance] = useState<
+    SignInResource | undefined
+  >();
 
   const requestReset = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
+
+    if (!signIn) {
+      setError('Sign-in instance not available.');
+      return;
+    }
+
     try {
+      let response;
       if (methodSelected === 'Email Address') {
-        await signIn?.create({
-          strategy: 'email_link', // Use magic link strategy
+        response = await signIn.create({
+          strategy: 'reset_password_email_code',
           identifier: email,
-          redirectUrl: 'http://localhost:5173/reset-password', // Redirect to reset-password page after clicking the link
         });
       } else if (methodSelected === 'Phone Number') {
-        await signIn?.create({
+        response = await signIn.create({
           strategy: 'reset_password_phone_code',
           identifier: phoneNumber,
         });
       }
-      nextStep();
+
+      if (response?.status === 'needs_first_factor') {
+        setSignInInstance(response);
+        nextStep(); // Move to Step Two
+      } else {
+        throw new Error('Failed to send OTP.');
+      }
     } catch (err: Error | unknown) {
       if (err instanceof Error) {
         console.error('Error requesting password reset: ', err.message);
-        setError(err.message)
+        setError(err.message);
       }
     }
   };
@@ -44,6 +61,7 @@ const ForgotPassword: React.FC = () => {
   const nextStep = () => {
     setStep((prev) => prev + 1);
   };
+
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
@@ -71,10 +89,11 @@ const ForgotPassword: React.FC = () => {
       )}
 
       {step === 2 && (
-        <StepTwoMain
+        <StepTwo
           methodSelected={methodSelected}
           email={email}
           phoneNumber={phoneNumber}
+          signIn={signInInstance}
         />
       )}
     </div>
