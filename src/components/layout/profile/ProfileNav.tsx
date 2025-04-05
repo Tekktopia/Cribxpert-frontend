@@ -9,8 +9,8 @@ type Props = {
 const ProfileNav = ({ active, setActive }: Props) => {
   return (
     <nav>
-      <div className="flex w-full py-3 gap-[10px] ">
-        <div className="flex items-center justify-center py-2  px-4">
+      <div className="flex w-full py-3 lg:gap-[10px] text-[#999]">
+        <div className="flex items-center justify-center py-2  lg:px-4 ">
           <ProfileLinks page="Profile" active={active} setActive={setActive} />
         </div>
         <div className="flex items-center justify-center py-2  px-4">
