@@ -13,6 +13,7 @@ import BookingPage from './pages/booking';
 import Home from './pages/Home';
 import ProfilePage from './pages/ProfilePage';
 import SupportPage from './pages/SupportPage';
+import SupportInfo from './components/support/SupportInfo';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/paymentmethod" element={<PaymentMethod />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/support-info" element={<SupportInfo />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
