@@ -21,7 +21,7 @@ const StepOne: React.FC<StepOneProps> = ({
   return (
     <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
-        STEP 01/04
+        STEP 01/03
       </p>
       <div className="w-full max-w-md text-center space-y-6">
         <div className="text-left w-full max-w-[342px] ">
@@ -45,7 +45,6 @@ const StepOne: React.FC<StepOneProps> = ({
         <div className="space-y-2 text-[#999999]">
           <p className="text-left">Register with</p>
           <CustomDropdown
-            nextStep={nextStep}
             methodSelected={methodSelected}
             setMethodSelected={setMethodSelected}
           />

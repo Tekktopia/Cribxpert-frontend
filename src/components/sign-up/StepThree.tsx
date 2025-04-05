@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { Link } from 'react-router';
 
-const StepFour: React.FC = () => {
+const StepThree: React.FC = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -32,7 +32,7 @@ const StepFour: React.FC = () => {
   return (
     <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
-        STEP 04/04
+        STEP 03/03
       </p>
 
       <div className="w-full max-w-[512px] text-center">
@@ -156,4 +156,4 @@ const StepFour: React.FC = () => {
   );
 };
 
-export default StepFour;
+export default StepThree;
