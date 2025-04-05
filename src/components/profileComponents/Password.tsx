@@ -82,7 +82,7 @@ const Password = () => {
   return (
     <div className="flex flex-col gap-6 items-start my-9 ">
       <form onSubmit={handleSubmit} className=" flex flex-col gap-[42px]">
-        <div className=" flex gap-[42px] ">
+        <div className=" flex gap-6 sm:gap-[42px] flex-wrap ">
           <div className="flex gap-1 flex-col w-[300px] ">
             <label className=" text-[#999999] ">Old Password</label>
             <input

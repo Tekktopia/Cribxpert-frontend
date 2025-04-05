@@ -7,14 +7,13 @@ import Payment from '@/components/profileComponents/Payment';
 import Password from '@/components/profileComponents/Password';
 import { Active } from '@/types';
 
-
 const ProfilePage = () => {
   const [active, setActive] = useState<Active>(Active.Profile);
   return (
     <div>
       {' '}
       <Header />
-      <div className="px-[80px]">
+      <div className=" px-[30px] lg:px-[80px]">
         <ProfileNav active={active} setActive={setActive} />
         {active === Active.Profile && (
           <Profile

@@ -22,18 +22,23 @@ const Preference = ({
     <div className="flex flex-col gap-6 items-start my-9 ">
       <h2 className="font-medium text-xl text-[#070707] ">Notification</h2>
       <div className="flex flex-col gap-4">
-        <div className="flex items-center  gap-2">
+        <div className="flex lg:items-center lg:gap-2 gap-4">
           <button
             onClick={() => setNotifications(!notifications)}
-            className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors duration-300 ${
-              notifications ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
-            }`}
+            className="inline-flex items-center space-x-4 cursor-pointer "
           >
-            <div
-              className={`absolute left-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                notifications ? 'translate-x-7' : ''
-              }`}
-            />
+            <span className="relative">
+              <div
+                className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
+                  notifications ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                } `}
+              ></div>
+              <div
+                className={`absolute inset-y-0 left-0 w-4 h-4  lg:w-5 lg:h-5 m-1 rounded-full shadow transition-transform duration-300  ${
+                  notifications ? 'translate-x-4 lg:translate-x-7' : ''
+                }   bg-white`}
+              ></div>
+            </span>
           </button>
           <span className="text-[#232323]">
             Get notified about confirmations, cancellations and check-in
@@ -41,18 +46,23 @@ const Preference = ({
           </span>
         </div>
 
-        <div className="flex items-center  gap-2">
+        <div className="flex lg:items-center gap-4  lg:gap-2">
           <button
             onClick={() => setDiscounts(!discounts)}
-            className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors duration-300 ${
-              discounts ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
-            }`}
+            className="inline-flex items-center space-x-4 cursor-pointer "
           >
-            <div
-              className={`absolute left-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                discounts ? 'translate-x-7' : ''
-              }`}
-            />
+            <span className="relative">
+              <div
+                className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
+                  discounts ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                } `}
+              ></div>
+              <div
+                className={`absolute inset-y-0 left-0 w-4 h-4  lg:w-5 lg:h-5 m-1 rounded-full shadow transition-transform duration-300  ${
+                  discounts ? 'translate-x-4 lg:translate-x-7' : ''
+                }   bg-white`}
+              ></div>
+            </span>
           </button>
           <span className="text-[#232323]">
             Be the first to know about discounts and exclusive deals
@@ -61,15 +71,20 @@ const Preference = ({
         <div className="flex items-center  gap-2">
           <button
             onClick={() => setMessages(!messages)}
-            className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors duration-300 ${
-              messages ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
-            }`}
+            className="inline-flex items-center space-x-4 cursor-pointer "
           >
-            <div
-              className={`absolute left-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                messages ? 'translate-x-7' : ''
-              }`}
-            />
+            <span className="relative">
+              <div
+                className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
+                  messages ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                } `}
+              ></div>
+              <div
+                className={`absolute inset-y-0 left-0 w-4 h-4  lg:w-5 lg:h-5 m-1 rounded-full shadow transition-transform duration-300  ${
+                  messages ? 'translate-x-4 lg:translate-x-7' : ''
+                }   bg-white`}
+              ></div>
+            </span>
           </button>
           <span className="text-[#232323]">
             Receive messages from hosts regarding your bookings
@@ -78,15 +93,20 @@ const Preference = ({
         <div className="flex items-center  gap-2">
           <button
             onClick={() => setUpdates(!updates)}
-            className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors duration-300 ${
-              updates ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
-            }`}
+            className="inline-flex items-center space-x-4 cursor-pointer "
           >
-            <div
-              className={`absolute left-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                updates ? 'translate-x-7' : ''
-              }`}
-            />
+            <span className="relative">
+              <div
+                className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
+                  updates ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                } `}
+              ></div>
+              <div
+                className={`absolute inset-y-0 left-0 w-4 h-4  lg:w-5 lg:h-5 m-1 rounded-full shadow transition-transform duration-300  ${
+                  updates ? 'translate-x-4 lg:translate-x-7' : ''
+                }   bg-white`}
+              ></div>
+            </span>
           </button>
           <span className="text-[#232323]">
             Get updates on payments, invoices, and refunds
@@ -99,15 +119,20 @@ const Preference = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setAuthentication(!authentication)}
-            className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors duration-300 ${
-              authentication ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
-            }`}
+            className="inline-flex items-center space-x-4 cursor-pointer "
           >
-            <div
-              className={`absolute left-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ${
-                authentication ? 'translate-x-7' : ''
-              }`}
-            />
+            <span className="relative">
+              <div
+                className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
+                  authentication ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                } `}
+              ></div>
+              <div
+                className={`absolute inset-y-0 left-0 w-4 h-4  lg:w-5 lg:h-5 m-1 rounded-full shadow transition-transform duration-300 ${
+                  authentication ? 'translate-x-4 lg:translate-x-7' : ''
+                }   bg-white`}
+              ></div>
+            </span>
           </button>
           <span className="text-[#232323]">
             Enable or disable two factor authentication
@@ -159,6 +184,10 @@ const Preference = ({
           Cancel
         </button>
       </div>
+
+      {/* 
+             
+            */}
     </div>
   );
 };
