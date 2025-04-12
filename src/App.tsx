@@ -12,10 +12,10 @@ import BookingPage from './components/pages/booking';
 import SupportPage from './pages/SupportPage';
 import Home from './components/pages/Home';
 
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PropertyDetail from './components/pages/PropertyDetail';
 import { SAMPLE_DATA } from './utils/data';
+import SupportInfo from './components/support/SupportInfo';
 function App() {
   return (
     <>
@@ -30,6 +30,7 @@ function App() {
           <Route path="/paymentmethod" element={<PaymentMethod />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/support-info" element={<SupportInfo />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/login" element={<Login />} />

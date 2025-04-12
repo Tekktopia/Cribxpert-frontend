@@ -8,7 +8,7 @@ const SupportPage = () => {
       <Header />
       <div className="mt-1">
         <SupportHeader />
-        <div className="p-8">
+        <div className="lg:p-8">
           <Support />
         </div>
       </div>
