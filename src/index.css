@@ -4,6 +4,7 @@
 
 body {
   font-family: 'DM Sans', serif;
+  transition: 1s ease-in-out;
 }
 #PAYSTACK-GATEWAY {
   font-family: 'Saira Stencil One', serif;
