@@ -9,7 +9,7 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   return (
     <div
-      className={`${isOpen ? '-translate-x-0 w-1/4 max-w-[276px] ' : '-translate-x-full'}  `}
+      className={`${isOpen ? '-translate-x-0 w-1/4 max-w-[276px] ' : '-translate-x-full'} border-r-[1px] pr-2`}
     >
       {isOpen && (
         <div className="flex justify-between">

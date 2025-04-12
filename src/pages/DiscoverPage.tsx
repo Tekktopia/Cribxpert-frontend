@@ -12,14 +12,14 @@ export default function DiscoverPage() {
     setIsFilterPanelOpen(!isFilterPanelOpen);
   };
   return (
-    <div>
+    <div className='transition-all duration-1000 ease-in-out'>
       <Header />
-      <div className="w-full flex p-8">
+      <div className="w-full flex p-8 mb-14">
         <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
-        <div className={`${isFilterPanelOpen? "w-3/4 ml-6": "w-full"}`}>
+        <div className={`${isFilterPanelOpen? "w-3/4 ml-8": "w-full"}`}>
           <div className="flex gap-4">
             {!isFilterPanelOpen && (
-              <button className="flex " onClick={handleToggle}>
+              <button className="flex items-center" onClick={handleToggle}>
                 <Settings2Icon />
                 Filters
               </button>
