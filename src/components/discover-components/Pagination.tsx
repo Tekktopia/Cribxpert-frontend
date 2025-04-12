@@ -42,19 +42,29 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="flex justify-between items-center py-4">
-      {/* Invisible button😂 */}
+      {/* Buttons*/}
       <button></button>
 
-      {/* Left Button */}
-      <button
-        className="bg-[#730071] text-white px-6 py-2 rounded-md cursor-pointer"
-        onClick={handleNext}
-      >
-        Next Page
-      </button>
+      {!(currentPage === totalPages) && (
+        <button
+          className="bg-[#730071] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
+          onClick={handleNext}
+        >
+          Next Page
+        </button>
+      )}
 
-      {/* Right Pagination */}
-      <div className="flex items-center space-x-2 text-sm">
+      {currentPage === totalPages && (
+        <button
+          className="bg-[#730071] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
+          onClick={handlePrev}
+        >
+          Previous Page
+        </button>
+      )}
+
+      {/* Main Pagination */}
+      <div className="flex items-center w-full md:w-auto justify-center space-x-2 text-sm">
         <span>
           Page {currentPage} of {totalPages}
         </span>

@@ -14,9 +14,9 @@ export default function DiscoverPage() {
   return (
     <div className='transition-all duration-1000 ease-in-out'>
       <Header />
-      <div className="w-full flex p-8 mb-14">
+      <div className="w-full flex md:p-8 p-2 pt-8 relative overflow-y-hidden">
         <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
-        <div className={`${isFilterPanelOpen? "w-3/4 ml-8": "w-full"}`}>
+        <div className={`${isFilterPanelOpen? "md:w-3/4 md:ml-8": "w-full"} w-full mb-8`}>
           <div className="flex gap-4">
             {!isFilterPanelOpen && (
               <button className="flex items-center" onClick={handleToggle}>
