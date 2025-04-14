@@ -15,7 +15,9 @@ import Home from './components/pages/Home';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PropertyDetail from './components/pages/PropertyDetail';
 import { SAMPLE_DATA } from './utils/data';
+import DiscoverPage from './pages/DiscoverPage';
 import SupportInfo from './components/support/SupportInfo';
+
 function App() {
   return (
     <>
@@ -36,6 +38,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/discover" element={<DiscoverPage />} />
         </Routes>
       </Router>
     </>
