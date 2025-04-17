@@ -1,7 +1,10 @@
 import { PropertyListingProps } from '@/types';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router';
 import { CiHeart } from "react-icons/ci";
+import { FaHeart } from "react-icons/fa";
+import { useSavedList } from '../context/SavedListContext';
 const PropertyListingCard:React.FC<PropertyListingProps>= ({
+    id,
     propertyName,
 price,
 rating,
@@ -10,14 +13,35 @@ location,
 image,
 
 }) =>{
+    const{addList,savedList,removeList}=useSavedList() 
+    const isSavedProperty=savedList.some((savedProperty)=>savedProperty.id===id)
+    const handleIconToggle=()=>{
+        if(isSavedProperty){
+            removeList({id,propertyName,price,location,rating,description,image})
+            console.log("removed")
+        }
+            else{
+                addList({id,propertyName,price,location,rating,description,image})
+                console.log("added")
+            }
+    }
+    
     return(
         
-<Link to="/propertydetail">
+<Link to ="/propertydetail">
+
 <div className="w-[305px] h-[347px] hover:cursor-pointer" >
     <div className="relative">
-    <img src={image} alt="Property Image" className="w-full h-[230px]" />
+    <img src={image}  className="w-full h-[230px]" />
     <div className="flex justify-end absolute top-2 right-4 ">
-<CiHeart className="w-6 h-6 text-black"/>
+        {isSavedProperty ? (
+                        <FaHeart className="w-6 h-6 text-black" onClick={handleIconToggle}/>
+        ) : (
+            <CiHeart className="w-6 h-6 " onClick={handleIconToggle}/>
+
+        )
+    }
+
     </div>
     </div>
 
@@ -31,9 +55,10 @@ image,
 <p><strong className="font-[7000]">NGN {price}</strong>/night</p>
 </div>
 </div>
-     </Link>
+   
        
      
+</Link>
 
         
 

@@ -9,7 +9,8 @@ import PaymentMethod from './components/pages/booking/PaymentMethod'
 import BookingPage from './components/pages/booking'
 import SupportPage from './pages/SupportPage';
 import Home from './components/pages/Home'
-
+import SavedListing from './pages/SavedListing/SavedListing';
+import { SavedListProvider } from './components/context/SavedListContext';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import PropertyDetail from './components/pages/PropertyDetail'
 import { SAMPLE_DATA } from './utils/data'
@@ -19,7 +20,9 @@ function App() {
   return (
     <>
     <Router>
+    <SavedListProvider>
       <Routes>
+       
       <Route path="/" element={<Home />} />
       <Route path="/propertydetail" element={<PropertyDetail listings={SAMPLE_DATA} />} />
       <Route path="/BookingPage" element={<BookingPage />} />
@@ -31,8 +34,10 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
       
+<Route path="/saved-listing" element={<SavedListing />} />
 
       </Routes>
+      </SavedListProvider>
     </Router>
     
       

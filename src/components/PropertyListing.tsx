@@ -6,7 +6,7 @@ const PropertyListings=({listings}:{listings:PropertyListingProps[]})=>{
 
 {listings?.map((listing,key)=>(
      
-   < PropertyListingCard  key={key} image={listing.image}
+   < PropertyListingCard  id={listing.id} key={key} image={listing.image}
     price={listing.price}
     rating={listing.rating}
     propertyName={listing.propertyName}

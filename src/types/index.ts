@@ -1,12 +1,20 @@
 import { JSX } from 'react';
 
 export interface PropertyListingProps {
+  id:number
   image: string;
   rating: number;
   location: string;
   propertyName: string;
   description: string;
   price: number;
+}
+export interface SavedListContextProps {
+  
+savedList:PropertyListingProps[]
+ 
+  addList:(property:PropertyListingProps)=>void;
+  removeList:(property:PropertyListingProps)=>void
 }
 export enum Active {
   Profile = 'profile',

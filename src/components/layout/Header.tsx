@@ -3,14 +3,22 @@ import supportIcon from '@/assets/icons/like.png';
 import notificationIcon from '@/assets/icons/notifications.png';
 import profileIcon from '@/assets/icons/Profile.png';
 import humburger from '@/assets/icons/hamburger.png';
-import { Link } from 'react-router';
+import { Link,NavLink} from 'react-router';
+import { BiMenu, BiX } from "react-icons/bi";
+import { useState } from 'react';
+
 
 const Header: React.FC = () => {
+  const[isOpen,setIsOpen]=useState(false)
+
+  const toggleMenu=()=>{
+    setIsOpen(!isOpen)
+  }
   return (
     <section className="overflow-hidden w-full">
-      <header className="w-full border-b border-b-[#CCCCCC80]/50 bg-white">
+      <header className="w-full  border-b border-b-[#CCCCCC80]/50 bg-white">
         {/* Navigation Bar */}
-        <nav className="flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
+        <nav className="hidden md:flex  flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
           {/* Logo */}
           <div className="w-auto">
             <h1 className="font-bold text-[20px] text-[#730071]">
@@ -49,18 +57,75 @@ const Header: React.FC = () => {
                         </div>
                     </div>
                 </nav>
+                {/*Mobile Menu Toogle*/}
+                <div className='md:hidden t flex justify-between items-center p-4'>
+                <h1 className="font-bold text-[20px]  text-[#730071]">
+              Shotletapp.ng
+            </h1>
+                {
+  isOpen ?
+  (
+<BiX className="block md:hidden text-4xl " onClick={toggleMenu} />
+  ) :
+  (
+  <BiMenu className="block md:hidden text-4xl" onClick={toggleMenu} />
+  )
+}
+                </div>
+
 
                 {/* Navigation Menu */}
-                <div className="px-4 md:px-8 py-4 overflow-x-auto">
-                    <div className="flex items-center gap-4 whitespace-nowrap">
-                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Dashboard
-                        </Link>
-                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Discover </Link>
-                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">My Bookings </Link>
-                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Saved Listings </Link>
-                        <Link to="" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Payments </Link>
+                <div className="hidden md:flex px-4 md:px-8 py-4 ">
+                    <div className="flex items-center gap-4">
+                        <NavLink  to="/dashboard" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>Dashboard </NavLink>
+                        <NavLink  to="/discovery" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>Discover </NavLink>
+                        <NavLink  to="/my-booking" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>My Bookings </NavLink>
+                        <NavLink  to="/saved-listing" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>Saved Listings </NavLink>
+                        <NavLink  to="/payments" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Payments </NavLink>
                     </div>
                 </div>
+                {isOpen && (
+  <>
+    {/* Backdrop */}
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+      onClick={() => setIsOpen(false)}
+    />
+
+    {/* Side Drawer Menu */}
+    <div className="fixed top-0 left-0  w-[80%] bg-white text-black z-50  md:hidden">
+      <div className='bg-[#730071] flex justify-between items-center w-full mb-5  text-white'>
+      <h1 className="text-xl font-bold mb-6  flex items-start m-2 ">Shotletapp.ng</h1>
+      <BiX className="block md:hidden text-4xl" onClick={toggleMenu} />
+      </div>
+    
+      
+      <ul className="flex flex-col gap-4 p-4">
+        {[
+          'Dashboard',
+          'Discover',
+          'My Bookings',
+          'Saved Listing',
+          'Payments',
+          'Message',
+          'Support',
+          'Notifications',
+        ].map((item) => (
+          <li key={item}>
+            <Link
+              to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+              className="opacity-80 hover:opacity-100 transition duration-300"
+            
+            >
+              {item}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </>
+)}
+
             </header>
         </section>
     )
