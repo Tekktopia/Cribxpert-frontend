@@ -1,5 +1,6 @@
 import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { useState } from 'react';
+import { useSignIn } from '@clerk/clerk-react';
 
 type StepOneProps = {
   formData: {
@@ -10,10 +11,17 @@ type StepOneProps = {
       password: string;
     }>
   >;
+  nextStep: () => void;
 };
 
-export default function StepOne({ formData, setFormData }: StepOneProps) {
+export default function StepOne({
+  formData,
+  setFormData,
+  // nextStep,
+}: StepOneProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -23,6 +31,17 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setConfirmPassword(e.target.value);
+    if (e.target.value !== formData.password) {
+      setPasswordError('Passwords do not match');
+    } else {
+      setPasswordError('');
+    }
+  };
+
   // Password validation
   const passwordCriteria = {
     length: formData.password.length >= 8,
@@ -30,18 +49,54 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
     number: /\d/.test(formData.password),
     symbol: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
   };
+
+  const { signIn } = useSignIn();
+
+  const handlePasswordUpdate = async () => {
+    if (!signIn) {
+      console.error('Sign-in instance unavailable');
+      return;
+    }
+
+    try {
+      // Ensure the signIn instance's status is 'needs_new_password'
+      if (signIn.status !== 'needs_new_password') {
+        console.error('Sign-in instance is not ready for a new password.');
+        return;
+      }
+
+      const result = await signIn.resetPassword({
+        password: formData.password,
+      });
+
+      if (result.status === 'complete') {
+        // Password reset successful
+        window.location.href = '/'; // Redirect to login
+      } else {
+        console.error('Unexpected status:', result.status);
+      }
+    } catch (error) {
+      console.error('Error resetting password:', error); // Handle error (e.g., show error message to user)
+    }
+  };
+
+  const toStepTwo = async () => {
+    if (passwordError === '') {
+      await handlePasswordUpdate();
+      // nextStep();
+    }
+  };
   return (
-    <div className="w-full max-w-md text-center space-y-2">
+    <div className="w-full max-w-md text-center space-y-6">
       <div className="text-left w-full max-w-[342px] mb-2">
-          <h2 className="text-[20px] font-semibold ">Reset Password</h2>
-          <p className="text-[#999] mb-6">
+        <h2 className="text-[20px] font-semibold ">Reset Password</h2>
+        <p className="text-[#999] mb-6">
           Enter a new password to reset your account
-          </p>
-        </div>
+        </p>
+      </div>
 
       <div className="space-y-6">
-
-        {/* Password */}
+        {/* New Password */}
         <div className="relative">
           <label className="block text-left text-gray-700 font-medium mb-1">
             New Password
@@ -67,16 +122,15 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
           )}
         </div>
 
-        {/* Password */}
+        {/* Confirm Password */}
         <div className="relative">
           <label className="block text-left text-gray-700 font-medium mb-1">
             Confirm Password
           </label>
           <input
             type={showPassword ? 'text' : 'password'}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
             placeholder="*********"
             className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
           />
@@ -92,6 +146,11 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
             />
           )}
         </div>
+
+        {/* Password Error */}
+        {passwordError && (
+          <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+        )}
 
         {/* Password Requirements */}
         <ul className="text-sm grid grid-cols-2 mt-2">
@@ -109,6 +168,13 @@ export default function StepOne({ formData, setFormData }: StepOneProps) {
           ))}
         </ul>
       </div>
+
+      <button
+        onClick={toStepTwo}
+        className="w-full p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2"
+      >
+        Continue
+      </button>
     </div>
   );
 }

@@ -55,3 +55,7 @@ export type SupportType = {
   list4: string;
   list5: string;
 };
+export type ContactInfo = {
+  icon: JSX.Element;
+  title: string;
+};

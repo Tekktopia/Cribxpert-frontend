@@ -91,7 +91,7 @@ const Profile = ({
   };
 
   return (
-    <div className="w-[800px] flex flex-col gap-6 items-start my-9 ">
+    <div className="lg:w-[800px] w-full flex flex-col gap-6 items-start my-9 ">
       <div className="flex  items-center gap-3">
         {profileImage ? (
           <img
@@ -130,7 +130,7 @@ const Profile = ({
       </div>
 
       <form onSubmit={handleSubmit} className=" flex flex-col gap-[42px] ">
-        <div className=" grid grid-cols-2 gap-[42px] ">
+        <div className=" grid lg:grid-cols-2 gap-[42px] ">
           <div className="flex gap-1 flex-col w-[395px] h-[70px]">
             <label className=" text-[#999999] ">First Name</label>
             <input

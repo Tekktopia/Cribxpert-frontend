@@ -27,26 +27,13 @@ const ResetPassword: React.FC = () => {
       {/* Right Side - Login Section*/}
       <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
         {step === 1 && (
-          <StepOne formData={formData} setFormData={setFormData} />
+          <StepOne formData={formData} setFormData={setFormData} nextStep={nextStep} />
         )}
 
         {step === 2 && <StepTwo />}
 
-        {step === 1 ? (
-          <button
-            onClick={nextStep}
-            className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-12"
-          >
-            Continue
-          </button>
-        ) : (
-          <a
-            href="/login"
-            className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-12"
-          >
-            <button>Login</button>
-          </a>
-        )}
+        
+          
 
         {step === 1 && (
           <p className="mt-6">

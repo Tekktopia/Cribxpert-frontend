@@ -8,12 +8,23 @@ import { BiMenu, BiX } from "react-icons/bi";
 import { useState } from 'react';
 
 
+import { Link } from 'react-router';
+import { useAuth } from '@clerk/clerk-react';
+
 const Header: React.FC = () => {
   const[isOpen,setIsOpen]=useState(false)
 
   const toggleMenu=()=>{
     setIsOpen(!isOpen)
   }
+  
+  const { signOut } = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+    window.location.href = '/login'; // Redirect after logout (optional)
+  };
+
   return (
     <section className="overflow-hidden w-full">
       <header className="w-full  border-b border-b-[#CCCCCC80]/50 bg-white">
@@ -35,6 +46,51 @@ const Header: React.FC = () => {
             />
           </div>
 
+          {/* Icons Section */}
+          <div className="w-auto flex flex-row gap-6 py-3">
+            <div className="flex flex-col items-center">
+              <img
+                src={messageIcon}
+                alt="Message Icon"
+                className="w-[20px] h-[20px]"
+              />
+              <Link to="" className="text-[14px] text-[#999999] cursor-pointer">
+                Message{' '}
+              </Link>
+            </div>
+            <div className="flex flex-col items-center">
+              <img
+                src={supportIcon}
+                alt="supportIcon"
+                className="w-[20px] h-[20px]"
+              />
+              <Link to="" className="text-[14px] text-[#999999] cursor-pointer">
+                Support{' '}
+              </Link>
+            </div>
+            <div className="flex flex-col items-center">
+              <img
+                src={notificationIcon}
+                alt="notificationIcon"
+                className="w-[20px] h-[20px]"
+              />
+              <Link to="" className="text-[14px] text-[#999999] cursor-pointer">
+                Notifications{' '}
+              </Link>
+            </div>
+            <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
+            <div className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2">
+              <img
+                src={humburger}
+                alt="humburger Icon"
+                className="w-[18px] h-[10px]"
+              />
+              <img
+                src={profileIcon}
+                alt="Profile Icon"
+                className="w-[32px] h-[32px]"
+              />
+
 
                     {/* Icons Section */}
                     <div className="w-auto flex flex-row gap-6 py-3">
@@ -54,6 +110,14 @@ const Header: React.FC = () => {
                         <div className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2">
                             <img src={humburger} alt="humburger Icon" className="w-[18px] h-[10px]" />
                             <img src={profileIcon} alt="Profile Icon" className="w-[32px] h-[32px]" />
+                          <div className="absolute top-[45px] p-4 shadow-lg">
+                <button
+                  className="text-[14px] text-red-500"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </div>
                         </div>
                     </div>
                 </nav>
@@ -130,7 +194,44 @@ const Header: React.FC = () => {
         </section>
     )
 
+        {/* Navigation Menu */}
+        <div className="px-4 md:px-8 py-4 overflow-x-auto">
+          <div className="flex items-center gap-4 whitespace-nowrap">
+            <Link
+              to=""
+              className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to=""
+              className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]"
+            >
+              Discover{' '}
+            </Link>
+            <Link
+              to=""
+              className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]"
+            >
+              My Bookings{' '}
+            </Link>
+            <Link
+              to=""
+              className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]"
+            >
+              Saved Listings{' '}
+            </Link>
+            <Link
+              to=""
+              className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]"
+            >
+              Payments{' '}
+            </Link>
+          </div>
+        </div>
+      </header>
+    </section>
+  );
 };
-
 
 export default Header;
