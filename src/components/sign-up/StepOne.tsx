@@ -34,6 +34,11 @@ const StepOne: React.FC<StepOneProps> = ({
   } = useSignUp();
   const [error, setError] = React.useState<string>('');
 
+  const redirectUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5173/onboarding'
+    : 'https://cribxpert.netlify.app/onboarding';
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -47,7 +52,7 @@ const StepOne: React.FC<StepOneProps> = ({
 
         await signUp?.prepareEmailAddressVerification({
           strategy: 'email_link',
-          redirectUrl: '/onboarding',
+          redirectUrl: redirectUrl,
         }); // Sends verification email
       } else {
         if (!phoneNumber || !password) {
