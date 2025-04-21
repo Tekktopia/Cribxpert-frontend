@@ -21,7 +21,7 @@ export default function StepOne({
   error,
 }: StepOneProps) {
   return (
-    <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
+    <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
       <div className="w-full max-w-md text-center space-y-6">
         <div className="text-left w-full max-w-[342px] ">
           <h2 className="text-[20px] font-semibold mb-4">Forgot Password</h2>

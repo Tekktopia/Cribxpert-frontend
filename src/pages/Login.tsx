@@ -71,7 +71,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 h-full relative">
+      <div className="w-1/2 hidden lg:block h-full relative">
         <img
           src="/authsidepane2.png"
           alt="Login Background"
@@ -81,7 +81,7 @@ const Login: React.FC = () => {
       </div>
 
       {/* Right Side - Login Section */}
-      <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
+      <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
         <div className="w-full max-w-[512px] text-center space-y-6">
           <div className="text-left w-full max-w-[342px] ">
             <h2 className="text-[20px] font-semibold mb-4">Login</h2>
