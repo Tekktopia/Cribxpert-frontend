@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router';
 import { useSignIn } from '@clerk/clerk-react';
 import { SignInResource } from '@clerk/types';
+import GoogleSignIn from '@/components/login/GoogleSignIn';
 
 const Login: React.FC = () => {
   const { signIn, isLoaded } = useSignIn();
@@ -89,93 +90,102 @@ const Login: React.FC = () => {
             </p>
           </div>
 
-          {error && <p className="text-red-500">{error}</p>}
+          <div className="w-full max-h-[70vh] overflow-y-auto scrollbar-hide">
+            <GoogleSignIn setError={setError} />
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            {/* Login with Email or Phone Number */}
-            <div className="space-y-2 text-[#999999]">
-              <p className="text-left">Login with</p>
-              <CustomDropdown
-                methodSelected={methodSelected}
-                setMethodSelected={setMethodSelected}
-              />
-
-              {methodSelected === 'Email Address' ? (
-                <div>
-                  <label className="cursor-pointer flex flex-col items-start gap-2">
-                    Email
-                    <input
-                      name="email"
-                      onChange={handleChange}
-                      placeholder="Enter your email"
-                      className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
-                    />
-                  </label>
-                </div>
-              ) : (
-                <div>
-                  <label className="cursor-pointer flex flex-col items-start gap-2">
-                    Phone Number
-                    <input
-                      name="phoneNumber"
-                      onChange={handleChange}
-                      placeholder="Enter your Phone Number"
-                      className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
-                    />
-                  </label>
-                </div>
-              )}
+            <div className="relative text-gray-500 my-2 flex items-center justify-center">
+              <span className="bg-white px-2">Or</span>
             </div>
 
-            {/* Password */}
-            <div className="relative">
-              <label className="block text-left text-gray-700 font-medium mb-1">
-                Password
-              </label>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="********"
-                className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
-              />
-              {showPassword ? (
-                <EyeOff
-                  className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                />
-              ) : (
-                <Eye
-                  className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                />
-              )}
-            </div>
+            {error && <p className="text-red-500">{error}</p>}
 
-            {/* Remember Me Checkbox */}
-            <div className="flex justify-between items-center mt-2">
-              <label className="block text-left text-gray-700 font-medium mb-1">
+            <form onSubmit={handleLogin} className="space-y-4">
+              {/* Login with Email or Phone Number */}
+              <div className="space-y-2 text-[#999999]">
+                <p className="text-left">Login with</p>
+                <CustomDropdown
+                  methodSelected={methodSelected}
+                  setMethodSelected={setMethodSelected}
+                />
+
+                {methodSelected === 'Email Address' ? (
+                  <div>
+                    <label className="cursor-pointer flex flex-col items-start gap-2">
+                      Email
+                      <input
+                        name="email"
+                        onChange={handleChange}
+                        placeholder="Enter your email"
+                        className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="cursor-pointer flex flex-col items-start gap-2">
+                      Phone Number
+                      <input
+                        name="phoneNumber"
+                        onChange={handleChange}
+                        placeholder="Enter your Phone Number"
+                        className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              {/* Password */}
+              <div className="relative">
+                <label className="block text-left text-gray-700 font-medium mb-1">
+                  Password
+                </label>
                 <input
-                  type="checkbox"
-                  id="remember"
-                  name="remember"
-                  className="mr-2 accent-[#730071]"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="********"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
                 />
-                Remember me
-              </label>
-              <Link to="/forgot-password" className="text-[#730071]">
-                Forgot Password?
-              </Link>
-            </div>
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full mx-auto mt-8 p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2"
-            >
-              Login
-            </button>
-          </form>
+                {showPassword ? (
+                  <EyeOff
+                    className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
+                    onClick={togglePasswordVisibility}
+                  />
+                ) : (
+                  <Eye
+                    className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
+                    onClick={togglePasswordVisibility}
+                  />
+                )}
+              </div>
+
+              {/* Remember Me Checkbox */}
+              <div className="flex justify-between items-center mt-2">
+                <label className="block text-left text-gray-700 font-medium mb-1">
+                  <input
+                    type="checkbox"
+                    id="remember"
+                    name="remember"
+                    className="mr-2 accent-[#730071]"
+                  />
+                  Remember me
+                </label>
+                <Link to="/forgot-password" className="text-[#730071]">
+                  Forgot Password?
+                </Link>
+              </div>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full mx-auto mt-8 p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2"
+              >
+                Login
+              </button>
+            </form>
+          </div>
+
           {/* Sign Up Link */}
           <p className="text-gray-500 text-[14px]">
             Don't have an account?

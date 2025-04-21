@@ -1,8 +1,8 @@
 import React from 'react';
-import { FcGoogle } from 'react-icons/fc';
 // import { FaFacebook } from "react-icons/fa";
 import CustomDropdown from './CustomDropdown';
-import { useSignUp, useClerk } from '@clerk/clerk-react';
+import { useSignUp} from '@clerk/clerk-react';
+import { GoogleSignUp } from './GoogleSignUp';
 
 type StepOneProps = {
   methodSelected: string | null;
@@ -47,7 +47,7 @@ const StepOne: React.FC<StepOneProps> = ({
 
         await signUp?.prepareEmailAddressVerification({
           strategy: 'email_link',
-          redirectUrl: 'http://localhost:5173/onboarding',
+          redirectUrl: '/onboarding',
         }); // Sends verification email
       } else {
         if (!phoneNumber || !password) {
@@ -74,14 +74,6 @@ const StepOne: React.FC<StepOneProps> = ({
     }
   };
 
-  const { openSignUp } = useClerk();
-
-  const handleGoogleSignUp = () => {
-    openSignUp({
-      redirectUrl: '/onboarding',
-      afterSignUpUrl: '/onboarding',
-    });
-  };
   return (
     <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
       <p className="text-gray-500 text-sm mb-2 fixed top-4 right-4">
@@ -97,13 +89,7 @@ const StepOne: React.FC<StepOneProps> = ({
           </p>
         </div>
 
-        <button
-          className="w-full p-3 border border-gray-300 text-[#730071] font-semibold rounded-md flex items-center justify-center gap-2 mb-3"
-          onClick={handleGoogleSignUp}
-        >
-          <span>Sign Up with Google</span>
-          <FcGoogle className="w-5 h-5" />
-        </button>
+        <GoogleSignUp setError={setError}/>
 
         <div className="relative text-gray-500 my-4 flex items-center justify-center">
           <span className="bg-white px-2">Or</span>
