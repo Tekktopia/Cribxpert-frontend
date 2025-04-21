@@ -3,10 +3,21 @@ import supportIcon from '@/assets/icons/like.png';
 import notificationIcon from '@/assets/icons/notifications.png';
 import profileIcon from '@/assets/icons/Profile.png';
 import humburger from '@/assets/icons/hamburger.png';
+import { Link,NavLink} from 'react-router';
+import { BiMenu, BiX } from "react-icons/bi";
+import { useState } from 'react';
+
+
 import { Link } from 'react-router';
 import { useAuth } from '@clerk/clerk-react';
 
 const Header: React.FC = () => {
+  const[isOpen,setIsOpen]=useState(false)
+
+  const toggleMenu=()=>{
+    setIsOpen(!isOpen)
+  }
+  
   const { signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -16,9 +27,9 @@ const Header: React.FC = () => {
 
   return (
     <section className="overflow-hidden w-full">
-      <header className="w-full border-b border-b-[#CCCCCC80]/50 bg-white">
+      <header className="w-full  border-b border-b-[#CCCCCC80]/50 bg-white">
         {/* Navigation Bar */}
-        <nav className="flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
+        <nav className="hidden md:flex  flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
           {/* Logo */}
           <div className="w-auto">
             <h1 className="font-bold text-[20px] text-[#730071]">
@@ -80,7 +91,26 @@ const Header: React.FC = () => {
                 className="w-[32px] h-[32px]"
               />
 
-              <div className="absolute top-[45px] p-4 shadow-lg">
+
+                    {/* Icons Section */}
+                    <div className="w-auto flex flex-row gap-6 py-3">
+                        <div className="flex flex-col items-center">
+                            <img src={messageIcon} alt="Message Icon" className="w-[20px] h-[20px]" />
+                            <Link to="" className="text-[14px] text-[#999999] cursor-pointer">Message </Link>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <img src={supportIcon} alt="supportIcon" className="w-[20px] h-[20px]" />
+                            <Link to="" className="text-[14px] text-[#999999] cursor-pointer">Support </Link>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <img src={notificationIcon} alt="notificationIcon" className="w-[20px] h-[20px]" />
+                            <Link to="" className="text-[14px] text-[#999999] cursor-pointer">Notifications </Link>
+                        </div>
+                        <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
+                        <div className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2">
+                            <img src={humburger} alt="humburger Icon" className="w-[18px] h-[10px]" />
+                            <img src={profileIcon} alt="Profile Icon" className="w-[32px] h-[32px]" />
+                          <div className="absolute top-[45px] p-4 shadow-lg">
                 <button
                   className="text-[14px] text-red-500"
                   onClick={handleLogout}
@@ -88,9 +118,81 @@ const Header: React.FC = () => {
                   Logout
                 </button>
               </div>
-            </div>
-          </div>
-        </nav>
+                        </div>
+                    </div>
+                </nav>
+                {/*Mobile Menu Toogle*/}
+                <div className='md:hidden t flex justify-between items-center p-4'>
+                <h1 className="font-bold text-[20px]  text-[#730071]">
+              Shotletapp.ng
+            </h1>
+                {
+  isOpen ?
+  (
+<BiX className="block md:hidden text-4xl " onClick={toggleMenu} />
+  ) :
+  (
+  <BiMenu className="block md:hidden text-4xl" onClick={toggleMenu} />
+  )
+}
+                </div>
+
+
+                {/* Navigation Menu */}
+                <div className="hidden md:flex px-4 md:px-8 py-4 ">
+                    <div className="flex items-center gap-4">
+                        <NavLink  to="/dashboard" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>Dashboard </NavLink>
+                        <NavLink  to="/discovery" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>Discover </NavLink>
+                        <NavLink  to="/my-booking" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>My Bookings </NavLink>
+                        <NavLink  to="/saved-listing" className={({isActive})=>isActive ? "text-[#730071] font-bold" : "text-[#999999] text-[14px] font-medium  cursor-pointer"}>Saved Listings </NavLink>
+                        <NavLink  to="/payments" className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]">Payments </NavLink>
+                    </div>
+                </div>
+                {isOpen && (
+  <>
+    {/* Backdrop */}
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+      onClick={() => setIsOpen(false)}
+    />
+
+    {/* Side Drawer Menu */}
+    <div className="fixed top-0 left-0  w-[80%] bg-white text-black z-50  md:hidden">
+      <div className='bg-[#730071] flex justify-between items-center w-full mb-5  text-white'>
+      <h1 className="text-xl font-bold mb-6  flex items-start m-2 ">Shotletapp.ng</h1>
+      <BiX className="block md:hidden text-4xl" onClick={toggleMenu} />
+      </div>
+    
+      
+      <ul className="flex flex-col gap-4 p-4">
+        {[
+          'Dashboard',
+          'Discover',
+          'My Bookings',
+          'Saved Listing',
+          'Payments',
+          'Message',
+          'Support',
+          'Notifications',
+        ].map((item) => (
+          <li key={item}>
+            <Link
+              to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+              className="opacity-80 hover:opacity-100 transition duration-300"
+            
+            >
+              {item}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </>
+)}
+
+            </header>
+        </section>
+    )
 
         {/* Navigation Menu */}
         <div className="px-4 md:px-8 py-4 overflow-x-auto">

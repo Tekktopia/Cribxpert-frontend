@@ -1,7 +1,10 @@
 import { PropertyListingProps } from '@/types';
 import { Link } from 'react-router-dom';
 import { CiHeart } from 'react-icons/ci';
+import { FaHeart } from "react-icons/fa";
+import { useSavedList } from '../context/SavedListContext';
 const PropertyListingCard: React.FC<PropertyListingProps> = ({
+    id,
   propertyName,
   price,
   rating,
@@ -9,6 +12,19 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   location,
   image,
 }) => {
+    const{addList,savedList,removeList}=useSavedList() 
+    const isSavedProperty=savedList.some((savedProperty)=>savedProperty.id===id)
+    const handleIconToggle=()=>{
+        if(isSavedProperty){
+            removeList({id,propertyName,price,location,rating,description,image})
+            console.log("removed")
+        }
+            else{
+                addList({id,propertyName,price,location,rating,description,image})
+                console.log("added")
+            }
+    }
+    
   return (
     <Link to="/propertydetail">
       <div className="max-w-[305px] hover:cursor-pointer">
@@ -19,8 +35,15 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
             className="w-full max-h-[230px]"
           />
           <div className="flex justify-end absolute top-2 right-4 ">
-            <CiHeart className="w-6 h-6 text-black" />
-          </div>
+        {isSavedProperty ? (
+                        <FaHeart className="w-6 h-6 text-black" onClick={handleIconToggle}/>
+        ) : (
+            <CiHeart className="w-6 h-6 " onClick={handleIconToggle}/>
+
+        )
+    }
+
+    </div>
         </div>
 
         <div className="flex flex-row justify-around mt-2 ">

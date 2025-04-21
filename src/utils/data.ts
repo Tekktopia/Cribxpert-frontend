@@ -5,6 +5,7 @@ import { PropertyListingProps } from '@/types';
 
 const SAMPLE_DATA: PropertyListingProps[] = [
   {
+    id:1,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -13,6 +14,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: '3 bedroom apartment ',
   },
   {
+    id:2,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-a',
     location: 'Federal Capital Territory Gombe',
@@ -21,6 +23,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 750,
   },
   {
+    id:3,
     image: propertyImage,
 
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
@@ -31,6 +34,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: '3 bedroom apartment ',
   },
   {
+    id:4,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -41,6 +45,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: '3 bedroom apartment ',
   },
   {
+    id:5,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -49,6 +54,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 1200,
   },
   {
+    id:6,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -57,6 +63,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 2500,
   },
   {
+    id:7,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -65,6 +72,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 1500,
   },
   {
+    id:8,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -73,6 +81,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 850,
   },
   {
+    id:9,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -82,6 +91,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: '3 bedroom apartment ',
   },
   {
+    id:10,
     image: propertyImage,
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
     location: 'Federal Capital Territory Gombe',
@@ -90,6 +100,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 780,
   },
   {
+    id:11,
     image: propertyImage,
 
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
@@ -100,6 +111,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: '3 bedroom apartment ',
   },
   {
+    id:12,
     image: propertyImage,
 
     propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
