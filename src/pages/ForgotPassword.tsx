@@ -65,7 +65,7 @@ const ForgotPassword: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 h-full relative">
+      <div className="w-1/2 hidden lg:block h-full relative">
         <img
           src="/authsidepane1.png"
           alt="Login Background"
