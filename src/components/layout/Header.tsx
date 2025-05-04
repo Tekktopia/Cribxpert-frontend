@@ -125,7 +125,7 @@ const Header: React.FC = () => {
               Dashboard
             </NavLink>
             <NavLink
-              to="/discovery"
+              to="/discover"
               className={({ isActive }) =>
                 isActive
                   ? 'text-[#730071] font-bold'
@@ -135,7 +135,7 @@ const Header: React.FC = () => {
               Discover
             </NavLink>
             <NavLink
-              to="/my-booking"
+              to="/my-bookings"
               className={({ isActive }) =>
                 isActive
                   ? 'text-[#730071] font-bold'
@@ -145,7 +145,7 @@ const Header: React.FC = () => {
               My Bookings
             </NavLink>
             <NavLink
-              to="/saved-listing"
+              to="/saved-listings"
               className={({ isActive }) =>
                 isActive
                   ? 'text-[#730071] font-bold'
@@ -156,7 +156,11 @@ const Header: React.FC = () => {
             </NavLink>
             <NavLink
               to="/payments"
-              className="text-[14px] font-medium text-[#999999] cursor-pointer hover:text-[#730071]"
+              className={({ isActive }) =>
+                isActive
+                  ? 'text-[#730071] font-bold'
+                  : 'text-[#999999] text-[14px] font-medium cursor-pointer'
+              }
             >
               Payments
             </NavLink>

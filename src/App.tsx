@@ -25,13 +25,13 @@ function App() {
       <Router>
          <SavedListProvider>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Home />} />
           <Route
             path="/propertydetail"
             element={<PropertyDetail listings={SAMPLE_DATA} />}
           />
-          <Route path="/BookingPage" element={<BookingPage />} />
-          <Route path="/paymentmethod" element={<PaymentMethod />} />
+          <Route path="/my-bookings" element={<BookingPage />} />
+          <Route path="/payments" element={<PaymentMethod />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/support-info" element={<SupportInfo />} />
@@ -42,7 +42,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path="/discover" element={<DiscoverPage />} />
-        <Route path="/saved-listing" element={<SavedListing />} />
+        <Route path="/saved-listings" element={<SavedListing />} />
         </Routes>
         </SavedListProvider>
       </Router>
