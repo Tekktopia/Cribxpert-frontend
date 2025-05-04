@@ -9,11 +9,11 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   return (
     <div
-      className={`${isOpen ? '-translate-x-0 w-full md:w-1/4 md:max-w-[276px] ' : '-translate-x-full'} md:h-auto h-full z-20 top-0 bg-white absolute md:relative border-r-[1px] pr-2`}
+      className={`${isOpen ? '-translate-x-0 w-full md:w-1/4 md:max-w-[276px] ' : '-translate-x-full w-full'} h-fit transition-all duration-100 p-4 pb-8 md:pb-0 md:p-0 z-20 top-0 bg-white absolute md:relative border-r-[1px] md:pr-2`}
     >
       {isOpen && (
         <div>
-          <div className="flex justify-between">
+          <div className="flex pb-4 justify-between">
             <span className="flex">
               <Settings2Icon />
               Filters
@@ -24,7 +24,7 @@ export default function FilterPanel({
             </button>
           </div>
 
-          <div className="filters">
+          <div className="filters overflow-y-scroll scrollbar-hide h-screen">
             <div className="space-y-4 mt-4">
               {/* Reusable style */}
               {[
@@ -162,7 +162,7 @@ export default function FilterPanel({
                   className="rounded-md border pt-2 bg-[#F1E6F199]"
                 >
                   <summary className="flex justify-between items-center cursor-pointer font-medium">
-                    <span className='px-2'>{title}</span>
+                    <span className="px-2">{title}</span>
                     <svg
                       className="w-4 h-4 transform transition-transform group-open:rotate-180"
                       fill="none"
@@ -180,15 +180,15 @@ export default function FilterPanel({
                   {content}
                 </details>
               ))}
-
-              {/* Action Buttons */}
-              <div className="flex justify-between mt-4">
-                <button className="border px-4 py-2 rounded">Cancel</button>
-                <button className="bg-[#730071] text-white px-4 py-2 rounded">
-                  Apply Filter
-                </button>
-              </div>
             </div>
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="flex justify-between mt-4">
+            <button className="border px-4 py-2 rounded">Cancel</button>
+            <button className="bg-[#730071] text-white px-4 py-2 rounded">
+              Apply Filter
+            </button>
           </div>
         </div>
       )}

@@ -12,11 +12,16 @@ export default function DiscoverPage() {
     setIsFilterPanelOpen(!isFilterPanelOpen);
   };
   return (
-    <div className='transition-all duration-1000 ease-in-out'>
-      <Header />
-      <div className="w-full flex md:p-8 p-2 pt-8 relative overflow-y-hidden">
+    <div className="">
+      <div className="fixed top-0 w-full z-40 bg-white">
+        <Header />
+      </div>
+
+      <div className="mt-16 md:mt-[120px] w-full flex md:p-8 pt-8 relative bg-white">
         <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
-        <div className={`${isFilterPanelOpen? "md:w-3/4 md:ml-8": "w-full"} w-full mb-8`}>
+        <div
+          className={`${isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden md:block' : 'w-full md:-ml-4 '} transition-all duration-500 ease-in-out w-full mb-8`}
+        >
           <div className="flex gap-4">
             {!isFilterPanelOpen && (
               <button className="flex items-center" onClick={handleToggle}>
