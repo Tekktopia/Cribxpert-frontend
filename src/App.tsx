@@ -26,6 +26,7 @@ function App() {
          <SavedListProvider>
         <Routes>
           <Route path="/dashboard" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route
             path="/propertydetail"
             element={<PropertyDetail listings={SAMPLE_DATA} />}
