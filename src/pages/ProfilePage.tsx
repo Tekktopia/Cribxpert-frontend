@@ -5,17 +5,17 @@ import Profile from '@/components/profileComponents/Profile';
 import Preference from '@/components/profileComponents/Preference';
 import Payment from '@/components/profileComponents/Payment';
 import Password from '@/components/profileComponents/Password';
-import { Active } from '@/types';
+import { ActiveProfile } from '@/types';
 
 const ProfilePage = () => {
-  const [active, setActive] = useState<Active>(Active.Profile);
+  const [active, setActive] = useState<ActiveProfile>(ActiveProfile.Profile);
   return (
     <div>
       {' '}
       <Header />
       <div className=" px-[30px] lg:px-[80px]">
         <ProfileNav active={active} setActive={setActive} />
-        {active === Active.Profile && (
+        {active === ActiveProfile.Profile && (
           <Profile
             initialFirstName=""
             initialLastName=""
@@ -23,9 +23,9 @@ const ProfilePage = () => {
             initialPhone=""
           />
         )}
-        {active === Active.PasswordManagement && <Password />}
-        {active === Active.ManagePayment && <Payment />}
-        {active === Active.Preferences && (
+        {active === ActiveProfile.PasswordManagement && <Password />}
+        {active === ActiveProfile.ManagePayment && <Payment />}
+        {active === ActiveProfile.Preferences && (
           <Preference
             initialNotifications={true}
             initialUpdates={false}

@@ -1,17 +1,17 @@
-import { Active } from '@/types';
+import { ActiveProfile } from '@/types';
 import { Link } from 'react-router';
 
 // import { Link } from "react-router-dom"
 
 type Props = {
   page: string;
-  active: Active;
-  setActive: (value: Active) => void;
+  active: ActiveProfile;
+  setActive: (value: ActiveProfile) => void;
 };
 //  to={`${lowerCasePage}`}
 
 const ProfileLinks = ({ page, active, setActive }: Props) => {
-  const lowerCasePage = page.toLowerCase().replace(' ', '-') as Active;
+  const lowerCasePage = page.toLowerCase().replace(' ', '-') as ActiveProfile;
   return (
     <Link
       to={`#`}

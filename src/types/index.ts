@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 
 export interface PropertyListingProps {
-  id:number
+  id: number;
   image: string;
   rating: number;
   location: string;
@@ -10,18 +10,24 @@ export interface PropertyListingProps {
   price: number;
 }
 export interface SavedListContextProps {
-  
-savedList:PropertyListingProps[]
- 
-  addList:(property:PropertyListingProps)=>void;
-  removeList:(property:PropertyListingProps)=>void
+  savedList: PropertyListingProps[];
+
+  addList: (property: PropertyListingProps) => void;
+  removeList: (property: PropertyListingProps) => void;
 }
-export enum Active {
+export enum ActiveProfile {
   Profile = 'profile',
   PasswordManagement = 'password-management',
   ManagePayment = 'manage-payment',
   Preferences = 'preferences',
 }
+export enum ActiveNotification {
+  All = 'all',
+  Bookings = 'bookings',
+  Payments = 'payments',
+  Reviews = 'reviews',
+}
+
 export type ProfileFormProps = {
   initialFirstName: string;
   initialLastName: string;

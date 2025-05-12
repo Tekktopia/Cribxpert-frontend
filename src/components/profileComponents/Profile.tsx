@@ -91,7 +91,7 @@ const Profile = ({
   };
 
   return (
-    <div className="lg:w-[800px] w-full flex flex-col gap-6 items-start my-9 ">
+    <div className="lg:w-[800px] w-full flex flex-col gap-6 lg:items-start my-9 ">
       <div className="flex  items-center gap-3">
         {profileImage ? (
           <img
@@ -130,8 +130,8 @@ const Profile = ({
       </div>
 
       <form onSubmit={handleSubmit} className=" flex flex-col gap-[42px] ">
-        <div className=" grid lg:grid-cols-2 gap-[42px] ">
-          <div className="flex gap-1 flex-col w-[395px] h-[70px]">
+        <div className=" grid lg:grid-cols-2 lg:gap-[42px] gap-6 ">
+          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
             <label className=" text-[#999999] ">First Name</label>
             <input
               type="text"
@@ -139,14 +139,14 @@ const Profile = ({
               value={formData.firstName}
               onChange={handleChange}
               placeholder="amoria"
-              className="w-full py-3 px-4 border rounded flex items-center border-1 border-[#DFE4EA] text-[#999999]"
+              className="w-full py-3 px-4 border rounded  border-1 border-[#DFE4EA] text-[#999999]"
             />
             {errors.firstName && (
               <p className="text-red-500">{errors.firstName}</p>
             )}
           </div>
 
-          <div className="flex gap-1 flex-col w-[395px] h-[70px]">
+          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
             <label className=" text-[#999999] ">Last Name</label>
             <input
               type="text"
@@ -154,14 +154,14 @@ const Profile = ({
               value={formData.lastName}
               placeholder="amoria"
               onChange={handleChange}
-              className="w-full py-3 px-4 border rounded flex items-center border-1 border-[#DFE4EA] text-[#999999]"
+              className="w-full py-3 px-4 border rounded  border-1 border-[#DFE4EA] text-[#999999]"
             />
             {errors.lastName && (
               <p className="text-red-500">{errors.lastName}</p>
             )}
           </div>
 
-          <div className="flex gap-1 flex-col w-[395px] h-[70px]">
+          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
             <label className=" text-[#999999] ">Email</label>
             <input
               type="email"
@@ -169,12 +169,12 @@ const Profile = ({
               value={formData.email}
               onChange={handleChange}
               placeholder="amoriamakinwa@gmail.com"
-              className="w-full py-3 px-4 border rounded flex items-center border-1 border-[#DFE4EA] text-[#999999]"
+              className="w-full py-3 px-4 border rounded  border-1 border-[#DFE4EA] text-[#999999]"
             />
             {errors.email && <p className="text-red-500">{errors.email}</p>}
           </div>
 
-          <div className="flex gap-1 flex-col w-[395px] h-[70px]">
+          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
             <label className=" text-[#999999] ">Phone Number</label>
             <input
               type="tel"
@@ -182,7 +182,7 @@ const Profile = ({
               value={formData.phone}
               onChange={handleChange}
               placeholder="+2348167990657"
-              className="w-full py-3 px-4 border rounded flex items-center border-1 border-[#DFE4EA] text-[#999999]"
+              className="w-full py-3 px-4 border rounded   border-1 border-[#DFE4EA] text-[#999999]"
             />
             {errors.phone && <p className="text-red-500">{errors.phone}</p>}
           </div>

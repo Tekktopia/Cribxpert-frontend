@@ -140,7 +140,7 @@ const Preference = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 w-[400px]">
+      <div className="flex flex-col gap-6 w-full lg:w-[400px]">
         <h2 className="font-medium text-xl text-[#070707] ">
           Language & Currency
         </h2>
