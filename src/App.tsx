@@ -18,33 +18,35 @@ import PropertyDetail from './components/pages/PropertyDetail';
 import { SAMPLE_DATA } from './utils/data';
 import DiscoverPage from './pages/DiscoverPage';
 import SupportInfo from './components/support/SupportInfo';
+import NotificationPage from './components/pages/NotificationPage';
 
 function App() {
   return (
     <>
       <Router>
-         <SavedListProvider>
-        <Routes>
-          <Route path="/dashboard" element={<Home />} />
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/propertydetail"
-            element={<PropertyDetail listings={SAMPLE_DATA} />}
-          />
-          <Route path="/my-bookings" element={<BookingPage />} />
-          <Route path="/payments" element={<PaymentMethod />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/support" element={<SupportPage />} />
-          <Route path="/support-info" element={<SupportInfo />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+        <SavedListProvider>
+          <Routes>
+            <Route path="/dashboard" element={<Home />} />
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/propertydetail"
+              element={<PropertyDetail listings={SAMPLE_DATA} />}
+            />
+            <Route path="/my-bookings" element={<BookingPage />} />
+            <Route path="/payments" element={<PaymentMethod />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/support" element={<SupportPage />} />
+            <Route path="/support-info" element={<SupportInfo />} />
+            <Route path="/notification" element={<NotificationPage />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
-          <Route path="/discover" element={<DiscoverPage />} />
-        <Route path="/saved-listings" element={<SavedListing />} />
-        </Routes>
+            <Route path="/discover" element={<DiscoverPage />} />
+            <Route path="/saved-listings" element={<SavedListing />} />
+          </Routes>
         </SavedListProvider>
       </Router>
     </>

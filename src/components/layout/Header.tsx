@@ -61,7 +61,10 @@ const Header: React.FC = () => {
                 alt="supportIcon"
                 className="w-[20px] h-[20px]"
               />
-              <Link to="" className="text-[14px] text-[#999999] cursor-pointer">
+              <Link
+                to="/support"
+                className="text-[14px] text-[#999999] cursor-pointer"
+              >
                 Support
               </Link>
             </div>
@@ -71,17 +74,24 @@ const Header: React.FC = () => {
                 alt="notificationIcon"
                 className="w-[20px] h-[20px]"
               />
-              <Link to="" className="text-[14px] text-[#999999] cursor-pointer">
+              <Link
+                to="/notification"
+                className="text-[14px] text-[#999999] cursor-pointer"
+              >
                 Notifications
               </Link>
             </div>
             <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
             <div className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2 relative">
-              <img
-                src={humburger}
-                alt="humburger Icon"
-                className="w-[18px] h-[10px]"
-              />
+              <a href="/profile">
+                {' '}
+                <img
+                  src={humburger}
+                  alt="humburger Icon"
+                  className="w-[18px] h-[10px]"
+                />
+              </a>
+
               <img
                 src={profileIcon}
                 alt="Profile Icon"
