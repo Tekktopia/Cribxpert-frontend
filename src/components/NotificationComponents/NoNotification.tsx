@@ -1,4 +1,4 @@
-import bell from '../../../assets/icons/bell.svg';
+import bell from '@/assets/icons/bell.svg';
 
 const NoNotification = () => {
   return (

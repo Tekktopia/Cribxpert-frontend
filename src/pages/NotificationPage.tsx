@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Header from '@/components/layout/Header';
 import { ActiveNotification } from '@/types';
-import All from './NotificationComponents/All';
-import NotificationNav from '../layout/notification/NotificationNav';
-import Bookings from './NotificationComponents/Bookings';
-import Payments from './NotificationComponents/Payments';
-import Reviews from './NotificationComponents/Reviews';
+import All from '@/components/NotificationComponents/All';
+import NotificationNav from '@/components/layout/notification/NotificationNav';
+import Bookings from '@/components/NotificationComponents/Bookings';
+import Payments from '@/components/NotificationComponents/Payments';
+import Reviews from '@/components/NotificationComponents/Reviews';
 
 const NotificationPage = () => {
   const [active, setActive] = useState<ActiveNotification>(

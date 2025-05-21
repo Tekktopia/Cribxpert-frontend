@@ -65,3 +65,14 @@ export type ContactInfo = {
   icon: JSX.Element;
   title: string;
 };
+
+export type FilterOption = {
+  value: string;
+  label: string;
+};
+
+export type FilterParameter = {
+  name: string;
+  label: string;
+  options: FilterOption[];
+};

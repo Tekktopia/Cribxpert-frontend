@@ -1,5 +1,5 @@
-import Header from '../layout/Header';
-import SupportHeader from './SupportHeader';
+import Header from '../components/layout/Header';
+import SupportHeader from '../components/support/SupportHeader';
 import {
   HandThumbUpIcon,
   HandThumbDownIcon,

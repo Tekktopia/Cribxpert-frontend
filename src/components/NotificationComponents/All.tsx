@@ -1,6 +1,6 @@
-import eclipse from '../../../assets/icons/Ellipse-gray.svg';
-import button from '../../../assets/icons/button.svg';
-import reminder from '../../../assets/icons/reminder.svg';
+import eclipse from '@/assets/icons/Ellipse-gray.svg';
+import button from '@/assets/icons/button.svg';
+import reminder from '@/assets/icons/reminder.svg';
 const All = () => {
   return (
     <div className=" w-full flex flex-col gap-6 items-start my-9 ">
