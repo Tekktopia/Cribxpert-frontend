@@ -15,7 +15,7 @@ const NotificationPage = () => {
     <div>
       {' '}
       <Header />
-      <div className=" px-[30px] lg:px-[80px]">
+      <div className=" px-[30px] lg:px-[80px] container mx-auto">
         <h1 className="pt-[43px] text-[20px] text-[#040404]">Notifications</h1>
         <NotificationNav active={active} setActive={setActive} />
         {active === ActiveNotification.All && <All />}

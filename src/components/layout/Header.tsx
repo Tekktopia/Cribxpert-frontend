@@ -24,7 +24,7 @@ const Header: React.FC = () => {
 
   return (
     <section className="overflow-hidden w-full">
-      <header className="w-full border-b border-b-[#CCCCCC80]/50 bg-white">
+      <header className="container mx-auto w-full border-b border-b-[#CCCCCC80]/50 bg-white">
         {/* Navigation Bar */}
         <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
           {/* Logo */}

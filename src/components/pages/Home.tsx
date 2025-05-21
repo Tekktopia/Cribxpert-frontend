@@ -34,7 +34,7 @@ const Home: React.FC = () => {
 
           {/* Filter Bar */}
           <div className="bg-[#8b2b89] w-full py-4 px-4 md:px-8 absolute bottom-0 transform translate-y-1/2">
-            <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-between items-center gap-4">
+            <div className="flex flex-wrap container mx-auto md:flex-nowrap justify-center md:justify-between items-center gap-4">
               {["Filter Parameter 1", "Filter Parameter 2", "Filter Parameter 3", "Filter Parameter 4", "Filter Parameter 5"].map(
                 (param, index) => (
                   <div key={index} className="flex flex-col">
@@ -54,7 +54,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Filters Section */}
-        <div className="w-full overflow-x-auto mt-20 py-2 scrollbar-hide max-w-[1280px]">
+        <div className="w-full mx-auto overflow-x-auto mt-20 py-2 scrollbar-hide max-w-[1280px]">
           <div className="flex items-center gap-6 min-w-max px-4">
             {Filter.map((filter, index) => (
               <div
