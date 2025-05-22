@@ -29,6 +29,7 @@ import NotificationPage from './pages/NotificationPage';
 // Data & Context Providers
 import { SavedListProvider } from './components/context/SavedListContext';
 import { SAMPLE_DATA } from './utils/data';
+import Footer from './components/layout/Footer';
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
             <Route path="/discover" element={<DiscoverPage />} />
             <Route path="/saved-listings" element={<SavedListing />} />
           </Routes>
+          <Footer/>
         </SavedListProvider>
       </Router>
     </>

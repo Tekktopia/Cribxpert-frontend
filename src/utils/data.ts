@@ -1,125 +1,198 @@
 import allShortLet from '@/assets/icons/all-shorlet.png';
 import otherFilterIcon from '@/assets/icons/otherFilterIcon.png';
-import propertyImage from '@/assets/images/property-image.jpeg';
 import { PropertyListingProps } from '@/types';
 
 const SAMPLE_DATA: PropertyListingProps[] = [
   {
-    id:1,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.76,
-    price: 620,
-    description: '3 bedroom apartment ',
+    id: 1,
+    image: "/images/apartment4.jpg",
+    images: [
+      "/images/apartment4.jpg", 
+      "/images/apartment2.jpg", 
+      "/images/apartment3.jpg"
+    ],
+    propertyName: 'Makinwa\'s Cottage',
+    location: 'Street 23, All Avenue, Lagos Nigeria',
+    rating: 4.5,
+    price: 50000,
+    description: 'Newly Test Remodeled',
+    bedrooms: 3,
+    propertyType: "Apartment"
   },
   {
-    id:2,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-a',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.85,
-    description: '3 bedroom apartment ',
-    price: 750,
+    id: 2,
+    image: "/images/apartment5.jpg",
+    images: [
+      "/images/apartment5.jpg", 
+      "/images/apartment4.jpg", 
+      "/images/apartment3.jpg", 
+      "/images/apartment2.jpg"
+    ],
+    propertyName: 'Lekki Luxury Villa',
+    location: 'Lekki Phase 1, Lagos',
+    rating: 4.8,
+    description: 'Stunning waterfront property',
+    price: 75000,
+    bedrooms: 4,
+    propertyType: "Villa"
   },
   {
-    id:3,
-    image: propertyImage,
-
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.92,
-
-    price: 900,
-    description: '3 bedroom apartment ',
+    id: 3,
+    image: "/images/apartment6.jpg",
+    images: [
+      "/images/apartment6.jpg", 
+      "/images/apartment2.jpg"
+    ],
+    propertyName: 'Downtown Abuja Studio',
+    location: 'Central Business District, Abuja',
+    rating: 4.2,
+    price: 35000,
+    description: 'Modern studio in the heart of the city',
+    bedrooms: 1,
+    propertyType: "Studio"
   },
   {
-    id:4,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.78,
-
-    price: 680,
-
-    description: '3 bedroom apartment ',
+    id: 4,
+    image: "/images/apartment7.jpg",
+    images: [
+      "/images/apartment7.jpg", 
+      "/images/apartment3.jpg", 
+      "/images/apartment5.jpg"
+    ],
+    propertyName: 'Waterside Cottage',
+    location: 'Victoria Island, Lagos',
+    rating: 4.7,
+    price: 68000,
+    description: 'Serene waterfront experience',
+    bedrooms: 2,
+    propertyType: "Cottage"
   },
   {
-    id:5,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.88,
-    description: '3 bedroom apartment',
-    price: 1200,
-  },
-  {
-    id:6,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.95,
-    description: '3 bedroom apartment ',
-    price: 2500,
-  },
-  {
-    id:7,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.81,
-    description: '3 bedroom apartment ',
-    price: 1500,
-  },
-  {
-    id:8,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.89,
-    description: '3 bedroom apartment ',
-    price: 850,
-  },
-  {
-    id:9,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.83,
-
-    price: 720,
-    description: '3 bedroom apartment ',
-  },
-  {
-    id:10,
-    image: propertyImage,
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
+    id: 5,
+    image: "/images/apartment8.jpg",
+    images: [
+      "/images/apartment8.jpg", 
+      "/images/apartment7.jpg", 
+      "/images/apartment4.jpg",
+      "/images/apartment2.jpg"
+    ],
+    propertyName: 'Mountain View Cabin',
+    location: 'Jos, Plateau State',
     rating: 4.9,
-    description: '3 bedroom apartment ',
-    price: 780,
+    description: 'Scenic mountain retreat',
+    price: 45000,
+    bedrooms: 2,
+    propertyType: "Cabin"
   },
   {
-    id:11,
-    image: propertyImage,
-
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.92,
-
-    price: 900,
-    description: '3 bedroom apartment ',
+    id: 6,
+    image: "/images/apartment9.jpg",
+    images: [
+      "/images/apartment9.jpg",
+      "/images/apartment6.jpg"
+    ],
+    propertyName: 'Modern High-Rise',
+    location: 'Ikoyi, Lagos',
+    rating: 4.6,
+    description: 'Luxury apartment with skyline views',
+    price: 90000,
+    bedrooms: 3,
+    propertyType: "Apartment"
   },
   {
-    id:12,
-    image: propertyImage,
-
-    propertyName: 'Makinwaa’s Cottage - Newly Remodeled-',
-    location: 'Federal Capital Territory Gombe',
-    rating: 4.92,
-
-    price: 900,
-    description: '3 bedroom apartment ',
+    id: 7,
+    image: "/images/apartment4.jpg",
+    images: [
+      "/images/apartment4.jpg", 
+      "/images/apartment5.jpg", 
+      "/images/apartment8.jpg"
+    ],
+    propertyName: 'Garden Oasis',
+    location: 'Ikeja GRA, Lagos',
+    rating: 4.3,
+    description: 'Peaceful garden property',
+    price: 55000,
+    bedrooms: 3,
+    propertyType: "House"
+  },
+  {
+    id: 8,
+    image: "/images/apartment7.jpg",
+    images: [
+      "/images/apartment7.jpg", 
+      "/images/apartment9.jpg"
+    ],
+    propertyName: 'Beachfront Paradise',
+    location: 'Eleko Beach, Lagos',
+    rating: 4.8,
+    description: 'Direct beach access property',
+    price: 85000,
+    bedrooms: 4,
+    propertyType: "Beach House"
+  },
+  {
+    id: 9,
+    image: "/images/apartment6.jpg",
+    images: [
+      "/images/apartment6.jpg", 
+      "/images/apartment7.jpg", 
+      "/images/apartment8.jpg"
+    ],
+    propertyName: 'City Center Loft',
+    location: 'Marina, Lagos',
+    rating: 4.4,
+    price: 48000,
+    description: 'Urban loft with modern amenities',
+    bedrooms: 2,
+    propertyType: "Loft"
+  },
+  {
+    id: 10,
+    image: "/images/apartment5.jpg",
+    images: [
+      "/images/apartment5.jpg", 
+      "/images/apartment6.jpg", 
+      "/images/apartment7.jpg",
+      "/images/apartment8.jpg"
+    ],
+    propertyName: 'Riverside Retreat',
+    location: 'Port Harcourt, Rivers State',
+    rating: 4.7,
+    description: 'Serene riverside accommodation',
+    price: 65000,
+    bedrooms: 3,
+    propertyType: "Cottage"
+  },
+  {
+    id: 11,
+    image: "/images/apartment9.jpg",
+    images: [
+      "/images/apartment9.jpg", 
+      "/images/apartment8.jpg"
+    ],
+    propertyName: 'Executive Suite',
+    location: 'Victoria Island, Lagos',
+    rating: 4.9,
+    price: 120000,
+    description: 'Luxury executive accommodation',
+    bedrooms: 2,
+    propertyType: "Suite"
+  },
+  {
+    id: 12,
+    image: "/images/apartment4.jpg",
+    images: [
+      "/images/apartment4.jpg", 
+      "/images/apartment5.jpg", 
+      "/images/apartment6.jpg"
+    ],
+    propertyName: 'Historic Townhouse',
+    location: 'Calabar, Cross River State',
+    rating: 4.5,
+    price: 42000,
+    description: 'Classic town house with character',
+    bedrooms: 4,
+    propertyType: "Townhouse"
   },
 ];
 

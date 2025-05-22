@@ -53,7 +53,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   };
   return (
     <Link to="/propertydetail" className="block">
-      <div className="w-full hover:cursor-pointer rounded-lg overflow-hidden shadow-sm">
+      <div className="w-full min-w-[350px] hover:cursor-pointer rounded-lg overflow-hidden shadow-sm">
         {/* Image Carousel */}
         <div className="relative overflow-hidden">
           <div className="relative h-[200px]">
@@ -128,7 +128,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
           {/* Property Name */}
           <div className="mb-2">
             <h3 className="font-medium text-lg leading-tight">{propertyName}</h3>
-            <p className="text-sm text-gray-600">Newly Test Remodeled</p>
+            <p className="text-sm text-gray-600">{description}</p>
           </div>
 
           {/* Property Tags Row */}
