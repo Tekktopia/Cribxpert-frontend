@@ -1,7 +1,7 @@
 import { PropertyListingProps } from '@/types';
 import { Link } from 'react-router-dom';
 import { CiHeart } from 'react-icons/ci';
-import { FaChevronLeft, FaChevronRight, FaHeart, FaStar } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaHeart, FaStar } from 'react-icons/fa';
 import { useSavedList } from '../context/SavedListContext';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { IoLocationOutline } from 'react-icons/io5';
@@ -17,42 +17,68 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   image,
   images = [],
   bedrooms = 3, // Default value if not provided
-  propertyType = "Apartment" // Default value if not provided
+  propertyType = 'Apartment', // Default value if not provided
 }) => {
   // Use the provided image as fallback if no images array is provided
   const allImages = images.length > 0 ? images : [image, image, image];
-  
+
   // State for carousel
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const { addList, savedList, removeList } = useSavedList();
-  const isSavedProperty = savedList.some((savedProperty) => savedProperty.id === id);
-  
+  const isSavedProperty = savedList.some(
+    (savedProperty) => savedProperty.id === id
+  );
+
   const handleIconToggle = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation when clicking the heart icon
     if (isSavedProperty) {
-      removeList({ id, propertyName, price, location, rating, description, image });
+      removeList({
+        id,
+        propertyName,
+        price,
+        location,
+        rating,
+        description,
+        image,
+      });
     } else {
-      addList({ id, propertyName, price, location, rating, description, image });
+      addList({
+        id,
+        propertyName,
+        price,
+        location,
+        rating,
+        description,
+        image,
+      });
     }
   };
 
   // Carousel navigation functions
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation
-    setCurrentImageIndex((prevIndex) => 
+    setCurrentImageIndex((prevIndex) =>
       prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const prevImage = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation
-    setCurrentImageIndex((prevIndex) => 
+    setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
     );
   };
+  // Helper function to convert property name to URL slug
+  const createSlug = (name: string): string => {
+    return name
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .replace(/\s+/g, '-');
+  };
+
   return (
-    <Link to="/propertydetail" className="block">
+    <Link to={`/propertydetail/${createSlug(propertyName)}`} className="block">
       <div className="w-full min-w-[350px] hover:cursor-pointer rounded-lg overflow-hidden shadow-sm">
         {/* Image Carousel */}
         <div className="relative overflow-hidden">
@@ -67,26 +93,26 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
             {/* Navigation Arrows - Only show when more than one image */}
             {allImages.length > 1 && (
               <>
-                <button 
+                <button
                   onClick={prevImage}
                   className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center z-10"
                   aria-label="Previous image"
                 >
                   <FaChevronLeft size={14} />
                 </button>
-                <button 
+                <button
                   onClick={nextImage}
                   className="absolute top-1/2 right-2 z-20 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center"
                   aria-label="Next image"
                 >
-                  <FaChevronRight size={14} className='text-white' />
+                  <FaChevronRight size={14} className="text-white" />
                 </button>
 
                 {/* Carousel Indicators */}
                 <div className="absolute bottom-3 left-3 flex space-x-1">
                   {allImages.map((_, index) => (
-                    <span 
-                      key={index} 
+                    <span
+                      key={index}
                       className={`block h-1.5 w-1.5 rounded-full ${
                         index === currentImageIndex ? 'bg-white' : 'bg-white/50'
                       }`}
@@ -96,22 +122,22 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
               </>
             )}
           </div>
-          
+
           {/* Heart Icon - Save/Unsave */}
           <div className="absolute top-3 right-3 z-20">
             {isSavedProperty ? (
-              <FaHeart 
-                className="w-6 h-6 text-[#730071]" 
+              <FaHeart
+                className="w-6 h-6 text-[#730071]"
                 onClick={handleIconToggle}
               />
             ) : (
-              <CiHeart 
-                className="w-6 h-6 text-white drop-shadow-md" 
+              <CiHeart
+                className="w-6 h-6 text-white drop-shadow-md"
                 onClick={handleIconToggle}
               />
             )}
           </div>
-          
+
           {/* Photo Count Badge */}
           <div className="absolute bottom-3 right-3 flex items-center gap-2 z-20">
             <span className="bg-white text-black text-xs py-1 px-2 rounded-md">
@@ -127,7 +153,9 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
         <div className="p-3">
           {/* Property Name */}
           <div className="mb-2">
-            <h3 className="font-medium text-lg leading-tight">{propertyName}</h3>
+            <h3 className="font-medium text-lg leading-tight">
+              {propertyName}
+            </h3>
             <p className="text-sm text-gray-600">{description}</p>
           </div>
 
@@ -137,11 +165,11 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
             <span className="bg-[#730071] text-white text-xs px-2 py-1 rounded">
               {bedrooms} Bedroom {propertyType}
             </span>
-            
+
             {/* Rating */}
             <div className="flex items-center">
               <span className="bg-[#A58207] text-white text-xs px-1 py-0.5 rounded  gap-1 flex">
-                <FaStar className="text-yellow-500 text-xs"/> {rating}
+                <FaStar className="text-yellow-500 text-xs" /> {rating}
               </span>
             </div>
           </div>
@@ -154,7 +182,9 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
 
           {/* Price */}
           <div className="mt-2">
-            <span className="text-[#730071] font-bold text-lg">₦{Number(price).toLocaleString()}</span>
+            <span className="text-[#730071] font-bold text-lg">
+              ₦{Number(price).toLocaleString()}
+            </span>
             <span className="text-gray-500 text-sm">/per night</span>
           </div>
         </div>

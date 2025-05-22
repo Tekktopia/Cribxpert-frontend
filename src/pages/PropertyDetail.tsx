@@ -1,8 +1,11 @@
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
 import Header from '@/components/layout/Header';
 import PropertyListings from '@/components/PropertyListing';
 import { PropertyListingProps } from '@/types';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 // Use constant paths instead of imports
 const IMAGES = {
@@ -23,18 +26,26 @@ const IMAGES = {
   arrowright: '/icons/arrow-right.png',
   carIcon: '/icons/Car-icon.png',
   location: '/icons/location.png',
-  
+
   // Gallery images
   GalleryOne: '/images/galleryOne.jpeg',
   GalleryTwo: '/images/GallerTwo.jpeg',
   GalleryThree: '/images/GalleryThree.jpeg',
   GalleryFour: '/images/GalleryFour.jpeg',
   GalleryFive: '/images/GalleryFive.png',
-  
+
   // Other images
   kingBed: '/images/kingBed.png',
   doubleBed: '/images/doubleBed.png',
   map: '/images/map.png',
+};
+
+// Helper function to convert property name to URL slug
+const createSlug = (name: string): string => {
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s]/g, '')
+    .replace(/\s+/g, '-');
 };
 
 const PropertyDetail = ({
@@ -42,37 +53,221 @@ const PropertyDetail = ({
 }: {
   listings?: PropertyListingProps[];
 }) => {
-  const limitedListings = listings?.slice(0, 4);
-  console.log(limitedListings);
+  const { name } = useParams<{ name: string }>();
+  const navigate = useNavigate();
+
+  // Find the property that matches the URL parameter
+  const property = listings.find(
+    (item) => createSlug(item.propertyName) === name
+  );
+
+  // Get similar properties (excluding current one)
+  const similarProperties = property
+    ? listings.filter((item) => item.id !== property.id).slice(0, 3)
+    : listings.slice(0, 3);
+
+  useEffect(() => {
+    // If property is not found, we could redirect to 404 or home
+    if (!property && listings.length > 0) {
+      navigate('/404', { replace: true });
+    }
+  }, [property, navigate, listings]);
+
+  // State for mobile image index
+  const [mobileImageIndex, setMobileImageIndex] = useState(0);
+
+  // Show loading or not found message if no property
+  if (!property) {
+    return (
+      <section className="max-w-screen-xl mx-auto overflow-hidden">
+        <Header />
+        <div className="flex justify-center items-center h-[60vh] mt-[130px]">
+          <p className="text-xl text-gray-500">Property not found</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
       <Header />
-      {/*Image Gallery Section*/}
-      <div className="flex flex-col lg:mt-[130px] md:flex-row items-center justify-center py-3 gap-4 ">
-        <div className="relative">
-          <img
-            src={IMAGES.GalleryFour}
-            alt="Gallery Four"
-            className="w-full md:w-[554px] h-64 md:h-[340px] object-cover"
-          />
+      <div className="flex flex-col mt-12 sm:mt-32 lg:mt-[130px] md:flex-row items-center justify-center py-3 px-4 gap-4">
+        {/* Mobile Carousel - Only visible on mobile */}
+        <div className="relative w-full block md:hidden">
+          {/* Get all available images */}
+          {(() => {
+            const allImages = property.images?.length
+              ? property.images
+              : [property.image];
 
-          <div className="absolute inset-0 bg-black bg-opacity-20 "></div>
+            return (
+              <div className="relative w-full">
+                {/* Current Image */}
+                <img
+                  src={allImages[mobileImageIndex]}
+                  alt={`${property.propertyName} ${mobileImageIndex + 1}`}
+                  className="w-full h-[350px] object-cover rounded-lg"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+
+                {/* Navigation Arrows */}
+                <button
+                  onClick={() =>
+                    setMobileImageIndex((prev) =>
+                      prev === 0 ? allImages.length - 1 : prev - 1
+                    )
+                  }
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center z-10"
+                  aria-label="Previous image"
+                >
+                  <FaChevronLeft />
+                </button>
+
+                <button
+                  onClick={() =>
+                    setMobileImageIndex((prev) =>
+                      prev === allImages.length - 1 ? 0 : prev + 1
+                    )
+                  }
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center z-10"
+                  aria-label="Next image"
+                >
+                  <FaChevronRight />
+                </button>
+
+                {/* Pagination Dots */}
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+                  {allImages.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setMobileImageIndex(idx)}
+                      className={`w-2 h-2 rounded-full ${
+                        idx === mobileImageIndex ? 'bg-white' : 'bg-white/50'
+                      }`}
+                      aria-label={`Go to image ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Image Counter */}
+                <div className="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-md">
+                  {mobileImageIndex + 1} / {allImages.length}
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
-        {/* Grid for Small Images */}
-        <div className="grid grid-cols-2 gap-4 max-w-full overflow-hidden">
-          {[IMAGES.GalleryOne, IMAGES.GalleryTwo, IMAGES.GalleryThree, IMAGES.GalleryFive].map(
-            (src, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={src}
-                  className="w-full h-32 md:h-[160px] object-cover "
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-20 "></div>
-              </div>
-            )
-          )}
+        {/* Desktop Gallery - Only visible on medium screens and up */}
+        <div className="hidden md:block w-full">
+          {(() => {
+            // Get all available images
+            const allImages = property.images?.length
+              ? property.images
+              : [property.image];
+
+            switch (allImages.length) {
+              case 1:
+                // Single image layout - full width
+                return (
+                  <div className="relative w-full">
+                    <img
+                      src={allImages[0]}
+                      alt={property.propertyName}
+                      className="w-full h-[350px] md:h-[500px] object-cover rounded-lg"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+                  </div>
+                );
+
+              case 2:
+                // Two images layout - side by side
+                return (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                    {allImages.map((src, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={src}
+                          alt={`${property.propertyName} ${index + 1}`}
+                          className="w-full h-64 md:h-[350px] object-cover rounded-lg"
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+                      </div>
+                    ))}
+                  </div>
+                );
+
+              case 3:
+                // Three images layout - one large, two small
+                return (
+                  <div className="flex flex-col md:flex-row w-full gap-4">
+                    {/* Primary image */}
+                    <div className="relative md:w-1/2">
+                      <img
+                        src={allImages[0]}
+                        alt={property.propertyName}
+                        className="w-full h-64 md:h-[350px] object-cover rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+                    </div>
+
+                    {/* Two smaller images stacked */}
+                    <div className="flex flex-col md:w-1/2 gap-4">
+                      {allImages.slice(1, 3).map((src, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={src}
+                            alt={`${property.propertyName} ${index + 2}`}
+                            className="w-full h-32 md:h-[168px] object-cover rounded-lg"
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+
+              default:
+                // 4+ images layout - one large, four smaller in grid
+                return (
+                  <div className='flex gap-4 w-full'>
+                    {/* Primary image */}
+                    <div className="relative md:w-1/2">
+                      <img
+                        src={allImages[0]}
+                        alt={property.propertyName}
+                        className="w-full h-64 md:h-[350px] object-cover rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+                    </div>
+
+                    {/* Grid for Small Images */}
+                    <div className="grid grid-cols-2 gap-4 md:w-1/2">
+                      {allImages.slice(1, 5).map((src, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={src}
+                            alt={`${property.propertyName} ${index + 2}`}
+                            className="w-full h-32 md:h-[168px] object-cover rounded-lg"
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Show "View all photos" button if there are more than 5 images */}
+                    {allImages.length > 5 && (
+                      <button
+                        className="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-md text-sm font-medium shadow-md"
+                        onClick={() => alert('View all photos clicked')}
+                      >
+                        View all {allImages.length} photos
+                      </button>
+                    )}
+                  </div>
+                );
+            }
+          })()}
         </div>
       </div>
 
@@ -80,10 +275,10 @@ const PropertyDetail = ({
         <div className="flex md:flex-row flex-col justify-between items-center">
           <div className="flex flex-col gap-y-2">
             <h1 className="font-[400] text-[25px] text-[#040404]">
-              Makinwaa's Cottage- Newly Remodeled
+              {property.propertyName} - {property.description}
             </h1>
             <p className="font-[400] text-[14px] text-[#040404]">
-              ⭐4.5{' '}
+              ⭐{property.rating}{' '}
               <span className="text-[#6f6f6f] font-[400] text-[16px]">
                 [115 verified positive feedbacks]
               </span>
@@ -99,7 +294,11 @@ const PropertyDetail = ({
             </div>
             <div className="rounded-[200px] px-6 py-3 bg-[#e6e6e6]">
               <div className="flex items-center gap-2">
-                <img src={IMAGES.share} className="w-[20px] h-[20px]" alt="Share" />
+                <img
+                  src={IMAGES.share}
+                  className="w-[20px] h-[20px]"
+                  alt="Share"
+                />
                 <p className="text-[#070707] font-[400] text-[14px]">Share</p>
               </div>
             </div>
@@ -109,10 +308,18 @@ const PropertyDetail = ({
 
       <section className="py-6 px-10">
         <div className="m-4 flex flex-row items-center gap-3">
-          <img src={IMAGES.bedroom} alt="Bedroom" className="w-[20px] h-[20px]" />
+          <img
+            src={IMAGES.bedroom}
+            alt="Bedroom"
+            className="w-[20px] h-[20px]"
+          />
           <p className="text-[#313131] font-[400] text-[14px]">3 bedroom</p>
 
-          <img src={IMAGES.bathroom} alt="bathroom" className="w-[20px] h-[20px]" />
+          <img
+            src={IMAGES.bathroom}
+            alt="bathroom"
+            className="w-[20px] h-[20px]"
+          />
           <p className="text-[#313131] font-[400] text-[14px]">3 bathroom</p>
 
           <img src={IMAGES.guest} alt="guest" className="w-[20px] h-[20px]" />
@@ -160,7 +367,11 @@ const PropertyDetail = ({
                 <div className="md:w-1/2 space-y-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <img src={IMAGES.location} alt="Location" className="w-4 h-4" />
+                      <img
+                        src={IMAGES.location}
+                        alt="Location"
+                        className="w-4 h-4"
+                      />
                       <p className="text-sm font-normal text-[#6F6F6F]">
                         Trans Amusement Children's Museum
                       </p>
@@ -172,7 +383,11 @@ const PropertyDetail = ({
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <img src={IMAGES.location} alt="location" className="w-4 h-4" />
+                      <img
+                        src={IMAGES.location}
+                        alt="location"
+                        className="w-4 h-4"
+                      />
                       <p className="text-sm font-normal text-[#6F6F6F]">
                         Ventura Mall
                       </p>
@@ -466,10 +681,26 @@ const PropertyDetail = ({
                     <span className="text-[#050505] font-[500]">4</span>/5
                   </h2>
                   <div className="flex items-center gap-2">
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
                   </div>
                   <p className="text-[#313131] text-[14px] font-[500] mt-3">
                     1394 verified ratings
@@ -480,11 +711,31 @@ const PropertyDetail = ({
               <div className="flex flex-col gap-3 mx-auto">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-2">
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
+                    <img
+                      src={IMAGES.star}
+                      alt="star"
+                      className="w-[18px] h-[18px]"
+                    />
                     <p className="text-[#6F6F6F] text-[14px] font-[400]">
                       (923)
                     </p>
@@ -497,10 +748,26 @@ const PropertyDetail = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
                   <img
                     src={IMAGES.iconStarLight}
                     alt="star"
@@ -515,9 +782,21 @@ const PropertyDetail = ({
                 />
 
                 <div className="flex items-center gap-2">
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
                   <img
                     src={IMAGES.iconStarLight}
                     alt="star"
@@ -537,8 +816,16 @@ const PropertyDetail = ({
                 />
 
                 <div className="flex items-center gap-2">
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
                   <img
                     src={IMAGES.iconStarLight}
                     alt="star"
@@ -563,7 +850,11 @@ const PropertyDetail = ({
                 />
 
                 <div className="flex items-center gap-2">
-                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img
+                    src={IMAGES.star}
+                    alt="star"
+                    className="w-[18px] h-[18px]"
+                  />
                   <img
                     src={IMAGES.iconStarLight}
                     alt="star"
@@ -646,7 +937,7 @@ const PropertyDetail = ({
           <h1 className="text-[#040404] text-md md:text-[20px] font-[400] mb-4">
             Similar properties to Makinwaa's Cottage- Newly Remodeled
           </h1>
-          <PropertyListings listings={limitedListings} />
+          <PropertyListings listings={similarProperties} />
         </div>
       </section>
     </section>

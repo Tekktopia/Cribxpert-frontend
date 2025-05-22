@@ -40,7 +40,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
-              path="/propertydetail"
+              path="/propertydetail/:name"
               element={<PropertyDetail listings={SAMPLE_DATA} />}
             />
             <Route path="/my-bookings" element={<BookingPage />} />
