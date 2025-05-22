@@ -11,6 +11,7 @@ export interface PropertyListingProps {
   images?: string[],
   bedrooms?: number;
   propertyType?: string;
+  minWidth?: string;
 }
 export interface SavedListContextProps {
   savedList: PropertyListingProps[];

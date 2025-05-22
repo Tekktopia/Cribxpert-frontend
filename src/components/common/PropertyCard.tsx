@@ -19,6 +19,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   images = [],
   bedrooms = 3, // Default value if not provided
   propertyType = 'Apartment', // Default value if not provided
+  minWidth = "min-w-[350px]"
 }) => {
   // Use the provided image as fallback if no images array is provided
   const allImages = images.length > 0 ? images : [image, image, image];
@@ -80,7 +81,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
 
   return (
     <Link to={`/propertydetail/${createSlug(propertyName)}`} className="block">
-      <div className="w-full min-w-[350px] hover:cursor-pointer rounded-lg overflow-hidden shadow-sm">
+      <div className={`w-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm`}>
         {/* Image Carousel */}
         <div className="relative overflow-hidden">
           <div className="relative h-[200px]">

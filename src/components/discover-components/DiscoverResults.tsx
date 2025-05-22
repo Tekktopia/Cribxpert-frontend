@@ -13,7 +13,7 @@ export default function DiscoverResults({ isOpen }: DiscoverResultsProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate the data to display for the current page
-  const offset = (currentPage -1 ) * itemsPerPage;
+  const offset = (currentPage - 1) * itemsPerPage;
   const currentItems = listings.slice(offset, offset + itemsPerPage);
   const pageCount = Math.ceil(listings.length / itemsPerPage);
 
@@ -36,6 +36,10 @@ export default function DiscoverResults({ isOpen }: DiscoverResultsProps) {
             propertyName={listing.propertyName}
             location={listing.location}
             description={listing.description}
+            images={listing.images}
+            bedrooms={listing.bedrooms}
+            propertyType={listing.propertyType}
+            minWidth='min-w-none'
           />
         ))}
       </div>

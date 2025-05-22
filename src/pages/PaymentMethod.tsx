@@ -19,7 +19,7 @@ const PaymentMethod: React.FC = () => {
   return (
     <>
       <Header />
-      <section className="container mx-auto p-6">
+      <section className="container mx-auto p-6 mt-32">
         <div className="flex flex-col md:flex-row md:gap-6 relative">
           {/* Left: Payment Methods */}
           <div className="md:w-1/3 w-full flex flex-col">

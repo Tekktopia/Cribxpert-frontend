@@ -20,7 +20,7 @@ export default function DiscoverPage() {
       <div className="container mx-auto mt-16 md:mt-[120px] w-full flex md:p-8 pt-8 relative bg-white">
         <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
         <div
-          className={`${isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden md:block' : 'w-full md:-ml-4 '} transition-all duration-500 ease-in-out w-full mb-8`}
+          className={`${isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden md:block' : 'w-full md:-ml-4 '} transition-all duration-200 ease-in-out w-full mb-8`}
         >
           <div className="flex gap-4">
             {!isFilterPanelOpen && (
