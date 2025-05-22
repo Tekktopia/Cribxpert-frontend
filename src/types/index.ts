@@ -8,6 +8,9 @@ export interface PropertyListingProps {
   propertyName: string;
   description: string;
   price: number;
+  images?: string[],
+  bedrooms?: number;
+  propertyType?: string;
 }
 export interface SavedListContextProps {
   savedList: PropertyListingProps[];

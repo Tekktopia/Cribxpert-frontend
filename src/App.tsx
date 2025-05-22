@@ -3,6 +3,7 @@ import './index.css';
 
 // Routing related imports
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Authentication & User Management Pages
 import SignUp from './pages/SignUp';
@@ -33,6 +34,7 @@ function App() {
   return (
     <>
       <Router>
+        <ScrollToTop/>
         <SavedListProvider>
           <Routes>
             <Route path="/" element={<Home />} />

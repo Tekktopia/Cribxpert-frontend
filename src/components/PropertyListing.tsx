@@ -6,7 +6,7 @@ const PropertyListings = ({
   listings: PropertyListingProps[];
 }) => {
   return (
-    <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-14 gap-y-14 mb-14 place-items-center">
+    <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-14 place-items-center">
       {listings?.map((listing, key) => (
         <PropertyListingCard
           id={listing.id}

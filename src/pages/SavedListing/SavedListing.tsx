@@ -9,7 +9,7 @@ const SavedListing: React.FC = () => {
   return (
     <div className=" bg-white">
       <Header />
-      <div className="py-4 px-10 container mx-auto">
+      <div className="py-4 px-10 container mx-auto mt-32">
         <h1 className=" text-2xl">Your Saved Jobs</h1>
         <p className="text-[#6F6F6F] mt-2 ">
           {savedList.length} Listings saved -- Last updated on March 30,

@@ -57,7 +57,7 @@ const filterParameters: FilterParameter[] = [
 // Hero carousel images array
 const heroImages = [
   '/images/apartment2.jpg',
-  "/images/hero-image.jpeg",
+  '/images/hero-image.jpeg',
   '/images/apartment3.jpg',
 ];
 
@@ -87,8 +87,8 @@ const Home: React.FC = () => {
   return (
     <div>
       <Header />
-      <section className="py-15 my-5 lg:mx-5">
-        <section className="relative w-full lg:h-[100vh]">
+      <section className="py-15 my-5 sm:mt-32 lg:mx-5">
+        <section className="relative w-full">
           {/* Hero Section with Carousel */}
           <Hero
             images={heroImages}
@@ -97,16 +97,16 @@ const Home: React.FC = () => {
             buttonText="Shop Now"
             buttonLink="/discover"
           />
-
-          {/* Filter Bar */}
-          <FilterBar
-            parameters={filterParameters}
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onSearch={handleSearch}
-            className="hidden lg:block absolute bottom-0 transform translate-y-1/2 z-10"
-          />
         </section>
+
+        {/* Filter Bar */}
+        <FilterBar
+          parameters={filterParameters}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onSearch={handleSearch}
+          className="hidden lg:block z-10"
+        />
 
         {/* Filters Section */}
         <div className="w-full mx-auto overflow-x-auto lg:mt-12 py-2 scrollbar-hide max-w-[1280px]">
@@ -130,7 +130,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Property Listings Section */}
-        <div className="m-5">
+        <div className="my-5">
           <PropertyListings listings={SAMPLE_DATA} />
         </div>
       </section>

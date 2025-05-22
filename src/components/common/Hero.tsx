@@ -10,7 +10,6 @@ interface HeroProps {
   interval?: number; // Auto-rotation interval in ms, default 5000
   showArrows?: boolean;
   showDots?: boolean;
-  height?: string;
   overlayOpacity?: number;
 }
 
@@ -23,7 +22,6 @@ const Hero: React.FC<HeroProps> = ({
   interval = 5000,
   showArrows = true,
   showDots = true,
-  height = 'h-[600px]',
   overlayOpacity = 50,
 }) => {
   // State for tracking current image index
@@ -47,7 +45,7 @@ const Hero: React.FC<HeroProps> = ({
 
   return (
     <div
-      className={`relative w-full ${height} bg-cover bg-center transition-all duration-700 ease-in-out`}
+      className={`relative w-full h-[50vh] md:h-[80vh]  bg-cover bg-center transition-all duration-700 ease-in-out`}
       style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
     >
       {/* Overlay */}
