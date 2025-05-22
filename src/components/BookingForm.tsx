@@ -60,7 +60,7 @@ const BookingForm:React.FC=()=>{
   </div>
 
   {/* CTA Button */}
-  <Link to="/BookingPage">
+  <Link to="/my-bookings">
   <button className="bg-[#730071] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#5a0056] transition">
     Book Now
   </button>

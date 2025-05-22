@@ -1,64 +1,198 @@
 import { PropertyListingProps } from '@/types';
 import { Link } from 'react-router-dom';
 import { CiHeart } from 'react-icons/ci';
-import { FaHeart } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaHeart, FaStar } from 'react-icons/fa';
 import { useSavedList } from '../context/SavedListContext';
+import { HiOutlineCamera } from 'react-icons/hi';
+import { IoLocationOutline } from 'react-icons/io5';
+import { useState } from 'react';
+import OptimizedImage from './OptimizedImage';
+
 const PropertyListingCard: React.FC<PropertyListingProps> = ({
-    id,
+  id,
   propertyName,
   price,
   rating,
   description,
   location,
   image,
+  images = [],
+  bedrooms = 3, // Default value if not provided
+  propertyType = 'Apartment', // Default value if not provided
+  minWidth = "min-w-[350px]"
 }) => {
-    const{addList,savedList,removeList}=useSavedList() 
-    const isSavedProperty=savedList.some((savedProperty)=>savedProperty.id===id)
-    const handleIconToggle=()=>{
-        if(isSavedProperty){
-            removeList({id,propertyName,price,location,rating,description,image})
-            console.log("removed")
-        }
-            else{
-                addList({id,propertyName,price,location,rating,description,image})
-                console.log("added")
-            }
+  // Use the provided image as fallback if no images array is provided
+  const allImages = images.length > 0 ? images : [image];
+
+  // State for carousel
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const { addList, savedList, removeList } = useSavedList();
+  const isSavedProperty = savedList.some(
+    (savedProperty) => savedProperty.id === id
+  );
+
+  const handleIconToggle = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation when clicking the heart icon
+    if (isSavedProperty) {
+      removeList({
+        id,
+        propertyName,
+        price,
+        location,
+        rating,
+        description,
+        image,
+      });
+    } else {
+      addList({
+        id,
+        propertyName,
+        price,
+        location,
+        rating,
+        description,
+        image,
+      });
     }
-    
+  };
+
+  // Carousel navigation functions
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
+    );
+  };
+  // Helper function to convert property name to URL slug
+  const createSlug = (name: string): string => {
+    return name
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .replace(/\s+/g, '-');
+  };
+
   return (
-    <Link to="/propertydetail">
-      <div className="max-w-[305px] hover:cursor-pointer">
-        <div className="relative">
-          <img
-            src={image}
-            alt="Property Image"
-            className="w-full max-h-[230px]"
-          />
-          <div className="flex justify-end absolute top-2 right-4 ">
-        {isSavedProperty ? (
-                        <FaHeart className="w-6 h-6 text-black" onClick={handleIconToggle}/>
-        ) : (
-            <CiHeart className="w-6 h-6 " onClick={handleIconToggle}/>
+    <Link to={`/propertydetail/${createSlug(propertyName)}`} className="block">
+      <div className={`w-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm`}>
+        {/* Image Carousel */}
+        <div className="relative overflow-hidden">
+          <div className="relative h-[200px]">
+            {/* Current Image */}
+            <OptimizedImage
+              src={allImages[currentImageIndex]}
+              alt={propertyName}
+              className="w-full h-[200px] object-cover rounded-t-lg transition-opacity duration-300"
+            />
 
-        )
-    }
+            {/* Navigation Arrows - Only show when more than one image */}
+            {allImages.length > 1 && (
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center z-10"
+                  aria-label="Previous image"
+                >
+                  <FaChevronLeft size={14} />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute top-1/2 right-2 z-20 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center"
+                  aria-label="Next image"
+                >
+                  <FaChevronRight size={14} className="text-white" />
+                </button>
 
-    </div>
+                {/* Carousel Indicators */}
+                <div className="absolute bottom-3 left-3 flex space-x-1">
+                  {allImages.map((_, index) => (
+                    <span
+                      key={index}
+                      className={`block h-1.5 w-1.5 rounded-full ${
+                        index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Heart Icon - Save/Unsave */}
+          <div className="absolute top-3 right-3 z-20">
+            {isSavedProperty ? (
+              <FaHeart
+                className="w-6 h-6 text-[#730071]"
+                onClick={handleIconToggle}
+              />
+            ) : (
+              <CiHeart
+                className="w-6 h-6 text-white drop-shadow-md"
+                onClick={handleIconToggle}
+              />
+            )}
+          </div>
+
+          {/* Photo Count Badge */}
+          <div className="absolute bottom-3 right-3 flex items-center gap-2 z-20">
+            <span className="bg-white text-black text-xs py-1 px-2 rounded-md">
+              +{allImages.length - 1}
+            </span>
+            <span className="bg-white p-1 rounded-md">
+              <HiOutlineCamera className="w-4 h-4" />
+            </span>
+          </div>
         </div>
 
-        <div className="flex flex-row justify-around mt-2 ">
-          <p className="font-[400] text-[16px] mb-2">{propertyName}</p>
-          <p className="font-[400] text-[14px]">⭐{rating}</p>
-        </div>
-        <div className="flex flex-col space-y-2">
-          <p className="font-[400] text-[14px]">{location}</p>
-          <p className="font-[400] text-[14px]">{description}</p>
-          <p>
-            <strong className="font-[7000]">NGN {price}</strong>/night
-          </p>
+        {/* Content Section */}
+        <div className="p-3">
+          {/* Property Name */}
+          <div className="mb-2">
+            <h3 className="font-medium text-lg leading-tight">
+              {propertyName}
+            </h3>
+            <p className="text-sm text-gray-600">{description}</p>
+          </div>
+
+          {/* Property Tags Row */}
+          <div className="flex items-center gap-4 mb-2">
+            {/* Bedroom Tag */}
+            <span className="bg-[#730071] text-white text-xs px-2 py-1 rounded">
+              {bedrooms} Bedroom {propertyType}
+            </span>
+
+            {/* Rating */}
+            <div className="flex items-center">
+              <span className="bg-[#A58207] text-white text-xs px-1 py-0.5 rounded  gap-1 flex">
+                <FaStar className="text-yellow-500 text-xs" /> {rating}
+              </span>
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="flex items-center mb-2 text-gray-600">
+            <IoLocationOutline className="mr-1" />
+            <p className="text-sm">{location}</p>
+          </div>
+
+          {/* Price */}
+          <div className="mt-2">
+            <span className="text-[#730071] font-bold text-lg">
+              ₦{Number(price).toLocaleString()}
+            </span>
+            <span className="text-gray-500 text-sm">/per night</span>
+          </div>
         </div>
       </div>
     </Link>
   );
 };
+
 export default PropertyListingCard;

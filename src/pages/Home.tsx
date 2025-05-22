@@ -1,69 +1,115 @@
 import Header from '@/components/layout/Header';
-import heroImage from '@/assets/images/hero-image.jpeg';
 import { SAMPLE_DATA, Filter } from '@/utils/data';
-import React from 'react';
+import React, { useState } from 'react';
 import PropertyListings from '@/components/PropertyListing';
+import Hero from '@/components/common/Hero';
+import FilterBar from '@/components/home/FilterBar';
+import type { FilterParameter } from '@/types';
+
+const filterParameters: FilterParameter[] = [
+  {
+    name: 'location',
+    label: 'Location',
+    options: [
+      { value: 'lagos', label: 'Lagos' },
+      { value: 'abuja', label: 'Abuja' },
+      { value: 'portHarcourt', label: 'Port Harcourt' },
+    ],
+  },
+  {
+    name: 'propertyType',
+    label: 'Property Type',
+    options: [
+      { value: 'apartment', label: 'Apartment' },
+      { value: 'house', label: 'House' },
+      { value: 'villa', label: 'Villa' },
+    ],
+  },
+  {
+    name: 'priceRange',
+    label: 'Price Range',
+    options: [
+      { value: '0-50000', label: '₦0 - ₦50,000' },
+      { value: '50000-100000', label: '₦50,000 - ₦100,000' },
+      { value: '100000-200000', label: '₦100,000 - ₦200,000' },
+    ],
+  },
+  {
+    name: 'bedrooms',
+    label: 'Bedrooms',
+    options: [
+      { value: '1', label: '1 Bedroom' },
+      { value: '2', label: '2 Bedrooms' },
+      { value: '3plus', label: '3+ Bedrooms' },
+    ],
+  },
+  {
+    name: 'amenities',
+    label: 'Amenities',
+    options: [
+      { value: 'wifi', label: 'WiFi' },
+      { value: 'pool', label: 'Swimming Pool' },
+      { value: 'parking', label: 'Parking' },
+    ],
+  },
+];
+
+// Hero carousel images array
+const heroImages = [
+  '/images/apartment2.jpg',
+  '/images/hero-image.jpeg',
+  '/images/apartment3.jpg',
+];
 
 const Home: React.FC = () => {
+  const [filters, setFilters] = useState<Record<string, string>>({
+    location: '',
+    propertyType: '',
+    priceRange: '',
+    bedrooms: '',
+    amenities: '',
+  });
+
+  // Handler for filter changes
+  const handleFilterChange = (name: string, value: string) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
+  // Handler for search button click
+  const handleSearch = () => {
+    console.log('Searching with filters:', filters);
+    // Implement search functionality here
+  };
+
   return (
     <div>
       <Header />
-      <section className="py-15 m-5">
+      <section className="py-15 my-5 sm:mt-32 lg:mx-5">
         <section className="relative w-full">
-          {/* Hero Section */}
-          <div
-            className="relative w-full h-[600px] bg-cover bg-center"
-            style={{ backgroundImage: `url(${heroImage})` }}
-          >
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-
-            {/* Content */}
-            <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
-              <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-[#E6E6E6] mb-4 max-w-3xl">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </h1>
-              <p className="text-sm sm:text-base font-medium text-[#E6E6E6] mb-6">
-                Find Everything You Love, at Prices You’ll Adore – Shop Now and
-                Save Big.
-              </p>
-              <button className="bg-[#730071] px-6 py-2 rounded-md text-white text-sm md:text-base">
-                Shop Now
-              </button>
-            </div>
-          </div>
-
-          {/* Filter Bar */}
-          <div className="bg-[#8b2b89] w-full py-4 px-4 md:px-8 absolute bottom-0 transform translate-y-1/2">
-            <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-between items-center gap-4">
-              {[
-                'Filter Parameter 1',
-                'Filter Parameter 2',
-                'Filter Parameter 3',
-                'Filter Parameter 4',
-                'Filter Parameter 5',
-              ].map((param, index) => (
-                <div key={index} className="flex flex-col">
-                  <label className="text-[#E6E6E6] font-medium text-sm">
-                    {param}
-                  </label>
-                  <select className="w-full md:w-[200px] h-[36px] bg-white text-black border border-gray-300 rounded-md mt-1">
-                    <option value="">Select</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                  </select>
-                </div>
-              ))}
-              {/* Search Button */}
-              <button className="bg-black text-white px-6 py-2 rounded-md text-sm md:text-base">
-                Search
-              </button>
-            </div>
-          </div>
+          {/* Hero Section with Carousel */}
+          <Hero
+            images={heroImages}
+            title="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+            subtitle="Find Everything You Love, at Prices You'll Adore – Shop Now and Save Big."
+            buttonText="Shop Now"
+            buttonLink="/discover"
+          />
         </section>
 
+        {/* Filter Bar */}
+        <FilterBar
+          parameters={filterParameters}
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onSearch={handleSearch}
+          className="hidden lg:block z-10"
+        />
+
         {/* Filters Section */}
-        <div className="w-full overflow-x-auto mt-20 py-2 scrollbar-hide max-w-[1280px]">
+        <div className="w-full mx-auto overflow-x-auto lg:mt-12 py-2 scrollbar-hide max-w-[1280px]">
           <div className="flex items-center gap-6 min-w-max px-4">
             {Filter.map((filter, index) => (
               <div
@@ -84,7 +130,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* Property Listings Section */}
-        <div className="py- m-5">
+        <div className="my-5">
           <PropertyListings listings={SAMPLE_DATA} />
         </div>
       </section>
@@ -92,9 +138,9 @@ const Home: React.FC = () => {
       {/* Continue Exploring Section */}
       <div className="flex justify-center items-center">
         <div>
-
-          <p className="text-[#6F6F6F] font-[400] text-[14px] mb-4 ">Continue exploring short let houses</p>
-
+          <p className="text-[#6F6F6F] font-[400] text-[14px] mb-4 ">
+            Continue exploring short let houses
+          </p>
           <div className="mx-auto flex items-center justify-center">
             <button className="bg-[#730071] px-6 py-2 rounded-md text-white">
               Shop Now

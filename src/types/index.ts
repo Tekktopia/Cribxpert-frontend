@@ -8,6 +8,10 @@ export interface PropertyListingProps {
   propertyName: string;
   description: string;
   price: number;
+  images?: string[],
+  bedrooms?: number;
+  propertyType?: string;
+  minWidth?: string;
 }
 export interface SavedListContextProps {
   savedList: PropertyListingProps[];
@@ -64,4 +68,15 @@ export type SupportType = {
 export type ContactInfo = {
   icon: JSX.Element;
   title: string;
+};
+
+export type FilterOption = {
+  value: string;
+  label: string;
+};
+
+export type FilterParameter = {
+  name: string;
+  label: string;
+  options: FilterOption[];
 };

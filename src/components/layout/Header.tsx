@@ -1,20 +1,26 @@
 import messageIcon from '@/assets/icons/message.png';
 import supportIcon from '@/assets/icons/like.png';
 import notificationIcon from '@/assets/icons/notifications.png';
-import profileIcon from '@/assets/icons/Profile.png';
 import humburger from '@/assets/icons/hamburger.png';
 import { Link, NavLink } from 'react-router-dom';
 import { BiMenu, BiX } from 'react-icons/bi';
 import { useState } from 'react';
-import { useAuth } from '@clerk/clerk-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
+  const toggleProfileMenu = () => {
+    setShowProfileMenu(!showProfileMenu);
+  };
+
+  // Get authentication state and user data from Clerk
+  const { isLoaded, isSignedIn, user } = useUser();
   const { signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -22,200 +28,347 @@ const Header: React.FC = () => {
     window.location.href = '/login';
   };
 
+  // Icon navigation items
+  const iconNavItems = [
+    { icon: messageIcon, label: 'Message', route: '' },
+    { icon: supportIcon, label: 'Support', route: '/support' },
+    { icon: notificationIcon, label: 'Notifications', route: '/notification' },
+  ];
+
+  // Main navigation links
+  const navLinks = [
+    { label: 'Dashboard', route: '/' },
+    { label: 'Discover', route: '/discover' },
+    { label: 'My Bookings', route: '/my-bookings' },
+    { label: 'Saved Listings', route: '/saved-listings' },
+    { label: 'Payments', route: '/payments' },
+  ];
+
   return (
     <section className="overflow-hidden w-full">
-      <header className="w-full border-b border-b-[#CCCCCC80]/50 bg-white">
-        {/* Navigation Bar */}
-        <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
-          {/* Logo */}
-          <div className="w-auto">
-            <h1 className="font-bold text-[20px] text-[#730071]">
-              Shotletapp.ng
-            </h1>
-          </div>
-
-          {/* Search Input */}
-          <div className="flex-grow max-w-[500px]">
-            <input
-              type="text"
-              className="w-full h-[48px] border border-[#CCCCCC99]/60 rounded-[12px] px-4 text-[14px]"
-              placeholder="Search"
-            />
-          </div>
-
-          {/* Icons Section */}
-          <div className="w-auto flex flex-row gap-6 py-3">
-            <div className="flex flex-col items-center">
-              <img
-                src={messageIcon}
-                alt="Message Icon"
-                className="w-[20px] h-[20px]"
-              />
-              <Link to="" className="text-[14px] text-[#999999] cursor-pointer">
-                Message
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-b-[#CCCCCC80]/50 bg-white shadow-sm">
+        <div className="container mx-auto">
+          {/* Navigation Bar */}
+          <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
+            {/* Logo */}
+            <div className="w-auto">
+              <Link to={'/'}>
+                <h1 className="font-bold text-[20px] text-[#730071]">
+                  CribXpert
+                </h1>
               </Link>
             </div>
-            <div className="flex flex-col items-center">
-              <img
-                src={supportIcon}
-                alt="supportIcon"
-                className="w-[20px] h-[20px]"
-              />
-              <Link
-                to="/support"
-                className="text-[14px] text-[#999999] cursor-pointer"
-              >
-                Support
-              </Link>
-            </div>
-            <div className="flex flex-col items-center">
-              <img
-                src={notificationIcon}
-                alt="notificationIcon"
-                className="w-[20px] h-[20px]"
-              />
-              <Link
-                to="/notification"
-                className="text-[14px] text-[#999999] cursor-pointer"
-              >
-                Notifications
-              </Link>
-            </div>
-            <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
-            <div className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2 relative">
-              <a href="/profile">
-                {' '}
-                <img
-                  src={humburger}
-                  alt="humburger Icon"
-                  className="w-[18px] h-[10px]"
-                />
-              </a>
 
-              <img
-                src={profileIcon}
-                alt="Profile Icon"
-                className="w-[32px] h-[32px]"
+            {/* Search Input */}
+            <div className="flex-grow max-w-[500px]">
+              <input
+                type="text"
+                className="w-full h-[48px] border border-[#CCCCCC99]/60 rounded-[12px] px-4 text-[14px]"
+                placeholder="Search"
               />
-              <div className="absolute top-[45px] p-4 shadow-lg bg-white">
-                <button
-                  className="text-[14px] text-red-500"
-                  onClick={handleLogout}
+            </div>
+
+            {/* Icons Section */}
+            <div className="w-auto flex flex-row gap-6 py-3">
+              {iconNavItems.map((item, index) => (
+                <Link
+                  to={item.route}
+                  key={index}
+                  className="flex flex-col items-center"
                 >
-                  Logout
-                </button>
-              </div>
+                  <img
+                    src={item.icon}
+                    alt={`${item.label} Icon`}
+                    className="w-[20px] h-[20px]"
+                  />
+                  <span className="text-[14px] text-[#999999] cursor-pointer">
+                    {item.label}
+                  </span>
+                </Link>
+              ))}
+              <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
+
+              {/* Conditional rendering based on authentication status */}
+              {isLoaded && isSignedIn ? (
+                // Authenticated: Show Profile Menu
+                <div className="relative">
+                  <div
+                    className="w-[82px] h-[40px] rounded-md border border-[#CCCCCC] flex items-center gap-3 px-2 cursor-pointer"
+                    onClick={toggleProfileMenu}
+                  >
+                    <img
+                      src={humburger}
+                      alt="hamburger Icon"
+                      className="w-[18px] h-[10px]"
+                    />
+                    {user?.hasImage ? (
+                      <img
+                        src={user.imageUrl}
+                        alt="Profile"
+                        className="w-[32px] h-[32px] rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-[32px] h-[32px] rounded-full bg-[#730071] text-white flex items-center justify-center text-sm font-medium">
+                        {user?.firstName?.charAt(0) ||
+                          user?.username?.charAt(0) ||
+                          'U'}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Dropdown Menu - only shown when showProfileMenu is true */}
+                  {showProfileMenu && (
+                    <div className="absolute right-0 top-[45px] w-[220px] p-2 shadow-lg bg-white rounded-md z-50">
+                      {/* User Info Section - with actual user data */}
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <p className="font-medium text-sm">
+                          {user?.fullName || user?.username || 'Account'}
+                        </p>
+                        <p className="text-gray-500 text-xs truncate">
+                          {user?.primaryEmailAddress?.emailAddress || ''}
+                        </p>
+                      </div>
+
+                      {/* Menu Items */}
+                      <ul className="py-2">
+                        <li>
+                          <Link
+                            to="/profile"
+                            className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 rounded-md"
+                            onClick={() => setShowProfileMenu(false)}
+                          >
+                            <svg
+                              className="w-4 h-4 mr-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                              />
+                            </svg>
+                            My Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/settings"
+                            className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 rounded-md"
+                            onClick={() => setShowProfileMenu(false)}
+                          >
+                            <svg
+                              className="w-4 h-4 mr-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                              />
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                            </svg>
+                            Settings
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/my-bookings"
+                            className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 rounded-md"
+                            onClick={() => setShowProfileMenu(false)}
+                          >
+                            <svg
+                              className="w-4 h-4 mr-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
+                            </svg>
+                            My Bookings
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/help"
+                            className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 rounded-md"
+                            onClick={() => setShowProfileMenu(false)}
+                          >
+                            <svg
+                              className="w-4 h-4 mr-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            Help Center
+                          </Link>
+                        </li>
+
+                        {/* Logout with divider */}
+                        <li className="border-t border-gray-100 mt-2 pt-2">
+                          <button
+                            className="flex items-center w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 rounded-md"
+                            onClick={handleLogout}
+                          >
+                            <svg
+                              className="w-4 h-4 mr-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                              />
+                            </svg>
+                            Logout
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // Not authenticated: Show login/signup links
+                <div className="flex items-center gap-3">
+                  <Link
+                    to="/login"
+                    className="text-[14px] text-[#730071] font-medium"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/sign-up"
+                    className="px-4 py-2 text-[14px] text-white bg-[#730071] rounded-md font-medium hover:bg-[#5e005d] transition-colors"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
+            </div>
+          </nav>
+
+          {/* Mobile Menu Toggle */}
+          <div className="md:hidden flex justify-between items-center p-4">
+            <Link to={'/'}>
+              <h1 className="font-bold text-[20px] text-[#730071]">
+                CribXpert
+              </h1>
+            </Link>
+
+            {isOpen ? (
+              <BiX className="block md:hidden text-4xl" onClick={toggleMenu} />
+            ) : (
+              <BiMenu
+                className="block md:hidden text-4xl"
+                onClick={toggleMenu}
+              />
+            )}
+          </div>
+
+          {/* Navigation Menu for Desktop */}
+          <div className="hidden md:flex px-4 md:px-8 py-4">
+            <div className="flex items-center gap-4">
+              {navLinks.map((link, index) => (
+                <NavLink
+                  key={index}
+                  to={link.route}
+                  className={({ isActive }) =>
+                    isActive
+                      ? 'text-[#730071] font-bold'
+                      : 'text-[#999999] text-[14px] font-medium cursor-pointer'
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
             </div>
           </div>
-        </nav>
 
-        {/* Mobile Menu Toggle */}
-        <div className="md:hidden flex justify-between items-center p-4">
-          <h1 className="font-bold text-[20px] text-[#730071]">
-            Shotletapp.ng
-          </h1>
-          {isOpen ? (
-            <BiX className="block md:hidden text-4xl" onClick={toggleMenu} />
-          ) : (
-            <BiMenu className="block md:hidden text-4xl" onClick={toggleMenu} />
+          {/* Mobile Drawer */}
+          {isOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+                onClick={() => setIsOpen(false)}
+              />
+
+              {/* Side Drawer Menu */}
+              <div className="fixed top-0 left-0 w-full bg-white text-black z-50 md:hidden overflow-y-auto">
+                {/* Purple header */}
+                <div className="bg-[#730071] flex justify-between items-center w-full p-4 text-white">
+                  <Link to={'/'}>
+                    <h1 className="text-base font-medium">CribXpert</h1>
+                  </Link>
+
+                  <BiX className="text-2xl" onClick={toggleMenu} />
+                </div>
+
+                {/* Menu items */}
+                <div className="py-2">
+                  <ul className="flex flex-col">
+                    {navLinks.map((link, index) => (
+                      <li key={index} className="border-b border-gray-100">
+                        <Link
+                          to={link.route}
+                          className="px-4 py-2 block text-sm font-normal text-gray-800"
+                          onClick={toggleMenu}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+
+                    {iconNavItems.map((item, index) => (
+                      <li
+                        key={`icon-${index}`}
+                        className="border-b border-gray-100"
+                      >
+                        <Link
+                          to={item.route}
+                          className="px-4 py-3.5 block text-sm font-normal text-gray-800"
+                          onClick={toggleMenu}
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </>
           )}
         </div>
-
-        {/* Navigation Menu for Desktop */}
-        <div className="hidden md:flex px-4 md:px-8 py-4">
-          <div className="flex items-center gap-4">
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-[#730071] font-bold'
-                  : 'text-[#999999] text-[14px] font-medium cursor-pointer'
-              }
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/discover"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-[#730071] font-bold'
-                  : 'text-[#999999] text-[14px] font-medium cursor-pointer'
-              }
-            >
-              Discover
-            </NavLink>
-            <NavLink
-              to="/my-bookings"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-[#730071] font-bold'
-                  : 'text-[#999999] text-[14px] font-medium cursor-pointer'
-              }
-            >
-              My Bookings
-            </NavLink>
-            <NavLink
-              to="/saved-listings"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-[#730071] font-bold'
-                  : 'text-[#999999] text-[14px] font-medium cursor-pointer'
-              }
-            >
-              Saved Listings
-            </NavLink>
-            <NavLink
-              to="/payments"
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-[#730071] font-bold'
-                  : 'text-[#999999] text-[14px] font-medium cursor-pointer'
-              }
-            >
-              Payments
-            </NavLink>
-          </div>
-        </div>
-
-        {/* Mobile Drawer */}
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-              onClick={() => setIsOpen(false)}
-            />
-
-            {/* Side Drawer Menu */}
-            <div className="fixed top-0 left-0 w-[80%] bg-white text-black z-50 md:hidden">
-              <div className="bg-[#730071] flex justify-between items-center w-full mb-5 text-white p-2">
-                <h1 className="text-xl font-bold">Shotletapp.ng</h1>
-                <BiX className="text-4xl" onClick={toggleMenu} />
-              </div>
-              <ul className="flex flex-col gap-4 p-4">
-                {[
-                  'Dashboard',
-                  'Discover',
-                  'My Bookings',
-                  'Saved Listing',
-                  'Payments',
-                  'Message',
-                  'Support',
-                  'Notifications',
-                ].map((item) => (
-                  <li key={item}>
-                    <Link
-                      to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="opacity-80 hover:opacity-100 transition duration-300"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </>
-        )}
       </header>
     </section>
   );
