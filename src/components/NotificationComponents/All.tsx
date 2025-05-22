@@ -1,5 +1,5 @@
 import eclipse from '@/assets/icons/Ellipse-gray.svg';
-import button from '@/assets/icons/button.svg';
+import button from '@/assets/icons/Button.svg';
 import reminder from '@/assets/icons/reminder.svg';
 const All = () => {
   return (
