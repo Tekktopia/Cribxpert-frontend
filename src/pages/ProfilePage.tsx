@@ -13,7 +13,7 @@ const ProfilePage = () => {
     <div>
       {' '}
       <Header />
-      <div className=" px-[30px] lg:px-[80px] container mx-auto">
+      <div className=" px-[30px] lg:px-[80px] mt-32 container mx-auto">
         <ProfileNav active={active} setActive={setActive} />
         {active === ActiveProfile.Profile && (
           <Profile
