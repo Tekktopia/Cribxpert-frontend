@@ -9,7 +9,7 @@ const SupportInfo = () => {
   return (
     <div>
       <Header />
-      <div className="mt-1">
+      <div className="mt-32">
         <SupportHeader />
         <div className="lg:p-8">
           <div className=" text-[#6F6F6F] flex p-[60px] flex-col gap-[20px] bg-[#FFF] shadow-lg shadow-[#73007114] text-sm lg:text-lg">

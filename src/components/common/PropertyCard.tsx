@@ -22,7 +22,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   minWidth = "min-w-[350px]"
 }) => {
   // Use the provided image as fallback if no images array is provided
-  const allImages = images.length > 0 ? images : [image, image, image];
+  const allImages = images.length > 0 ? images : [image];
 
   // State for carousel
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

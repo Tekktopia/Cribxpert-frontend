@@ -6,7 +6,7 @@ const SupportPage = () => {
   return (
     <div>
       <Header />
-      <div className="mt-1 container mx-auto">
+      <div className="mt-32 container mx-auto">
         <SupportHeader />
         <div className="lg:p-8">
           <Support />

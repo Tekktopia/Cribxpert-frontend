@@ -36,7 +36,6 @@ export default function DiscoverResults({ isOpen }: DiscoverResultsProps) {
             propertyName={listing.propertyName}
             location={listing.location}
             description={listing.description}
-            images={listing.images}
             bedrooms={listing.bedrooms}
             propertyType={listing.propertyType}
             minWidth='min-w-none'
