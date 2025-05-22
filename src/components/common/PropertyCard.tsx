@@ -6,6 +6,7 @@ import { useSavedList } from '../context/SavedListContext';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { IoLocationOutline } from 'react-icons/io5';
 import { useState } from 'react';
+import OptimizedImage from './OptimizedImage';
 
 const PropertyListingCard: React.FC<PropertyListingProps> = ({
   id,
@@ -84,7 +85,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
         <div className="relative overflow-hidden">
           <div className="relative h-[200px]">
             {/* Current Image */}
-            <img
+            <OptimizedImage
               src={allImages[currentImageIndex]}
               alt={propertyName}
               className="w-full h-[200px] object-cover rounded-t-lg transition-opacity duration-300"

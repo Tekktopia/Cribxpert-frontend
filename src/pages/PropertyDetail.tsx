@@ -6,6 +6,7 @@ import Header from '@/components/layout/Header';
 import PropertyListings from '@/components/PropertyListing';
 import { PropertyListingProps } from '@/types';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import OptimizedImage from '@/components/common/OptimizedImage';
 
 // Use constant paths instead of imports
 const IMAGES = {
@@ -103,7 +104,7 @@ const PropertyDetail = ({
             return (
               <div className="relative w-full">
                 {/* Current Image */}
-                <img
+                <OptimizedImage
                   src={allImages[mobileImageIndex]}
                   alt={`${property.propertyName} ${mobileImageIndex + 1}`}
                   className="w-full h-[350px] object-cover rounded-lg"
@@ -171,7 +172,7 @@ const PropertyDetail = ({
                 // Single image layout - full width
                 return (
                   <div className="relative w-full">
-                    <img
+                    <OptimizedImage
                       src={allImages[0]}
                       alt={property.propertyName}
                       className="w-full h-[350px] md:h-[500px] object-cover rounded-lg"
@@ -186,7 +187,7 @@ const PropertyDetail = ({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                     {allImages.map((src, index) => (
                       <div key={index} className="relative">
-                        <img
+                        <OptimizedImage
                           src={src}
                           alt={`${property.propertyName} ${index + 1}`}
                           className="w-full h-64 md:h-[350px] object-cover rounded-lg"
@@ -203,7 +204,7 @@ const PropertyDetail = ({
                   <div className="flex flex-col md:flex-row w-full gap-4">
                     {/* Primary image */}
                     <div className="relative md:w-1/2">
-                      <img
+                      <OptimizedImage
                         src={allImages[0]}
                         alt={property.propertyName}
                         className="w-full h-64 md:h-[350px] object-cover rounded-lg"
@@ -215,7 +216,7 @@ const PropertyDetail = ({
                     <div className="flex flex-col md:w-1/2 gap-4">
                       {allImages.slice(1, 3).map((src, index) => (
                         <div key={index} className="relative">
-                          <img
+                          <OptimizedImage
                             src={src}
                             alt={`${property.propertyName} ${index + 2}`}
                             className="w-full h-32 md:h-[168px] object-cover rounded-lg"
