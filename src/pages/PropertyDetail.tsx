@@ -1,32 +1,42 @@
-import bedroom from '@/assets/icons/bedroom.png';
-import guest from '@/assets/icons/guest.png';
-import house from '@/assets/icons/house.png';
-import iconStarLight from '@/assets/icons/Icon-star-light.png';
-import progressOne from '@/assets/icons/progressFirsr.png';
-import progressTwo from '@/assets/icons/progressTwo.png';
-import progressThree from '@/assets/icons/progressThree.png';
-import progressFour from '@/assets/icons/progressFour.png';
-import progressFive from '@/assets/icons/progressFive.png';
-import star from '@/assets/icons/star.png';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
-import bathroom from '@/assets/icons/bathroom.png';
-import kingBed from '@/assets/images/kingBed.png';
-import doubleBed from '@/assets/images/doubleBed.png';
-import Share from '@/assets/icons/share.png';
-import GalleryOne from '@/assets/images/galleryOne.jpeg';
-import GalleryTwo from '@/assets/images/GallerTwo.jpeg';
-import GalleryThree from '@/assets/images/GalleryThree.jpeg';
-import GalleryFour from '@/assets/images/GalleryFour.jpeg';
-import GalleryFive from '@/assets/images/GalleryFive.png';
 import Header from '@/components/layout/Header';
-import airportStation from '@/assets/icons/airport-station.png';
-import arrowright from '@/assets/icons/arrow-right.png';
-import map from '@/assets/images/map.png';
-import carIcon from '@/assets/icons/Car-icon.png';
-import location from '@/assets/icons/location.png';
-import { PropertyListingProps } from '@/types';
 import PropertyListings from '@/components/PropertyListing';
+import { PropertyListingProps } from '@/types';
+
+// Use constant paths instead of imports
+const IMAGES = {
+  // Icons
+  bedroom: '/icons/bedroom.png',
+  guest: '/icons/guest.png',
+  house: '/icons/house.png',
+  iconStarLight: '/icons/Icon-star-light.png',
+  progressOne: '/icons/progressFirsr.png',
+  progressTwo: '/icons/progressTwo.png',
+  progressThree: '/icons/progressThree.png',
+  progressFour: '/icons/progressFour.png',
+  progressFive: '/icons/progressFive.png',
+  star: '/icons/star.png',
+  bathroom: '/icons/bathroom.png',
+  share: '/icons/share.png',
+  airportStation: '/icons/airport-station.png',
+  arrowright: '/icons/arrow-right.png',
+  carIcon: '/icons/Car-icon.png',
+  location: '/icons/location.png',
+  
+  // Gallery images
+  GalleryOne: '/images/galleryOne.jpeg',
+  GalleryTwo: '/images/GallerTwo.jpeg',
+  GalleryThree: '/images/GalleryThree.jpeg',
+  GalleryFour: '/images/GalleryFour.jpeg',
+  GalleryFive: '/images/GalleryFive.png',
+  
+  // Other images
+  kingBed: '/images/kingBed.png',
+  doubleBed: '/images/doubleBed.png',
+  map: '/images/map.png',
+};
+
 const PropertyDetail = ({
   listings = [],
 }: {
@@ -42,7 +52,7 @@ const PropertyDetail = ({
       <div className="flex flex-col lg:mt-[130px] md:flex-row items-center justify-center py-3 gap-4 ">
         <div className="relative">
           <img
-            src={GalleryFour}
+            src={IMAGES.GalleryFour}
             alt="Gallery Four"
             className="w-full md:w-[554px] h-64 md:h-[340px] object-cover"
           />
@@ -52,7 +62,7 @@ const PropertyDetail = ({
 
         {/* Grid for Small Images */}
         <div className="grid grid-cols-2 gap-4 max-w-full overflow-hidden">
-          {[GalleryOne, GalleryTwo, GalleryThree, GalleryFive].map(
+          {[IMAGES.GalleryOne, IMAGES.GalleryTwo, IMAGES.GalleryThree, IMAGES.GalleryFive].map(
             (src, index) => (
               <div key={index} className="relative">
                 <img
@@ -89,7 +99,7 @@ const PropertyDetail = ({
             </div>
             <div className="rounded-[200px] px-6 py-3 bg-[#e6e6e6]">
               <div className="flex items-center gap-2">
-                <img src={Share} className="w-[20px] h-[20px]" alt="Share" />
+                <img src={IMAGES.share} className="w-[20px] h-[20px]" alt="Share" />
                 <p className="text-[#070707] font-[400] text-[14px]">Share</p>
               </div>
             </div>
@@ -99,16 +109,16 @@ const PropertyDetail = ({
 
       <section className="py-6 px-10">
         <div className="m-4 flex flex-row items-center gap-3">
-          <img src={bedroom} alt="Bedroom" className="w-[20px] h-[20px]" />
+          <img src={IMAGES.bedroom} alt="Bedroom" className="w-[20px] h-[20px]" />
           <p className="text-[#313131] font-[400] text-[14px]">3 bedroom</p>
 
-          <img src={bathroom} alt="bathroom" className="w-[20px] h-[20px]" />
+          <img src={IMAGES.bathroom} alt="bathroom" className="w-[20px] h-[20px]" />
           <p className="text-[#313131] font-[400] text-[14px]">3 bathroom</p>
 
-          <img src={guest} alt="guest" className="w-[20px] h-[20px]" />
+          <img src={IMAGES.guest} alt="guest" className="w-[20px] h-[20px]" />
           <p className="text-[#313131] font-[400] text-[14px]">6 guest</p>
 
-          <img src={house} alt="guest" className="w-[20px] h-[20px]" />
+          <img src={IMAGES.house} alt="guest" className="w-[20px] h-[20px]" />
           <p className="text-[#313131] font-[400] text-[14px]">100 sq ft</p>
         </div>
       </section>
@@ -127,7 +137,7 @@ const PropertyDetail = ({
                 <div className="md:w-1/2 space-y-3">
                   <div className="h-40 bg-gray-100 rounded-md overflow-hidden">
                     <img
-                      src={map}
+                      src={IMAGES.map}
                       alt="Map"
                       className="w-full h-full object-cover"
                     />
@@ -139,7 +149,7 @@ const PropertyDetail = ({
                     <div className="flex items-center gap-1 text-sm text-[#6F6F6F] cursor-pointer hover:text-[#040404]">
                       <span>View in map</span>
                       <img
-                        src={arrowright}
+                        src={IMAGES.arrowright}
                         alt="arrow right"
                         className="w-3 h-3"
                       />
@@ -150,7 +160,7 @@ const PropertyDetail = ({
                 <div className="md:w-1/2 space-y-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <img src={location} alt="Location" className="w-4 h-4" />
+                      <img src={IMAGES.location} alt="Location" className="w-4 h-4" />
                       <p className="text-sm font-normal text-[#6F6F6F]">
                         Trans Amusement Children's Museum
                       </p>
@@ -162,7 +172,7 @@ const PropertyDetail = ({
 
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <img src={location} alt="location" className="w-4 h-4" />
+                      <img src={IMAGES.location} alt="location" className="w-4 h-4" />
                       <p className="text-sm font-normal text-[#6F6F6F]">
                         Ventura Mall
                       </p>
@@ -175,7 +185,7 @@ const PropertyDetail = ({
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <img
-                        src={airportStation}
+                        src={IMAGES.airportStation}
                         alt="airport station"
                         className="w-4 h-4"
                       />
@@ -191,7 +201,7 @@ const PropertyDetail = ({
                   <div className="flex items-center gap-1 text-sm text-[#E0E0E0] cursor-pointer hover:text-[#6F6F6F]">
                     <span>See more about area</span>
                     <img
-                      src={arrowright}
+                      src={IMAGES.arrowright}
                       alt="arrow right"
                       className="w-3 h-3"
                     />
@@ -208,7 +218,7 @@ const PropertyDetail = ({
                 <div className="flex items-center gap-4">
                   <div>
                     <img
-                      src={kingBed}
+                      src={IMAGES.kingBed}
                       alt="kingBed"
                       className="w-full h-auto "
                     />
@@ -223,7 +233,7 @@ const PropertyDetail = ({
                   </div>
                   <div>
                     <img
-                      src={doubleBed}
+                      src={IMAGES.doubleBed}
                       alt="doubleBed"
                       className="w-full  h-auto"
                     />
@@ -276,7 +286,7 @@ const PropertyDetail = ({
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <img
-                    src={carIcon}
+                    src={IMAGES.carIcon}
                     alt="carIcon"
                     className="w-[18px] h-[18px]"
                   />
@@ -289,7 +299,7 @@ const PropertyDetail = ({
                 </p>
                 <div className="flex items-center gap-2">
                   <img
-                    src={carIcon}
+                    src={IMAGES.carIcon}
                     alt="carIcon"
                     className="w-[18px] h-[18px]"
                   />
@@ -300,7 +310,7 @@ const PropertyDetail = ({
                 </p>
                 <div className="flex items-center gap-2">
                   <img
-                    src={carIcon}
+                    src={IMAGES.carIcon}
                     alt="carIcon"
                     className="w-[18px] h-[18px]"
                   />
@@ -314,7 +324,7 @@ const PropertyDetail = ({
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <img
-                    src={carIcon}
+                    src={IMAGES.carIcon}
                     alt="carIcon"
                     className="w-[18px] h-[18px]"
                   />
@@ -327,7 +337,7 @@ const PropertyDetail = ({
                 </p>
                 <div className="flex items-center gap-2">
                   <img
-                    src={carIcon}
+                    src={IMAGES.carIcon}
                     alt="carIcon"
                     className="w-[18px] h-[18px]"
                   />
@@ -340,7 +350,7 @@ const PropertyDetail = ({
                 </p>
                 <div className="flex items-center gap-2">
                   <img
-                    src={carIcon}
+                    src={IMAGES.carIcon}
                     alt="carIcon"
                     className="w-[18px] h-[18px]"
                   />
@@ -456,10 +466,10 @@ const PropertyDetail = ({
                     <span className="text-[#050505] font-[500]">4</span>/5
                   </h2>
                   <div className="flex items-center gap-2">
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
                   </div>
                   <p className="text-[#313131] text-[14px] font-[500] mt-3">
                     1394 verified ratings
@@ -470,114 +480,114 @@ const PropertyDetail = ({
               <div className="flex flex-col gap-3 mx-auto">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-2">
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                    <img src={star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                    <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
                     <p className="text-[#6F6F6F] text-[14px] font-[400]">
                       (923)
                     </p>
                   </div>
                   <img
-                    src={progressOne}
+                    src={IMAGES.progressOne}
                     alt="Progress One"
                     className="w-full md:w-[472px] h-[4px]"
                   />
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <p className="text-[#6F6F6F] text-[14px] font-[400]">(602)</p>
                 </div>
                 <img
-                  src={progressTwo}
+                  src={IMAGES.progressTwo}
                   alt="Progress Two"
                   className="w-full md:w-[472px] h-[4px]"
                 />
 
                 <div className="flex items-center gap-2">
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <p className="text-[#6F6F6F] text-[14px] font-[400]">(336)</p>
                 </div>
                 <img
-                  src={progressThree}
+                  src={IMAGES.progressThree}
                   alt="Progress Three"
                   className="w-full md:w-[472px] h-[4px]"
                 />
 
                 <div className="flex items-center gap-2">
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <p className="text-[#6F6F6F] text-[14px] font-[400]">(216)</p>
                 </div>
                 <img
-                  src={progressFour}
+                  src={IMAGES.progressFour}
                   alt="Progress Four"
                   className="w-full md:w-[472px] h-[4px]"
                 />
 
                 <div className="flex items-center gap-2">
-                  <img src={star} alt="star" className="w-[18px] h-[18px]" />
+                  <img src={IMAGES.star} alt="star" className="w-[18px] h-[18px]" />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <img
-                    src={iconStarLight}
+                    src={IMAGES.iconStarLight}
                     alt="star"
                     className="w-[18px] h-[18px]"
                   />
                   <p className="text-[#6F6F6F] text-[14px] font-[400]">(96)</p>
                 </div>
                 <img
-                  src={progressFive}
+                  src={IMAGES.progressFive}
                   alt="Progress Five"
                   className="w-full md:w-[472px] h-[4px]"
                 />
