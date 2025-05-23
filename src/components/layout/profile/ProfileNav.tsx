@@ -57,7 +57,6 @@ const ProfileNav = ({ active, setActive }: Props) => {
           </button>
         </div>
       </div>
-
       {mobileOpen && (
         <div className="fixed right-0 z-20 p-12  border-neutral-900 w-full flex flex-col justify-center items-center lg:hidden text-center backdrop-blur-lg ">
           <div className=" px-4 mx-auto relative text-sm">
