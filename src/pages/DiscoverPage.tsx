@@ -30,10 +30,10 @@ export default function DiscoverPage() {
         <div
           className={`${
             isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden md:block' : 'w-full'
-          } transition-all duration-200 ease-in-out w-full md:ml-0 mb-8 p-4`}
+          } transition-all duration-200 ease-in-out w-full md:ml-0 mb-8 p-4 pt-0`}
         >
-          {/* Filter toggle button for mobile */}
-          <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <div className="sticky top-0 z-30 bg-white pt-4">
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
             {!isFilterPanelOpen && (
               <button
                 className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
@@ -69,6 +69,8 @@ export default function DiscoverPage() {
               </div>
             </div>
           </div>
+          </div>
+          
 
           {/* Discovery results with responsive layout */}
           <DiscoverResults isOpen={isFilterPanelOpen} />
