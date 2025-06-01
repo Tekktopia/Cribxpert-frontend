@@ -1,10 +1,11 @@
 import Header from '@/components/layout/Header';
 import { SAMPLE_DATA, Filter } from '@/utils/data';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropertyListings from '@/components/PropertyListing';
 import Hero from '@/components/common/Hero';
 import FilterBar from '@/components/home/FilterBar';
 import type { FilterParameter } from '@/types';
+import Pagination from '@/components/discover-components/Pagination';
 
 const filterParameters: FilterParameter[] = [
   {
@@ -62,6 +63,20 @@ const heroImages = [
 ];
 
 const Home: React.FC = () => {
+  // In Home.tsx, only show a subset of data
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 12;
+  // Memoize the paginated data
+  const paginatedData = useMemo(() => {
+    return SAMPLE_DATA.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+  }, [page, itemsPerPage]);
+
+  const handlePageChange = useCallback((selected: number) => {
+    setPage(selected);
+  }, []);
   const [filters, setFilters] = useState<Record<string, string>>({
     location: '',
     propertyType: '',
@@ -71,23 +86,23 @@ const Home: React.FC = () => {
   });
 
   // Handler for filter changes
-  const handleFilterChange = (name: string, value: string) => {
+  const handleFilterChange = useCallback((name: string, value: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
     }));
-  };
+  }, []);
 
   // Handler for search button click
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     console.log('Searching with filters:', filters);
     // Implement search functionality here
-  };
+  }, [filters]);
 
   return (
     <div>
       <Header />
-      <section className="py-15 my-5 sm:mt-32 lg:mx-5">
+      <section className="py-15 my-5 sm:mt-32 ">
         <section className="relative w-full">
           {/* Hero Section with Carousel */}
           <Hero
@@ -131,12 +146,18 @@ const Home: React.FC = () => {
 
         {/* Property Listings Section */}
         <div className="my-5">
-          <PropertyListings listings={SAMPLE_DATA} />
+          <PropertyListings listings={paginatedData} />
         </div>
+
+        <Pagination
+          currentPage={page}
+          totalPages={Math.ceil(SAMPLE_DATA.length / itemsPerPage)}
+          onPageChange={handlePageChange}
+        />
       </section>
 
       {/* Continue Exploring Section */}
-      <div className="flex justify-center items-center">
+      {/* <div className="flex justify-center items-center">
         <div>
           <p className="text-[#6F6F6F] font-[400] text-[14px] mb-4 ">
             Continue exploring short let houses
@@ -147,7 +168,7 @@ const Home: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

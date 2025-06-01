@@ -1,28 +1,33 @@
 import { PropertyListingProps } from '@/types';
 import PropertyListingCard from './common/PropertyCard';
+import React from 'react';
+
 const PropertyListings = ({
   listings,
 }: {
   listings: PropertyListingProps[];
 }) => {
   return (
-    <div className="container mx-auto sm:px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14 place-items-center">
+    <div className="px-4 mx-auto w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-14">
       {listings?.map((listing, key) => (
-        <PropertyListingCard
-          id={listing.id}
-          key={key}
-          image={listing.image}
-          price={listing.price}
-          rating={listing.rating}
-          propertyName={listing.propertyName}
-          location={listing.location}
-          description={listing.description}
-          images={listing.images}
-          bedrooms={listing.bedrooms}
-          propertyType={listing.propertyType}
-        />
+        <div key={key} className="w-full flex justify-center">
+          <PropertyListingCard
+            id={listing.id}
+            image={listing.image}
+            price={listing.price}
+            rating={listing.rating}
+            propertyName={listing.propertyName}
+            location={listing.location}
+            description={listing.description}
+            images={listing.images}
+            bedrooms={listing.bedrooms}
+            propertyType={listing.propertyType}
+          />
+        </div>
       ))}
     </div>
   );
 };
-export default PropertyListings;
+
+// Wrap PropertyListings in React.memo
+export default React.memo(PropertyListings);

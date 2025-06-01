@@ -5,7 +5,7 @@ import { FaChevronLeft, FaChevronRight, FaHeart, FaStar } from 'react-icons/fa';
 import { useSavedList } from '../context/SavedListContext';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { IoLocationOutline } from 'react-icons/io5';
-import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import OptimizedImage from './OptimizedImage';
 
 const PropertyListingCard: React.FC<PropertyListingProps> = ({
@@ -19,10 +19,13 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   images = [],
   bedrooms = 3, // Default value if not provided
   propertyType = 'Apartment', // Default value if not provided
-  minWidth = "min-w-[350px]"
+  minWidth = 'min-w-[350px]',
 }) => {
   // Use the provided image as fallback if no images array is provided
-  const allImages = images.length > 0 ? images : [image];
+  const allImages = React.useMemo(
+    () => (images.length > 0 ? images : [image]),
+    [images, image]
+  );
 
   // State for carousel
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -32,45 +35,64 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
     (savedProperty) => savedProperty.id === id
   );
 
-  const handleIconToggle = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation when clicking the heart icon
-    if (isSavedProperty) {
-      removeList({
-        id,
-        propertyName,
-        price,
-        location,
-        rating,
-        description,
-        image,
-      });
-    } else {
-      addList({
-        id,
-        propertyName,
-        price,
-        location,
-        rating,
-        description,
-        image,
-      });
-    }
-  };
+  const handleIconToggle = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (isSavedProperty) {
+        removeList({
+          id,
+          propertyName,
+          price,
+          location,
+          rating,
+          description,
+          image,
+        });
+      } else {
+        addList({
+          id,
+          propertyName,
+          price,
+          location,
+          rating,
+          description,
+          image,
+        });
+      }
+    },
+    [
+      isSavedProperty,
+      id,
+      propertyName,
+      price,
+      location,
+      rating,
+      description,
+      image,
+      addList,
+      removeList,
+    ]
+  );
 
-  // Carousel navigation functions
-  const nextImage = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
-    );
-  };
+  const nextImage = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
+      );
+    },
+    [allImages.length]
+  );
 
-  const prevImage = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
-    );
-  };
+  const prevImage = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? allImages.length - 1 : prevIndex - 1
+      );
+    },
+    [allImages.length]
+  );
   // Helper function to convert property name to URL slug
   const createSlug = (name: string): string => {
     return name
@@ -79,9 +101,16 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
       .replace(/\s+/g, '-');
   };
 
+  const propertySlug = React.useMemo(
+    () => createSlug(propertyName),
+    [propertyName]
+  );
+
   return (
-    <Link to={`/propertydetail/${createSlug(propertyName)}`} className="block">
-      <div className={`w-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm`}>
+    <Link to={`/propertydetail/${propertySlug}`} className="block">
+      <div
+        className={`w-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm`}
+      >
         {/* Image Carousel */}
         <div className="relative overflow-hidden">
           <div className="relative h-[200px]">
@@ -89,9 +118,20 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
             <OptimizedImage
               src={allImages[currentImageIndex]}
               alt={propertyName}
+              width={350}
+              height={200}
+              loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
+              priority={currentImageIndex === 0} // First image is priority
               className="w-full h-[200px] object-cover rounded-t-lg transition-opacity duration-300"
+              onLoad={() => {
+                console.log(
+                  `Image ${currentImageIndex + 1}/${allImages.length} loaded`
+                );
+              }}
+              onError={() => {
+                console.error(`Failed to load image for ${propertyName}`);
+              }}
             />
-
             {/* Navigation Arrows - Only show when more than one image */}
             {allImages.length > 1 && (
               <>
@@ -112,14 +152,40 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
 
                 {/* Carousel Indicators */}
                 <div className="absolute bottom-3 left-3 flex space-x-1">
-                  {allImages.map((_, index) => (
-                    <span
-                      key={index}
-                      className={`block h-1.5 w-1.5 rounded-full ${
-                        index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                      }`}
-                    />
-                  ))}
+                  {allImages.length <= 5 ? (
+                    // Show all dots when few images
+                    allImages.map((_, index) => (
+                      <span
+                        key={index}
+                        className={`block h-1.5 w-1.5 rounded-full ${
+                          index === currentImageIndex
+                            ? 'bg-white'
+                            : 'bg-white/50'
+                        }`}
+                      />
+                    ))
+                  ) : (
+                    // Show limited indicators when many images
+                    <>
+                      {[0, 1, 2].map((index) => (
+                        <span
+                          key={index}
+                          className={`block h-1.5 w-1.5 rounded-full ${
+                            currentImageIndex === index
+                              ? 'bg-white'
+                              : 'bg-white/50'
+                          }`}
+                        />
+                      ))}
+                      {currentImageIndex > 2 &&
+                        currentImageIndex < allImages.length - 1 && (
+                          <span className="text-xs text-white">...</span>
+                        )}
+                      {currentImageIndex >= 3 && (
+                        <span className="block h-1.5 w-1.5 rounded-full bg-white" />
+                      )}
+                    </>
+                  )}
                 </div>
               </>
             )}
@@ -195,4 +261,4 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   );
 };
 
-export default PropertyListingCard;
+export default React.memo(PropertyListingCard);
