@@ -2,7 +2,7 @@
 import './index.css';
 
 // Routing related imports
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import ScrollToTop from './components/common/ScrollToTop';
 
 // Authentication & User Management Pages
@@ -30,6 +30,26 @@ import NotificationPage from './pages/NotificationPage';
 import { SavedListProvider } from './components/context/SavedListContext';
 import { SAMPLE_DATA } from './utils/data';
 import Footer from './components/layout/Footer';
+import NotFound404 from './pages/NotFound404';
+
+// Create a footer wrapper component to handle the conditional rendering
+const FooterWrapper = () => {
+  const location = useLocation();
+  
+  // List of auth-related paths where footer should not appear
+  const noFooterPaths = [
+    '/sign-up',
+    '/login',
+    '/forgot-password',
+    '/reset-password',
+    '/onboarding'
+  ];
+  
+  // Check if current path is in the noFooterPaths list
+  const shouldShowFooter = !noFooterPaths.includes(location.pathname);
+  
+  return shouldShowFooter ? <Footer /> : null;
+};
 
 function App() {
   return (
@@ -57,8 +77,11 @@ function App() {
 
             <Route path="/discover" element={<DiscoverPage />} />
             <Route path="/saved-listings" element={<SavedListing />} />
+
+            {/* Add the 404 route at the end - it will catch all unmatched routes */}
+            <Route path="*" element={<NotFound404 />} />
           </Routes>
-          <Footer/>
+          <FooterWrapper/>
         </SavedListProvider>
       </Router>
     </>
