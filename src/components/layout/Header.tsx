@@ -47,7 +47,7 @@ const Header: React.FC = () => {
   return (
     <section className="overflow-hidden w-full">
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-b-[#CCCCCC80]/50 bg-white shadow-sm">
-        <div className="container mx-auto">
+        <div className="lg:container mx-auto">
           {/* Navigation Bar */}
           <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
             {/* Logo */}
@@ -69,8 +69,9 @@ const Header: React.FC = () => {
             </div>
 
             {/* Icons Section */}
-            <div className="w-auto flex flex-row gap-6 py-3">
-              {iconNavItems.map((item, index) => (
+            <div className="w-full lg:w-auto justify-between flex flex-row gap-6 py-3">
+              <div className='flex items-center gap-6'>
+                {iconNavItems.map((item, index) => (
                 <Link
                   to={item.route}
                   key={index}
@@ -86,6 +87,8 @@ const Header: React.FC = () => {
                   </span>
                 </Link>
               ))}
+              </div>
+              
               <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
 
               {/* Conditional rendering based on authentication status */}

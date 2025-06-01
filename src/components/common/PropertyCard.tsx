@@ -113,7 +113,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
       >
         {/* Image Carousel */}
         <div className="relative overflow-hidden">
-          <div className="relative h-[200px]">
+          <div className="relative aspect-[4/3] w-full bg-gray-100">
             {/* Current Image */}
             <OptimizedImage
               src={allImages[currentImageIndex]}
@@ -122,7 +122,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
               height={200}
               loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
               priority={currentImageIndex === 0} // First image is priority
-              className="w-full h-[200px] object-cover rounded-t-lg transition-opacity duration-300"
+              className="w-full h-full object-cover rounded-t-lg transition-opacity duration-300"
               onLoad={() => {
                 console.log(
                   `Image ${currentImageIndex + 1}/${allImages.length} loaded`

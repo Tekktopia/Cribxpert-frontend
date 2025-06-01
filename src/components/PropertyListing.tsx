@@ -8,7 +8,7 @@ const PropertyListings = ({
   listings: PropertyListingProps[];
 }) => {
   return (
-    <div className="px-4 mx-auto w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-14">
+    <div className="px-4 2xl:container mx-auto w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-14">
       {listings?.map((listing, key) => (
         <div key={key} className="w-full flex justify-center">
           <PropertyListingCard
