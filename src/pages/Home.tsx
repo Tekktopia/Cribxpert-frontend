@@ -68,10 +68,7 @@ const Home: React.FC = () => {
   const itemsPerPage = 12;
   // Memoize the paginated data
   const paginatedData = useMemo(() => {
-    return SAMPLE_DATA.slice(
-      (page - 1) * itemsPerPage,
-      page * itemsPerPage
-    );
+    return SAMPLE_DATA.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   }, [page, itemsPerPage]);
 
   const handlePageChange = useCallback((selected: number) => {
@@ -103,7 +100,7 @@ const Home: React.FC = () => {
     <div>
       <Header />
       <section className="py-15 my-5">
-        <HeaderSpacer/>
+        <HeaderSpacer />
         <section className="relative w-full">
           {/* Hero Section with Carousel */}
           <Hero
@@ -113,43 +110,42 @@ const Home: React.FC = () => {
             buttonText="Shop Now"
             buttonLink="/discover"
           />
-        </section>
-
-        {/* Filter Bar */}
-        <FilterBar
-          parameters={filterParameters}
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          onSearch={handleSearch}
-          className="hidden lg:block z-10"
-        />
-
-        {/* Filters Section */}
-        <div className="w-full mx-auto overflow-x-auto lg:mt-12 py-2 scrollbar-hide max-w-[1280px]">
-          <div className="flex items-center gap-6 min-w-max px-4">
-            {Filter.map((filter, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center text-center"
-              >
-                <img
-                  src={filter.image}
-                  alt={filter.name}
-                  className="w-[24px] h-[24px] object-contain"
-                />
-                <p className="text-[14px] font-[400] text-[#999999]">
-                  {filter.name}
-                </p>
-              </div>
-            ))}
+        </section>{' '}
+        {/* Filter Bar - Made sticky */}
+        <div className="sticky top-0 z-30">
+          <FilterBar
+            parameters={filterParameters}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onSearch={handleSearch}
+            className="hidden lg:block"
+          />
+          {/* Filters Section */}
+          <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-[1280px]">
+            <div className="flex items-center gap-6 min-w-max px-4">
+              {Filter.map((filter, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center text-center"
+                >
+                  <img
+                    src={filter.image}
+                    alt={filter.name}
+                    loading="lazy"
+                    className="w-[24px] h-[24px] object-contain"
+                  />
+                  <p className="text-[14px] font-[400] text-[#999999]">
+                    {filter.name}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
         {/* Property Listings Section */}
         <div className="my-5">
           <PropertyListings listings={paginatedData} />
         </div>
-
         <Pagination
           currentPage={page}
           totalPages={Math.ceil(SAMPLE_DATA.length / itemsPerPage)}

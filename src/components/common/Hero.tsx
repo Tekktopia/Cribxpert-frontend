@@ -57,7 +57,7 @@ const Hero: React.FC<HeroProps> = ({
   }, []);
 
   return (
-    <div className="relative w-full h-[50vh] lg:h-[80vh] overflow-hidden">
+    <div className="relative w-full h-[50vh] xl:h-[80vh] overflow-hidden">
       {/* Better image handling with individual images instead of background */}
       {images.map((image, index) => (
         <div 
