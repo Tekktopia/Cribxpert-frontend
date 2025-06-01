@@ -24,7 +24,7 @@ export default function DiscoverResults({ isOpen }: DiscoverResultsProps) {
   return (
     <div className="mt-8 w-full max-w-none">
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 ${isOpen ? 'md:grid-cols-3' : 'md:grid-cols-4'} overflow-y-scroll scrollbar-hide h-[90vh] gap-4 mb-14 place-items-center`}
+        className={`grid grid-cols-1 sm:grid-cols-2 ${isOpen ? 'xl:grid-cols-3' : 'xl:grid-cols-4'} max-h-[90vh] overflow-y-scroll scrollbar-hide gap-4 mb-14 place-items-center`}
       >
         {currentItems.map((listing, key) => (
           <PropertyListingCard

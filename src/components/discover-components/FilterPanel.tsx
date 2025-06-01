@@ -1,4 +1,4 @@
-import { ArrowLeft, Settings2Icon } from 'lucide-react';
+import { ArrowLeft, Settings2Icon, XIcon } from 'lucide-react';
 type FilterPanelProps = {
   isOpen: boolean;
   handleToggle: () => void;
@@ -9,7 +9,7 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   return (
     <div
-      className={`${isOpen ? '-translate-x-0 w-full md:w-1/4 md:max-w-[276px] ' : '-translate-x-full w-full'} h-fit transition-all duration-100 p-4 pb-8 md:pb-0 md:p-0 z-20 top-0 bg-white absolute md:relative border-r-[1px] md:pr-2`}
+      className={`${isOpen ? '-translate-x-0 w-full lg:w-1/4 lg:max-w-[276px] ' : '-translate-x-full w-full'} h-fit transition-all duration-200 p-4 pb-8 md:pb-0 md:p-0 z-20 top-0 bg-white absolute lg:relative border-r-[1px] md:pr-2`}
     >
       {isOpen && (
         <div>
@@ -19,8 +19,9 @@ export default function FilterPanel({
               Filters
             </span>
 
-            <button className="flex" onClick={handleToggle}>
-              <ArrowLeft className="-mr-1" />|
+            <button className="flex hover:cursor-pointer" onClick={handleToggle}>
+              <ArrowLeft className="-mr-1 hidden lg:block" />
+              <XIcon className="-mr-1 lg:hidden" />
             </button>
           </div>
 

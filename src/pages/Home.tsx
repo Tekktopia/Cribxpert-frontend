@@ -1,4 +1,4 @@
-import Header from '@/components/layout/Header';
+import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { SAMPLE_DATA, Filter } from '@/utils/data';
 import React, { useCallback, useMemo, useState } from 'react';
 import PropertyListings from '@/components/PropertyListing';
@@ -102,7 +102,8 @@ const Home: React.FC = () => {
   return (
     <div>
       <Header />
-      <section className="py-15 my-5 sm:mt-32 ">
+      <section className="py-15 my-5">
+        <HeaderSpacer/>
         <section className="relative w-full">
           {/* Hero Section with Carousel */}
           <Hero

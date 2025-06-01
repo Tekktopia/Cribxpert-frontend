@@ -4,12 +4,14 @@ import notificationIcon from '@/assets/icons/notifications.png';
 import humburger from '@/assets/icons/hamburger.png';
 import { Link, NavLink } from 'react-router-dom';
 import { BiMenu, BiX } from 'react-icons/bi';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -18,6 +20,37 @@ const Header: React.FC = () => {
   const toggleProfileMenu = () => {
     setShowProfileMenu(!showProfileMenu);
   };
+
+  // Control header visibility based on scroll direction
+  const controlNavbar = useCallback(() => {
+    // For mobile devices - if menu is open, don't hide header
+    if (isOpen) return;
+
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY <= 100) {
+      // Always show at top of page
+      setVisible(true);
+    } else if (currentScrollY < lastScrollY) {
+      // Scrolling UP - show header
+      setVisible(true);
+    } else if (currentScrollY > lastScrollY) {
+      // Scrolling DOWN - hide header
+      setVisible(false);
+    }
+
+    // Update scroll position
+    setLastScrollY(currentScrollY);
+  }, [lastScrollY, isOpen]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', controlNavbar);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', controlNavbar);
+    };
+  }, [controlNavbar]);
 
   // Get authentication state and user data from Clerk
   const { isLoaded, isSignedIn, user } = useUser();
@@ -43,10 +76,13 @@ const Header: React.FC = () => {
     { label: 'Saved Listings', route: '/saved-listings' },
     { label: 'Payments', route: '/payments' },
   ];
-
   return (
     <section className="overflow-hidden w-full">
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-b-[#CCCCCC80]/50 bg-white shadow-sm">
+      <header
+        className={`fixed w-full left-0 right-0 z-50 border-b border-b-[#CCCCCC80]/50 bg-white shadow-sm transition-transform duration-300 ${
+          visible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
         <div className="lg:container mx-auto">
           {/* Navigation Bar */}
           <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
@@ -70,25 +106,25 @@ const Header: React.FC = () => {
 
             {/* Icons Section */}
             <div className="w-full lg:w-auto justify-between flex flex-row gap-6 py-3">
-              <div className='flex items-center gap-6'>
+              <div className="flex items-center gap-6">
                 {iconNavItems.map((item, index) => (
-                <Link
-                  to={item.route}
-                  key={index}
-                  className="flex flex-col items-center"
-                >
-                  <img
-                    src={item.icon}
-                    alt={`${item.label} Icon`}
-                    className="w-[20px] h-[20px]"
-                  />
-                  <span className="text-[14px] text-[#999999] cursor-pointer">
-                    {item.label}
-                  </span>
-                </Link>
-              ))}
+                  <Link
+                    to={item.route}
+                    key={index}
+                    className="flex flex-col items-center"
+                  >
+                    <img
+                      src={item.icon}
+                      alt={`${item.label} Icon`}
+                      className="w-[20px] h-[20px]"
+                    />
+                    <span className="text-[14px] text-[#999999] cursor-pointer">
+                      {item.label}
+                    </span>
+                  </Link>
+                ))}
               </div>
-              
+
               <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
 
               {/* Conditional rendering based on authentication status */}
@@ -375,6 +411,11 @@ const Header: React.FC = () => {
       </header>
     </section>
   );
+};
+
+// Create a header spacer component to use where needed
+export const HeaderSpacer: React.FC = () => {
+  return <div className="h-[60px] md:h-[200px] lg:h-[125px]"></div>;
 };
 
 export default Header;

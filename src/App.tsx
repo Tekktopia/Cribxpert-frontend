@@ -42,7 +42,8 @@ const FooterWrapper = () => {
     '/login',
     '/forgot-password',
     '/reset-password',
-    '/onboarding'
+    '/onboarding',
+    "/discover",
   ];
   
   // Check if current path is in the noFooterPaths list

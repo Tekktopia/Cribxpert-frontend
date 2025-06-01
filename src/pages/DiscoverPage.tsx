@@ -1,49 +1,67 @@
 import DiscoverResults from '@/components/discover-components/DiscoverResults';
 import FilterPanel from '@/components/discover-components/FilterPanel';
-import Header from '@/components/layout/Header';
+import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { Filter } from '@/utils/data';
 import { Settings2Icon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import OptimizedImage from '@/components/common/OptimizedImage';
+import Footer from '@/components/layout/Footer';
 
 export default function DiscoverPage() {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
 
-  const handleToggle = () => {
-    setIsFilterPanelOpen(!isFilterPanelOpen);
-  };
+  const handleToggle = useCallback(() => {
+    setIsFilterPanelOpen((prev) => !prev);
+  }, []);
   return (
-    <div className="">
-      <div className="fixed top-0 w-full z-40 bg-white">
+    <div className="min-h-screen bg-white">
+      {/* Fixed header */}
+      <div className="fixed top-0 w-full z-40 bg-white shadow-sm">
         <Header />
       </div>
-
-      <div className="container mx-auto mt-16 md:mt-[120px] w-full flex md:p-8 pt-8 relative bg-white">
+      {/* Spacer to prevent content from being hidden behind the fixed header */}
+      <HeaderSpacer />
+      {/* Main content with proper spacing */}
+      <div className="xl:container mx-auto sm:px-6 lg:px-8 lg:mt-8 w-full flex flex-col md:flex-row relative bg-white">
+        {/* Filter panel */}
         <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
+
+        {/* Main content area with responsive layout */}
         <div
-          className={`${isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden md:block' : 'w-full md:-ml-4 '} transition-all duration-200 ease-in-out w-full mb-8`}
+          className={`${
+            isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden md:block' : 'w-full'
+          } transition-all duration-200 ease-in-out w-full md:ml-0 mb-8 p-4`}
         >
-          <div className="flex gap-4">
+          {/* Filter toggle button for mobile */}
+          <div className="flex flex-col md:flex-row gap-4 mb-4">
             {!isFilterPanelOpen && (
-              <button className="flex items-center" onClick={handleToggle}>
-                <Settings2Icon />
-                Filters
+              <button
+                className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                onClick={handleToggle}
+                aria-label="Show filters"
+              >
+                <Settings2Icon size={18} />
+                <span>Filters</span>
               </button>
             )}
 
-            {/* Filters Section */}
-            <div className="w-full overflow-x-auto scrollbar-hide max-w-[1280px]">
-              <div className="flex items-center gap-6 min-w-max">
+            {/* Scrollable filter categories with optimized images */}
+            <div className="w-full overflow-x-auto py-2 scrollbar-hide">
+              <div className="flex items-center gap-6 min-w-max px-2">
                 {Filter.map((filter, index) => (
                   <div
                     key={index}
-                    className="flex flex-col items-center text-center"
+                    className="flex flex-col items-center text-center hover:opacity-80 transition-opacity cursor-pointer"
                   >
-                    <img
+                    <OptimizedImage
                       src={filter.image}
                       alt={filter.name}
+                      width={24}
+                      height={24}
+                      loading={index < 5 ? 'eager' : 'lazy'}
                       className="w-[24px] h-[24px] object-contain"
                     />
-                    <p className="text-[14px] font-[400] text-[#999999]">
+                    <p className="text-[14px] font-[400] text-[#999999] mt-1 whitespace-nowrap">
                       {filter.name}
                     </p>
                   </div>
@@ -52,9 +70,11 @@ export default function DiscoverPage() {
             </div>
           </div>
 
+          {/* Discovery results with responsive layout */}
           <DiscoverResults isOpen={isFilterPanelOpen} />
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
