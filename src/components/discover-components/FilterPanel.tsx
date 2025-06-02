@@ -9,23 +9,28 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   return (
     <div
-      className={`${isOpen ? '-translate-x-0 w-full lg:w-1/4 lg:max-w-[276px] ' : '-translate-x-full w-full'} h-fit transition-all duration-200 p-4 pb-8 md:pb-0 md:p-0 z-20 top-0 bg-white absolute lg:sticky border-r-[1px] md:pr-2`}
+      className={`${isOpen ? '-translate-x-0 w-full lg:w-1/4 lg:max-w-[276px] ' : '-translate-x-full w-full'} h-fit transition-all duration-200 p-4 pb-8 xl:pb-0 z-30 top-0 bg-white absolute lg:sticky border-r-[1px] md:pr-2`}
     >
       {isOpen && (
-        <div>
-          <div className="flex pb-4 justify-between">
-            <span className="flex">
-              <Settings2Icon />
-              Filters
-            </span>
+        <div className='relative'>
+          <div className="sticky top-0 z-10 bg-white pt-4">
+            <div className="flex pb-4 justify-between">
+              <span className="flex">
+                <Settings2Icon />
+                Filters
+              </span>
 
-            <button className="flex hover:cursor-pointer" onClick={handleToggle}>
-              <ArrowLeft className="-mr-1 hidden lg:block" />
-              <XIcon className="-mr-1 lg:hidden" />
-            </button>
+              <button
+                className="flex hover:cursor-pointer"
+                onClick={handleToggle}
+              >
+                <ArrowLeft className="-mr-1 hidden lg:block" />
+                <XIcon className="-mr-1 lg:hidden" />
+              </button>
+            </div>
           </div>
 
-          <div className="filters overflow-y-scroll scrollbar-hide h-screen">
+          <div className="filters overflow-y-scroll scrollbar-hide h-fit max-h-screen xl:pb-0">
             <div className="space-y-4 mt-4">
               {/* Reusable style */}
               {[
@@ -183,7 +188,7 @@ export default function FilterPanel({
               ))}
             </div>
           </div>
-          
+
           {/* Action Buttons */}
           <div className="flex justify-between mt-4">
             <button className="border px-4 py-2 rounded">Cancel</button>

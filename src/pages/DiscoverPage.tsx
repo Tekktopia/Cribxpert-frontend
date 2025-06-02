@@ -22,17 +22,17 @@ export default function DiscoverPage() {
       {/* Spacer to prevent content from being hidden behind the fixed header */}
       <HeaderSpacer />
       {/* Main content with proper spacing */}
-      <div className="xl:container mx-auto sm:px-6 lg:px-8 lg:mt-8 w-full flex flex-col md:flex-row relative bg-white">
+      <div className="xl:container mx-auto xl:px-8 lg:mt-8 w-full flex flex-col md:flex-row relative bg-white">
         {/* Filter panel */}
         <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
 
         {/* Main content area with responsive layout */}
         <div
           className={`${
-            isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden md:block' : 'w-full'
+            isFilterPanelOpen ? 'md:w-3/4 md:ml-8 hidden xl:block' : 'w-full'
           } transition-all duration-200 ease-in-out w-full md:ml-0 mb-8 p-4 pt-0`}
         >
-          <div className="sticky top-0 z-30 bg-white pt-4">
+          <div className="sticky top-0 z-10 bg-white pt-4">
             <div className="flex flex-col md:flex-row gap-4 mb-4">
             {!isFilterPanelOpen && (
               <button

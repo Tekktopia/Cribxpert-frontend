@@ -1,20 +1,24 @@
 import React from 'react';
-import Header from '@/components/layout/Header';
+import Header, { HeaderSpacer } from '@/components/layout/Header';
 import NoSavedListImage from '../../assets/images/NoSavedListing.png';
-import PropertyListingCard from '@/components/common/PropertyCard';
 import { useSavedList } from '@/components/context/SavedListContext';
+import PropertyListing from '@/components/PropertyListing';
+import { Link } from 'react-router';
 
 const SavedListing: React.FC = () => {
   const { savedList } = useSavedList();
   return (
     <div className=" bg-white">
       <Header />
-      <div className="py-4 px-10 container mx-auto mt-32">
-        <h1 className=" text-2xl">Your Saved Jobs</h1>
-        <p className="text-[#6F6F6F] mt-2 ">
-          {savedList.length} Listings saved -- Last updated on March 30,
-          2023.{' '}
-        </p>
+      <HeaderSpacer />
+      <div className="sticky top-0 z-30 bg-white">
+        <div className="py-6 px-4 xl:px-8 container mx-auto">
+          <h1 className=" text-2xl">Your Saved Listings</h1>
+          <p className="text-[#6F6F6F] mt-2 ">
+            {savedList.length} Listings saved -- Last updated on March 30,
+            2023.{' '}
+          </p>
+        </div>
       </div>
 
       {savedList.length === 0 ? (
@@ -29,25 +33,14 @@ const SavedListing: React.FC = () => {
             Save your favorites in one place. Click the heart icon as you browse
             to add items to your saved list.
           </p>
-          <button className="bg-[#730071] text-white font-bold py-2 px-4 rounded-md hover:bg-[#AE6BAD]/80 transition duration-300">
-            Add
-          </button>
+          <Link to={'/discover'}>
+            <button className="bg-[#730071] text-white font-bold py-2 px-4 rounded-md hover:bg-[#AE6BAD]/80 transition duration-300">
+              Add Listings
+            </button>
+          </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  mb-14 place-items-center">
-          {savedList.map((savedProperty) => (
-            <PropertyListingCard
-              id={savedProperty.id}
-              key={savedProperty.id}
-              image={savedProperty.image}
-              location={savedProperty.location}
-              price={savedProperty.price}
-              propertyName={savedProperty.propertyName}
-              description={savedProperty.description}
-              rating={savedProperty.rating}
-            />
-          ))}
-        </div>
+        <PropertyListing listings={savedList} />
       )}
     </div>
   );
