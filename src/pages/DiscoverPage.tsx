@@ -34,49 +34,48 @@ export default function DiscoverPage() {
         >
           <div className="sticky top-0 z-10 bg-white pt-4">
             <div className="flex flex-col md:flex-row gap-4 mb-4">
-            {!isFilterPanelOpen && (
-              <button
-                className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-                onClick={handleToggle}
-                aria-label="Show filters"
-              >
-                <Settings2Icon size={18} />
-                <span>Filters</span>
-              </button>
-            )}
+              {!isFilterPanelOpen && (
+                <button
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                  onClick={handleToggle}
+                  aria-label="Show filters"
+                >
+                  <Settings2Icon size={18} />
+                  <span>Filters</span>
+                </button>
+              )}
 
-            {/* Scrollable filter categories with optimized images */}
-            <div className="w-full overflow-x-auto py-2 scrollbar-hide">
-              <div className="flex items-center gap-6 min-w-max px-2">
-                {Filter.map((filter, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center text-center hover:opacity-80 transition-opacity cursor-pointer"
-                  >
-                    <OptimizedImage
-                      src={filter.image}
-                      alt={filter.name}
-                      width={24}
-                      height={24}
-                      loading={index < 5 ? 'eager' : 'lazy'}
-                      className="w-[24px] h-[24px] object-contain"
-                    />
-                    <p className="text-[14px] font-[400] text-[#999999] mt-1 whitespace-nowrap">
-                      {filter.name}
-                    </p>
-                  </div>
-                ))}
+              {/* Scrollable filter categories with optimized images */}
+              <div className="w-full overflow-x-auto py-2 scrollbar-hide">
+                <div className="flex items-center gap-6 min-w-max px-2">
+                  {Filter.map((filter, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col items-center text-center hover:opacity-80 transition-opacity cursor-pointer"
+                    >
+                      <OptimizedImage
+                        src={filter.image}
+                        alt={filter.name}
+                        width={24}
+                        height={24}
+                        loading={index < 5 ? 'eager' : 'lazy'}
+                        className="w-[24px] h-[24px] object-contain"
+                      />
+                      <p className="text-[14px] font-[400] text-[#999999] mt-1 whitespace-nowrap">
+                        {filter.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-          </div>
-          
 
           {/* Discovery results with responsive layout */}
           <DiscoverResults isOpen={isFilterPanelOpen} />
         </div>
       </div>
-      <Footer/>
+      <Footer className={`${isFilterPanelOpen ? 'hidden xl:block' : ''}`} />
     </div>
   );
 }
