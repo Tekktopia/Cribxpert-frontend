@@ -37,6 +37,7 @@ import { SAMPLE_DATA } from './utils/data';
 import Footer from './components/layout/Footer';
 import NotFound404 from './pages/NotFound404';
 import BookNowPage from './components/booking/BookNowPage';
+import OfflineSyncHandler from './components/common/OfflineSyncHandler';
 
 // Create a footer wrapper component to handle the conditional rendering
 const FooterWrapper = () => {
@@ -64,6 +65,7 @@ function App() {
       <Router>
         <ScrollToTop />
         <SavedListProvider>
+          <OfflineSyncHandler />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route

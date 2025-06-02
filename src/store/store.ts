@@ -9,23 +9,26 @@ import { bookingReducer } from '@/features/booking';
 import { authApi } from '@/features/auth/authService';
 // import { listingApi } from '@/features/listing';
 import { bookingApi } from '@/features/booking/bookingService';
+import favouritesReducer, { favouritesApi } from '@/features/favourites';
 
 export const store = configureStore({
   reducer: {
     // Feature slices
     auth: authReducer,
     booking: bookingReducer,
+    favourites: favouritesReducer,
 
     // API reducers
     [authApi.reducerPath]: authApi.reducer,
     [bookingApi.reducerPath]: bookingApi.reducer,
-    // [listingApi.reducerPath]: listingApi.reducer,
+    [favouritesApi.reducerPath]: favouritesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
       //   listingApi.middleware,
-      bookingApi.middleware
+      bookingApi.middleware,
+      favouritesApi.middleware
     ),
 });
 
