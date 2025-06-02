@@ -97,7 +97,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
             </div>
             <button
               type="button"
-              className="bg-transparent items-center justify-center text-white px-[5px] rounded-[5px] py-[8px] gap-4 w-full hover:bg-primary  flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
+              className="bg-transparent items-center justify-center hover:text-white px-[5px] rounded-[5px] py-[8px] gap-4 w-full hover:bg-primary flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
               //   onClick={}
             >
               View Details
