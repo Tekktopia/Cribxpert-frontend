@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import StepOne from '@/components/reset-password/StepOne';
 import StepTwo from '@/components/reset-password/StepTwo';
+import { Link } from 'react-router';
 
 const ResetPassword: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -15,7 +16,7 @@ const ResetPassword: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 h-full relative">
+      <div className="w-1/2 h-full hidden lg:block relative">
         <img
           src="/authsidepane1.png"
           alt="Login Background"
@@ -25,15 +26,21 @@ const ResetPassword: React.FC = () => {
       </div>
 
       {/* Right Side - Login Section*/}
-      <div className="relative w-1/2 flex flex-col items-center justify-center p-8">
+      <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
+        <div className="w-auto mr-auto mb-8">
+          <Link to={'/'}>
+            <h1 className="font-bold text-[20px] text-[#730071]">CribXpert</h1>
+          </Link>
+        </div>
         {step === 1 && (
-          <StepOne formData={formData} setFormData={setFormData} nextStep={nextStep} />
+          <StepOne
+            formData={formData}
+            setFormData={setFormData}
+            nextStep={nextStep}
+          />
         )}
 
         {step === 2 && <StepTwo />}
-
-        
-          
 
         {step === 1 && (
           <p className="mt-6">
