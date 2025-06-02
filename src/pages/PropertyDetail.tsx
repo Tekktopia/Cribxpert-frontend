@@ -1,12 +1,22 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
-import Header from '@/components/layout/Header';
-import PropertyListings from '@/components/PropertyListing';
+import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { PropertyListingProps } from '@/types';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import OptimizedImage from '@/components/common/OptimizedImage';
+
+// Import our new components
+import PropertyGallery from '@/components/property-details/PropertyGallery';
+import PropertyHeader from '@/components/property-details/PropertyHeader';
+import PropertyOverview from '@/components/property-details/PropertyOverview';
+import PropertyLocation from '@/components/property-details/PropertyLocation';
+import PropertyBedrooms from '@/components/property-details/PropertyBedrooms';
+import PropertyDescription from '@/components/property-details/PropertyDescription';
+import PropertyRules from '@/components/property-details/PropertyRules';
+import PropertyPolicies from '@/components/property-details/PropertyPolicies';
+import PropertyRatings from '@/components/property-details/PropertyRatings';
+import CustomerReviews from '@/components/property-details/CustomerReviews';
+import SimilarProperties from '@/components/property-details/SimilarProperties';
 
 // Use constant paths instead of imports
 const IMAGES = {
@@ -74,9 +84,6 @@ const PropertyDetail = ({
     }
   }, [property, navigate, listings]);
 
-  // State for mobile image index
-  const [mobileImageIndex, setMobileImageIndex] = useState(0);
-
   // Show loading or not found message if no property
   if (!property) {
     return (
@@ -89,857 +96,245 @@ const PropertyDetail = ({
     );
   }
 
+  // Prepare data for our components
+  const propertyImages = property.images?.length
+    ? property.images
+    : [property.image];
+
+  // Prepare bedroom data
+  const bedrooms = [
+    {
+      image: IMAGES.kingBed,
+      name: 'Bedroom 1 - 1 King Bed',
+      amenities: 'Soap · Towels provided · Toilet · Hair dryer',
+    },
+    {
+      image: IMAGES.doubleBed,
+      name: 'Bedroom 2 - 1 Double Bed',
+      amenities: 'Soap · Towels provided · Toilet · Hair dryer',
+    },
+  ];
+
+  // Prepare nearby locations data
+  const nearbyLocations = [
+    {
+      name: "Trans Amusement Children's Museum",
+      distance: '2 min walk',
+      isTransport: false,
+    },
+    {
+      name: 'Ventura Mall',
+      distance: '10 min walk',
+      isTransport: false,
+    },
+    {
+      name: 'National Airport Station',
+      distance: '24 min walk',
+      isTransport: true,
+    },
+  ];
+
+  // Prepare house rules data
+  const houseRules = [
+    {
+      icon: IMAGES.carIcon,
+      title: 'Check In',
+      description: 'Check in after 3:00PM',
+    },
+    {
+      icon: IMAGES.carIcon,
+      title: 'Pets',
+      description: 'No pets allowed',
+    },
+    {
+      icon: IMAGES.carIcon,
+      title: 'Age',
+      description: 'Minimum age to rent: 18',
+    },
+    {
+      icon: IMAGES.carIcon,
+      title: 'Check Out',
+      description: 'Check out before 11:00AM',
+    },
+    {
+      icon: IMAGES.carIcon,
+      title: 'Smoking',
+      description: 'No smoking allowed',
+    },
+    {
+      icon: IMAGES.carIcon,
+      title: 'Parties',
+      description: 'No parties or events',
+    },
+  ];
+
+  // Prepare cancellation policies
+  const cancellationPeriods = [
+    {
+      deadline: 'Before Jan 17',
+      refundType: 'FULL REFUND',
+      description:
+        "Cancel your reservation before Jan 17 at 11:59 PM, and you'll get a full refund. Times are based on the property's local time.",
+    },
+    {
+      deadline: 'Before Jan 24',
+      refundType: 'PARTIAL REFUND',
+      description:
+        "If you cancel your reservation before Jan 24 at 11:59 PM, you'll get a refund of 50% of the amount paid (minus the service fee). Times are based on the property's local time.",
+    },
+    {
+      deadline: 'After Jan 24',
+      refundType: 'NO REFUND',
+      description: "After that, you won't get a refund.",
+    },
+  ];
+
+  // Prepare ratings distribution
+  const ratingDistribution = [
+    {
+      stars: 5,
+      count: 923,
+      progressImage: IMAGES.progressOne,
+    },
+    {
+      stars: 4,
+      count: 602,
+      progressImage: IMAGES.progressTwo,
+    },
+    {
+      stars: 3,
+      count: 336,
+      progressImage: IMAGES.progressThree,
+    },
+    {
+      stars: 2,
+      count: 216,
+      progressImage: IMAGES.progressFour,
+    },
+    {
+      stars: 1,
+      count: 96,
+      progressImage: IMAGES.progressFive,
+    },
+  ];
+
+  // Prepare customer reviews
+  const customerReviews = [
+    {
+      text: 'We offer unparalleled transparency in revenue collection processes. With detailed and real-time reporting, every transaction is documented and accessible.',
+      author: 'Amori Ademakinwa',
+    },
+    {
+      text: 'The property exceeded all expectations. Clean, spacious, and beautifully decorated. The host was very responsive and made our stay comfortable. Will definitely return next time.',
+      author: 'John Thompson',
+    },
+    {
+      text: 'Amazing location with great amenities nearby. The check-in process was smooth and the place was immaculate. Perfect for our family vacation.',
+      author: 'Sarah Parker',
+    },
+    {
+      text: 'The apartment was exactly as described, even better. Very comfortable and the location was perfect for exploring the city. The host provided excellent recommendations for local restaurants.',
+      author: 'Michael Johnson',
+    },
+    {
+      text: 'We had a wonderful stay at this property. The kitchen was well-equipped, the beds were comfortable, and the living area was spacious. Would highly recommend for families or groups.',
+      author: 'Lisa Williams',
+    },
+    {
+      text: 'Great value for money! The property was clean, spacious, and had all the amenities we needed. The host was very accommodating and responded quickly to our questions.',
+      author: 'David Brown',
+    },
+  ];
+
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
-      <Header />
-      <div className="flex flex-col mt-12 sm:mt-32 lg:mt-[130px] md:flex-row items-center justify-center py-3 px-4 gap-4">
-        {/* Mobile Carousel - Only visible on mobile */}
-        <div className="relative w-full block md:hidden">
-          {/* Get all available images */}
-          {(() => {
-            const allImages = property.images?.length
-              ? property.images
-              : [property.image];
-
-            return (
-              <div className="relative w-full">
-                {/* Current Image */}
-                <OptimizedImage
-                  src={allImages[mobileImageIndex]}
-                  alt={`${property.propertyName} ${mobileImageIndex + 1}`}
-                  className="w-full h-[350px] object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-
-                {/* Navigation Arrows */}
-                <button
-                  onClick={() =>
-                    setMobileImageIndex((prev) =>
-                      prev === 0 ? allImages.length - 1 : prev - 1
-                    )
-                  }
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center z-10"
-                  aria-label="Previous image"
-                >
-                  <FaChevronLeft />
-                </button>
-
-                <button
-                  onClick={() =>
-                    setMobileImageIndex((prev) =>
-                      prev === allImages.length - 1 ? 0 : prev + 1
-                    )
-                  }
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-8 h-8 rounded-full flex items-center justify-center z-10"
-                  aria-label="Next image"
-                >
-                  <FaChevronRight />
-                </button>
-
-                {/* Pagination Dots */}
-                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-                  {allImages.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setMobileImageIndex(idx)}
-                      className={`w-2 h-2 rounded-full ${
-                        idx === mobileImageIndex ? 'bg-white' : 'bg-white/50'
-                      }`}
-                      aria-label={`Go to image ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-
-                {/* Image Counter */}
-                <div className="absolute top-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded-md">
-                  {mobileImageIndex + 1} / {allImages.length}
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-
-        {/* Desktop Gallery - Only visible on medium screens and up */}
-        <div className="hidden md:block w-full">
-          {(() => {
-            // Get all available images
-            const allImages = property.images?.length
-              ? property.images
-              : [property.image];
-
-            switch (allImages.length) {
-              case 1:
-                // Single image layout - full width
-                return (
-                  <div className="relative w-full">
-                    <OptimizedImage
-                      src={allImages[0]}
-                      alt={property.propertyName}
-                      className="w-full h-[350px] md:h-[500px] object-cover rounded-lg"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                  </div>
-                );
-
-              case 2:
-                // Two images layout - side by side
-                return (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                    {allImages.map((src, index) => (
-                      <div key={index} className="relative">
-                        <OptimizedImage
-                          src={src}
-                          alt={`${property.propertyName} ${index + 1}`}
-                          className="w-full h-64 md:h-[350px] object-cover rounded-lg"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                      </div>
-                    ))}
-                  </div>
-                );
-
-              case 3:
-                // Three images layout - one large, two small
-                return (
-                  <div className="flex flex-col md:flex-row w-full gap-4">
-                    {/* Primary image */}
-                    <div className="relative md:w-1/2">
-                      <OptimizedImage
-                        src={allImages[0]}
-                        alt={property.propertyName}
-                        className="w-full h-64 md:h-[350px] object-cover rounded-lg"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                    </div>
-
-                    {/* Two smaller images stacked */}
-                    <div className="flex flex-col md:w-1/2 gap-4">
-                      {allImages.slice(1, 3).map((src, index) => (
-                        <div key={index} className="relative">
-                          <OptimizedImage
-                            src={src}
-                            alt={`${property.propertyName} ${index + 2}`}
-                            className="w-full h-32 md:h-[168px] object-cover rounded-lg"
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-
-              default:
-                // 4+ images layout - one large, four smaller in grid
-                return (
-                  <div className='flex gap-4 w-full'>
-                    {/* Primary image */}
-                    <div className="relative md:w-1/2">
-                      <img
-                        src={allImages[0]}
-                        alt={property.propertyName}
-                        className="w-full h-64 md:h-[350px] object-cover rounded-lg"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                    </div>
-
-                    {/* Grid for Small Images */}
-                    <div className="grid grid-cols-2 gap-4 md:w-1/2">
-                      {allImages.slice(1, 5).map((src, index) => (
-                        <div key={index} className="relative">
-                          <img
-                            src={src}
-                            alt={`${property.propertyName} ${index + 2}`}
-                            className="w-full h-32 md:h-[168px] object-cover rounded-lg"
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Show "View all photos" button if there are more than 5 images */}
-                    {allImages.length > 5 && (
-                      <button
-                        className="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-md text-sm font-medium shadow-md"
-                        onClick={() => alert('View all photos clicked')}
-                      >
-                        View all {allImages.length} photos
-                      </button>
-                    )}
-                  </div>
-                );
-            }
-          })()}
-        </div>
-      </div>
-
-      <div className="px-10 m-5">
-        <div className="flex md:flex-row flex-col justify-between items-center">
-          <div className="flex flex-col gap-y-2">
-            <h1 className="font-[400] text-[25px] text-[#040404]">
-              {property.propertyName} - {property.description}
-            </h1>
-            <p className="font-[400] text-[14px] text-[#040404]">
-              ⭐{property.rating}{' '}
-              <span className="text-[#6f6f6f] font-[400] text-[16px]">
-                [115 verified positive feedbacks]
-              </span>
-            </p>
-          </div>
-          <div className="flex items-center justify-center gap-3 md:mt-0 mt-2">
-            <div className="rounded-[200px] px-6 py-3 bg-[#e6e6e6]">
-              <div className="flex items-center gap-2">
-                <p className="text-[#070707] font-[400] text-[14px] text-center">
-                  Save
-                </p>
-              </div>
-            </div>
-            <div className="rounded-[200px] px-6 py-3 bg-[#e6e6e6]">
-              <div className="flex items-center gap-2">
-                <img
-                  src={IMAGES.share}
-                  className="w-[20px] h-[20px]"
-                  alt="Share"
-                />
-                <p className="text-[#070707] font-[400] text-[14px]">Share</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <section className="py-6 px-10">
-        <div className="m-4 flex flex-row items-center gap-3">
-          <img
-            src={IMAGES.bedroom}
-            alt="Bedroom"
-            className="w-[20px] h-[20px]"
-          />
-          <p className="text-[#313131] font-[400] text-[14px]">3 bedroom</p>
-
-          <img
-            src={IMAGES.bathroom}
-            alt="bathroom"
-            className="w-[20px] h-[20px]"
-          />
-          <p className="text-[#313131] font-[400] text-[14px]">3 bathroom</p>
-
-          <img src={IMAGES.guest} alt="guest" className="w-[20px] h-[20px]" />
-          <p className="text-[#313131] font-[400] text-[14px]">6 guest</p>
-
-          <img src={IMAGES.house} alt="guest" className="w-[20px] h-[20px]" />
-          <p className="text-[#313131] font-[400] text-[14px]">100 sq ft</p>
-        </div>
-      </section>
-
-      <section className="py-6 px-10">
-        <div className="flex flex-col md:flex-row justify-around gap-8">
-          <div className="md:w-1/2">
+      <Header /> <HeaderSpacer />
+      {/* Property Gallery Component */}
+      <PropertyGallery
+        images={propertyImages}
+        propertyName={property.propertyName}
+      />
+      {/* Property Header Component */}
+      <PropertyHeader
+        propertyName={property.propertyName}
+        description={property.description}
+        rating={property.rating}
+        totalRatings={115}
+        shareIconUrl={IMAGES.share}
+      />
+      {/* Property Overview Component */}
+      <PropertyOverview
+        bedrooms={3}
+        bathrooms={3}
+        guests={6}
+        area="100 sq ft"
+        icons={{
+          bedroom: IMAGES.bedroom,
+          bathroom: IMAGES.bathroom,
+          guest: IMAGES.guest,
+          house: IMAGES.house,
+        }}
+      />{' '}
+      <section className="py-4 sm:py-6 px-4 sm:px-10">
+        <div className="flex flex-col lg:flex-row justify-around gap-6 lg:gap-8">
+          <div className="w-full lg:w-1/2">
+            {/* Amenities Section */}
             <AmenitiesSection />
 
-            {/* Explore the area section with Tailwind only */}
-            <div className="space-y-4 py-8">
-              <h2 className="text-xl font-medium text-[#040404]">
-                Explore the area
-              </h2>
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="md:w-1/2 space-y-3">
-                  <div className="h-40 bg-gray-100 rounded-md overflow-hidden">
-                    <img
-                      src={IMAGES.map}
-                      alt="Map"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-normal text-[#313131]">
-                      Federal Capital Territory Gombe
-                    </p>
-                    <div className="flex items-center gap-1 text-sm text-[#6F6F6F] cursor-pointer hover:text-[#040404]">
-                      <span>View in map</span>
-                      <img
-                        src={IMAGES.arrowright}
-                        alt="arrow right"
-                        className="w-3 h-3"
-                      />
-                    </div>
-                  </div>
-                </div>
+            {/* Location Component */}
+            <PropertyLocation
+              mapImage={IMAGES.map}
+              address="Federal Capital Territory Gombe"
+              nearbyLocations={nearbyLocations}
+              icons={{
+                location: IMAGES.location,
+                transport: IMAGES.airportStation,
+                arrowRight: IMAGES.arrowright,
+              }}
+            />
 
-                <div className="md:w-1/2 space-y-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={IMAGES.location}
-                        alt="Location"
-                        className="w-4 h-4"
-                      />
-                      <p className="text-sm font-normal text-[#6F6F6F]">
-                        Trans Amusement Children's Museum
-                      </p>
-                    </div>
-                    <p className="text-sm font-normal text-[#999999] ml-6">
-                      2 min walk
-                    </p>
-                  </div>
+            {/* Bedrooms Component */}
+            <PropertyBedrooms bedrooms={bedrooms} />
 
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={IMAGES.location}
-                        alt="location"
-                        className="w-4 h-4"
-                      />
-                      <p className="text-sm font-normal text-[#6F6F6F]">
-                        Ventura Mall
-                      </p>
-                    </div>
-                    <p className="text-sm font-normal text-[#999999] ml-6">
-                      10 min walk
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={IMAGES.airportStation}
-                        alt="airport station"
-                        className="w-4 h-4"
-                      />
-                      <p className="text-sm font-normal text-[#6F6F6F]">
-                        National Airport Station
-                      </p>
-                    </div>
-                    <p className="text-sm font-normal text-[#999999] ml-6">
-                      24 min walk
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-1 text-sm text-[#E0E0E0] cursor-pointer hover:text-[#6F6F6F]">
-                    <span>See more about area</span>
-                    <img
-                      src={IMAGES.arrowright}
-                      alt="arrow right"
-                      className="w-3 h-3"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <section className="py-12">
-              <h2 className="text-[#050505] md:text-xl text-lg mb-5 text-bold">
-                Where you sleep
-              </h2>
-              <div>
-                <div className="flex items-center gap-4">
-                  <div>
-                    <img
-                      src={IMAGES.kingBed}
-                      alt="kingBed"
-                      className="w-full h-auto "
-                    />
-                    <div className="mt-3">
-                      <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                        Bedroom 1 -1 King Bed
-                      </p>
-                      <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                        Soap · Towels provided · Toilet · Hair dryer
-                      </p>
-                    </div>
-                  </div>
-                  <div>
-                    <img
-                      src={IMAGES.doubleBed}
-                      alt="doubleBed"
-                      className="w-full  h-auto"
-                    />
-                    <div className="mt-3">
-                      <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                        Bedroom 1 -1 King Bed
-                      </p>
-                      <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                        Soap · Towels provided · Toilet · Hair dryer
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <section className="py-6">
-              <h3 className="font-[500] text-[#050505] text-[16px]">
-                About this property
-              </h3>
-              <p className="mt-3 mb-5 text-[14px] text-[#313131] font-[400] leading-7">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In est
-                nisl, dictum at ante nec, rutrum finibus odio. Pellentesque
-                pulvinar, justo venenatis pulvinar feugiat, tortor nunc cursus
-                elit, sit amet porttitor turpis ante a lacus. Sed blandit lectus
-                odio. Vestibulum consequat a ante vel pulvinar. Mauris efficitur
-                eros convallis nisi venenatis, vel aliquam leo interdum. Proin
-                vel dapibus ipsum. Nulla vel urna id erat pretium rhoncus. Morbi
-                maximus tellus a urna commodo, at pharetra mauris cursus. In hac
-                habitasse platea dictumst. Nunc odio nisi, dignissim sed mauris
-                ac, accumsan finibus nisl. Nullam aliquam at neque a lacinia. Ut
-                euismod mi in metus pharetra pellentesque. Nullam in diam
-                consectetur, vulputate metus non, volutpat elit
-              </p>
-              <p className="text-[#6F6F6F] font-[400] text-[14px]">see more</p>
-            </section>
-
-            {/* Add other sections here */}
+            {/* Description Component */}
+            <PropertyDescription description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In est nisl, dictum at ante nec, rutrum finibus odio. Pellentesque pulvinar, justo venenatis pulvinar feugiat, tortor nunc cursus elit, sit amet porttitor turpis ante a lacus. Sed blandit lectus odio. Vestibulum consequat a ante vel pulvinar. Mauris efficitur eros convallis nisi venenatis, vel aliquam leo interdum. Proin vel dapibus ipsum. Nulla vel urna id erat pretium rhoncus. Morbi maximus tellus a urna commodo, at pharetra mauris cursus. In hac habitasse platea dictumst. Nunc odio nisi, dignissim sed mauris ac, accumsan finibus nisl. Nullam aliquam at neque a lacinia. Ut euismod mi in metus pharetra pellentesque. Nullam in diam consectetur, vulputate metus non, volutpat elit" />
           </div>
-          <div className="md:w-1/2">
-            <BookingForm />
-          </div>
-        </div>
-        {/* House Rules Section */}
-        <div className="w-full bg-[#FBFBFB] py-8 px-4 md:px-10">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-8">
-            <h2 className="text-[20px] text-[#040404] font-[400]">
-              House Rules
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full max-w-[600px] place-items-center ">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.carIcon}
-                    alt="carIcon"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                    Check In
-                  </p>
-                </div>
-                <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                  Check in after 3:00PM
-                </p>
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.carIcon}
-                    alt="carIcon"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] font-[400] text-[14px]">Pets</p>
-                </div>
-                <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                  No pets allowed
-                </p>
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.carIcon}
-                    alt="carIcon"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] font-[400] text-[14px]">Age</p>
-                </div>
-                <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                  Minimum age to rent: 18
-                </p>
-              </div>
 
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.carIcon}
-                    alt="carIcon"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                    Check Out
-                  </p>
-                </div>
-                <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                  Check out before 11:00AM
-                </p>
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.carIcon}
-                    alt="carIcon"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                    Smoking
-                  </p>
-                </div>
-                <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                  No smoking allowed
-                </p>
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.carIcon}
-                    alt="carIcon"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                    Parties
-                  </p>
-                </div>
-                <p className="text-[#6F6F6F] font-[400] text-[14px]">
-                  No parties or events
-                </p>
-              </div>
+          <div className="w-full lg:w-1/2">
+            <div className="sticky top-[80px]">
+              <BookingForm />
             </div>
           </div>
         </div>
 
-        {/* Damage and Incidentals Section */}
-        <div className="w-full bg-[#FBFBFB] py-7 px-4 md:px-10">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-8">
-            <div>
-              <h2 className="text-[20px] text-[#040404] font-[400]">
-                Damage and incidentals
-              </h2>
-            </div>
-            <div className="max-w-[800px]">
-              <p className="text-[#6F6F6F] text-[14px]">
-                You will be responsible for any damage to the rental property
-                caused by you or your party during your stay, including but not
-                limited to broken items, stains, or structural harm. Please
-                report any accidents or damages immediately to ensure prompt
-                resolution.
-              </p>
-            </div>
-          </div>
-        </div>
-        {/* Cancellation Section */}
-        <div className="w-full bg-[#FBFBFB] py-4 px-4 md:px-10">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-8">
-            <div>
-              <h2 className="text-[20px] text-[#040404] font-[400]">
-                Cancellation
-              </h2>
-            </div>
-            <div className="flex flex-col gap-4 max-w-[800px]">
-              <div className="mb-6">
-                <p className="text-[#6F6F6F] text-[14px]">
-                  Before Jan 17 [FULL REFUND]
-                </p>
-                <p className="text-[#6F6F6F] text-[14px]">
-                  Cancel your reservation before Jan 17 at 11:59 PM, and you'll
-                  get a full refund. Times are based on the property's local
-                  time.
-                </p>
-              </div>
-              <div className="mb-6">
-                <p className="text-[#6F6F6F] text-[14px]">
-                  Before Jan 24 [PARTIAL REFUND]
-                </p>
-                <p className="text-[#6F6F6F] text-[14px]">
-                  If you cancel your reservation before Jan 24 at 11:59 PM,
-                  you'll get a refund of 50% of the amount paid (minus the
-                  service fee). Times are based on the property's local time.
-                </p>
-              </div>
-              <div className="mb-6">
-                <p className="text-[#6F6F6F] text-[14px]">
-                  After Jan 24 [NO REFUND]
-                </p>
-                <p className="text-[#6F6F6F] text-[14px]">
-                  After that, you won't get a refund.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Important Information Section */}
-        <div className="w-full bg-[#FBFBFB] py-7 px-4 md:px-10">
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-8">
-            <div>
-              <h2 className="text-[20px] text-[#040404] font-[400]">
-                Important information
-              </h2>
-            </div>
-            <div className="max-w-[800px]">
-              <p className="text-[#6F6F6F] text-[14px]">
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui
-                blanditiis praesentium voluptatum deleniti atque corrupti quos
-                dolores et quas molestias excepturi sint occaecati cupiditate
-                non provident, similique sunt in culpa qui officia deserunt
-                mollitia animi, id est laborum et dolorum fuga. Et harum quidem
-                rerum facilis est et expedita distinctio. Nam libero tempore,
-                cum soluta nobis est eligendi optio cumque nihil impedit quo
-                minus id quod maxime placeat facere possimus, omnis voluptas
-                assumenda est, omnis dolor repellendus. Temporibus autem
-                quibusdam et aut officiis debitis aut rerum necessitatibus saepe
-                eveniet ut et voluptates repudiandae sint et molestiae non
-                recusandae. Itaque earum rerum hic tenetur a sapiente delectus,
-                ut aut reiciendis voluptatibus maiores alias consequatur aut
-                perferendis doloribus asperiores repellat.
-              </p>
-            </div>
-          </div>
-          <div className="py-8 px-4 md:px-10">
-            <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start gap-8">
-              <div>
-                <h2 className="text-[20px] text-[#040404] font-[400]">
-                  Verified Ratings (1394)
-                </h2>
-              </div>
+        {/* House Rules Component */}
+        <PropertyRules rules={houseRules} />
 
-              <div className="w-[286px] h-[246px] bg-[#F1F1F2] rounded-md flex justify-center items-center">
-                <div className="flex flex-col justify-center items-center mx-auto">
-                  <h2 className="mb-3 text-2xl">
-                    <span className="text-[#050505] font-[500]">4</span>/5
-                  </h2>
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                  </div>
-                  <p className="text-[#313131] text-[14px] font-[500] mt-3">
-                    1394 verified ratings
-                  </p>
-                </div>
-              </div>
+        {/* Policies Component */}
+        <PropertyPolicies
+          damagePolicy="You will be responsible for any damage to the rental property caused by you or your party during your stay, including but not limited to broken items, stains, or structural harm. Please report any accidents or damages immediately to ensure prompt resolution."
+          cancellationPeriods={cancellationPeriods}
+          importantInfo="At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
+        />
 
-              <div className="flex flex-col gap-3 mx-auto">
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <img
-                      src={IMAGES.star}
-                      alt="star"
-                      className="w-[18px] h-[18px]"
-                    />
-                    <p className="text-[#6F6F6F] text-[14px] font-[400]">
-                      (923)
-                    </p>
-                  </div>
-                  <img
-                    src={IMAGES.progressOne}
-                    alt="Progress One"
-                    className="w-full md:w-[472px] h-[4px]"
-                  />
-                </div>
+        {/* Ratings and Reviews Section */}
+        <div className="py-6 sm:py-8 px-4 md:px-10">
+          {/* Ratings Component */}
+          <PropertyRatings
+            rating={4}
+            totalRatings={1394}
+            ratingDistribution={ratingDistribution}
+          />
 
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] text-[14px] font-[400]">(602)</p>
-                </div>
-                <img
-                  src={IMAGES.progressTwo}
-                  alt="Progress Two"
-                  className="w-full md:w-[472px] h-[4px]"
-                />
-
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] text-[14px] font-[400]">(336)</p>
-                </div>
-                <img
-                  src={IMAGES.progressThree}
-                  alt="Progress Three"
-                  className="w-full md:w-[472px] h-[4px]"
-                />
-
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] text-[14px] font-[400]">(216)</p>
-                </div>
-                <img
-                  src={IMAGES.progressFour}
-                  alt="Progress Four"
-                  className="w-full md:w-[472px] h-[4px]"
-                />
-
-                <div className="flex items-center gap-2">
-                  <img
-                    src={IMAGES.star}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <img
-                    src={IMAGES.iconStarLight}
-                    alt="star"
-                    className="w-[18px] h-[18px]"
-                  />
-                  <p className="text-[#6F6F6F] text-[14px] font-[400]">(96)</p>
-                </div>
-                <img
-                  src={IMAGES.progressFive}
-                  alt="Progress Five"
-                  className="w-full md:w-[472px] h-[4px]"
-                />
-              </div>
-            </div>
-            <div className="py-5 overflow-x-auto scrollbar-hide flex md:flex-row flex-col gap-5 items-center">
-              <div className="md:w-[600px] w-[320px] h-auto   rounded-md p-2 border border-[#E6E6E6]">
-                <p className="text-[#999999] font-[400] text-[14px] max-w-md  mt-2">
-                  We offer unparalleled transparency in revenue collection
-                  processes. With detailed and real-time reporting, every
-                  transaction is documented and accessible.
-                </p>
-                <div className="flex items-center gap-3 mt-5">
-                  <div className="w-10 h-10 rounded-full bg-[#999999]"></div>
-                  <p className="text-[#8B2B89] text-[16px]">Amori Ademakinwa</p>
-                </div>
-              </div>
-              <div className="md:w-[600px] w-[320px] h-auto rounded-md p-2 border border-[#E6E6E6]">
-                <p className="text-[#999999] font-[400] text-[14px]  mt-2">
-                  We offer unparalleled transparency in revenue collection
-                  processes. With detailed and real-time reporting, every
-                  transaction is documented and accessible.
-                </p>
-                <div className="flex items-center gap-3 mt-5">
-                  <div className="w-10 h-10 rounded-full bg-[#999999]"></div>
-                  <p className="text-[#8B2B89] text-[16px]">Amori Ademakinwa</p>
-                </div>
-              </div>
-              <div className="md:w-[600px] w-[320px] h-auto md:h-[190px]  rounded-md p-2 border border-[#E6E6E6]">
-                <p className="text-[#999999] font-[400] text-[14px]  mt-2">
-                  We offer unparalleled transparency in revenue collection
-                  processes. With detailed and real-time reporting, every
-                  transaction is documented and accessible.
-                </p>
-                <div className="flex items-center gap-3 mt-5">
-                  <div className="w-10 h-10 rounded-full bg-[#999999]"></div>
-                  <p className="text-[#8B2B89] text-[16px]">Amori Ademakinwa</p>
-                </div>
-              </div>
-              <div className="md:w-[600px] w-[320px] h-auto md:h-[190px]  rounded-md p-2 border border-[#E6E6E6]">
-                <p className="text-[#999999] font-[400] text-[14px]  mt-2">
-                  We offer unparalleled transparency in revenue collection
-                  processes. With detailed and real-time reporting, every
-                  transaction is documented and accessible.
-                </p>
-                <div className="flex items-center gap-3 mt-5">
-                  <div className="w-10 h-10 rounded-full bg-[#999999]"></div>
-                  <p className="text-[#8B2B89] text-[16px]">Amori Ademakinwa</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Customer Reviews Component */}
+          <CustomerReviews reviews={customerReviews} />
         </div>
 
-        <div className="py-8 ">
-          <h1 className="text-[#040404] text-md md:text-[20px] font-[400] mb-4">
-            Similar properties to Makinwaa's Cottage- Newly Remodeled
-          </h1>
-          <PropertyListings listings={similarProperties} />
-        </div>
+        {/* Similar Properties Component */}
+        <SimilarProperties
+          propertyName={property.propertyName}
+          similarProperties={similarProperties}
+        />
       </section>
     </section>
   );
