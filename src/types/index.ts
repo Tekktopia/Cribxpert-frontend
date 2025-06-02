@@ -8,7 +8,7 @@ export interface PropertyListingProps {
   propertyName: string;
   description: string;
   price: number;
-  images?: string[],
+  images?: string[];
   bedrooms?: number;
   propertyType?: string;
   minWidth?: string;
@@ -24,6 +24,12 @@ export enum ActiveProfile {
   PasswordManagement = 'password-management',
   ManagePayment = 'manage-payment',
   Preferences = 'preferences',
+}
+export enum ActiveBooking {
+  All = 'all-bookings',
+  Upcoming = 'upcoming-bookings',
+  Past = 'past-bookings',
+  Cancelled = 'cancelled-bookings',
 }
 export enum ActiveNotification {
   All = 'all',
@@ -64,6 +70,14 @@ export type SupportType = {
   list3: string;
   list4: string;
   list5: string;
+};
+export type BookingsType = {
+  id: string;
+  image: string;
+  name: string;
+  checkin: string;
+  checkout: string;
+  status: JSX.Element;
 };
 export type ContactInfo = {
   icon: JSX.Element;

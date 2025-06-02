@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ProfileNav = ({ active, setActive }: Props) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
   const toggleNavbar = () => {
     setMobileOpen(!mobileOpen);

@@ -1,12 +1,13 @@
 import React from 'react';
 import danger from '@/assets/icons/danger.png';
-import Header from '../components/layout/Header';
-import OrderSummary from '../components/booking/OrderSummary';
-import Booking from '../components/booking/Booking';
-const BookingPage: React.FC = () => {
+import Header, { HeaderSpacer } from '../layout/Header';
+import OrderSummary from './OrderSummary';
+import Booking from './Booking';
+const BookNowPage: React.FC = () => {
   return (
     <>
       <Header />
+      <HeaderSpacer />
       <div className="md:m-8 m-5 w-full">
         <h2 className="md:text-2xl container mx-auto text-xl text-[#040404] mb-6">
           Begin your booking
@@ -32,4 +33,4 @@ const BookingPage: React.FC = () => {
     </>
   );
 };
-export default BookingPage;
+export default BookNowPage;
