@@ -1,101 +1,84 @@
 // Core styles
 import './index.css';
+import { useEffect, useState } from 'react';
 
 // Routing related imports
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useLocation,
 } from 'react-router-dom';
 import ScrollToTop from './components/common/ScrollToTop';
 
-// Authentication & User Management Pages
-import SignUp from './pages/SignUp';
-import Login from './pages/Login';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import Onboarding from './pages/Onboarding';
-import ProfilePage from './pages/ProfilePage';
-
-// Main Feature Pages
-import Home from './pages/Home';
-import DiscoverPage from './pages/DiscoverPage';
-import PropertyDetail from './pages/PropertyDetail';
-import SavedListing from './pages/SavedListing/SavedListing';
-import BookingsPage from './pages/BookingsPage';
-
-// Support & Utility Pages
-import PaymentMethod from './pages/PaymentMethod';
-import SupportPage from './pages/SupportPage';
-import SupportInfo from './pages/SupportInfo';
-import NotificationPage from './pages/NotificationPage';
-
 // Data & Context Providers
 import { SavedListProvider } from './components/context/SavedListContext';
-import { SAMPLE_DATA } from './utils/data';
-import Footer from './components/layout/Footer';
-import NotFound404 from './pages/NotFound404';
-import BookNowPage from './components/booking/BookNowPage';
 import OfflineSyncHandler from './components/common/OfflineSyncHandler';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import FooterWrapper from './components/layout/FooterWrapper';
 
-// Create a footer wrapper component to handle the conditional rendering
-const FooterWrapper = () => {
-  const location = useLocation();
+// Import route config
+import routeConfig from './routes/routeConfig';
+import { JSX } from 'react';
 
-  // List of auth-related paths where footer should not appear
-  const noFooterPaths = [
-    '/sign-up',
-    '/login',
-    '/forgot-password',
-    '/reset-password',
-    '/onboarding',
-    '/discover',
-  ];
+// Add loading components
+import Preloader from '@/components/common/Preloader';
+import { useSelector } from 'react-redux';
+import { selectAuthLoading } from '@/features/auth/authSlice';
 
-  // Check if current path is in the noFooterPaths list
-  const shouldShowFooter = !noFooterPaths.includes(location.pathname);
+// New AppContent component that handles authentication loading state
+const AppContent = () => {
+  const authLoading = useSelector(selectAuthLoading);
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  
+  // Set initial load to complete after a short delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoadComplete(true);
+    }, 1000); // Adjust this delay as needed
+    
+    return () => clearTimeout(timer);
+  }, []);
 
-  return shouldShowFooter ? <Footer /> : null;
+  // Show preloader during initial auth check
+  if (authLoading || !initialLoadComplete) {
+    return <Preloader isLoading={true} />;
+  }
+
+  return (
+    <>
+      <SavedListProvider>
+        <OfflineSyncHandler />
+        <Routes>
+          {routeConfig.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={
+                route.protected ? (
+                  route.element ? (
+                    <ProtectedRoute>
+                      {route.element as JSX.Element}
+                    </ProtectedRoute>
+                  ) : null
+                ) : (
+                  route.element
+                )
+              }
+            />
+          ))}
+        </Routes>
+        <FooterWrapper />
+      </SavedListProvider>
+    </>
+  );
 };
 
 function App() {
   return (
-    <>
-      <Router>
-        <ScrollToTop />
-        <SavedListProvider>
-          <OfflineSyncHandler />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/propertydetail/:name"
-              element={<PropertyDetail listings={SAMPLE_DATA} />}
-            />
-            <Route path="/my-bookings" element={<BookingsPage />} />
-            <Route path="/book-now" element={<BookNowPage />} />
-
-            <Route path="/payments" element={<PaymentMethod />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/support" element={<SupportPage />} />
-            <Route path="/support-info" element={<SupportInfo />} />
-            <Route path="/notification" element={<NotificationPage />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-
-            <Route path="/discover" element={<DiscoverPage />} />
-            <Route path="/saved-listings" element={<SavedListing />} />
-
-            {/* Add the 404 route at the end - it will catch all unmatched routes */}
-            <Route path="*" element={<NotFound404 />} />
-          </Routes>
-          <FooterWrapper />
-        </SavedListProvider>
-      </Router>
-    </>
+    <Router>
+      <ScrollToTop />
+      <AppContent />
+    </Router>
   );
 }
 
