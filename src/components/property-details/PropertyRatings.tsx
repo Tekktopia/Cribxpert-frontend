@@ -33,7 +33,7 @@ const PropertyRatings: React.FC<PropertyRatingsProps> = ({
                 key={index}
                 src="/icons/star.png"
                 alt="star"
-                className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
+                className="w-4 text-[#006073] h-4 sm:w-[18px] sm:h-[18px]"
               />
             ))}
           </div>

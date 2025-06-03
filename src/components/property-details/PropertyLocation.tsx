@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronRight } from 'lucide-react';
 
 interface Location {
   name: string;
@@ -39,11 +40,7 @@ const PropertyLocation: React.FC<PropertyLocationProps> = ({
             <p className="text-sm font-normal text-[#313131]">{address}</p>
             <div className="flex items-center gap-1 text-sm text-[#6F6F6F] cursor-pointer hover:text-[#040404]">
               <span>View in map</span>
-              <img
-                src={icons.arrowRight}
-                alt="arrow right"
-                className="w-3 h-3"
-              />
+               <ChevronRight size={20} color='#006073'/>
             </div>
           </div>
         </div>
@@ -65,9 +62,9 @@ const PropertyLocation: React.FC<PropertyLocationProps> = ({
               </p>
             </div>
           ))}
-          <div className="flex items-center gap-1 text-sm text-[#E0E0E0] cursor-pointer hover:text-[#6F6F6F] mt-4">
-            <span>See more about area</span>
-            <img src={icons.arrowRight} alt="arrow right" className="w-3 h-3" />
+          <div className="flex items-center gap-1 text-sm  cursor-pointer  mt-4">
+            <span className='text-[#6F6F6F]'>See more about area</span>
+             <ChevronRight size={20} color='#006073'/>
           </div>
         </div>
       </div>

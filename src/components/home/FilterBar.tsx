@@ -17,13 +17,13 @@ const FilterBar: React.FC<FilterBarProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`bg-[#8b2b89] w-full py-4 px-3 md:px-8 ${className}`}>
+    <div className={`bg-[#1d5c5c] w-full py-4 px-3 md:px-8 ${className}`}>
       {/* Mobile View: Collapsible Filter */}
       <div className="md:hidden mb-2 flex justify-between items-center text-white">
         <span className="font-medium">Filters</span>
       </div>
 
-      <div className="flex flex-col md:flex-row container mx-auto justify-center md:justify-between gap-3 md:gap-4">
+      <div className="flex flex-col md:flex-row container mx-auto justify-center md:justify-between gap-3 md:gap-6">
         {/* Mobile Scrollable Container */}
         <div className="flex md:flex-wrap overflow-x-auto pb-2 md:pb-0 scrollbar-hide gap-3">
           {parameters.map((param, index) => (
