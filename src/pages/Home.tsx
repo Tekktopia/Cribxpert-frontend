@@ -1,59 +1,16 @@
 import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { SAMPLE_DATA, Filter } from '@/utils/data';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import PropertyListings from '@/components/PropertyListing';
 import Hero from '@/components/common/Hero';
 import FilterBar from '@/components/home/FilterBar';
 import type { FilterParameter } from '@/types';
 import Pagination from '@/components/discover-components/Pagination';
-
-const filterParameters: FilterParameter[] = [
-  {
-    name: 'location',
-    label: 'Location',
-    options: [
-      { value: 'lagos', label: 'Lagos' },
-      { value: 'abuja', label: 'Abuja' },
-      { value: 'portHarcourt', label: 'Port Harcourt' },
-    ],
-  },
-  {
-    name: 'propertyType',
-    label: 'Property Type',
-    options: [
-      { value: 'apartment', label: 'Apartment' },
-      { value: 'house', label: 'House' },
-      { value: 'villa', label: 'Villa' },
-    ],
-  },
-  {
-    name: 'priceRange',
-    label: 'Price Range',
-    options: [
-      { value: '0-50000', label: '₦0 - ₦50,000' },
-      { value: '50000-100000', label: '₦50,000 - ₦100,000' },
-      { value: '100000-200000', label: '₦100,000 - ₦200,000' },
-    ],
-  },
-  {
-    name: 'bedrooms',
-    label: 'Bedrooms',
-    options: [
-      { value: '1', label: '1 Bedroom' },
-      { value: '2', label: '2 Bedrooms' },
-      { value: '3plus', label: '3+ Bedrooms' },
-    ],
-  },
-  {
-    name: 'amenities',
-    label: 'Amenities',
-    options: [
-      { value: 'wifi', label: 'WiFi' },
-      { value: 'pool', label: 'Swimming Pool' },
-      { value: 'parking', label: 'Parking' },
-    ],
-  },
-];
+import { useGeolocation } from '@/hooks/useGeolocation';
+import {
+  nigerianLocations,
+  getNearbyLocations
+} from '@/utils/locationUtils';
 
 // Hero carousel images array
 const heroImages = [
@@ -63,6 +20,98 @@ const heroImages = [
 ];
 
 const Home: React.FC = () => {
+  // Get user's geolocation
+  const userLocation = useGeolocation();
+
+  // State for filter parameters (with initial default values)
+  const [filterParameters, setFilterParameters] = useState<FilterParameter[]>([
+    {
+      name: 'location',
+      label: 'Location',
+      options: [
+        { value: 'lagos', label: 'Lagos' },
+        { value: 'abuja', label: 'Abuja' },
+        { value: 'portHarcourt', label: 'Port Harcourt' },
+      ],
+    },
+    {
+      name: 'propertyType',
+      label: 'Property Type',
+      options: [
+        { value: 'apartment', label: 'Apartment' },
+        { value: 'house', label: 'House' },
+        { value: 'villa', label: 'Villa' },
+      ],
+    },
+    {
+      name: 'priceRange',
+      label: 'Price Range',
+      options: [
+        { value: '0-50000', label: '₦0 - ₦50,000' },
+        { value: '50000-100000', label: '₦50,000 - ₦100,000' },
+        { value: '100000-200000', label: '₦100,000 - ₦200,000' },
+      ],
+    },
+    {
+      name: 'bedrooms',
+      label: 'Bedrooms',
+      options: [
+        { value: '1', label: '1 Bedroom' },
+        { value: '2', label: '2 Bedrooms' },
+        { value: '3plus', label: '3+ Bedrooms' },
+      ],
+    },
+    {
+      name: 'amenities',
+      label: 'Amenities',
+      options: [
+        { value: 'wifi', label: 'WiFi' },
+        { value: 'pool', label: 'Swimming Pool' },
+        { value: 'parking', label: 'Parking' },
+      ],
+    },
+  ]);
+
+  // Update location options based on user's geolocation
+  useEffect(() => {
+    if (userLocation.latitude && userLocation.longitude) {
+      // Get locations sorted by proximity to user
+      const closestLocations = getNearbyLocations(
+        userLocation.latitude,
+        userLocation.longitude,
+        10 // Get top 10 locations
+      );
+
+      // Update filter parameters with closest locations
+      setFilterParameters((prevParams) =>
+        prevParams.map((param) =>
+          param.name === 'location'
+            ? { ...param, options: closestLocations }
+            : param
+        )
+      );
+    } else if (!userLocation.loading && userLocation.error) {
+      // If geolocation fails, show more default locations
+      setFilterParameters((prevParams) =>
+        prevParams.map((param) =>
+          param.name === 'location'
+            ? {
+                ...param,
+                options: nigerianLocations
+                  .slice(0, 10)
+                  .map((loc) => ({ value: loc.value, label: loc.label })),
+              }
+            : param
+        )
+      );
+    }
+  }, [
+    userLocation.latitude,
+    userLocation.longitude,
+    userLocation.loading,
+    userLocation.error,
+  ]);
+
   // In Home.tsx, only show a subset of data
   const [page, setPage] = useState(1);
   const itemsPerPage = 12;
@@ -109,8 +158,34 @@ const Home: React.FC = () => {
             subtitle="Find Everything You Love, at Prices You'll Adore – Shop Now and Save Big."
             buttonText="Shop Now"
             buttonLink="/discover"
-          />
+          />{' '}
         </section>{' '}
+        {/* Location loading indicator */}
+        {userLocation.loading && (
+          <div className="bg-blue-50 text-blue-700 px-4 py-2 text-sm rounded-md mx-auto max-w-[1280px] my-2 flex items-center justify-center">
+            <svg
+              className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-700"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            Finding locations near you...
+          </div>
+        )}
         {/* Filter Bar - Made sticky */}
         <div className="sticky top-0 z-30">
           <FilterBar
