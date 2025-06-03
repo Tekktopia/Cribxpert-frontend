@@ -4,6 +4,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 // Import slices from features
 import authReducer from '@/features/auth';
 import { bookingReducer } from '@/features/booking';
+import { propertyReducer, propertyTypeApi } from '@/features/propertyType';
 
 // Import API services
 import { authApi } from '@/features/auth/authService';
@@ -20,6 +21,7 @@ export const store = configureStore({
     favourites: favouritesReducer,
     amenities: amenitiesReducer,
     listing: listingReducer,
+    property: propertyReducer,
 
     // API reducers
     [authApi.reducerPath]: authApi.reducer,
@@ -27,6 +29,7 @@ export const store = configureStore({
     [favouritesApi.reducerPath]: favouritesApi.reducer,
     [amenitiesApi.reducerPath]: amenitiesApi.reducer,
     [listingApi.reducerPath]: listingApi.reducer,
+    [propertyTypeApi.reducerPath]: propertyTypeApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -34,7 +37,8 @@ export const store = configureStore({
       listingApi.middleware,
       bookingApi.middleware,
       favouritesApi.middleware,
-      amenitiesApi.middleware
+      amenitiesApi.middleware,
+      propertyTypeApi.middleware
     ),
 });
 
