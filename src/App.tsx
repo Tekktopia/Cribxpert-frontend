@@ -17,7 +17,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import FooterWrapper from './components/layout/FooterWrapper';
 
 // Import route config
-import routeConfig from './routes/routeConfig';
+import routeConfig from '@/routes/RouteConfig';
 import { JSX } from 'react';
 
 // Add loading components

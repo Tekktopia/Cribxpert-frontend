@@ -2,7 +2,7 @@ import {
   selectAuthLoading,
   selectIsAuthenticated,
 } from '@/features/auth/authSlice';
-import routeConfig from '@/routes/routeConfig';
+import routeConfig from '@/routes/RouteConfig';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import Footer from './Footer';

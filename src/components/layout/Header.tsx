@@ -2,7 +2,7 @@ import messageIcon from '@/assets/icons/message.png';
 import supportIcon from '@/assets/icons/like.png';
 import notificationIcon from '@/assets/icons/notifications.png';
 import humburger from '@/assets/icons/hamburger.png';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { BiMenu, BiX } from 'react-icons/bi';
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-react';
@@ -12,6 +12,11 @@ const Header: React.FC = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  const location = useLocation();
+  const isActive = (route: string) => {
+    return location.pathname === route;
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -118,7 +123,9 @@ const Header: React.FC = () => {
                       alt={`${item.label} Icon`}
                       className="w-[20px] h-[20px]"
                     />
-                    <span className="text-[14px] text-[#999999] cursor-pointer">
+                    <span
+                      className={`text-[14px] ${isActive(item.route) ? 'text-[#730071]' : 'text-[#999999]'} cursor-pointer`}
+                    >
                       {item.label}
                     </span>
                   </Link>
