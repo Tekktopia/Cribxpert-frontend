@@ -322,7 +322,6 @@ const Header: React.FC = () => {
               )}
             </div>
           </nav>
-
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex justify-between items-center p-4">
             <Link to={'/'}>
@@ -340,7 +339,6 @@ const Header: React.FC = () => {
               />
             )}
           </div>
-
           {/* Navigation Menu for Desktop */}
           <div className="hidden md:flex px-4 md:px-8 py-4">
             <div className="flex items-center gap-4">
@@ -358,62 +356,67 @@ const Header: React.FC = () => {
                 </NavLink>
               ))}
             </div>
+          </div>{' '}
+          {/* Mobile Dropdown Menu */}
+          <div
+            className={`w-full bg-white border-t border-[#CCCCCC80]/50 md:hidden overflow-hidden transition-all duration-300 ${
+              isOpen
+                ? 'max-h-[500px] opacity-100 shadow-md'
+                : 'max-h-0 opacity-0'
+            }`}
+          >
+            {/* Menu items */}
+            <div className="py-2">
+              <ul className="flex flex-col">
+                {navLinks.map((link, index) => (
+                  <li key={index} className="border-b border-gray-100">
+                    <Link
+                      to={link.route}
+                      className="px-4 py-3 block text-sm font-medium text-gray-800 hover:bg-gray-50 hover:text-[#730071]"
+                      onClick={toggleMenu}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+
+                {iconNavItems.map((item, index) => (
+                  <li
+                    key={`icon-${index}`}
+                    className="border-b border-gray-100"
+                  >
+                    <Link
+                      to={item.route}
+                      className="px-4 py-3 block text-sm font-medium text-gray-800 hover:bg-gray-50 hover:text-[#730071]"
+                      onClick={toggleMenu}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+
+                {/* Login/Signup for mobile menu */}
+                {isLoaded && !isSignedIn && (
+                  <li className="mt-2 px-4 py-3 flex gap-3">
+                    <Link
+                      to="/login"
+                      className="flex-1 py-2 text-center text-[14px] text-[#730071] border border-[#730071] rounded-md font-medium"
+                      onClick={toggleMenu}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/sign-up"
+                      className="flex-1 py-2 text-center text-[14px] text-white bg-[#730071] rounded-md font-medium"
+                      onClick={toggleMenu}
+                    >
+                      Sign Up
+                    </Link>
+                  </li>
+                )}
+              </ul>
+            </div>
           </div>
-
-          {/* Mobile Drawer */}
-          {isOpen && (
-            <>
-              {/* Backdrop */}
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-                onClick={() => setIsOpen(false)}
-              />
-
-              {/* Side Drawer Menu */}
-              <div className="fixed top-0 left-0 w-full bg-white text-black z-50 md:hidden overflow-y-auto">
-                {/* Purple header */}
-                <div className="bg-[#730071] flex justify-between items-center w-full p-4 text-white">
-                  <Link to={'/'}>
-                    <h1 className="text-base font-medium">CribXpert</h1>
-                  </Link>
-
-                  <BiX className="text-2xl" onClick={toggleMenu} />
-                </div>
-
-                {/* Menu items */}
-                <div className="py-2">
-                  <ul className="flex flex-col">
-                    {navLinks.map((link, index) => (
-                      <li key={index} className="border-b border-gray-100">
-                        <Link
-                          to={link.route}
-                          className="px-4 py-2 block text-sm font-normal text-gray-800"
-                          onClick={toggleMenu}
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-
-                    {iconNavItems.map((item, index) => (
-                      <li
-                        key={`icon-${index}`}
-                        className="border-b border-gray-100"
-                      >
-                        <Link
-                          to={item.route}
-                          className="px-4 py-3.5 block text-sm font-normal text-gray-800"
-                          onClick={toggleMenu}
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </>
-          )}
         </div>
       </header>
     </section>
@@ -421,8 +424,16 @@ const Header: React.FC = () => {
 };
 
 // Create a header spacer component to use where needed
-export const HeaderSpacer: React.FC = () => {
-  return <div className="h-[60px] md:h-[200px] lg:h-[125px]"></div>;
+export const HeaderSpacer: React.FC<{ isMenuOpen?: boolean }> = ({
+  isMenuOpen = false,
+}) => {
+  return (
+    <div
+      className={`h-[60px] md:h-[200px] lg:h-[125px] transition-height duration-300 ${
+        isMenuOpen ? 'md:h-[200px] lg:h-[125px]' : ''
+      }`}
+    />
+  );
 };
 
 export default Header;

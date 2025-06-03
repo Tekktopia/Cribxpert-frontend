@@ -15,24 +15,24 @@ import x from '@/assets/socialIcons/x.svg';
 
 const contactInfo: Array<ContactInfo> = [
   {
-    icon: <PhoneArrowUpRightIcon className="h-6 w-6" />,
+    icon: <PhoneArrowUpRightIcon className="h-5 w-5 md:h-6 md:w-6" />,
     title: '+2348167890978',
   },
   {
-    icon: <EnvelopeIcon className="h-6 w-6" />,
+    icon: <EnvelopeIcon className="h-5 w-5 md:h-6 md:w-6" />,
     title: 'shortletng.com',
   },
   {
-    icon: <MapPinIcon className="h-6 w-6" />,
+    icon: <MapPinIcon className="h-5 w-5 md:h-6 md:w-6" />,
     title: 'Lagos, Nigeria',
   },
 ];
 
 const header: Array<SupportType> = [
   {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#730071]" />,
+    icon: <InformationCircleIcon className="h-5 w-5 md:h-6 md:w-6 text-[#730071]" />,
     title: 'Booking & Cancellations',
-    iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
+    iconList: <DocumentTextIcon className="h-5 w-5 md:h-6 md:w-6 text-[#6F6F6F]" />,
     list1: 'How do i cancel or modify a booking?',
     list2: ' What is refund process?',
     list3: ' What is refund process?',
@@ -92,53 +92,48 @@ const header: Array<SupportType> = [
 ];
 const Support = () => {
   return (
-    <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[72px]   p-10 justify-center">
-        {header.map((item: SupportType, index: number) => (
-          <div key={index}>
-            <div className="flex items-center gap-4">
-              <div className="bg-[#F1E6F1] rounded-full p-3 ">{item.icon}</div>
-
-              <h1 className="text-base text-[#070707] font-bold">
+    <div className="container mx-auto px-4 py-6 md:py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 mb-8">        {header.map((item: SupportType, index: number) => (
+          <div key={index} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 md:p-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-[#F1E6F1] rounded-full p-2 md:p-3">{item.icon}</div>
+              <h1 className="text-sm md:text-base text-[#070707] font-bold">
                 {item.title}
               </h1>
             </div>
-            <div className="flex flex-col gap-4 p-6 justify-center">
-              <div className="flex  gap-4 ">
-                <div>{item.iconList}</div>
+            <div className="flex flex-col gap-3 py-3 md:py-4 px-1 md:px-2">              <div className="flex gap-2 md:gap-3">
+                <div className="flex-shrink-0">{item.iconList}</div>
                 <Link
                   to={`/support-info`}
-                  className="text-base cursor-pointer text-[#070707] "
+                  className="text-xs md:text-sm text-[#070707] hover:text-[#730071] transition-colors"
                 >
                   {item.list1}
                 </Link>
+              </div>              <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex-shrink-0">{item.iconList}</div>
+                <h1 className="text-xs md:text-sm text-[#070707]">{item.list2}</h1>
               </div>
-              <div className="flex items-center gap-4">
-                <div>{item.iconList}</div>
-                <h1 className="text-base text-[#070707] ">{item.list2}</h1>
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex-shrink-0">{item.iconList}</div>
+                <h1 className="text-xs md:text-sm text-[#070707]">{item.list3}</h1>
               </div>
-              <div className="flex items-center gap-4">
-                <div>{item.iconList}</div>
-                <h1 className="text-base text-[#070707] ">{item.list3}</h1>
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex-shrink-0">{item.iconList}</div>
+                <h1 className="text-xs md:text-sm text-[#070707]">{item.list4}</h1>
               </div>
-              <div className="flex items-center gap-4">
-                <div>{item.iconList}</div>
-                <h1 className="text-base text-[#070707] ">{item.list4}</h1>
-              </div>
-              <div className="flex items-center gap-4">
-                <div>{item.iconList}</div>
-                <h1 className="text-base text-[#070707] ">{item.list5}</h1>
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="flex-shrink-0">{item.iconList}</div>
+                <h1 className="text-xs md:text-sm text-[#070707]">{item.list5}</h1>
               </div>
             </div>
           </div>
         ))}
-      </div>
-      <div className="flex flex-col lg:flex-row py-4 px-6 items-center gap-20 justify-between">
-        <div className="lg:w-[500px] lg:h-[650px] bg-[#730071] flex flex-col justify-between relative overflow-hidden rounded-lg">
+      </div>      <div className="flex flex-col lg:flex-row gap-8 md:gap-10 lg:gap-12 mb-8">
+        <div className="w-full lg:w-[45%] xl:w-[500px] bg-[#730071] flex flex-col justify-between relative overflow-hidden rounded-lg min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
           <div className="p-8 text-white flex flex-col gap-24">
             <div className="flex flex-col gap-3">
               <h1 className="font-semibold text-2xl ">Contact Information</h1>
-              <p className="text-[#6F6F6F]">
+              <p className="text-[#fff]">
                 We’ll get back to you within 24-48 hours
               </p>
             </div>
