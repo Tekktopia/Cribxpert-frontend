@@ -7,10 +7,10 @@ import { bookingReducer } from '@/features/booking';
 
 // Import API services
 import { authApi } from '@/features/auth/authService';
-// import { listingApi } from '@/features/listing';
 import { bookingApi } from '@/features/booking/bookingService';
 import favouritesReducer, { favouritesApi } from '@/features/favourites';
 import amenitiesReducer, { amenitiesApi } from '@/features/amenities';
+import listingReducer, { listingApi } from '@/features/listing';
 
 export const store = configureStore({
   reducer: {
@@ -19,17 +19,19 @@ export const store = configureStore({
     booking: bookingReducer,
     favourites: favouritesReducer,
     amenities: amenitiesReducer,
+    listing: listingReducer,
 
     // API reducers
     [authApi.reducerPath]: authApi.reducer,
     [bookingApi.reducerPath]: bookingApi.reducer,
     [favouritesApi.reducerPath]: favouritesApi.reducer,
-    [amenitiesApi.reducerPath]: amenitiesApi.reducer
+    [amenitiesApi.reducerPath]: amenitiesApi.reducer,
+    [listingApi.reducerPath]: listingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
-      //   listingApi.middleware,
+      listingApi.middleware,
       bookingApi.middleware,
       favouritesApi.middleware,
       amenitiesApi.middleware
