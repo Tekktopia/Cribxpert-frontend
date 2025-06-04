@@ -1,0 +1,151 @@
+import React from 'react';
+
+// Authentication & User Management Pages
+import SignUp from '@/pages/SignUp';
+import Login from '@/pages/Login';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
+import Onboarding from '@/pages/Onboarding';
+import ProfilePage from '@/pages/ProfilePage';
+
+// Main Feature Pages
+import Home from '@/pages/Home';
+import DiscoverPage from '@/pages/DiscoverPage';
+import PropertyDetail from '@/pages/PropertyDetail';
+import SavedListing from '@/pages/SavedListing/SavedListing';
+import BookingsPage from '@/pages/BookingsPage';
+import BookNowPage from '@/components/booking/BookNowPage';
+
+// Support & Utility Pages
+import PaymentMethod from '@/pages/PaymentMethod';
+import SupportPage from '@/pages/SupportPage';
+import SupportInfo from '@/pages/SupportInfo';
+import NotificationPage from '@/pages/NotificationPage';
+import NotFound404 from '@/pages/NotFound404';
+
+// Sample data (you might want to remove this later when fetching from API)
+import { SAMPLE_DATA } from '@/utils/data';
+
+export interface RouteConfig {
+  path: string;
+  element: React.ReactNode;
+  protected: boolean;
+  title: string;
+  children?: RouteConfig[];
+}
+
+const routeConfig: RouteConfig[] = [
+  // Public routes
+  {
+    path: '/',
+    element: <Home />,
+    protected: false,
+    title: 'Home'
+  },
+  {
+    path: '/propertydetail/:name',
+    element: <PropertyDetail listings={SAMPLE_DATA} />,
+    protected: false,
+    title: 'Property Details'
+  },
+  {
+    path: '/discover',
+    element: <DiscoverPage />,
+    protected: false,
+    title: 'Discover Properties'
+  },
+  
+  // Auth routes
+  {
+    path: '/sign-up',
+    element: <SignUp />,
+    protected: false,
+    title: 'Sign Up'
+  },
+  {
+    path: '/login',
+    element: <Login />,
+    protected: false,
+    title: 'Login'
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />,
+    protected: false,
+    title: 'Forgot Password'
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />,
+    protected: false,
+    title: 'Reset Password'
+  },
+  
+  // Protected routes
+  {
+    path: '/my-bookings',
+    element: <BookingsPage />,
+    protected: true,
+    title: 'My Bookings'
+  },
+  {
+    path: '/book-now',
+    element: <BookNowPage />,
+    protected: true,
+    title: 'Book Now'
+  },
+  {
+    path: '/payments',
+    element: <PaymentMethod />,
+    protected: true,
+    title: 'Payment Methods'
+  },
+  {
+    path: '/profile',
+    element: <ProfilePage />,
+    protected: true,
+    title: 'My Profile'
+  },
+  {
+    path: '/saved-listings',
+    element: <SavedListing />,
+    protected: true,
+    title: 'Saved Listings'
+  },
+  {
+    path: '/onboarding',
+    element: <Onboarding />,
+    protected: true,
+    title: 'Complete Your Profile'
+  },
+  {
+    path: '/notification',
+    element: <NotificationPage />,
+    protected: true,
+    title: 'Notifications'
+  },
+  
+  // Support routes
+  {
+    path: '/support',
+    element: <SupportPage />,
+    protected: false,
+    title: 'Support'
+  },
+  {
+    path: '/support-info',
+    element: <SupportInfo />,
+    protected: false,
+    title: 'Support Information'
+  },
+  
+  // 404 route - must be last
+  {
+    path: '*',
+    element: <NotFound404 />,
+    protected: false,
+    title: 'Page Not Found'
+  }
+];
+
+export default routeConfig;

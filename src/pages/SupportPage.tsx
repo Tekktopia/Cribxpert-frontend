@@ -1,4 +1,4 @@
-import Header from '@/components/layout/Header';
+import Header, { HeaderSpacer } from '@/components/layout/Header';
 import Support from '@/components/support/Support';
 import SupportHeader from '@/components/support/SupportHeader';
 
@@ -6,7 +6,8 @@ const SupportPage = () => {
   return (
     <div>
       <Header />
-      <div className="mt-32 container mx-auto">
+      <HeaderSpacer />
+      <div className="container mx-auto">
         <SupportHeader />
         <div className="lg:p-8">
           <Support />

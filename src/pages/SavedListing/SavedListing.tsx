@@ -11,7 +11,7 @@ const SavedListing: React.FC = () => {
     <div className=" bg-white">
       <Header />
       <HeaderSpacer />
-      <div className="sticky top-0 z-30 bg-white">
+      <div className="sticky top-0 z-30 xl:mt-12 bg-white">
         <div className="py-6 px-4 xl:px-8 container mx-auto">
           <h1 className=" text-2xl">Your Saved Listings</h1>
           <p className="text-[#6F6F6F] mt-2 ">

@@ -4,7 +4,7 @@ import Payment from '@/assets/icons/Payment-Link.png';
 import BankCard from '@/assets/icons/Bank-Card.png';
 import BankTransfer from '@/assets/icons/Bank-Transfer.png';
 import copyIcon from '@/assets/icons/copyIcon.png';
-import Header from '../components/layout/Header';
+import Header, { HeaderSpacer } from '@/components/layout/Header';
 
 const PaymentMethod: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState('Bank Transfer');
@@ -19,7 +19,8 @@ const PaymentMethod: React.FC = () => {
   return (
     <>
       <Header />
-      <section className="container mx-auto p-6 mt-32">
+      <HeaderSpacer />
+      <section className="container xl:mt-12 mx-auto p-6">
         <div className="flex flex-col md:flex-row md:gap-6 relative">
           {/* Left: Payment Methods */}
           <div className="md:w-1/3 w-full flex flex-col">
