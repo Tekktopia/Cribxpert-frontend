@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { useFavouritesOfflineSync } from '@/features/favourites/useOfflineSync';
 
 /**
@@ -11,13 +11,13 @@ const OfflineSyncHandler = () => {
 
   // We could add more offline sync hooks here for other features
 
-  // Log when the component mounts/unmounts for debugging
-  useEffect(() => {
-    console.log('OfflineSyncHandler mounted - offline sync enabled');
-    return () => {
-      console.log('OfflineSyncHandler unmounted');
-    };
-  }, []);
+  // // Log when the component mounts/unmounts for debugging
+  // useEffect(() => {
+  //   console.log('OfflineSyncHandler mounted - offline sync enabled');
+  //   return () => {
+  //     console.log('OfflineSyncHandler unmounted');
+  //   };
+  // }, []);
 
   // This component doesn't render anything
   return null;

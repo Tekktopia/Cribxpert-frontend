@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { PropertyListingProps } from '@/types';
-import { listingApi, CreateListingRequest, ListingFilter } from './listingService';
+import { listingApi, CreateListingRequest } from './listingService';
 
 // Define types for UI-specific state
 interface DraftListing extends Partial<CreateListingRequest> {
@@ -15,36 +15,57 @@ interface ListingState {
   // Current listing being viewed or edited
   currentListing: PropertyListingProps | null;
   
+  // List of all current listings (for search results, etc.)
+  currentListings: PropertyListingProps[];
+
   // Draft listing for multi-step form
   draftListing: DraftListing;
-  
+
   // Active search filters
-  activeFilters: ListingFilter;
-  
+  activeFilters: {
+    location?: string;
+    propertyType?: string;
+    priceRange?: string;
+    bedrooms?: string;
+    amenities?: string;
+    [key: string]: string | undefined;
+  };
+
   // UI states
   isCreating: boolean;
   isFiltering: boolean;
   isLoadingUserListings: boolean;
   error: string | null;
-  
+
   // Selected listing IDs (for bulk operations)
   selectedListingIds: string[];
+
+  // Track if we're using geolocation
+  isUsingGeolocation: boolean;
 }
 
 // Initial state
 const initialState: ListingState = {
   currentListing: null,
+  currentListings: [],
   draftListing: {
     step: 1,
     uploadProgress: 0,
     isDirty: false,
   },
-  activeFilters: {},
+  activeFilters: {
+    location: '',
+    propertyType: '',
+    priceRange: '',
+    bedrooms: '',
+    amenities: '',
+  },
   isCreating: false,
   isFiltering: false,
   isLoadingUserListings: false,
   error: null,
   selectedListingIds: [],
+  isUsingGeolocation: false,
 };
 
 // Create the slice
@@ -53,34 +74,56 @@ export const listingSlice = createSlice({
   initialState,
   reducers: {
     // Set current listing being viewed
-    setCurrentListing: (state, action: PayloadAction<PropertyListingProps | null>) => {
+    setCurrentListing: (
+      state,
+      action: PayloadAction<PropertyListingProps | null>
+    ) => {
       state.currentListing = action.payload;
     },
-    
-    // Set a filter value
-    setFilter: <K extends keyof ListingFilter>(
-      state: ListingState,
-      action: PayloadAction<{ key: K; value: ListingFilter[K] }>
+
+    // Add these reducers
+    setCurrentListings: (state, action: PayloadAction<PropertyListingProps[]>) => {
+      state.currentListings = action.payload;
+    },
+
+    // Update a single filter
+    updateFilter: (
+      state,
+      action: PayloadAction<{ name: string; value: string }>
     ) => {
-      const { key, value } = action.payload;
+      const { name, value } = action.payload;
       state.activeFilters = {
         ...state.activeFilters,
-        [key]: value,
+        [name]: value,
       };
       state.isFiltering = true;
     },
-    
+
+    // Update multiple filters at once
+    updateFilters: (state, action: PayloadAction<Record<string, string>>) => {
+      state.activeFilters = {
+        ...state.activeFilters,
+        ...action.payload,
+      };
+      state.isFiltering = true;
+    },
+
+    // Toggle geolocation usage
+    setUsingGeolocation: (state, action: PayloadAction<boolean>) => {
+      state.isUsingGeolocation = action.payload;
+    },
+
     // Clear all filters
     clearFilters: (state) => {
       state.activeFilters = {};
       state.isFiltering = false;
     },
-    
+
     // Set error message
     setListingError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
-    
+
     // Start a new listing draft
     startNewListing: (state) => {
       state.draftListing = {
@@ -89,44 +132,47 @@ export const listingSlice = createSlice({
       };
       state.isCreating = true;
     },
-    
+
     // Update draft listing
-    updateDraftListing: (state, action: PayloadAction<Partial<DraftListing>>) => {
+    updateDraftListing: (
+      state,
+      action: PayloadAction<Partial<DraftListing>>
+    ) => {
       state.draftListing = {
         ...state.draftListing,
         ...action.payload,
         isDirty: true,
       };
     },
-    
+
     // Set the current step in multi-step form
     setListingStep: (state, action: PayloadAction<number>) => {
       state.draftListing.step = action.payload;
     },
-    
+
     // Clear the draft listing
     clearDraftListing: (state) => {
       state.draftListing = initialState.draftListing;
       state.isCreating = false;
     },
-    
+
     // Set upload progress for files
     setUploadProgress: (state, action: PayloadAction<number>) => {
       state.draftListing.uploadProgress = action.payload;
     },
-    
+
     // Toggle a listing selection (for bulk operations)
     toggleListingSelection: (state, action: PayloadAction<string>) => {
       const id = action.payload;
       const index = state.selectedListingIds.indexOf(id);
-      
+
       if (index === -1) {
         state.selectedListingIds.push(id);
       } else {
         state.selectedListingIds.splice(index, 1);
       }
     },
-    
+
     // Clear all selected listings
     clearSelectedListings: (state) => {
       state.selectedListingIds = [];
@@ -135,26 +181,20 @@ export const listingSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Handle loading states for getListings
-      .addMatcher(
-        listingApi.endpoints.getListings.matchPending,
-        (state) => {
-          state.error = null;
-        }
-      )
+      .addMatcher(listingApi.endpoints.getListings.matchPending, (state) => {
+        state.error = null;
+      })
       .addMatcher(
         listingApi.endpoints.getListings.matchRejected,
         (state, { error }) => {
           state.error = error.message || 'Failed to fetch listings';
         }
       )
-      
+
       // Handle loading states for getListingById
-      .addMatcher(
-        listingApi.endpoints.getListingById.matchPending,
-        (state) => {
-          state.error = null;
-        }
-      )
+      .addMatcher(listingApi.endpoints.getListingById.matchPending, (state) => {
+        state.error = null;
+      })
       .addMatcher(
         listingApi.endpoints.getListingById.matchFulfilled,
         (state, { payload }) => {
@@ -167,7 +207,7 @@ export const listingSlice = createSlice({
           state.error = error.message || 'Failed to fetch listing details';
         }
       )
-      
+
       // Handle loading states for getUserListings
       .addMatcher(
         listingApi.endpoints.getUserListings.matchPending,
@@ -189,7 +229,7 @@ export const listingSlice = createSlice({
           state.error = error.message || 'Failed to fetch your listings';
         }
       )
-      
+
       // Handle create/update listing
       .addMatcher(
         listingApi.endpoints.createOrUpdateListing.matchPending,
@@ -219,7 +259,10 @@ export const listingSlice = createSlice({
 // Export actions
 export const {
   setCurrentListing,
-  setFilter,
+  setCurrentListings,
+  updateFilter,
+  updateFilters,
+  setUsingGeolocation,
   clearFilters,
   setListingError,
   startNewListing,
@@ -232,38 +275,45 @@ export const {
 } = listingSlice.actions;
 
 // Export selectors
-export const selectCurrentListing = (state: { listing: ListingState }) => 
+export const selectActiveFilter = (filterName: string) => 
+  (state: { listing: ListingState }) => 
+    state.listing.activeFilters[filterName] || '';
+
+export const selectIsUsingGeolocation = (state: { listing: ListingState }) => 
+  state.listing.isUsingGeolocation;
+
+export const selectCurrentListing = (state: { listing: ListingState }) =>
   state.listing.currentListing;
 
-export const selectDraftListing = (state: { listing: ListingState }) => 
+export const selectDraftListing = (state: { listing: ListingState }) =>
   state.listing.draftListing;
 
-export const selectListingStep = (state: { listing: ListingState }) => 
+export const selectListingStep = (state: { listing: ListingState }) =>
   state.listing.draftListing.step || 1;
 
-export const selectActiveFilters = (state: { listing: ListingState }) => 
+export const selectActiveFilters = (state: { listing: ListingState }) =>
   state.listing.activeFilters;
 
-export const selectIsCreatingListing = (state: { listing: ListingState }) => 
+export const selectIsCreatingListing = (state: { listing: ListingState }) =>
   state.listing.isCreating;
 
-export const selectIsFilteringListings = (state: { listing: ListingState }) => 
+export const selectIsFilteringListings = (state: { listing: ListingState }) =>
   state.listing.isFiltering;
 
-export const selectListingError = (state: { listing: ListingState }) => 
+export const selectListingError = (state: { listing: ListingState }) =>
   state.listing.error;
 
-export const selectUploadProgress = (state: { listing: ListingState }) => 
+export const selectUploadProgress = (state: { listing: ListingState }) =>
   state.listing.draftListing.uploadProgress || 0;
 
-export const selectSelectedListingIds = (state: { listing: ListingState }) => 
+export const selectSelectedListingIds = (state: { listing: ListingState }) =>
   state.listing.selectedListingIds;
 
-export const selectIsDraftDirty = (state: { listing: ListingState }) => 
+export const selectIsDraftDirty = (state: { listing: ListingState }) =>
   state.listing.draftListing.isDirty || false;
 
-export const selectIsListingSelected = (listingId: string) => 
-  (state: { listing: ListingState }) => 
+export const selectIsListingSelected =
+  (listingId: string) => (state: { listing: ListingState }) =>
     state.listing.selectedListingIds.includes(listingId);
 
 // Export reducer
