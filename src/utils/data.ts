@@ -1,32 +1,36 @@
 import allShortLet from '@/assets/icons/all-shorlet.png';
 import otherFilterIcon from '@/assets/icons/otherFilterIcon.png';
 import { PropertyListingProps } from '@/types';
+import { BookingsType } from '@/types';
+import beachside from '../assets/images/beachside.jpg';
+import cityview from '../assets/images/cityview.jpg';
+import downtown from '../assets/images/downtown.jpg';
 
 const SAMPLE_DATA: PropertyListingProps[] = [
   {
     id: 1,
-    image: "/images/apartment4.jpg",
+    image: '/images/apartment4.jpg',
     images: [
-      "/images/apartment4.jpg", 
-      "/images/apartment2.jpg", 
-      "/images/apartment3.jpg"
+      '/images/apartment4.jpg',
+      '/images/apartment2.jpg',
+      '/images/apartment3.jpg',
     ],
-    propertyName: 'Makinwa\'s Cottage',
+    propertyName: "Makinwa's Cottage",
     location: 'Street 23, All Avenue, Lagos Nigeria',
     rating: 4.5,
     price: 50000,
     description: 'Newly Test Remodeled',
     bedrooms: 3,
-    propertyType: "Apartment"
+    propertyType: 'Apartment',
   },
   {
     id: 2,
-    image: "/images/apartment5.jpg",
+    image: '/images/apartment5.jpg',
     images: [
-      "/images/apartment5.jpg", 
-      "/images/apartment4.jpg", 
-      "/images/apartment3.jpg", 
-      "/images/apartment2.jpg"
+      '/images/apartment5.jpg',
+      '/images/apartment4.jpg',
+      '/images/apartment3.jpg',
+      '/images/apartment2.jpg',
     ],
     propertyName: 'Lekki Luxury Villa',
     location: 'Lekki Phase 1, Lagos',
@@ -34,30 +38,27 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: 'Stunning waterfront property',
     price: 75000,
     bedrooms: 4,
-    propertyType: "Villa"
+    propertyType: 'Villa',
   },
   {
     id: 3,
-    image: "/images/apartment6.jpg",
-    images: [
-      "/images/apartment6.jpg", 
-      "/images/apartment2.jpg"
-    ],
+    image: '/images/apartment6.jpg',
+    images: ['/images/apartment6.jpg', '/images/apartment2.jpg'],
     propertyName: 'Downtown Abuja Studio',
     location: 'Central Business District, Abuja',
     rating: 4.2,
     price: 35000,
     description: 'Modern studio in the heart of the city',
     bedrooms: 1,
-    propertyType: "Studio"
+    propertyType: 'Studio',
   },
   {
     id: 4,
-    image: "/images/apartment7.jpg",
+    image: '/images/apartment7.jpg',
     images: [
-      "/images/apartment7.jpg", 
-      "/images/apartment3.jpg", 
-      "/images/apartment5.jpg"
+      '/images/apartment7.jpg',
+      '/images/apartment3.jpg',
+      '/images/apartment5.jpg',
     ],
     propertyName: 'Waterside Cottage',
     location: 'Victoria Island, Lagos',
@@ -65,16 +66,16 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 68000,
     description: 'Serene waterfront experience',
     bedrooms: 2,
-    propertyType: "Cottage"
+    propertyType: 'Cottage',
   },
   {
     id: 5,
-    image: "/images/apartment8.jpg",
+    image: '/images/apartment8.jpg',
     images: [
-      "/images/apartment8.jpg", 
-      "/images/apartment7.jpg", 
-      "/images/apartment4.jpg",
-      "/images/apartment2.jpg"
+      '/images/apartment8.jpg',
+      '/images/apartment7.jpg',
+      '/images/apartment4.jpg',
+      '/images/apartment2.jpg',
     ],
     propertyName: 'Mountain View Cabin',
     location: 'Jos, Plateau State',
@@ -82,30 +83,27 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: 'Scenic mountain retreat',
     price: 45000,
     bedrooms: 2,
-    propertyType: "Cabin"
+    propertyType: 'Cabin',
   },
   {
     id: 6,
-    image: "/images/apartment9.jpg",
-    images: [
-      "/images/apartment9.jpg",
-      "/images/apartment6.jpg"
-    ],
+    image: '/images/apartment9.jpg',
+    images: ['/images/apartment9.jpg', '/images/apartment6.jpg'],
     propertyName: 'Modern High-Rise',
     location: 'Ikoyi, Lagos',
     rating: 4.6,
     description: 'Luxury apartment with skyline views',
     price: 90000,
     bedrooms: 3,
-    propertyType: "Apartment"
+    propertyType: 'Apartment',
   },
   {
     id: 7,
-    image: "/images/apartment4.jpg",
+    image: '/images/apartment4.jpg',
     images: [
-      "/images/apartment4.jpg", 
-      "/images/apartment5.jpg", 
-      "/images/apartment8.jpg"
+      '/images/apartment4.jpg',
+      '/images/apartment5.jpg',
+      '/images/apartment8.jpg',
     ],
     propertyName: 'Garden Oasis',
     location: 'Ikeja GRA, Lagos',
@@ -113,30 +111,27 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: 'Peaceful garden property',
     price: 55000,
     bedrooms: 3,
-    propertyType: "House"
+    propertyType: 'House',
   },
   {
     id: 8,
-    image: "/images/apartment7.jpg",
-    images: [
-      "/images/apartment7.jpg", 
-      "/images/apartment9.jpg"
-    ],
+    image: '/images/apartment7.jpg',
+    images: ['/images/apartment7.jpg', '/images/apartment9.jpg'],
     propertyName: 'Beachfront Paradise',
     location: 'Eleko Beach, Lagos',
     rating: 4.8,
     description: 'Direct beach access property',
     price: 85000,
     bedrooms: 4,
-    propertyType: "Beach House"
+    propertyType: 'Beach House',
   },
   {
     id: 9,
-    image: "/images/apartment6.jpg",
+    image: '/images/apartment6.jpg',
     images: [
-      "/images/apartment6.jpg", 
-      "/images/apartment7.jpg", 
-      "/images/apartment8.jpg"
+      '/images/apartment6.jpg',
+      '/images/apartment7.jpg',
+      '/images/apartment8.jpg',
     ],
     propertyName: 'City Center Loft',
     location: 'Marina, Lagos',
@@ -144,16 +139,16 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 48000,
     description: 'Urban loft with modern amenities',
     bedrooms: 2,
-    propertyType: "Loft"
+    propertyType: 'Loft',
   },
   {
     id: 10,
-    image: "/images/apartment5.jpg",
+    image: '/images/apartment5.jpg',
     images: [
-      "/images/apartment5.jpg", 
-      "/images/apartment6.jpg", 
-      "/images/apartment7.jpg",
-      "/images/apartment8.jpg"
+      '/images/apartment5.jpg',
+      '/images/apartment6.jpg',
+      '/images/apartment7.jpg',
+      '/images/apartment8.jpg',
     ],
     propertyName: 'Riverside Retreat',
     location: 'Port Harcourt, Rivers State',
@@ -161,30 +156,27 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     description: 'Serene riverside accommodation',
     price: 65000,
     bedrooms: 3,
-    propertyType: "Cottage"
+    propertyType: 'Cottage',
   },
   {
     id: 11,
-    image: "/images/apartment9.jpg",
-    images: [
-      "/images/apartment9.jpg", 
-      "/images/apartment8.jpg"
-    ],
+    image: '/images/apartment9.jpg',
+    images: ['/images/apartment9.jpg', '/images/apartment8.jpg'],
     propertyName: 'Executive Suite',
     location: 'Victoria Island, Lagos',
     rating: 4.9,
     price: 120000,
     description: 'Luxury executive accommodation',
     bedrooms: 2,
-    propertyType: "Suite"
+    propertyType: 'Suite',
   },
   {
     id: 12,
-    image: "/images/apartment4.jpg",
+    image: '/images/apartment4.jpg',
     images: [
-      "/images/apartment4.jpg", 
-      "/images/apartment5.jpg", 
-      "/images/apartment6.jpg"
+      '/images/apartment4.jpg',
+      '/images/apartment5.jpg',
+      '/images/apartment6.jpg',
     ],
     propertyName: 'Historic Townhouse',
     location: 'Calabar, Cross River State',
@@ -192,7 +184,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     price: 42000,
     description: 'Classic town house with character',
     bedrooms: 4,
-    propertyType: "Townhouse"
+    propertyType: 'Townhouse',
   },
 ];
 
@@ -247,4 +239,193 @@ const Filter = [
   },
 ];
 
-export { SAMPLE_DATA, Filter };
+const bookingsData: Array<BookingsType> = [
+  {
+    id: '100001',
+    image: beachside,
+    name: 'Beachside Villa',
+    checkin: 'Dec 12 2024',
+    checkout: 'Dec 19 2024',
+    status: 'confirmed',
+    description: ' Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100002',
+    image: cityview,
+    name: 'City View Cabin',
+    checkin: 'Mar 12 2024',
+    checkout: 'Mar 19 2024',
+    status: 'pending',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100003',
+    image: downtown,
+    name: 'Downtown Villa',
+    checkin: 'Jan 12 2024',
+    checkout: 'Jan 19 2024',
+    status: 'confirmed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100004',
+    image: beachside,
+    name: 'Beachside Villa',
+    checkin: 'Dec 12 2024',
+    checkout: 'Dec 19 2024',
+    status: 'confirmed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+
+  {
+    id: '100005',
+    image: beachside,
+    name: 'Beachside Villa',
+    checkin: 'Dec 12 2024',
+    checkout: 'Dec 19 2024',
+    status: 'cancelled',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100006',
+    image: cityview,
+    name: 'City View Cabin',
+    checkin: 'Mar 12 2024',
+    checkout: 'Mar 19 2024',
+    status: 'cancelled',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100007',
+    image: downtown,
+    name: 'Downtown Villa',
+    checkin: 'Jan 12 2024',
+    checkout: 'Jan 19 2024',
+    status: 'cancelled',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100008',
+    image: beachside,
+    name: 'Beachside Villa',
+    checkin: 'Dec 12 2024',
+    checkout: 'Dec 19 2024',
+    status: 'completed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100009',
+    image: cityview,
+    name: 'City View Cabin',
+    checkin: 'Mar 12 2024',
+    checkout: 'Mar 19 2024',
+    status: 'completed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100010',
+    image: downtown,
+    name: 'Downtown Villa',
+    checkin: 'Jan 12 2024',
+    checkout: 'Jan 19 2024',
+    status: 'completed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+];
+
+const upcomingBookingsData: Array<BookingsType> = [
+  {
+    id: '100001',
+    image: beachside,
+    name: 'Beachside Villa',
+    checkin: 'Dec 12 2024',
+    checkout: 'Dec 19 2024',
+    status: 'confirmed',
+    description: ' Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100002',
+    image: cityview,
+    name: 'City View Cabin',
+    checkin: 'Mar 12 2024',
+    checkout: 'Mar 19 2024',
+    status: 'pending',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100003',
+    image: downtown,
+    name: 'Downtown Villa',
+    checkin: 'Jan 12 2024',
+    checkout: 'Jan 19 2024',
+    status: 'confirmed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+];
+const cancelledBookingsData: Array<BookingsType> = [
+  {
+    id: '100005',
+    image: beachside,
+    name: 'Beachside Villa',
+    checkin: 'Dec 12 2024',
+    checkout: 'Dec 19 2024',
+    status: 'cancelled',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100006',
+    image: cityview,
+    name: 'City View Cabin',
+    checkin: 'Mar 12 2024',
+    checkout: 'Mar 19 2024',
+    status: 'cancelled',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100007',
+    image: downtown,
+    name: 'Downtown Villa',
+    checkin: 'Jan 12 2024',
+    checkout: 'Jan 19 2024',
+    status: 'cancelled',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+];
+const completedBookingsData: Array<BookingsType> = [
+  {
+    id: '100008',
+    image: beachside,
+    name: 'Beachside Villa',
+    checkin: 'Dec 12 2024',
+    checkout: 'Dec 19 2024',
+    status: 'completed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100009',
+    image: cityview,
+    name: 'City View Cabin',
+    checkin: 'Mar 12 2024',
+    checkout: 'Mar 19 2024',
+    status: 'completed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+  {
+    id: '100010',
+    image: downtown,
+    name: 'Downtown Villa',
+    checkin: 'Jan 12 2024',
+    checkout: 'Jan 19 2024',
+    status: 'completed',
+    description: 'Newly Remodeled Federal Capital Territory Gombe',
+  },
+];
+
+export {
+  SAMPLE_DATA,
+  Filter,
+  bookingsData,
+  cancelledBookingsData,
+  completedBookingsData,
+  upcomingBookingsData,
+};

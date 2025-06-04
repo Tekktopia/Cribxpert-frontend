@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { BookingsType } from '@/types';
 import chevronLeft from '../../assets/icons/chevron-left.svg';
 import chevronRight from '../../assets/icons/chevron-right.svg';
+import { useNavigate } from 'react-router';
+import StatusButton from './StatusButton';
+// import { useBookingStore } from '@/store/bookingStore';
+
 type BookingsTableProps = {
   bookings: BookingsType[];
 };
@@ -14,6 +18,14 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentBookings = bookings.slice(indexOfFirstItem, indexOfLastItem);
+
+  const navigate = useNavigate();
+  // const setSelectedBooking = useBookingStore(
+  //   (state) => state.setSelectedBooking
+  // );
+  const handleViewDetails = (id: string) => {
+    navigate(`/booking/${id}`);
+  };
 
   return (
     <div className="pt-10">
@@ -49,11 +61,16 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
               <span className="text-neutralDark">{booking.checkout}</span>
             </div>
             <div>
-              <span>{booking.status}</span>
+              <StatusButton status={booking.status} />
             </div>
             <button
               type="button"
-              className="bg-transparent items-center justify-center text-white px-[5px] rounded-[5px] py-[8px] gap-4 w-[112px] hover:bg-primary hover:text-white flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
+              className="bg-transparent items-center justify-center  px-[5px] rounded-[5px] py-[8px] gap-4 w-[112px] hover:bg-primary hover:text-white flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
+              onClick={() => {
+                // setSelectedBooking(booking);
+                // navigate(`/booking/${booking.id}`);
+                handleViewDetails(booking.id);
+              }}
             >
               View Details
             </button>
@@ -117,51 +134,8 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
             >
               <img src={chevronLeft} alt="<" />
             </button>
-            {/* <span className="px-4 py-2 w-8 h-8 p-[6px] rounded-lg bg-">{` ${currentPage}`}</span> */}
 
             <div className="flex items-center gap-2 ">
-              {/* {Array.from({ length: totalPages }).map((_, i) => {
-                const page = i + 1;
-
-                if (
-                  page === 1 ||
-                  page === currentPage ||
-                  page === totalPages ||
-                  (page <= 3 && currentPage <= 3) ||
-                  (page >= currentPage &&
-                    page <= currentPage + 1 &&
-                    currentPage > 2)
-                ) {
-                  return (
-                    <button
-                      key={page}
-                      //   onClick={() => setCurrentPage(page)}
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                      }
-                      disabled={currentPage === 1}
-                      className={`px-3 py-1 w-8 text-center rounded  ${
-                        page === currentPage
-                          ? 'bg-primary text-white'
-                          : 'bg-accent text-primary'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  );
-                }
-
-                // Show ellipsis once between page ranges
-                if (
-                  (page === 4 && currentPage <= 3) ||
-                  (page === currentPage + 2 && currentPage < totalPages - 2)
-                ) {
-                  return <span key={`dots-${page}`}>...</span>;
-                }
-
-                return null;
-              })} */}
-
               {Array.from({ length: totalPages }).map((_, i) => {
                 const page = i + 1;
                 return (

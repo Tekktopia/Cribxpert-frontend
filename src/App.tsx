@@ -37,6 +37,7 @@ import { SAMPLE_DATA } from './utils/data';
 import Footer from './components/layout/Footer';
 import NotFound404 from './pages/NotFound404';
 import BookNowPage from './components/booking/BookNowPage';
+import BookingDetailsPage from './pages/BookingDetailsPage';
 
 // Create a footer wrapper component to handle the conditional rendering
 const FooterWrapper = () => {
@@ -71,6 +72,7 @@ function App() {
               element={<PropertyDetail listings={SAMPLE_DATA} />}
             />
             <Route path="/my-bookings" element={<BookingsPage />} />
+            <Route path="/booking/:id" element={<BookingDetailsPage />} />
             <Route path="/book-now" element={<BookNowPage />} />
 
             <Route path="/payments" element={<PaymentMethod />} />

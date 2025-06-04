@@ -77,7 +77,9 @@ export type BookingsType = {
   name: string;
   checkin: string;
   checkout: string;
-  status: JSX.Element;
+  // status: JSX.Element;
+  status: string; // Changed to string for simplicity
+  description?: string;
 };
 export type ContactInfo = {
   icon: JSX.Element;
