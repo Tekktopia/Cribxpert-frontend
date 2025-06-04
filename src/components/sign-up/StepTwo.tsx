@@ -64,7 +64,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
         )}
 
         {methodSelected === 'Email Address' ? (
-          <button className="w-full max-w-[422px] p-3 mx-auto bg-[#73007179] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
+          <button className="w-full max-w-[422px] p-3 mx-auto bg-[#1D5C5C79] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
             <IoReload />
             Resend Link:{/* Countdown Timer */}
             <span>

@@ -73,7 +73,7 @@ const StepTwoResendButton = ({ methodSelected, handleVerify }: Props) => {
           <button
             onClick={handleResend}
             disabled={resendDisabled}
-            className="w-full max-w-[422px] p-3 mx-auto bg-[#73007191] text-white text-[14px] rounded-md flex items-center justify-center gap-2 mt-4"
+            className="w-full max-w-[422px] p-3 mx-auto bg-[#1D5C5C91] text-white text-[14px] rounded-md flex items-center justify-center gap-2 mt-4"
           >
             <IoReload />
             Resend Link: {timeLeft > 0 ? formatTime(timeLeft) : ''}

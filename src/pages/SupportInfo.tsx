@@ -12,7 +12,7 @@ const SupportInfo = () => {
       <div className="mt-32">
         <SupportHeader />
         <div className="lg:p-8">
-          <div className=" text-[#6F6F6F] flex p-[60px] flex-col gap-[20px] bg-[#FFF] shadow-lg shadow-[#73007114] text-sm lg:text-lg">
+          <div className=" text-[#6F6F6F] flex p-[60px] flex-col gap-[20px] bg-[#FFF] shadow-lg shadow-[#1D5C5C14] text-sm lg:text-lg">
             <div className=" gap-[10px] flex flex-col ">
               <h1 className="text-[#070707] text-2xl lg:text-[31px] font-bold mb-4">
                 How do i Cancel or modify a booking?

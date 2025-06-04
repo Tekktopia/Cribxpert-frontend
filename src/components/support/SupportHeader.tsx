@@ -8,7 +8,7 @@ const SupportHeader = () => {
         className="  bg-cover bg-no-repeat absolute inset-0   "
         style={{ backgroundImage: `url(${supportbanner})` }}
       >
-        <div className="bg-[#73007166] absolute inset-0 ">
+        <div className="bg-[#1D5C5C66] absolute inset-0 ">
           <div className="relative  flex-col py-6 px-8 h-[447px]  w-full flex text-white justify-end ">
             <div className="inline-flex flex-col gap-4 items-start lg:w-[650px] ">
               <h1 className="font-bold text-4xl">Support Center</h1>

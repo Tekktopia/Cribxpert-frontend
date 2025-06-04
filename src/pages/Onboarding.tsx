@@ -29,7 +29,7 @@ export default function Onboarding() {
           alt="Signup Background"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-[#73007166] opacity-50"></div>
+        <div className="absolute inset-0 bg-[#1D5C5C66] opacity-50"></div>
       </div>
 
       <StepFour formData={formData} setFormData={setFormData} />

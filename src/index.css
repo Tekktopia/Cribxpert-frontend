@@ -13,7 +13,7 @@ body {
   width: 5px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #730071;
+  background: #1D5C5C;
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
