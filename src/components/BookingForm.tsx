@@ -1,6 +1,7 @@
 import calender from '../assets/icons/calendar.png';
 import certified from '../assets/icons/certified.png';
-import arrowdown from '../assets/icons/arrow-down.png';
+import { ChevronDown } from 'lucide-react';
+import { CiCircleCheck } from "react-icons/ci";
 import { Link } from 'react-router';
 const BookingForm: React.FC = () => {
   return (
@@ -60,29 +61,29 @@ const BookingForm: React.FC = () => {
         </div>
 
         {/* Availability Check */}
-        <p className="text-[#999999] text-[14px] mt-3">
-          ✔ Your dates are available
+        <div className="flex items-start mt-3 gap-2 ">
+            <CiCircleCheck size={20} color='#09974C' />
+       
+        <p className="text-[#999999] text-[14px]">
+          Your dates are available
         </p>
+ </div>
 
         {/* Price & Breakdown */}
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items  -center justify-between mt-4">
           <p className="text-[#313131] text-[16px] font-medium">Total Price</p>
           <h3 className="text-[#070707] text-[16px] font-semibold">
             NGN 170,000
           </h3>
         </div>
-        <div className="flex items-center justify-center  text-[#6F6F6F] text-[14px] font-medium cursor-pointer mt-1">
+        <div className="flex items-center gap-2 justify-center  text-[#6F6F6F] text-[14px] font-medium cursor-pointer mt-1">
           View price breakdown{' '}
-          <img
-            src={arrowdown}
-            alt="Arrow Down"
-            className="w-[16px] h-[16px] ml-1"
-          />
+           <ChevronDown size={20} color='#006073' />
         </div>
 
         {/* CTA Button */}
         <Link to="/book-now">
-          <button className="bg-[#730071] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#5a0056] transition">
+          <button className="bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition">
             Book Now
           </button>
         </Link>
@@ -103,7 +104,7 @@ const BookingForm: React.FC = () => {
         <p className="text-[#313131] text-[14px]">
           Property ID <strong>234532</strong>
         </p>
-        <p className="text-[#730071] font-[400] text-[14px] mt-3 cursor-pointer hover:underline">
+        <p className="text-[#006073] font-[400] text-[14px] mt-3 cursor-pointer hover:underline">
           Contact host
         </p>
       </div>

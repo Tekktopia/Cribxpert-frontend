@@ -68,7 +68,7 @@ const OrderSummary: React.FC = () => {
           <p className="text-[#313131] font-[500] text-[14px]">NGN 260,000</p>
         </div>
         <Link to="/payments">
-          <button className="bg-[#730071] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#5a0056] transition">
+          <button className="bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#5a0056] transition">
             Make Payment
           </button>
         </Link>

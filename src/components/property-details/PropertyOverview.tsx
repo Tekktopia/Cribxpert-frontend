@@ -22,7 +22,7 @@ const PropertyOverview: React.FC<PropertyOverviewProps> = ({
 }) => {
   return (
     <section className="py-4 sm:py-6 px-4 sm:px-10 overflow-x-auto">
-      <div className="flex flex-row items-center gap-2 sm:gap-3 whitespace-nowrap">
+      <div className="flex flex-row items-center gap-6 sm:9 whitespace-nowrap">
         <div className="flex items-center gap-2">
           <img
             src={icons.bedroom}

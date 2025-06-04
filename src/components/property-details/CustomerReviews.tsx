@@ -49,7 +49,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews }) => {
                         />
                       )}
                     </div>
-                    <p className="text-[#8B2B89] text-sm sm:text-base font-medium">
+                    <p className="text-[#006073] text-sm sm:text-base font-medium">
                       {review.author}
                     </p>
                   </div>

@@ -100,7 +100,7 @@ const Hero: React.FC<HeroProps> = ({
           {subtitle}
         </p>
         <Link to={buttonLink}>
-          <button className="bg-[#730071] hover:bg-[#5c0059] transition-colors px-6 py-2 rounded-md text-white text-sm md:text-base">
+          <button className="bg-[#1d5c5c] hover:bg-[#267474] transition-colors px-6 py-2 rounded-md text-white text-sm md:text-base">
             {buttonText}
           </button>
         </Link>
