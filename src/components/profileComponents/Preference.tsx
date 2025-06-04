@@ -30,7 +30,7 @@ const Preference = ({
             <span className="relative">
               <div
                 className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
-                  notifications ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                  notifications ? 'bg-[#1D5C5C]' : 'bg-[#F1E6F1]'
                 } `}
               ></div>
               <div
@@ -54,7 +54,7 @@ const Preference = ({
             <span className="relative">
               <div
                 className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
-                  discounts ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                  discounts ? 'bg-[#1D5C5C]' : 'bg-[#F1E6F1]'
                 } `}
               ></div>
               <div
@@ -76,7 +76,7 @@ const Preference = ({
             <span className="relative">
               <div
                 className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
-                  messages ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                  messages ? 'bg-[#1D5C5C]' : 'bg-[#F1E6F1]'
                 } `}
               ></div>
               <div
@@ -98,7 +98,7 @@ const Preference = ({
             <span className="relative">
               <div
                 className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
-                  updates ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                  updates ? 'bg-[#1D5C5C]' : 'bg-[#F1E6F1]'
                 } `}
               ></div>
               <div
@@ -124,7 +124,7 @@ const Preference = ({
             <span className="relative">
               <div
                 className={` w-10 lg:w-14 h-6 lg:h-7 rounded-full shadow-inner transition-colors duration-300 ${
-                  authentication ? 'bg-[#730071]' : 'bg-[#F1E6F1]'
+                  authentication ? 'bg-[#1D5C5C]' : 'bg-[#F1E6F1]'
                 } `}
               ></div>
               <div
@@ -176,11 +176,11 @@ const Preference = ({
       <div className="flex gap-4">
         <button
           type="submit"
-          className="w-[156px] bg-[#730071] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
+          className="w-[156px] bg-[#1D5C5C] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
         >
           Save
         </button>
-        <button className="w-[156px] border-2 border-[#730071] text-[#730071] p-[10px] rounded-lg hover:border-[#3f013e]">
+        <button className="w-[156px] border-2 border-[#1D5C5C] text-[#1D5C5C] p-[10px] rounded-lg hover:border-[#3f013e]">
           Cancel
         </button>
       </div>

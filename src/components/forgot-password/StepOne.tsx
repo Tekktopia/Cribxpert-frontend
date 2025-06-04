@@ -41,7 +41,7 @@ export default function StepOne({
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                 required
               />
             </label>
@@ -54,7 +54,7 @@ export default function StepOne({
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 type="number"
                 placeholder="07068839585"
-                className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                 required
               />
             </label>
@@ -64,7 +64,7 @@ export default function StepOne({
 
         <button
           onClick={requestReset}
-          className="w-full p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+          className="w-full p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
         >
           Continue
         </button>

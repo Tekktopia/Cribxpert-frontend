@@ -116,7 +116,7 @@ const Login: React.FC = () => {
                         name="email"
                         onChange={handleChange}
                         placeholder="Enter your email"
-                        className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                        className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                       />
                     </label>
                   </div>
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                         name="phoneNumber"
                         onChange={handleChange}
                         placeholder="Enter your Phone Number"
-                        className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                        className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                       />
                     </label>
                   </div>
@@ -146,7 +146,7 @@ const Login: React.FC = () => {
                   value={formData.password}
                   onChange={handleChange}
                   placeholder="********"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
                 />
                 {showPassword ? (
                   <EyeOff
@@ -168,18 +168,18 @@ const Login: React.FC = () => {
                     type="checkbox"
                     id="remember"
                     name="remember"
-                    className="mr-2 accent-[#730071]"
+                    className="mr-2 accent-[#1D5C5C]"
                   />
                   Remember me
                 </label>
-                <Link to="/forgot-password" className="text-[#730071]">
+                <Link to="/forgot-password" className="text-[#1D5C5C]">
                   Forgot Password?
                 </Link>
               </div>
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full mx-auto mt-8 p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2"
+                className="w-full mx-auto mt-8 p-3 bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2"
               >
                 Login
               </button>
@@ -190,7 +190,7 @@ const Login: React.FC = () => {
           <p className="text-gray-500 text-[14px]">
             Don't have an account?
             <Link to="/sign-up">
-              <span className="text-[#730071]">Sign up</span>
+              <span className="text-[#1D5C5C]">Sign up</span>
             </Link>
             .
           </p>

@@ -48,7 +48,7 @@ const ProfileNav = ({ active, setActive }: Props) => {
             />
           </div>
         </div>
-        <div className="lg:hidden gap-3 w-full text-[#730071]  flex items-center justify-between py-2  px-4">
+        <div className="lg:hidden gap-3 w-full text-[#1D5C5C]  flex items-center justify-between py-2  px-4">
           <div className="font-bold text-[18px]">
             <h1>PROFILE</h1>
           </div>

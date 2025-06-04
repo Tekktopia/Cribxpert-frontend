@@ -235,7 +235,7 @@ const Home: React.FC = () => {
             Continue exploring short let houses
           </p>
           <div className="mx-auto flex items-center justify-center">
-            <button className="bg-[#730071] px-6 py-2 rounded-md text-white">
+            <button className="bg-[#1D5C5C] px-6 py-2 rounded-md text-white">
               Shop Now
             </button>
           </div>

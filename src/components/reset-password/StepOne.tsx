@@ -107,7 +107,7 @@ export default function StepOne({
             value={formData.password}
             onChange={handleChange}
             placeholder="*********"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
           />
           {showPassword ? (
             <EyeOff
@@ -132,7 +132,7 @@ export default function StepOne({
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
             placeholder="*********"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+            className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
           />
           {showPassword ? (
             <EyeOff
@@ -171,7 +171,7 @@ export default function StepOne({
 
       <button
         onClick={toStepTwo}
-        className="w-full p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2"
+        className="w-full p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2"
       >
         Continue
       </button>

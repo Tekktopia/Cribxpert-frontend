@@ -137,20 +137,20 @@ const Password = () => {
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex gap-1 items-center">
-            <CheckCircleIcon className="w-6 h-6 text-[#730071]" />
-            <p className=" text-sm leading-5 text-[#730071]">
+            <CheckCircleIcon className="w-6 h-6 text-[#1D5C5C]" />
+            <p className=" text-sm leading-5 text-[#1D5C5C]">
               Minimum 8 characters.
             </p>
           </div>
           <div className="flex gap-1 items-center">
-            <CheckCircleIcon className="w-6 h-6 text-[#730071]" />
-            <p className=" text-sm leading-5 text-[#730071]">
+            <CheckCircleIcon className="w-6 h-6 text-[#1D5C5C]" />
+            <p className=" text-sm leading-5 text-[#1D5C5C]">
               Use combination of uppercase and lowercase letters.
             </p>
           </div>
           <div className="flex gap-1 items-center">
-            <CheckCircleIcon className="w-6 h-6 text-[#730071]" />
-            <p className=" text-sm leading-5 text-[#730071]">
+            <CheckCircleIcon className="w-6 h-6 text-[#1D5C5C]" />
+            <p className=" text-sm leading-5 text-[#1D5C5C]">
               Use of special characters (e.g., !, @, #, $, %)
             </p>
           </div>
@@ -159,11 +159,11 @@ const Password = () => {
         <div className="flex gap-4">
           <button
             type="submit"
-            className="w-[156px] bg-[#730071] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
+            className="w-[156px] bg-[#1D5C5C] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
           >
             Update Password
           </button>
-          <button className="w-[156px] border-2 border-[#730071] text-[#730071] p-[10px] rounded-lg hover:border-[#3f013e]">
+          <button className="w-[156px] border-2 border-[#1D5C5C] text-[#1D5C5C] p-[10px] rounded-lg hover:border-[#3f013e]">
             Cancel
           </button>
         </div>

@@ -192,7 +192,7 @@ export default function FilterPanel({
           {/* Action Buttons */}
           <div className="flex justify-between mt-4">
             <button className="border px-4 py-2 rounded">Cancel</button>
-            <button className="bg-[#730071] text-white px-4 py-2 rounded">
+            <button className="bg-[#1D5C5C] text-white px-4 py-2 rounded">
               Apply Filter
             </button>
           </div>

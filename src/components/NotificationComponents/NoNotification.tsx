@@ -19,7 +19,7 @@ const NoNotification = () => {
         </div>
         <button
           type="submit"
-          className=" bg-[#730071] items-center justify-center text-white p-[10px] rounded-[5px] hover:bg-[#3f013e] flex  text-[12px]  sm:text-[16px] lg:text-[18px]"
+          className=" bg-[#1D5C5C] items-center justify-center text-white p-[10px] rounded-[5px] hover:bg-[#3f013e] flex  text-[12px]  sm:text-[16px] lg:text-[18px]"
         >
           Refresh
         </button>

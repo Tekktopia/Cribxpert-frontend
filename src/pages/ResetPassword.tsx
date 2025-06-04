@@ -29,7 +29,7 @@ const ResetPassword: React.FC = () => {
       <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
         <div className="w-auto mr-auto mb-8">
           <Link to={'/'}>
-            <h1 className="font-bold text-[20px] text-[#730071]">CribXpert</h1>
+            <h1 className="font-bold text-[20px] text-[#1D5C5C]">CribXpert</h1>
           </Link>
         </div>
         {step === 1 && (

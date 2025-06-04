@@ -148,7 +148,7 @@ const Header: React.FC = () => {
                         className="w-[32px] h-[32px] rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-[32px] h-[32px] rounded-full bg-[#730071] text-white flex items-center justify-center text-sm font-medium">
+                      <div className="w-[32px] h-[32px] rounded-full bg-[#1D5C5C] text-white flex items-center justify-center text-sm font-medium">
                         {user?.firstName?.charAt(0) ||
                           user?.username?.charAt(0) ||
                           'U'}
@@ -302,13 +302,13 @@ const Header: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <Link
                     to="/login"
-                    className="text-[14px] text-[#730071] font-medium"
+                    className="text-[14px] text-[#1D5C5C] font-medium"
                   >
                     Login
                   </Link>
                   <Link
                     to="/sign-up"
-                    className="px-4 py-2 text-[14px] text-white bg-[#730071] rounded-md font-medium hover:bg-[#5e005d] transition-colors"
+                    className="px-4 py-2 text-[14px] text-white bg-[#1D5C5C] rounded-md font-medium hover:bg-[#5e005d] transition-colors"
                   >
                     Sign Up
                   </Link>

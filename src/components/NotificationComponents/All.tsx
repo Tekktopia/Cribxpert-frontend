@@ -25,7 +25,7 @@ const All = () => {
           <div className="flex flex-wrap w-full gap-2 sm:gap-4">
             <button
               type="submit"
-              className="bg-[#730071] items-center justify-center text-white py-2 px-3 sm:p-[10px] rounded-[5px] hover:bg-[#3f013e] flex text-[12px] sm:text-[14px] lg:text-[16px]"
+              className="bg-[#1D5C5C] items-center justify-center text-white py-2 px-3 sm:p-[10px] rounded-[5px] hover:bg-[#3f013e] flex text-[12px] sm:text-[14px] lg:text-[16px]"
             >
               View Details
             </button>
@@ -86,7 +86,7 @@ const All = () => {
           </div>
           <button
             type="submit"
-            className="bg-[#730071] items-center justify-center text-white py-2 px-3 sm:p-[10px] rounded-[5px] hover:bg-[#3f013e] flex text-[12px] sm:text-[14px] lg:text-[16px]"
+            className="bg-[#1D5C5C] items-center justify-center text-white py-2 px-3 sm:p-[10px] rounded-[5px] hover:bg-[#3f013e] flex text-[12px] sm:text-[14px] lg:text-[16px]"
           >
             View Receipt
           </button>

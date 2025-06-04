@@ -53,7 +53,7 @@ const Preloader: React.FC<PreloaderProps> = ({
               }}
             >
               <div className="w-auto">
-                <h1 className="font-bold text-[20px] text-[#730071]">
+                <h1 className="font-bold text-[20px] text-[#1D5C5C]">
                   CribXpert
                 </h1>
               </div>
@@ -63,7 +63,7 @@ const Preloader: React.FC<PreloaderProps> = ({
           <div className="flex flex-col items-center">
             <div className="w-48 h-1 bg-gray-200 rounded-full overflow-hidden mb-2">
               <motion.div
-                className="h-full bg-[#730071]"
+                className="h-full bg-[#1D5C5C]"
                 initial={{ width: 0 }}
                 animate={{ width: '100%' }}
                 transition={{

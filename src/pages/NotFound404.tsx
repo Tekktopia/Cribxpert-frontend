@@ -15,7 +15,7 @@ const NotFound404 = () => {
         </p>
         <Link
           to="/"
-          className="px-6 py-3 mt-8 text-white transition-colors duration-300 bg-[#730071] rounded-md hover:bg-[#a422a2]"
+          className="px-6 py-3 mt-8 text-white transition-colors duration-300 bg-[#1D5C5C] rounded-md hover:bg-[#a422a2]"
         >
           Go Back Home
         </Link>

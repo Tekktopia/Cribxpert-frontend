@@ -190,7 +190,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
           <div className="absolute top-3 right-3 z-20">
             {isSavedProperty ? (
               <FaHeart
-                className="w-6 h-6 text-[#730071]"
+                className="w-6 h-6 text-[#1D5C5C]"
                 onClick={handleIconToggle}
               />
             ) : (
@@ -225,7 +225,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
           {/* Property Tags Row */}
           <div className="flex items-center gap-4 mb-2">
             {/* Bedroom Tag */}
-            <span className="bg-[#730071] text-white text-xs px-2 py-1 rounded">
+            <span className="bg-[#1D5C5C] text-white text-xs px-2 py-1 rounded">
               {bedrooms} Bedroom {propertyType}
             </span>
 
@@ -245,7 +245,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
 
           {/* Price */}
           <div className="mt-2">
-            <span className="text-[#730071] font-bold text-lg">
+            <span className="text-[#1D5C5C] font-bold text-lg">
               ₦{Number(price).toLocaleString()}
             </span>
             <span className="text-gray-500 text-sm">/per night</span>

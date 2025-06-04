@@ -16,9 +16,9 @@ const NotificationLinks = ({ page, active, setActive }: Props) => {
       to={`#`}
       className={`${
         active === lowerCasePage
-          ? ' border-b-[1.5px] border-b-[#730071] px-3 text-[#730071] transition-all duration-200'
+          ? ' border-b-[1.5px] border-b-[#1D5C5C] px-3 text-[#1D5C5C] transition-all duration-200'
           : ''
-      } transition duration-100 hover:text-[#730071]/50 `}
+      } transition duration-100 hover:text-[#1D5C5C]/50 `}
       onClick={() => setActive(lowerCasePage)}
     >
       {page}

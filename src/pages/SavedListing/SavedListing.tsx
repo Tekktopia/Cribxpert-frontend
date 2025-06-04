@@ -34,7 +34,7 @@ const SavedListing: React.FC = () => {
             to add items to your saved list.
           </p>
           <Link to={'/discover'}>
-            <button className="bg-[#730071] text-white font-bold py-2 px-4 rounded-md hover:bg-[#AE6BAD]/80 transition duration-300">
+            <button className="bg-[#1D5C5C] text-white font-bold py-2 px-4 rounded-md hover:bg-[#AE6BAD]/80 transition duration-300">
               Add Listings
             </button>
           </Link>

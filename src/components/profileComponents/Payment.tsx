@@ -43,11 +43,11 @@ const Payment = () => {
         <div className="flex gap-4">
           <button
             type="submit"
-            className="w-[156px] bg-[#730071] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
+            className="w-[156px] bg-[#1D5C5C] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
           >
             Update Payment
           </button>
-          <button className="w-[156px] border-2 border-[#730071] text-[#730071] p-[10px] rounded-lg hover:border-[#3f013e]">
+          <button className="w-[156px] border-2 border-[#1D5C5C] text-[#1D5C5C] p-[10px] rounded-lg hover:border-[#3f013e]">
             Cancel
           </button>
         </div>
@@ -56,7 +56,7 @@ const Payment = () => {
             type="checkbox"
             name="default"
             id=""
-            className="accent-[#730071] outline-4  outline-[#730071] w-5 h-5"
+            className="accent-[#1D5C5C] outline-4  outline-[#1D5C5C] w-5 h-5"
           />
           <label htmlFor="default" className="text-[#070707] ">
             Make this my default payment method
@@ -65,7 +65,7 @@ const Payment = () => {
       </div>
 
       <div>
-        <a href="#" className="text-[#730071] font-medium text-xl">
+        <a href="#" className="text-[#1D5C5C] font-medium text-xl">
           Add a new payment method
         </a>
       </div>

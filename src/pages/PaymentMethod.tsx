@@ -46,7 +46,7 @@ const PaymentMethod: React.FC = () => {
                       className="w-[24px] h-[24px] mr-3"
                     />
                     <p
-                      className={`text-gray-700 font-medium ${selectedMethod === method.name ? 'text-[#730071]' : ''}`}
+                      className={`text-gray-700 font-medium ${selectedMethod === method.name ? 'text-[#1D5C5C]' : ''}`}
                     >
                       {method.name}
                     </p>
@@ -96,7 +96,7 @@ const PaymentMethod: React.FC = () => {
                   <div className="flex justify-between items-center mt-4">
                     <div>
                       <p className="text-[#6F6F6F] font-medium">Amount</p>
-                      <p className="text-[#730071] font-bold text-lg">
+                      <p className="text-[#1D5C5C] font-bold text-lg">
                        {amount}
                       </p>
                     </div>

@@ -31,7 +31,7 @@ export function GoogleSignUp({ setError }: GoogleSignUpProps) {
     //   fallbackRedirectUrl="/onboarding"
     // >
     <button
-      className="w-full p-3 border border-gray-300 text-[#730071] font-semibold rounded-md flex items-center justify-center gap-2 mb-3"
+      className="w-full p-3 border border-gray-300 text-[#1D5C5C] font-semibold rounded-md flex items-center justify-center gap-2 mb-3"
       onClick={handleGoogleSignUp}
     >
       <span>Sign Up with Google</span>

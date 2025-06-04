@@ -47,7 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {!(currentPage === totalPages) && (
         <button
-          className="bg-[#730071] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
+          className="bg-[#1D5C5C] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
           onClick={handleNext}
         >
           Next Page
@@ -56,7 +56,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {currentPage === totalPages && (
         <button
-          className="bg-[#730071] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
+          className="bg-[#1D5C5C] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
           onClick={handlePrev}
         >
           Previous Page
@@ -72,7 +72,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Previous Button */}
         <button
           onClick={handlePrev}
-          className="bg-[#F1E6F1] text-[#730071] px-2 py-1 rounded cursor-pointer"
+          className="bg-[#F1E6F1] text-[#1D5C5C] px-2 py-1 rounded cursor-pointer"
           disabled={currentPage === 1}
         >
           &lt;
@@ -86,8 +86,8 @@ const Pagination: React.FC<PaginationProps> = ({
               onClick={() => onPageChange(page)}
               className={`px-3 py-1 rounded cursor-pointer ${
                 page === currentPage
-                  ? 'bg-[#730071] text-white'
-                  : 'bg-[#F1E6F1] text-[#730071]'
+                  ? 'bg-[#1D5C5C] text-white'
+                  : 'bg-[#F1E6F1] text-[#1D5C5C]'
               }`}
             >
               {page}
@@ -95,7 +95,7 @@ const Pagination: React.FC<PaginationProps> = ({
           ) : (
             <span
               key={index}
-              className="px-3 py-1 rounded bg-[#F1E6F1] text-[#730071]"
+              className="px-3 py-1 rounded bg-[#F1E6F1] text-[#1D5C5C]"
             >
               ...
             </span>
@@ -105,7 +105,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Next Button */}
         <button
           onClick={handleNext}
-          className="bg-[#F1E6F1] text-[#730071] cursor-pointer px-2 py-1 rounded"
+          className="bg-[#F1E6F1] text-[#1D5C5C] cursor-pointer px-2 py-1 rounded"
           disabled={currentPage === totalPages}
         >
           &gt;

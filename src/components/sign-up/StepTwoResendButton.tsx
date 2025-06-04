@@ -54,7 +54,7 @@ const StepTwoResendButton = ({ methodSelected, handleVerify }: Props) => {
         <div>
           <button
             onClick={handleVerify}
-            className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+            className="w-full max-w-[422px] p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
           >
             Proceed
           </button>

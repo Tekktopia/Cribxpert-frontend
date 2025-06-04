@@ -77,7 +77,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
           <div className='space-y-6'>
             <button
               onClick={nextStep}
-              className="w-full max-w-[422px] p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+              className="w-full max-w-[422px] p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
             >Proceed</button>
             <p className='flex justify-center items-center gap-2 text-[#999999]'>
               <IoReload />

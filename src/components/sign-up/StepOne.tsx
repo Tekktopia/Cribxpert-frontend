@@ -115,7 +115,7 @@ const StepOne: React.FC<StepOneProps> = ({
                 <input
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                   required
                 />
               </label>
@@ -128,7 +128,7 @@ const StepOne: React.FC<StepOneProps> = ({
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   type="number"
                   placeholder="07068839585"
-                  className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                  className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                   required
                 />
               </label>
@@ -142,7 +142,7 @@ const StepOne: React.FC<StepOneProps> = ({
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your Password"
-                className="w-full p-3 border  border-[#730071] rounded-md flex justify-between items-center"
+                className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                 required
                 type="password"
               />
@@ -150,24 +150,24 @@ const StepOne: React.FC<StepOneProps> = ({
           </div>
           <p className=" text-[14px] text-left">
             By clicking "Proceed" you agree to our{' '}
-            <span className="text-[#730071]">Terms of Service</span>.
+            <span className="text-[#1D5C5C]">Terms of Service</span>.
           </p>
         </div>
-        {/* <button className='w-full p-3 border border-gray-300 text-[#730071] font-semibold rounded-md flex items-center justify-center gap-2'>
+        {/* <button className='w-full p-3 border border-gray-300 text-[#1D5C5C] font-semibold rounded-md flex items-center justify-center gap-2'>
           <span>Sign Up with Facebook</span>
           <FaFacebook className='w-5 h-5 text-blue-600' />
         </button> */}
 
         <button
           onClick={handleSignUp}
-          className="w-full p-3 mx-auto bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+          className="w-full p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
         >
           Continue
         </button>
         <p className="text-gray-500 text-[14px]">
           Already have an account?
           <a href="/login">
-            <span className="text-[#730071]">Log in</span>
+            <span className="text-[#1D5C5C]">Log in</span>
           </a>
           .
         </p>

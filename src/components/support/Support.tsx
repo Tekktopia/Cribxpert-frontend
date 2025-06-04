@@ -30,7 +30,7 @@ const contactInfo: Array<ContactInfo> = [
 
 const header: Array<SupportType> = [
   {
-    icon: <InformationCircleIcon className="h-5 w-5 md:h-6 md:w-6 text-[#730071]" />,
+    icon: <InformationCircleIcon className="h-5 w-5 md:h-6 md:w-6 text-[#1D5C5C]" />,
     title: 'Booking & Cancellations',
     iconList: <DocumentTextIcon className="h-5 w-5 md:h-6 md:w-6 text-[#6F6F6F]" />,
     list1: 'How do i cancel or modify a booking?',
@@ -40,7 +40,7 @@ const header: Array<SupportType> = [
     list5: ' What is refund process?',
   },
   {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#730071]" />,
+    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
     title: 'Payments & Refunds',
     iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
     list1: 'How do I update my payment method?',
@@ -50,7 +50,7 @@ const header: Array<SupportType> = [
     list5: ' What is refund process?',
   },
   {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#730071]" />,
+    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
     title: 'Account & Security',
     iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
     list1: 'How do I reset my password?',
@@ -60,7 +60,7 @@ const header: Array<SupportType> = [
     list5: ' What is refund process?',
   },
   {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#730071]" />,
+    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
     title: 'Booking & Cancellations',
     iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
     list1: 'How do i cancel or modify a booking?',
@@ -70,7 +70,7 @@ const header: Array<SupportType> = [
     list5: ' What is refund process?',
   },
   {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#730071]" />,
+    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
     title: 'Payments & Refunds',
     iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
     list1: 'How do I update my payment method?',
@@ -80,7 +80,7 @@ const header: Array<SupportType> = [
     list5: ' What is refund process?',
   },
   {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#730071]" />,
+    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
     title: 'Account & Security',
     iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
     list1: 'How do I reset my password?',
@@ -105,7 +105,7 @@ const Support = () => {
                 <div className="flex-shrink-0">{item.iconList}</div>
                 <Link
                   to={`/support-info`}
-                  className="text-xs md:text-sm text-[#070707] hover:text-[#730071] transition-colors"
+                  className="text-xs md:text-sm text-[#070707] hover:text-[#1D5C5C] transition-colors"
                 >
                   {item.list1}
                 </Link>

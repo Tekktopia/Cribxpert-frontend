@@ -29,7 +29,7 @@ export default function CustomDropdown({
     <div className="relative w-full z-20">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full p-3 border border-[#730071] rounded-md flex justify-between items-center`}
+        className={`w-full p-3 border border-[#1D5C5C] rounded-md flex justify-between items-center`}
       >
         {methodSelected || 'Select'}
         <ChevronDown className={`w-5 h-5`} />
@@ -38,10 +38,10 @@ export default function CustomDropdown({
       {isOpen && (
         <div className="absolute w-full mt-1 p-4 bg-white border border-gray-300 rounded-md shadow-lg">
           <label className="cursor-pointer flex justify-between items-center gap-2 p-3 bg-purple-100">
-            <button onClick={handleClose} className="w-4 h-4 accent-[#730071]">
+            <button onClick={handleClose} className="w-4 h-4 accent-[#1D5C5C]">
               Select
             </button>
-            <ChevronUp className={`w-5 h-5 text-[#730071]`} />
+            <ChevronUp className={`w-5 h-5 text-[#1D5C5C]`} />
           </label>
           {options.map((option) => (
             <label
@@ -52,7 +52,7 @@ export default function CustomDropdown({
                 type="checkbox"
                 checked={methodSelected === option.name}
                 onChange={() => handleSelect(option.name)}
-                className="w-4 h-4 accent-[#730071]"
+                className="w-4 h-4 accent-[#1D5C5C]"
               />
               {option.name}
             </label>

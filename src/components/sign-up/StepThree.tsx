@@ -54,7 +54,7 @@ const StepThree: React.FC = () => {
               value={formData.firstName}
               onChange={handleChange}
               placeholder="Enter your first name"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
@@ -69,7 +69,7 @@ const StepThree: React.FC = () => {
               value={formData.lastName}
               onChange={handleChange}
               placeholder="Enter your last name"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
@@ -83,7 +83,7 @@ const StepThree: React.FC = () => {
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
@@ -98,7 +98,7 @@ const StepThree: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
@@ -113,7 +113,7 @@ const StepThree: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
             {showPassword ? (
               <EyeOff
@@ -147,7 +147,7 @@ const StepThree: React.FC = () => {
 
         {/* Submit Button */}
         <Link to="/">
-          <button className="w-full mx-auto max-w-[422px] p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
+          <button className="w-full mx-auto max-w-[422px] p-3 bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4">
             Complete My Profile
           </button>
         </Link>

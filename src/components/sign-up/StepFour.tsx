@@ -91,7 +91,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               value={formData.firstName}
               onChange={handleChange}
               placeholder="Enter your first name"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
@@ -106,7 +106,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               value={formData.lastName}
               onChange={handleChange}
               placeholder="Enter your last name"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
@@ -120,7 +120,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
@@ -135,7 +135,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div> */}
 
@@ -150,7 +150,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter your password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#730071]"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
             {showPassword ? (
               <EyeOff
@@ -185,7 +185,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mx-auto p-3 bg-[#730071] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+            className="w-full mx-auto p-3 bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
           >
             {loading ? 'Saving...' : 'Complete My Profile'}
           </button>

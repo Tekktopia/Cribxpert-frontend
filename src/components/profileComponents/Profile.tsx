@@ -100,16 +100,16 @@ const Profile = ({
             className="w-[100px] h-24 rounded-[24px] border object-cover"
           />
         ) : (
-          <div className="w-[100px] h-24 rounded-[24px]  flex items-center justify-center bg-[#730071]/10">
-            <CameraIcon className="w-6 h-6 text-[#730071]" />
+          <div className="w-[100px] h-24 rounded-[24px]  flex items-center justify-center bg-[#1D5C5C]/10">
+            <CameraIcon className="w-6 h-6 text-[#1D5C5C]" />
           </div>
         )}
         <div className="flex flex-col gap-1">
           <div className="flex p-[10px] gap-[6px] items-center justify-center border border-[#BCC3CA] rounded-lg w-[179px] h-[44px]">
-            <CameraIcon className="w-6 h-6 text-[#730071]" />
+            <CameraIcon className="w-6 h-6 text-[#1D5C5C]" />
             <label
               htmlFor="file"
-              className="cursor-pointer text-sm leading-5 text-[#730071]"
+              className="cursor-pointer text-sm leading-5 text-[#1D5C5C]"
             >
               Change Picture
             </label>
@@ -190,7 +190,7 @@ const Profile = ({
 
         <button
           type="submit"
-          className="w-[156px] bg-[#730071] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
+          className="w-[156px] bg-[#1D5C5C] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
         >
           Save
         </button>
