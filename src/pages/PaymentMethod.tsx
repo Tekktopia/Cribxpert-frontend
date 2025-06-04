@@ -5,7 +5,8 @@ import BankCard from '@/assets/icons/Bank-Card.png';
 import BankTransfer from '@/assets/icons/Bank-Transfer.png';
 import copyIcon from '@/assets/icons/copyIcon.png';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
-
+    import { CopyToClipboard } from 'react-copy-to-clipboard';
+    
 const PaymentMethod: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState('Bank Transfer');
 
@@ -16,6 +17,8 @@ const PaymentMethod: React.FC = () => {
     { name: 'Payment Link', icon: Payment },
   ];
 
+  const amount="NGN 50,000"
+  const accountNumber="0002224449"
   return (
     <>
       <Header />
@@ -28,14 +31,14 @@ const PaymentMethod: React.FC = () => {
             <h1 className="text-lg font-semibold text-gray-800 -mb-4">
               Payment Method
             </h1>
-            <div className="border border-[#F1E6F1] rounded-lg p-4 mt-6 flex-grow ">
+            <div className="border border-[#E6EFF1] shadow-md rounded-lg p-4 mt-6 flex-grow ">
               <div className="flex flex-col gap-3">
                 {paymentMethods.map((method, index) => (
                   <div
                     key={index}
                     onClick={() => setSelectedMethod(method.name)}
                     className={`flex items-center cursor-pointer px-4 py-3 rounded-md bg-white shadow-sm
-                    ${selectedMethod === method.name ? 'border-l-4 border-[#730071] bg-[#F5F5FF]' : 'border-gray-300 bg-white'}`}
+                    ${selectedMethod === method.name ? 'border-l-4 border-[#006073] bg-[#F5F5FF]' : 'border-gray-300 bg-white'}`}
                   >
                     <img
                       src={method.icon}
@@ -77,37 +80,43 @@ const PaymentMethod: React.FC = () => {
                   <div className="flex justify-between items-center border-b border-gray-200 pb-2">
                     <div>
                       <p className="text-[#6F6F6F] font-medium">
-                        Account Number
+                       accountNumber
                       </p>
-                      <p className="text-gray-800">0002224449</p>
+                      <p className="text-gray-800">{accountNumber}</p>
                     </div>
-                    <img
+                    <CopyToClipboard text={accountNumber}>
+ <img
                       src={copyIcon}
                       alt="CopyIcon"
                       className="w-[20px] h-[20px] cursor-pointer"
                     />
+                    </CopyToClipboard>
+                   
                   </div>
                   <div className="flex justify-between items-center mt-4">
                     <div>
                       <p className="text-[#6F6F6F] font-medium">Amount</p>
                       <p className="text-[#730071] font-bold text-lg">
-                        NGN 50,000
+                       {amount}
                       </p>
                     </div>
-                    <img
+                    <CopyToClipboard text={amount}>
+ <img
                       src={copyIcon}
                       alt="CopyIcon"
                       className="w-[20px] h-[20px] cursor-pointer"
                     />
+                    </CopyToClipboard>
+                   
                   </div>
                 </div>
-                <button className="bg-[#730071] w-full py-3 mt-4 rounded-lg text-white font-medium hover:bg-[#5a0056] transition">
+                <button className="bg-[#006073] w-full py-3 mt-4 rounded-lg text-white font-medium hover:bg-[#5a0056] transition">
                   Click Here After Transfer
                 </button>
                 <p className="text-center text-gray-600 mt-3">
                   Note: Kindly transfer the exact amount to the account details
                   above. Account number is valid for{' '}
-                  <span className="text-lg font-semibold text-[#730071]">
+                  <span className="text-lg font-semibold text-[#006073]">
                     09:30
                   </span>
                 </p>

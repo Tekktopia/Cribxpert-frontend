@@ -129,7 +129,7 @@ const Support = () => {
           </div>
         ))}
       </div>      <div className="flex flex-col lg:flex-row gap-8 md:gap-10 lg:gap-12 mb-8">
-        <div className="w-full lg:w-[45%] xl:w-[500px] bg-[#730071] flex flex-col justify-between relative overflow-hidden rounded-lg min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
+        <div className="w-full lg:w-[45%] xl:w-[500px] bg-[#006073] flex flex-col justify-between relative overflow-hidden rounded-lg min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
           <div className="p-8 text-white flex flex-col gap-24">
             <div className="flex flex-col gap-3">
               <h1 className="font-semibold text-2xl ">Contact Information</h1>
@@ -172,7 +172,7 @@ const Support = () => {
               <input
                 type="text"
                 name="firstName"
-                placeholder="amoria"
+                placeholder="John Doe"
                 className="w-full py-3 px-4 border rounded flex items-center border-1 border-[#DFE4EA] text-[#999999]"
               />
             </div>
@@ -182,7 +182,7 @@ const Support = () => {
               <input
                 type="text"
                 name="lastName"
-                placeholder="amoria"
+                placeholder="John Doe"
                 className="w-full py-3 px-4 border rounded flex items-center border-1 border-[#DFE4EA] text-[#999999]"
               />
             </div>
@@ -250,7 +250,7 @@ const Support = () => {
           </div>
           <button
             type="submit"
-            className="w-[156px] bg-[#730071] text-white p-[10px] rounded-lg hover:bg-[#3f013e] self-end"
+            className="w-[156px] bg-[#006073] text-white p-[10px] rounded-lg hover:bg-[#3f013e] self-end"
           >
             Submit
           </button>

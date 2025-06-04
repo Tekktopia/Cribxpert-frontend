@@ -63,7 +63,7 @@ const Header: React.FC = () => {
 
   // Icon navigation items
   const iconNavItems = [
-    { icon: messageIcon, label: 'Message', route: '' },
+    { icon: messageIcon, label: 'Message', route: '/message' },
     { icon: supportIcon, label: 'Support', route: '/support' },
     { icon: notificationIcon, label: 'Notifications', route: '/notification' },
   ];
@@ -108,20 +108,21 @@ const Header: React.FC = () => {
             <div className="w-full lg:w-auto justify-between flex flex-row gap-6 py-3">
               <div className="flex items-center gap-6">
                 {iconNavItems.map((item, index) => (
-                  <Link
+                  <NavLink
                     to={item.route}
                     key={index}
-                    className="flex flex-col items-center"
+                    className={({ isActive }) =>`flex flex-col cursor-pointer items-center ${isActive ? "text-[#1d5c5c] font-bold" : "text-[#999999] text-[14px]  " }`} 
+                    
                   >
                     <img
                       src={item.icon}
                       alt={`${item.label} Icon`}
                       className="w-[20px] h-[20px]"
                     />
-                    <span className="text-[14px] text-[#999999] cursor-pointer">
+                    <span className="text-[14px] cursor-pointer">
                       {item.label}
                     </span>
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
 
@@ -341,6 +342,7 @@ const Header: React.FC = () => {
                 <NavLink
                   key={index}
                   to={link.route}
+                  end
                   className={({ isActive }) =>
                     isActive
                       ? 'text-[#1d5c5c] font-bold'
@@ -378,13 +380,14 @@ const Header: React.FC = () => {
                   <ul className="flex flex-col">
                     {navLinks.map((link, index) => (
                       <li key={index} className="border-b border-gray-100">
-                        <Link
+                        <NavLink
                           to={link.route}
-                          className="px-4 py-2 block text-sm font-normal text-gray-800"
+                            className={({ isActive }) =>`px-4 py-2 block text-sm font-normal text-gray-800 ${isActive ? "text-[#1d5c5c] font-bold" : "text-[#999999] text-[14px] font-medium " }`} 
+
                           onClick={toggleMenu}
                         >
                           {link.label}
-                        </Link>
+                        </NavLink>
                       </li>
                     ))}
 

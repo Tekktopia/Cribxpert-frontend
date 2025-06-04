@@ -56,18 +56,18 @@ const PropertyRatings: React.FC<PropertyRatingsProps> = ({
                         : '/icons/Icon-star-light.png'
                     }
                     alt="star"
-                    className="w-4 h-4 sm:w-[18px] sm:h-[18px]"
+                    className="w-4 text-[#006073] h-4 sm:w-[18px] sm:h-[18px]"
                   />
                 ))}
               </div>
-              <p className="text-[#6F6F6F] text-xs sm:text-[14px] font-[400] ml-1">
+              <p className="text-[#6F6F6F] text-md sm:text-[14px] font-[400] ml-1">
                 ({item.count})
               </p>
             </div>
             <img
               src={item.progressImage}
               alt={`Progress ${item.stars} Stars`}
-              className="w-full h-[4px]"
+              className="w-full h-[4px] "
             />
             {index < ratingDistribution.length - 1 && ' '}
           </React.Fragment>
