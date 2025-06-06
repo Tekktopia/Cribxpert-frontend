@@ -15,6 +15,8 @@ import {
 // Re-export from listingSlice
 import listingReducer, {
   setCurrentListing,
+  setCurrentListings,
+  selectCurrentListings,
   selectActiveFilter,
   setUsingGeolocation,
   updateFilter,
@@ -62,8 +64,7 @@ export {
 // Export all actions
 export {
   setCurrentListing,
-  selectActiveFilter,
-  selectIsUsingGeolocation,
+  setCurrentListings,
   setUsingGeolocation,
   updateFilter,
   updateFilters,
@@ -81,6 +82,9 @@ export {
 // Export all selectors
 export {
   selectCurrentListing,
+  selectActiveFilter,
+  selectIsUsingGeolocation,
+  selectCurrentListings,
   selectDraftListing,
   selectListingStep,
   selectActiveFilters,

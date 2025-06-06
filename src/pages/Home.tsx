@@ -1,10 +1,11 @@
 import Header, { HeaderSpacer } from '@/components/layout/Header';
-import { SAMPLE_DATA, Filter } from '@/utils/data';
+import { SAMPLE_DATA } from '@/utils/data';
 import React, { useCallback, useMemo, useState} from 'react';
 import PropertyListings from '@/components/PropertyListing';
 import Hero from '@/components/common/Hero';
 import FilterBar from '@/components/home/FilterBar';
 import Pagination from '@/components/discover-components/Pagination';
+import FilterCategories from '@/components/home/FilterCategories';
 
 // Hero carousel images array
 const heroImages = [
@@ -45,27 +46,7 @@ const Home: React.FC = () => {
         {/* Filter Bar - Made sticky */}
         <div className="sticky top-0 z-30">
           <FilterBar/>
-          {/* Filters Section */}
-          <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-[1280px]">
-            <div className="flex items-center gap-6 min-w-max px-4">
-              {Filter.map((filter, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col items-center text-center"
-                >
-                  <img
-                    src={filter.image}
-                    alt={filter.name}
-                    loading="lazy"
-                    className="w-[24px] h-[24px] object-contain"
-                  />
-                  <p className="text-[14px] font-[400] text-[#999999]">
-                    {filter.name}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <FilterCategories/>
         </div>
         {/* Property Listings Section */}
         <div className="my-5">

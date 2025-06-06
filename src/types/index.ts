@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 
-export interface PropertyListingProps {
+export interface PropertyListing {
   id: number;
   image: string;
   rating: number;
@@ -11,8 +11,12 @@ export interface PropertyListingProps {
   images?: string[];
   bedrooms?: number;
   propertyType?: string;
+}
+
+export interface PropertyListingProps extends PropertyListing {
   minWidth?: string;
 }
+
 export interface SavedListContextProps {
   savedList: PropertyListingProps[];
 

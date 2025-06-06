@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { PropertyListingProps } from '@/types';
+import { PropertyListing } from '@/types';
 import { baseQuery } from '@/features/api';
 
 // filter interface based on API documentation
@@ -65,7 +65,7 @@ export const listingApi = createApi({
   tagTypes: ['Listing'],
   endpoints: (builder) => ({
     // GET /listing - Get all listings with optional filters
-    getListings: builder.query<PropertyListingProps[], ListingFilter | void>({
+    getListings: builder.query<PropertyListing[], ListingFilter | void>({
       query: (filters) => {
         // Format dates if they exist
         const formattedFilters = filters ? { ...filters } : undefined;
@@ -85,14 +85,14 @@ export const listingApi = createApi({
     }),
 
     // GET /listing/{listingId} - Get a listing by its ID
-    getListingById: builder.query<PropertyListingProps, string>({
+    getListingById: builder.query<PropertyListing, string>({
       query: (id) => `/listing/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Listing', id }],
     }),
 
     // PATCH /listing - Create or update a listing
     createOrUpdateListing: builder.mutation<
-      PropertyListingProps,
+      PropertyListing,
       Partial<CreateListingRequest> & { id?: string }
     >({
       query: (data) => {
@@ -163,7 +163,7 @@ export const listingApi = createApi({
     }),
 
     // GET /listing/user/{userId} - Get all listings created by a specific user
-    getUserListings: builder.query<PropertyListingProps[], string>({
+    getUserListings: builder.query<PropertyListing[], string>({
       query: (userId) => `/listing/user/${userId}`,
       providesTags: (result) =>
         result
@@ -175,7 +175,7 @@ export const listingApi = createApi({
     }),
 
     // GET /listing/uncompleted - Get all uncompleted listings
-    getUncompletedListings: builder.query<PropertyListingProps[], void>({
+    getUncompletedListings: builder.query<PropertyListing[], void>({
       query: () => `/listing/uncompleted`,
       providesTags: [{ type: 'Listing', id: 'UNCOMPLETED' }],
     }),

@@ -1,4 +1,3 @@
-import allShortLet from '@/assets/icons/all-shorlet.png';
 import otherFilterIcon from '@/assets/icons/otherFilterIcon.png';
 import { PropertyListingProps } from '@/types';
 import { BookingsType } from '@/types';
@@ -191,7 +190,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
 const Filter = [
   {
     name: 'All Short-let',
-    image: allShortLet,
+    image: otherFilterIcon,
   },
   {
     name: 'House',

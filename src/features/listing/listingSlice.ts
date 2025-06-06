@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PropertyListingProps } from '@/types';
+import { PropertyListing } from '@/types';
 import { listingApi, CreateListingRequest } from './listingService';
 
 // Define types for UI-specific state
@@ -13,10 +13,10 @@ interface DraftListing extends Partial<CreateListingRequest> {
 // Define the state structure
 interface ListingState {
   // Current listing being viewed or edited
-  currentListing: PropertyListingProps | null;
+  currentListing: PropertyListing | null;
   
   // List of all current listings (for search results, etc.)
-  currentListings: PropertyListingProps[];
+  currentListings: PropertyListing[];
 
   // Draft listing for multi-step form
   draftListing: DraftListing;
@@ -76,13 +76,13 @@ export const listingSlice = createSlice({
     // Set current listing being viewed
     setCurrentListing: (
       state,
-      action: PayloadAction<PropertyListingProps | null>
+      action: PayloadAction<PropertyListing | null>
     ) => {
       state.currentListing = action.payload;
     },
 
     // Add these reducers
-    setCurrentListings: (state, action: PayloadAction<PropertyListingProps[]>) => {
+    setCurrentListings: (state, action: PayloadAction<PropertyListing[]>) => {
       state.currentListings = action.payload;
     },
 
@@ -284,6 +284,9 @@ export const selectIsUsingGeolocation = (state: { listing: ListingState }) =>
 
 export const selectCurrentListing = (state: { listing: ListingState }) =>
   state.listing.currentListing;
+
+export const selectCurrentListings = (state: { listing: ListingState }) =>
+  state.listing.currentListings;
 
 export const selectDraftListing = (state: { listing: ListingState }) =>
   state.listing.draftListing;
