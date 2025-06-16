@@ -93,6 +93,7 @@ export type ContactInfo = {
 export type FilterOption = {
   value: string;
   label: string;
+  currency?:string
 };
 
 export type FilterParameter = {
