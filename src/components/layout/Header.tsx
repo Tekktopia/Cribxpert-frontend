@@ -88,7 +88,8 @@ const Header: React.FC = () => {
           <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
             {/* Logo */}
             <div className="w-auto">
-              <Link to={'/'}>
+              <Link to={'/'} className="flex items-center justify-center">
+                <img src="/CribXpert.svg" alt="cribxpert logo" className='w-[35px] h-[35px] mr-[10px]' />
                 <h1 className="font-bold text-[20px] text-[#1d5c5c]">
                   CribXpert
                 </h1>
@@ -111,8 +112,9 @@ const Header: React.FC = () => {
                   <NavLink
                     to={item.route}
                     key={index}
-                    className={({ isActive }) =>`flex flex-col cursor-pointer items-center ${isActive ? "text-[#1d5c5c] font-bold" : "text-[#999999] text-[14px]  " }`} 
-                    
+                    className={({ isActive }) =>
+                      `flex flex-col cursor-pointer items-center ${isActive ? 'text-[#1d5c5c] font-bold' : 'text-[#999999] text-[14px]  '}`
+                    }
                   >
                     <img
                       src={item.icon}
@@ -382,8 +384,9 @@ const Header: React.FC = () => {
                       <li key={index} className="border-b border-gray-100">
                         <NavLink
                           to={link.route}
-                            className={({ isActive }) =>`px-4 py-2 block text-sm font-normal text-gray-800 ${isActive ? "text-[#1d5c5c] font-bold" : "text-[#999999] text-[14px] font-medium " }`} 
-
+                          className={({ isActive }) =>
+                            `px-4 py-2 block text-sm font-normal text-gray-800 ${isActive ? 'text-[#1d5c5c] font-bold' : 'text-[#999999] text-[14px] font-medium '}`
+                          }
                           onClick={toggleMenu}
                         >
                           {link.label}
