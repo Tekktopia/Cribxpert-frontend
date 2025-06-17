@@ -174,55 +174,62 @@ const FilterCategories: React.FC = () => {
           </p>
         </div>
 
-        {propertyTypes?.map((propertyType) => {
-          // Check if this filter is currently active
-          const isActive = activeFilters.propertyType === propertyType._id;
+        {propertyTypes?.data?.map(
+          (propertyType: {
+            _id: string;
+            icon: { fileUrl: string };
+            name: string;
+          }) => {
+            // Check if this filter is currently active
+            const isActive = activeFilters.propertyType === propertyType._id;
 
-          // Count listings with this property type (if available)
-          const count =
-            currentListings.length > 0
-              ? currentListings.filter(
-                  (listing) => listing.propertyType === propertyType._id
-                ).length
-              : null;
+            // Count listings with this property type (if available)
+            const count =
+              currentListings.length > 0
+                ? currentListings.filter(
+                    (listing) => listing.propertyType === propertyType._id
+                  ).length
+                : null;
 
-          return (
-            <div
-              key={propertyType._id}
-              className={`flex flex-col items-center text-center cursor-pointer ${
-                isActive ? 'scale-110 transition-transform' : ''
-              }`}
-              onClick={() => handleCategoryClick(propertyType._id)}
-            >
+            return (
               <div
-                className={`relative p-2 rounded-full ${isActive ? 'bg-[#1D5C5C]/10' : ''}`}
+                key={propertyType._id}
+                className={`flex flex-col items-center text-center cursor-pointer ${
+                  isActive ? 'scale-110 transition-transform' : ''
+                }`}
+                onClick={() => handleCategoryClick(propertyType._id)}
               >
-                <img
-                  src={
-                    propertyType.icon?.fileUrl || '/icons/default-property.svg'
-                  }
-                  alt={propertyType.name}
-                  loading="lazy"
-                  className={`w-[24px] h-[24px] object-contain ${
-                    isActive
-                      ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                      : ''
-                  }`}
-                />
-                {count !== null && count > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {count}
-                  </span>
-                )}
+                <div
+                  className={`relative p-2 rounded-full ${isActive ? 'bg-[#1D5C5C]/10' : ''}`}
+                >
+                  <img
+                    src={
+                      propertyType.icon?.fileUrl ||
+                      '/icons/default-property.svg'
+                    }
+                    alt={propertyType.name}
+                    loading="lazy"
+                    className={`w-[24px] h-[24px] object-contain ${
+                      isActive
+                        ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
+                        : ''
+                    }`}
+                  />
+                  {count !== null && count > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {count}
+                    </span>
+                  )}
+                </div>
+                <p
+                  className={`text-[14px] font-[400] ${isActive ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
+                >
+                  {propertyType.name}
+                </p>
               </div>
-              <p
-                className={`text-[14px] font-[400] ${isActive ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
-              >
-                {propertyType.name}
-              </p>
-            </div>
-          );
-        })}
+            );
+          }
+        )}
       </div>
     </div>
   );

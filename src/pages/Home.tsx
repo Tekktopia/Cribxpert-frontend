@@ -1,6 +1,6 @@
 import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { SAMPLE_DATA } from '@/utils/data';
-import React, { useCallback, useMemo, useState} from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropertyListings from '@/components/PropertyListing';
 import Hero from '@/components/common/Hero';
 import FilterBar from '@/components/home/FilterBar';
@@ -15,7 +15,6 @@ const heroImages = [
 ];
 
 const Home: React.FC = () => {
-
   // In Home.tsx, only show a subset of data
   const [page, setPage] = useState(1);
   const itemsPerPage = 12;
@@ -45,8 +44,8 @@ const Home: React.FC = () => {
         </section>{' '}
         {/* Filter Bar - Made sticky */}
         <div className="sticky top-0 z-30">
-          <FilterBar/>
-          <FilterCategories/>
+          <FilterBar />
+          <FilterCategories />
         </div>
         {/* Property Listings Section */}
         <div className="my-5">

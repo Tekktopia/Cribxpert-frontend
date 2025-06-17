@@ -2,7 +2,6 @@
 import {
   propertyTypeApi,
   useGetPropertyTypesQuery,
-  useGetPropertyTypeByIdQuery,
   useCreatePropertyTypeMutation,
   useUpdatePropertyTypeMutation,
   useDeletePropertyTypeMutation,
@@ -43,7 +42,6 @@ export { propertyTypeApi };
 // Export hooks for component usage
 export {
   useGetPropertyTypesQuery,
-  useGetPropertyTypeByIdQuery,
   useCreatePropertyTypeMutation,
   useUpdatePropertyTypeMutation,
   useDeletePropertyTypeMutation,

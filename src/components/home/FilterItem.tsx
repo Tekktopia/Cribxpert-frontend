@@ -21,7 +21,7 @@ const FilterItem = ({ param, handleFilterChange }: FilterItemProps) => {
         name={param.name}
         value={currentValue}
         onChange={(e) => handleFilterChange(param.name, e.target.value)}
-        className="w-full md:w-[150px] lg:w-[200px] h-[36px] bg-white text-black border border-gray-300 rounded-md mt-1 text-sm"
+        className="w-full md:w-[150px] lg:w-[200px] h-[36px] bg-white text-black border border-gray-300 rounded-md mt-1 text-sm outline-none"
       >
         <option value="">Select</option>
         {param.options.map((option, idx) => (

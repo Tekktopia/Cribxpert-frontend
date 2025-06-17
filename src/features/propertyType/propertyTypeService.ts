@@ -23,10 +23,10 @@ export const propertyTypeApi = createApi({
   tagTypes: ['PropertyType'],
   endpoints: (builder) => ({
     // GET /property-types - Get all property types
-    getPropertyTypes: builder.query<PropertyType[], void>({
+    getPropertyTypes: builder.query<{ data: PropertyType[] }, void>({
       query: () => '/property-types',
       providesTags: (result) =>
-        result
+        Array.isArray(result)
           ? [
               ...result.map(({ _id }) => ({
                 type: 'PropertyType' as const,
