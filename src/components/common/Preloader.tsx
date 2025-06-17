@@ -52,7 +52,8 @@ const Preloader: React.FC<PreloaderProps> = ({
                 duration: 2,
               }}
             >
-              <div className="w-auto">
+              <div className="w-auto flex items-center justify-center">
+                <img src="/CribXpert.svg" alt="cribxpert logo" className='w-[50px] h-[50px] mr-[10px]' />
                 <h1 className="font-bold text-[20px] text-[#1D5C5C]">
                   CribXpert
                 </h1>
