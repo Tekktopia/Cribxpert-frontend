@@ -1,3 +1,4 @@
+// hooks/useGeolocation.ts
 import { useState, useEffect } from 'react';
 
 interface GeolocationState {
@@ -7,24 +8,35 @@ interface GeolocationState {
   loading: boolean;
 }
 
-/**
- * A custom hook to get the user's current geolocation
- */
-export function useGeolocation(): GeolocationState {
+
+export function useGeolocation(enabled: boolean): GeolocationState { // Add 'enabled' parameter
   const [location, setLocation] = useState<GeolocationState>({
     latitude: null,
     longitude: null,
     error: null,
-    loading: true,
+    loading: false, // Set initial loading to false, it will be true when enabled
   });
 
   useEffect(() => {
-    if (!navigator.geolocation) {
+    if (!enabled) { // Only proceed if 'enabled' is true
       setLocation({
-        ...location,
-        error: 'Geolocation is not supported by your browser',
+        latitude: null,
+        longitude: null,
+        error: null,
         loading: false,
       });
+      return;
+    }
+
+    // When enabled, start loading
+    setLocation((prev) => ({ ...prev, loading: true, error: null }));
+
+    if (!navigator.geolocation) {
+      setLocation((prev) => ({
+        ...prev,
+        error: 'Geolocation is not supported by your browser',
+        loading: false,
+      }));
       return;
     }
 
@@ -46,17 +58,17 @@ export function useGeolocation(): GeolocationState {
       });
     };
 
+    // Use getCurrentPosition as it's a one-time request, suitable for a button click
     navigator.geolocation.getCurrentPosition(successHandler, errorHandler, {
       enableHighAccuracy: true,
       timeout: 15000,
       maximumAge: 10000,
     });
 
-    // Clean up function
-    return () => {
-      // No cleanup needed for geolocation
-    };
-  }, []);
+    // No specific cleanup needed for getCurrentPosition itself, as it's not watching.
+    // If you were using watchPosition, you'd clear the watch here.
+    return () => {};
+  }, [enabled]); // Re-run effect only when 'enabled' changes
 
   return location;
 }
