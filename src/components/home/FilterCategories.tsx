@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectActiveFilters,
   updateFilter,
-  selectCurrentListings,
+  useGetListingsQuery,
 } from '@/features/listing';
 import { useGetPropertyTypesQuery } from '@/features/propertyType';
 import { Filter } from '@/utils/data';
@@ -12,13 +12,48 @@ import { useFilteredListings } from '@/hooks/useFilteredListings';
 const FilterCategories: React.FC = () => {
   const dispatch = useDispatch();
   const activeFilters = useSelector(selectActiveFilters);
-  const currentListings = useSelector(selectCurrentListings);
 
+  // State to track counts for each property type
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({});
+  
   // Use the hook to automatically update listings when filters change
-  const { isLoading: isFilteringListings } = useFilteredListings();
+  const { isLoading: isFilteringListings, currentFilters } = useFilteredListings();
 
   // Fetch property types from the API
   const { data: propertyTypes, isLoading, error } = useGetPropertyTypesQuery();
+  
+  // Create a separate filter object without propertyType
+  const filtersWithoutPropertyType = { ...currentFilters };
+  if ('propertyType' in filtersWithoutPropertyType) {
+    delete filtersWithoutPropertyType.propertyType;
+  }
+  
+  // Fetch all listings matching current filters EXCEPT property type
+  const { data: allFilteredListings } = useGetListingsQuery(filtersWithoutPropertyType, {
+    skip: isLoading,
+  });
+
+  // Calculate counts for each property type based on all filtered listings
+  useEffect(() => {
+    if (!allFilteredListings || !propertyTypes?.data) return;
+    
+    // Extract listings array from response
+    const listings = Array.isArray(allFilteredListings)
+      ? allFilteredListings
+      : allFilteredListings.listings || [];
+      
+    // Calculate total (for "All" category)
+    const counts: Record<string, number> = { all: listings.length };
+    
+    // Count listings for each property type
+    propertyTypes.data.forEach((propertyType: { _id: string }) => {
+      counts[propertyType._id] = listings.filter(
+        (listing) => listing.propertyType === propertyType._id
+      ).length;
+    });
+    
+    setCategoryCounts(counts);
+  }, [allFilteredListings, propertyTypes]);
 
   // Handle filter category click
   const handleCategoryClick = (propertyTypeId: string) => {
@@ -151,10 +186,9 @@ const FilterCategories: React.FC = () => {
                   : ''
               }`}
             />
-            {/* Optional count of all listings */}
-            {currentListings.length > 0 && (
+            {categoryCounts.all > 0 && (
               <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {currentListings.length}
+                {categoryCounts.all}
               </span>
             )}
           </div>
@@ -174,13 +208,8 @@ const FilterCategories: React.FC = () => {
             // Check if this filter is currently active
             const isActive = activeFilters.propertyType === propertyType._id;
 
-            // Count listings with this property type (if available)
-            const count =
-              currentListings.length > 0
-                ? currentListings.filter(
-                    (listing) => listing.propertyType === propertyType._id
-                  ).length
-                : null;
+            // Use the pre-calculated count from categoryCounts
+            const count = categoryCounts[propertyType._id] || 0;
 
             return (
               <div
@@ -206,7 +235,7 @@ const FilterCategories: React.FC = () => {
                         : ''
                     }`}
                   />
-                  {count !== null && count > 0 && (
+                  {count > 0 && (
                     <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                       {count}
                     </span>

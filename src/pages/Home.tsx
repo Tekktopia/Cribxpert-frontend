@@ -14,6 +14,7 @@ import {
   useGetListingsQuery,
 } from '@/features/listing';
 import { useDispatch, useSelector } from 'react-redux';
+import { SearchX } from 'lucide-react';
 
 // Hero carousel images array
 const heroImages = [
@@ -97,10 +98,10 @@ const Home: React.FC = () => {
         ) : currentListings.length === 0 ? (
           // No results state
           <div className="flex flex-col items-center justify-center py-20">
-            <img
-              src="/icons/no-results.svg"
-              alt="No properties found"
-              className="w-20 h-20 mb-4 opacity-60"
+            <SearchX
+              size={80}
+              className="mb-4 text-gray-400"
+              strokeWidth={1.5}
             />
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
               No properties found
