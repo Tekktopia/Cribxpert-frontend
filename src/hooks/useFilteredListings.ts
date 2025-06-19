@@ -27,7 +27,7 @@ export function useFilteredListings() {
 
   // Convert Redux filters to API format whenever activeFilters change
   useEffect(() => {
-    console.log('Active filters changed:', activeFilters);
+    // console.log('Active filters changed:', activeFilters);
 
     // Create formatted filters regardless of whether any are active
     const formattedFilters = {
@@ -71,7 +71,7 @@ export function useFilteredListings() {
     // Always update filters and trigger change
     setApiFilters(formattedFilters);
     setFilterChanged(true);
-    console.log('API filters set:', formattedFilters);
+    // console.log('API filters set:', formattedFilters);
   }, [activeFilters]);
 
   // Use RTK Query hook with skip option to control when it fires
@@ -91,7 +91,7 @@ export function useFilteredListings() {
   // Update Redux store when we get results
   useEffect(() => {
     if (filterChanged && !isLoading && !isFetching) {
-      console.log('Received API response:', filteredListings);
+      // console.log('Received API response:', filteredListings);
 
       if (filteredListings) {
         // Handle different response formats - either direct array or nested in listings property
@@ -99,7 +99,7 @@ export function useFilteredListings() {
           ? filteredListings
           : filteredListings.listings || [];
 
-        console.log('Updating currentListings with:', listings);
+        // console.log('Updating currentListings with:', listings);
         dispatch(setCurrentListings(listings));
       }
 

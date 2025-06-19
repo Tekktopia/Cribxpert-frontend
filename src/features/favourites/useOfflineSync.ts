@@ -59,14 +59,15 @@ export function useFavouritesOfflineSync() {
                 userId: user.id,
                 listingId,
               });
-              console.log(
-                `Successfully synced addition of listing ${listingId}`
-              );
+              // console.log(
+              //   `Successfully synced addition of listing ${listingId}`
+              // );
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (err) {
-              console.error(
-                `Failed to sync addition of listing ${listingId}:`,
-                err
-              );
+              // console.error(
+              //   `Failed to sync addition of listing ${listingId}:`,
+              //   err
+              // );
               // In a production app, you might want to retry or track failed syncs
             }
           }
