@@ -1,4 +1,4 @@
-import { PropertyListingProps } from '@/types';
+import { PropertyListingCardProps } from '@/types';
 import { Link } from 'react-router-dom';
 import { CiHeart } from 'react-icons/ci';
 import { FaChevronLeft, FaChevronRight, FaHeart, FaStar } from 'react-icons/fa';
@@ -8,9 +8,9 @@ import { IoLocationOutline } from 'react-icons/io5';
 import React, { useCallback, useState } from 'react';
 import OptimizedImage from './OptimizedImage';
 
-const PropertyListingCard: React.FC<PropertyListingProps> = ({
+const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   id,
-  propertyName,
+  name,
   price,
   rating,
   description,
@@ -41,34 +41,46 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
       if (isSavedProperty) {
         removeList({
           id,
-          propertyName,
+          name,
           price,
           location,
           rating,
           description,
           image,
+          images,
+          bedrooms,
+          propertyType,
+          minWidth,
         });
       } else {
         addList({
           id,
-          propertyName,
+          name,
           price,
           location,
           rating,
           description,
           image,
+          images,
+          bedrooms,
+          propertyType,
+          minWidth,
         });
       }
     },
     [
       isSavedProperty,
       id,
-      propertyName,
+      name,
       price,
       location,
       rating,
       description,
       image,
+      images,
+      bedrooms,
+      propertyType,
+      minWidth,
       addList,
       removeList,
     ]
@@ -102,8 +114,8 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
   };
 
   const propertySlug = React.useMemo(
-    () => createSlug(propertyName),
-    [propertyName]
+    () => createSlug(name),
+    [name]
   );
 
   return (
@@ -117,14 +129,14 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
             {/* Current Image */}
             <OptimizedImage
               src={allImages[currentImageIndex]}
-              alt={propertyName}
+              alt={name}
               width={350}
               height={200}
               loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
               priority={currentImageIndex === 0} // First image is priority
               className="w-full h-full object-cover rounded-t-lg transition-opacity duration-300"
               onError={() => {
-                console.error(`Failed to load image for ${propertyName}`);
+                console.error(`Failed to load image for ${name}`);
               }}
             />
             {/* Navigation Arrows - Only show when more than one image */}
@@ -217,7 +229,7 @@ const PropertyListingCard: React.FC<PropertyListingProps> = ({
           {/* Property Name */}
           <div className="mb-2">
             <h3 className="font-medium text-lg leading-tight">
-              {propertyName}
+              {name}
             </h3>
             <p className="text-sm text-gray-600">{description}</p>
           </div>

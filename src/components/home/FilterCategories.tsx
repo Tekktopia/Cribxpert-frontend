@@ -7,11 +7,15 @@ import {
 } from '@/features/listing';
 import { useGetPropertyTypesQuery } from '@/features/propertyType';
 import { Filter } from '@/utils/data';
+import { useFilteredListings } from '@/hooks/useFilteredListings';
 
 const FilterCategories: React.FC = () => {
   const dispatch = useDispatch();
   const activeFilters = useSelector(selectActiveFilters);
   const currentListings = useSelector(selectCurrentListings);
+
+  // Use the hook to automatically update listings when filters change
+  const { isLoading: isFilteringListings } = useFilteredListings();
 
   // Fetch property types from the API
   const { data: propertyTypes, isLoading, error } = useGetPropertyTypesQuery();
@@ -22,7 +26,7 @@ const FilterCategories: React.FC = () => {
     const newValue =
       activeFilters.propertyType === propertyTypeId ? '' : propertyTypeId;
 
-    // Update the propertyType filter in Redux
+    // Update the propertyType filter in Redux - this will trigger the hook's filter effect
     dispatch(updateFilter({ name: 'propertyType', value: newValue }));
   };
 
@@ -42,103 +46,90 @@ const FilterCategories: React.FC = () => {
     );
   }
 
-  // Show error state with functional fallback
+  // Show error state with visual-only fallback
   if (error) {
-    console.log(error);
     return (
       <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-[1280px]">
-        <div className="flex items-center gap-6 min-w-max px-4">
-          {/* Add an "All" option */}
-          <div
-            key="all"
-            className={`flex flex-col items-center text-center cursor-pointer ${
-              !activeFilters.propertyType
-                ? 'scale-110 transition-transform'
-                : ''
-            }`}
-            onClick={() => handleCategoryClick('')}
-          >
-            <div
-              className={`relative p-2 rounded-full ${!activeFilters.propertyType ? 'bg-[#1D5C5C]/10' : ''}`}
+        <div className="flex flex-col">
+          {/* Error message with retry button */}
+          <div className="text-sm text-red-500 text-center mb-2 px-4">
+            Unable to load property types.
+            <button
+              className="ml-2 underline font-medium"
+              onClick={() => window.location.reload()}
             >
-              <img
-                src={'/icons/otherFilterIcon.png'}
-                alt={'All'}
-                loading="lazy"
-                className={`w-[24px] h-[24px] object-contain ${
-                  !activeFilters.propertyType
-                    ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                    : ''
-                }`}
-              />
-            </div>
-            <p
-              className={`text-[14px] font-[400] ${!activeFilters.propertyType ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
-            >
-              All
-            </p>
+              Retry
+            </button>
           </div>
 
-          {/* Map through static Filter data */}
-          {Filter.map((filter, index) => {
-            // Check if this filter is currently active (using the index as a fallback ID)
-            const filterId = `static-${index}`;
-            const isActive = activeFilters.propertyType === filterId;
-
-            // Count listings with this property type (if available)
-            // This assumes your listings have a fallback propertyType field or similar
-            const count =
-              currentListings.length > 0
-                ? currentListings.filter(
-                    (listing) =>
-                      // Match by name since we don't have IDs in the fallback
-                      listing.propertyType?.toLowerCase() ===
-                      filter.name.toLowerCase()
-                  ).length
-                : null;
-
-            return (
+          {/* Visual-only categories */}
+          <div className="flex items-center gap-6 min-w-max px-4">
+            {/* "All" option that works since it uses empty string */}
+            <div
+              key="all"
+              className={`flex flex-col items-center text-center cursor-pointer ${
+                !activeFilters.propertyType
+                  ? 'scale-110 transition-transform'
+                  : ''
+              }`}
+              onClick={() => handleCategoryClick('')}
+            >
               <div
-                key={filterId}
-                className={`flex flex-col items-center text-center cursor-pointer ${
-                  isActive ? 'scale-110 transition-transform' : ''
-                }`}
-                onClick={() => handleCategoryClick(filterId)}
+                className={`relative p-2 rounded-full ${!activeFilters.propertyType ? 'bg-[#1D5C5C]/10' : ''}`}
               >
-                <div
-                  className={`relative p-2 rounded-full ${isActive ? 'bg-[#1D5C5C]/10' : ''}`}
-                >
+                <img
+                  src={'/icons/otherFilterIcon.png'}
+                  alt={'All'}
+                  loading="lazy"
+                  className={`w-[24px] h-[24px] object-contain ${
+                    !activeFilters.propertyType
+                      ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
+                      : ''
+                  }`}
+                />
+              </div>
+              <p
+                className={`text-[14px] font-[400] ${!activeFilters.propertyType ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
+              >
+                All
+              </p>
+            </div>
+
+            {/* Map through static Filter data as visual elements only */}
+            {Filter.map((filter, index) => (
+              <div
+                key={`static-${index}`}
+                className="flex flex-col items-center text-center opacity-50 cursor-not-allowed"
+                title="Property type filtering unavailable"
+              >
+                <div className="relative p-2 rounded-full">
                   <img
                     src={filter.image}
                     alt={filter.name}
                     loading="lazy"
-                    className={`w-[24px] h-[24px] object-contain ${
-                      isActive
-                        ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                        : ''
-                    }`}
+                    className="w-[24px] h-[24px] object-contain"
                   />
-                  {count !== null && count > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {count}
-                    </span>
-                  )}
                 </div>
-                <p
-                  className={`text-[14px] font-[400] ${isActive ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
-                >
+                <p className="text-[14px] font-[400] text-[#999999]">
                   {filter.name}
                 </p>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-[1280px]">
+    <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-screen">
+      {/* Show filtering indicator if needed */}
+      {isFilteringListings && (
+        <div className="absolute right-4 top-2">
+          <div className="animate-spin h-4 w-4 border-2 border-[#1D5C5C] border-t-transparent rounded-full"></div>
+        </div>
+      )}
+
       <div className="flex items-center gap-6 min-w-max px-4">
         <div
           key="all"

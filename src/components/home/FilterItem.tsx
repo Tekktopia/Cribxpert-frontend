@@ -2,8 +2,9 @@ import { selectActiveFilter } from '@/features/listing/listingSlice';
 import { FilterParameter } from '@/types';
 import { useSelector } from 'react-redux';
 
-interface FilterItemProps {
+export interface FilterItemProps {
   param: FilterParameter;
+  value: string;
   handleFilterChange: (name: string, value: string) => void;
 }
 

@@ -1,27 +1,57 @@
 import { JSX } from 'react';
 
 export interface PropertyListing {
-  id: number;
-  image: string;
-  rating: number;
-  location: string;
-  propertyName: string;
+  _id: string;
+  name: string;
   description: string;
-  price: number;
-  images?: string[];
-  bedrooms?: number;
-  propertyType?: string;
+  amenities: string[];  // Array of amenity IDs
+  propertyType: string; // Property type ID
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  hideStatus: boolean;
+  basePrice: number;
+  securityDeposit: number;
+  cleaningFee: number;
+  avaliableFrom: string; // ISO date string
+  avaliableUntil: string; // ISO date string
+  houseRules: string[];
+  additionalRules: string;
+  guestNo: number;
+  size: number;
+  bathroomNo: number;
+  bedroomNo: number;
+  listingImg: {
+    _id: string;
+    fileUrl: string;
+  }[];
+  rating: number;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  __v: number;
 }
 
-export interface PropertyListingProps extends PropertyListing {
+export interface PropertyListingCardProps {
+  id: string;
+  name: string;
+  price: number;
+  rating: number;
+  description: string;
+  location: string;
+  image: string;
+  images: string[];
+  bedrooms: number;
+  propertyType: string;
   minWidth?: string;
 }
 
 export interface SavedListContextProps {
-  savedList: PropertyListingProps[];
+  savedList: PropertyListingCardProps[];
 
-  addList: (property: PropertyListingProps) => void;
-  removeList: (property: PropertyListingProps) => void;
+  addList: (property: PropertyListingCardProps) => void;
+  removeList: (property: PropertyListingCardProps) => void;
 }
 export enum ActiveProfile {
   Profile = 'profile',

@@ -88,7 +88,7 @@ export const propertySlice = createSlice({
         propertyTypeApi.endpoints.getPropertyTypes.matchFulfilled,
         (state, { payload }) => {
           state.isLoading = false;
-          state.propertyTypes = payload;
+          state.propertyTypes = payload.data;
           state.error = null;
         }
       )
@@ -186,11 +186,24 @@ export const {
 // Export selectors
 export const selectAllPropertyTypes = (state: {
   propertyType: PropertyTypeState;
-}) => state.propertyType.propertyTypes;
+}) => state.propertyType?.propertyTypes;
 
 export const selectSelectedPropertyTypeIds = (state: {
   propertyType: PropertyTypeState;
 }) => state.propertyType.selectedPropertyTypeIds;
+
+// Add this new selector after your existing selectors
+export const selectPropertyTypeNameById = 
+  (propertyTypeId: string | null | undefined) => 
+  (state: { propertyType: PropertyTypeState }) => {
+    if (!propertyTypeId) return '';
+    
+    const propertyType = state.propertyType.propertyTypes.find(
+      type => type._id === propertyTypeId
+    );
+    
+    return propertyType?.name || 'Unknown Property Type';
+  };
 
 export const selectCurrentPropertyType = (state: {
   propertyType: PropertyTypeState;

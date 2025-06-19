@@ -6,6 +6,8 @@ import { baseQuery } from '@/features/api';
 export interface ListingFilter {
   // Location filters
   state?: string;
+  country?:string;
+  city?: string;
 
   // Property details filters
   guestNo?: number;
@@ -65,7 +67,7 @@ export const listingApi = createApi({
   tagTypes: ['Listing'],
   endpoints: (builder) => ({
     // GET /listing - Get all listings with optional filters
-    getListings: builder.query<PropertyListing[], ListingFilter | void>({
+    getListings: builder.query<{ listings: PropertyListing[] }, ListingFilter | void>({
       query: (filters) => {
         // Format dates if they exist
         const formattedFilters = filters ? { ...filters } : undefined;
@@ -78,14 +80,14 @@ export const listingApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: 'Listing' as const, id })),
-              { type: 'Listing', id: 'LIST' },
+              ...result.listings.map(({ _id }) => ({ type: 'Listing' as const, _id })),
+              { type: 'Listing', _id: 'LIST' },
             ]
           : [{ type: 'Listing', id: 'LIST' }],
     }),
 
     // GET /listing/{listingId} - Get a listing by its ID
-    getListingById: builder.query<PropertyListing, string>({
+    getListingById: builder.query<{listing: PropertyListing}, string>({
       query: (id) => `/listing/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Listing', id }],
     }),
@@ -168,7 +170,7 @@ export const listingApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: 'Listing' as const, id })),
+              ...result.map(({ _id }) => ({ type: 'Listing' as const, _id })),
               { type: 'Listing', id: 'USER_LISTINGS' },
             ]
           : [{ type: 'Listing', id: 'USER_LISTINGS' }],

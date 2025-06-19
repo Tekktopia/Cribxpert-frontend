@@ -10,7 +10,7 @@ import {
 } from './propertyTypeService';
 
 // Import and re-export from propertyTypeSlice.ts
-import propertyReducer, {
+import propertyTypeReducer, {
   // Actions
   toggleSelectedPropertyType,
   setCurrentPropertyType,
@@ -21,6 +21,7 @@ import propertyReducer, {
   // Selectors
   selectAllPropertyTypes,
   selectSelectedPropertyTypeIds,
+  selectPropertyTypeNameById,
   selectCurrentPropertyType,
   selectPropertyTypeLoading,
   selectPropertyTypeCreating,
@@ -31,10 +32,9 @@ import propertyReducer, {
 } from './propertyTypeSlice';
 
 // Export the slice
-export const property = { propertyReducer };
-
+export const property = { propertyTypeReducer };
 // Export reducer
-export { default as propertyReducer } from './propertyTypeSlice';
+export { default as propertyTypeReducer } from './propertyTypeSlice';
 
 // Export API for store configuration
 export { propertyTypeApi };
@@ -60,6 +60,7 @@ export {
 export {
   selectAllPropertyTypes,
   selectSelectedPropertyTypeIds,
+  selectPropertyTypeNameById,
   selectCurrentPropertyType,
   selectPropertyTypeLoading,
   selectPropertyTypeCreating,

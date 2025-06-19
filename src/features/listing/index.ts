@@ -42,6 +42,8 @@ import listingReducer, {
   selectSelectedListingIds,
   selectIsDraftDirty,
   selectIsListingSelected,
+  setInitialListingsLoaded,
+  selectInitialListingsLoaded
 } from './listingSlice';
 
 // Export the API
@@ -76,7 +78,8 @@ export {
   clearDraftListing,
   setUploadProgress,
   toggleListingSelection,
-  clearSelectedListings
+  clearSelectedListings,
+  setInitialListingsLoaded
 };
 
 // Export all selectors
@@ -88,6 +91,7 @@ export {
   selectDraftListing,
   selectListingStep,
   selectActiveFilters,
+  selectInitialListingsLoaded,
   selectIsCreatingListing,
   selectIsFilteringListings,
   selectListingError,

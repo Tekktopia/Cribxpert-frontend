@@ -4,7 +4,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 // Import slices from features
 import authReducer from '@/features/auth';
 import { bookingReducer } from '@/features/booking';
-import { propertyReducer, propertyTypeApi } from '@/features/propertyType';
+import { propertyTypeReducer, propertyTypeApi } from '@/features/propertyType';
 import reviewReducer, { reviewApi } from '@/features/review';
 
 // Import API services
@@ -22,7 +22,7 @@ export const store = configureStore({
     favourites: favouritesReducer,
     amenities: amenitiesReducer,
     listing: listingReducer,
-    property: propertyReducer,
+    propertyType: propertyTypeReducer,
     review: reviewReducer,
 
     // API reducers

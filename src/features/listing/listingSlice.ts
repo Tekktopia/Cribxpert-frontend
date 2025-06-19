@@ -14,7 +14,7 @@ interface DraftListing extends Partial<CreateListingRequest> {
 interface ListingState {
   // Current listing being viewed or edited
   currentListing: PropertyListing | null;
-  
+
   // List of all current listings (for search results, etc.)
   currentListings: PropertyListing[];
 
@@ -23,7 +23,9 @@ interface ListingState {
 
   // Active search filters
   activeFilters: {
-    location?: string;
+    country?: string;
+    stateProvince?: string;
+    city?: string;
     propertyType?: string;
     priceRange?: string;
     bedrooms?: string;
@@ -42,7 +44,9 @@ interface ListingState {
 
   // Track if we're using geolocation
   isUsingGeolocation: boolean;
-}
+
+  initialListingsLoaded?: boolean; // Track if initial listings are loaded
+};
 
 // Initial state
 const initialState: ListingState = {
@@ -54,11 +58,16 @@ const initialState: ListingState = {
     isDirty: false,
   },
   activeFilters: {
-    location: '',
+    country: '',
+    stateProvince: '',
+    city: '',
+    guestNo: '',
     propertyType: '',
     priceRange: '',
     bedrooms: '',
     amenities: '',
+    startDate: '',
+    endDate: '',
   },
   isCreating: false,
   isFiltering: false,
@@ -66,6 +75,7 @@ const initialState: ListingState = {
   error: null,
   selectedListingIds: [],
   isUsingGeolocation: false,
+  initialListingsLoaded: false, // Track if initial listings are loaded
 };
 
 // Create the slice
@@ -177,6 +187,11 @@ export const listingSlice = createSlice({
     clearSelectedListings: (state) => {
       state.selectedListingIds = [];
     },
+
+    // Set whether initial listings have been loaded
+    setInitialListingsLoaded: (state, action: PayloadAction<boolean>) => {
+      state.initialListingsLoaded = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -198,7 +213,7 @@ export const listingSlice = createSlice({
       .addMatcher(
         listingApi.endpoints.getListingById.matchFulfilled,
         (state, { payload }) => {
-          state.currentListing = payload;
+          state.currentListing = payload.listing;
         }
       )
       .addMatcher(
@@ -272,18 +287,22 @@ export const {
   setUploadProgress,
   toggleListingSelection,
   clearSelectedListings,
+  setInitialListingsLoaded,
 } = listingSlice.actions;
 
 // Export selectors
-export const selectActiveFilter = (filterName: string) => 
-  (state: { listing: ListingState }) => 
+export const selectActiveFilter =
+  (filterName: string) => (state: { listing: ListingState }) =>
     state.listing.activeFilters[filterName] || '';
 
-export const selectIsUsingGeolocation = (state: { listing: ListingState }) => 
+export const selectIsUsingGeolocation = (state: { listing: ListingState }) =>
   state.listing.isUsingGeolocation;
 
 export const selectCurrentListing = (state: { listing: ListingState }) =>
   state.listing.currentListing;
+
+export const selectInitialListingsLoaded = (state: { listing: ListingState }) =>
+  state.listing.initialListingsLoaded;
 
 export const selectCurrentListings = (state: { listing: ListingState }) =>
   state.listing.currentListings;

@@ -1,51 +1,49 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState, useMemo } from 'react';
 import type { FilterParameter } from '@/types';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectActiveFilters,
-  setCurrentListings,
   updateFilter,
 } from '@/features/listing/listingSlice';
 import FilterItem from '@/components/home/FilterItem';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { nigerianLocations } from '@/utils/locationUtils';
-import { useGetListingsQuery } from '@/features/listing';
+import { useFilteredListings } from '@/hooks/useFilteredListings';
 
 const FilterBar: React.FC = () => {
   const apiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
   const dispatch = useDispatch();
   const activeFilters = useSelector(selectActiveFilters);
 
-  const [searchTrigger, setSearchTrigger] = useState(0);
-  const [apiFilters, setApiFilters] = useState({});
+  // Use the filtering hook instead of direct API calls
+  const { isLoading: isFiltering } = useFilteredListings();
+
+  // Keep geolocation functionality
   const [isGeolocationActive, setIsGeolocationActive] = useState(false);
   const userLocation = useGeolocation(isGeolocationActive);
 
-  const {
-    data: listings,
-    isLoading,
-    isFetching,
-  } = useGetListingsQuery(apiFilters, {
-    skip: searchTrigger === 0,
-    refetchOnMountOrArgChange: true,
-  });
-
-  useEffect(() => {
-    if (searchTrigger > 0 && listings && !isLoading && !isFetching) {
-      dispatch(setCurrentListings(listings));
-    }
-  }, [listings, isLoading, isFetching, dispatch, searchTrigger]);
-
   const handleFilterChange = (name: string, value: string) => {
+    // This will automatically trigger the filtering in the hook
     dispatch(updateFilter({ name, value }));
+    
+    // Clear dependent filters when parent filter changes
+    if (name === 'country') {
+      dispatch(updateFilter({ name: 'stateProvince', value: '' }));
+      dispatch(updateFilter({ name: 'city', value: '' }));
+    } else if (name === 'stateProvince') {
+      dispatch(updateFilter({ name: 'city', value: '' }));
+    }
   };
 
   const [filterParameters, setFilterParameters] = useState<FilterParameter[]>([
-    { name: 'location', label: 'Country', options: [] },
+    { name: 'country', label: 'Country', options: [] },
     { name: 'stateProvince', label: 'State/Province', options: [] },
+    { name: 'city', label: 'City', options: [] },
     { name: 'priceRange', label: 'Price Range', options: [] },
   ]);
 
+  // Load country options
   useEffect(() => {
     fetch('https://restcountries.com/v3.1/all?fields=name,currencies,cca2')
       .then((res) => res.json())
@@ -68,7 +66,7 @@ const FilterBar: React.FC = () => {
 
           setFilterParameters((prevParams) =>
             prevParams.map((param) =>
-              param.name === 'location'
+              param.name === 'country'
                 ? { ...param, options: countryOption }
                 : param
             )
@@ -82,6 +80,7 @@ const FilterBar: React.FC = () => {
     setIsGeolocationActive(true);
   };
 
+  // Handle geolocation results
   useEffect(() => {
     if (isGeolocationActive && !userLocation.loading) {
       if (userLocation.latitude && userLocation.longitude) {
@@ -96,6 +95,7 @@ const FilterBar: React.FC = () => {
             const country = components?.country;
             const state =
               components?.state || components?.province || components?.region;
+            const city = components?.city || components?.town || components?.village;
 
             if (country) {
               dispatch(updateFilter({ name: 'location', value: country }));
@@ -103,6 +103,10 @@ const FilterBar: React.FC = () => {
 
             if (state) {
               dispatch(updateFilter({ name: 'stateProvince', value: state }));
+            }
+            
+            if (city) {
+              dispatch(updateFilter({ name: 'city', value: city }));
             }
           } catch (error) {
             console.error('Failed to reverse geocode location', error);
@@ -147,8 +151,9 @@ const FilterBar: React.FC = () => {
     );
   };
 
+  // Load states when country changes
   useEffect(() => {
-    const selectedCountry = activeFilters.location;
+    const selectedCountry = activeFilters.country;
     if (selectedCountry) {
       fetch('https://countriesnow.space/api/v0.1/countries/states')
         .then((res) => res.json())
@@ -183,19 +188,78 @@ const FilterBar: React.FC = () => {
         )
       );
     }
-  }, [activeFilters.location]);
+  }, [activeFilters.country]);
 
-  const basePriceRanges = [
-    { value: '0-1000', label: '0 - 1,000' },
-    { value: '1001-5000', label: '1,001 - 5,000' },
-    { value: '5001-10000', label: '5,001 - 10,000' },
-    { value: '10001-20000', label: '10,001 - 20,000' },
-    { value: '20001-50000', label: '20,001 - 50,000' },
-    { value: '50001-plus', label: '50,000+' },
-  ];
-
+  // Load cities when state changes
   useEffect(() => {
-    const selectedCountryName = activeFilters.location;
+    const selectedCountry = activeFilters.country;
+    const selectedState = activeFilters.stateProvince;
+
+    if (selectedCountry && selectedState) {
+      fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          country: selectedCountry,
+          state: selectedState,
+        }),
+      })
+        .then((res) => res.json())
+        .then((apiData) => {
+          let cityOptions: FilterParameter['options'] = [];
+          
+          if (apiData?.data) {
+            cityOptions = apiData.data.map((city: string) => ({
+              label: city,
+              value: city,
+            }));
+          }
+
+          setFilterParameters((prevParams) =>
+            prevParams.map((param) =>
+              param.name === 'city'
+                ? { ...param, options: cityOptions }
+                : param
+            )
+          );
+        })
+        .catch((error) => {
+          console.error('Failed to fetch Cities', error);
+          // Set empty options on error
+          setFilterParameters((prevParams) =>
+            prevParams.map((param) =>
+              param.name === 'city' ? { ...param, options: [] } : param
+            )
+          );
+        });
+    } else {
+      // Clear city options when no state is selected
+      setFilterParameters((prevParams) =>
+        prevParams.map((param) =>
+          param.name === 'city' ? { ...param, options: [] } : param
+        )
+      );
+    }
+  }, [activeFilters.country, activeFilters.stateProvince]);
+
+  // Define base price ranges
+  const basePriceRanges = useMemo(
+    () => [
+      { value: '0-1000', label: '0 - 1,000' },
+      { value: '1001-5000', label: '1,001 - 5,000' },
+      { value: '5001-10000', label: '5,001 - 10,000' },
+      { value: '10001-20000', label: '10,001 - 20,000' },
+      { value: '20001-50000', label: '20,001 - 50,000' },
+      { value: '50001-plus', label: '50,000+' },
+    ],
+    []
+  );
+
+  // Update price range options with currency when country changes
+  useEffect(() => {
+    const selectedCountryName = activeFilters.country;
     let selectedCurrency = '';
 
     const locationParam = filterParameters.find(
@@ -229,33 +293,12 @@ const FilterBar: React.FC = () => {
           : param
       )
     );
-  }, [activeFilters.location]); // ✅ Removed `filterParameters` dependency here
+  }, [activeFilters.country, basePriceRanges]);
 
   const handleSearch = () => {
-    const apiFilters = {
-      location: activeFilters.location,
-      state: activeFilters.stateProvince,
-      propertyType: activeFilters.propertyType,
-      ...(activeFilters.priceRange &&
-        (() => {
-          const rangeValue = activeFilters.priceRange;
-          let min, max;
-          if (rangeValue === '50001-plus') {
-            min = 50001;
-            max = undefined;
-          } else {
-            [min, max] = rangeValue.split('-').map(Number);
-          }
-          return {
-            priceMin: min,
-            priceMax: max,
-          };
-        })()),
-    };
-
-    console.log('Searching with API filters:', apiFilters);
-    setApiFilters(apiFilters);
-    setSearchTrigger((prev) => prev + 1);
+    // The hook will automatically handle filtering based on active filters
+    // Force a refresh of the current filters
+    console.log('Current filters:', activeFilters);
   };
 
   return (
@@ -270,6 +313,7 @@ const FilterBar: React.FC = () => {
             <FilterItem
               key={index}
               param={param}
+              value={activeFilters[param.name] || ''}
               handleFilterChange={handleFilterChange}
             />
           ))}
@@ -284,12 +328,12 @@ const FilterBar: React.FC = () => {
 
         <button
           onClick={handleSearch}
-          disabled={isLoading || isFetching}
+          disabled={isFiltering}
           className={`bg-black text-white h-[36px] px-4 py-2 rounded-md text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end ${
-            isLoading || isFetching ? 'opacity-70 cursor-not-allowed' : ''
+            isFiltering ? 'opacity-70 cursor-not-allowed' : ''
           }`}
         >
-          {isLoading || isFetching ? (
+          {isFiltering ? (
             <span className="flex items-center justify-center">
               <svg
                 className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
@@ -311,7 +355,7 @@ const FilterBar: React.FC = () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Searching...
+              Filtering...
             </span>
           ) : (
             'Search'
