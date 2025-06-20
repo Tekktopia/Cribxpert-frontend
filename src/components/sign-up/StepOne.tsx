@@ -3,6 +3,7 @@ import CustomDropdown from './CustomDropdown';
 import { GoogleSignUp } from './GoogleSignUp';
 import { useInitiateEmailVerificationMutation } from '@/features/auth/authService';
 import { Link } from 'react-router';
+import { isValidEmail } from '@/utils/utils';
 
 type StepOneProps = {
   methodSelected: string | null;
@@ -15,6 +16,7 @@ type StepOneProps = {
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
 };
+
 
 const StepOne: React.FC<StepOneProps> = ({
   methodSelected,
@@ -31,29 +33,7 @@ const StepOne: React.FC<StepOneProps> = ({
   const [initiateEmailVerification, { isLoading }] =
     useInitiateEmailVerificationMutation();
 
-  const isValidEmail = (email: string): boolean => {
-    // Basic format validation using regex
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // Trim the email to remove any whitespace
-    const trimmedEmail = email.trim();
-
-    // Check for basic format validity
-    if (!emailRegex.test(trimmedEmail)) {
-      return false;
-    }
-
-    // Check for common mistakes
-    if (
-      trimmedEmail.includes('..') || // Double dots
-      !trimmedEmail.split('@')[1]?.includes('.') || // No dot after @
-      trimmedEmail.endsWith('.') // Ends with dot
-    ) {
-      return false;
-    }
-
-    return true;
-  };
+  
 
   const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
     // Prevent default button click behavior

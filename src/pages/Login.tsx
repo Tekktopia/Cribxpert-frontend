@@ -1,13 +1,16 @@
 import CustomDropdown from '@/components/sign-up/CustomDropdown';
 import { Eye, EyeOff } from 'lucide-react';
-import React, { useState } from 'react';
-import { Link } from 'react-router';
-import { useSignIn } from '@clerk/clerk-react';
-import { SignInResource } from '@clerk/types';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router';
 import GoogleSignIn from '@/components/login/GoogleSignIn';
+import { useDispatch } from 'react-redux';
+import { clearError, setUser, useLoginMutation } from '@/features/auth';
+import { isValidEmail } from '@/utils/utils';
 
 const Login: React.FC = () => {
-  const { signIn, isLoaded } = useSignIn();
+  const [login, { isLoading, error: loginError }] = useLoginMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
@@ -15,6 +18,28 @@ const Login: React.FC = () => {
     phoneNumber: '',
     password: '',
   });
+
+  useEffect(() => {
+    if (loginError) {
+      if ('data' in loginError) {
+        setError(
+          typeof loginError.data === 'object' &&
+            loginError.data !== null &&
+            'message' in loginError.data
+            ? (loginError.data as { message?: string }).message ||
+                'Login failed. Please try again.'
+            : 'Login failed. Please try again.'
+        );
+      } else {
+        setError('Network error. Please check your connection.');
+      }
+    }
+
+    // Clear error when component unmounts
+    return () => {
+      dispatch(clearError());
+    };
+  }, [loginError, dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,39 +57,50 @@ const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isLoaded) return;
+    setError('');
 
-    try {
-      let result: SignInResource;
+    const identifier =
+      methodSelected === 'Email Address'
+        ? formData.email
+        : formData.phoneNumber;
 
-      if (methodSelected === 'Phone Number') {
-        if (!formData.phoneNumber) {
-          setError('Phone number is required');
-          return;
+    if (!identifier) {
+      setError(
+        `${
+          methodSelected === 'Email Address' ? 'Email' : 'Phone number'
+        } is required`
+      );
+      return;
+    }
+
+    // Add email validation check
+    if (methodSelected === 'Email Address' && !isValidEmail(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (!formData.password) {
+      setError('Password is required');
+      return;
+    }
+
+    const result = await login({
+      identifier,
+      password: formData.password,
+    }).unwrap();
+
+    if (result) {
+      // Store the access token in localStorage
+      if (result.accessToken) {
+        localStorage.setItem('token', result.accessToken);
+
+        // store user data if needed
+        if (result.user) {
+          setUser(result.user);
         }
-
-        result = await signIn.create({
-          identifier: formData.phoneNumber,
-          password: formData.password,
-        });
-      } else {
-        if (!formData.email) {
-          setError('Email is required');
-          return;
-        }
-
-        result = await signIn.create({
-          identifier: formData.email,
-          password: formData.password,
-        });
       }
 
-      if (result && result.status === 'complete') {
-        window.location.href = '/'; // Redirect to onboarding after login
-      }
-    } catch (err) {
-      console.log(err);
-      setError('Invalid login credentials');
+      navigate('/'); // Redirect to home after successful login
     }
   };
 
@@ -179,9 +215,10 @@ const Login: React.FC = () => {
               {/* Submit Button */}
               <button
                 type="submit"
+                disabled={isLoading}
                 className="w-full mx-auto mt-8 p-3 bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2"
               >
-                Login
+                {isLoading ? 'Logging in...' : 'Login'}
               </button>
             </form>
           </div>

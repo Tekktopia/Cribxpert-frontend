@@ -36,43 +36,6 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     // Login mutation
     builder
-      .addMatcher(authApi.endpoints.login.matchPending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addMatcher(
-        authApi.endpoints.login.matchFulfilled,
-        (state, { payload }) => {
-          state.isLoading = false;
-          state.isAuthenticated = true;
-          state.user = payload.user;
-          state.error = null;
-          // Store token from the response
-          if (payload.accessToken) {
-            localStorage.setItem('token', payload.accessToken);
-          }
-        }
-      )
-      .addMatcher(authApi.endpoints.login.matchRejected, (state, { error }) => {
-        state.isLoading = false;
-        state.error = error.message || 'Login failed';
-      })
-      // Register mutation
-      .addMatcher(authApi.endpoints.register.matchPending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addMatcher(authApi.endpoints.register.matchFulfilled, (state) => {
-        state.isLoading = false;
-        // We don't automatically log in after registration
-      })
-      .addMatcher(
-        authApi.endpoints.register.matchRejected,
-        (state, { error }) => {
-          state.isLoading = false;
-          state.error = error.message || 'Registration failed';
-        }
-      )
       // Get current user query
       .addMatcher(authApi.endpoints.getCurrentUser.matchPending, (state) => {
         state.isLoading = true;
