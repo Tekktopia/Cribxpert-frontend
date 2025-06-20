@@ -118,6 +118,14 @@ export const authApi = createApi({
         body: data,
       }),
     }),
+    // Add OTP verification endpoint
+    verifyOtp: builder.mutation({
+      query: (data) => ({
+        url: '/auth/verify-otp',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -132,4 +140,5 @@ export const {
   useCompleteRegistrationMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useVerifyOtpMutation, // Export the new hook
 } = authApi;

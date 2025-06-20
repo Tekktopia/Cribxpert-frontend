@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import OTPInput from './OTPInput';
-import { useSignUp } from '@clerk/clerk-react';
 import StepTwoResendButton from './StepTwoResendButton';
+import { setIsAuthenticated } from '@/features/auth/authSlice';
+import { useVerifyOtpMutation } from '@/features/auth/authService';
 
 type StepTwoMainProps = {
   methodSelected: string | null;
@@ -14,27 +17,55 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
   email,
   phoneNumber,
 }) => {
-  const { signUp, setActive } = useSignUp();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [otp, setOtp] = React.useState<string[]>(new Array(6).fill(''));
-  const [code, setCode] = React.useState<string>('');
   const [error, setError] = React.useState<string>('');
 
+  // API mutations
+  const [verifyOtp] = useVerifyOtpMutation();
+
   const handleVerify = async () => {
-    try {
-      setCode(otp.join(''));
-      const completeSignUp = await signUp?.attemptPhoneNumberVerification({
-        code,
-      });
-      if (completeSignUp?.status === 'complete' && setActive) {
-        await setActive({ session: completeSignUp.createdSessionId });
-        window.location.href = '/onboarding'; // Redirect on success
-      }
-    } catch (err: Error | unknown) {
-      if (err instanceof Error) {
-        console.log(err.message);
-        setError(err.message);
-      } else {
-        console.log('An unknown error occurred');
+    // Only handle verification for phone number method
+    if (methodSelected !== 'Email Address') {
+      try {
+        const code = otp.join('');
+
+        // Phone verification data
+        const verificationData = { phoneNumber, code };
+
+        // Call backend API to verify the OTP
+        const response = await verifyOtp(verificationData).unwrap();
+
+        if (response.success) {
+          // Update auth state
+          dispatch(setIsAuthenticated(true));
+
+          // If we receive a token, store it
+          if (response.token) {
+            localStorage.setItem('token', response.token);
+          }
+
+          // Redirect to onboarding
+          navigate('/onboarding');
+        } else {
+          setError(response.message || 'Verification failed');
+        }
+      } catch (err: unknown) {
+        console.error('Verification error:', err);
+        if (typeof err === 'object' && err !== null) {
+          const errorObj = err as {
+            data?: { message?: string };
+            message?: string;
+          };
+          setError(
+            errorObj.data?.message ||
+              errorObj.message ||
+              'An unknown error occurred'
+          );
+        } else {
+          setError('An unknown error occurred');
+        }
       }
     }
   };
@@ -67,10 +98,7 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
                 We have sent an OTP code to{' '}
                 {phoneNumber.slice(0, 3) +
                   '****' +
-                  phoneNumber.slice(
-                    phoneNumber.length - 3,
-                    phoneNumber.length
-                  )}
+                  phoneNumber.slice(phoneNumber.length - 3, phoneNumber.length)}
                 , Please enter the OTP sent to this number below to confirm your
                 account. . If you haven't received the OTP, click on the resend
                 code to get another OTP
@@ -85,6 +113,8 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
         <StepTwoResendButton
           methodSelected={methodSelected}
           handleVerify={handleVerify}
+          email={email}
+          phoneNumber={phoneNumber}
         />
       </div>
     </div>
