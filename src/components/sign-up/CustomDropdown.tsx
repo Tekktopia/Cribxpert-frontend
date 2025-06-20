@@ -37,7 +37,7 @@ export default function CustomDropdown({
 
       {isOpen && (
         <div className="absolute w-full mt-1 p-4 bg-white border border-gray-300 rounded-md shadow-lg">
-          <label className="cursor-pointer flex justify-between items-center gap-2 p-3 bg-purple-100">
+          <label className="cursor-pointer flex justify-between items-center gap-2 p-3 bg-[#b5f9f9a0]">
             <button onClick={handleClose} className="w-4 h-4 accent-[#1D5C5C]">
               Select
             </button>

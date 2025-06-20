@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import StepOne from '@/components/sign-up/StepOne';
+import StepOne from '@/components/sign-up/StepOne.tsx';
 import StepTwoMain from '@/components/sign-up/StepTwoMain';
 
 const SignUp: React.FC = () => {

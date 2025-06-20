@@ -89,7 +89,11 @@ const Header: React.FC = () => {
             {/* Logo */}
             <div className="w-auto">
               <Link to={'/'} className="flex items-center justify-center">
-                <img src="/CribXpert.svg" alt="cribxpert logo" className='w-[35px] h-[35px] mr-[10px]' />
+                <img
+                  src="/CribXpert.svg"
+                  alt="cribxpert logo"
+                  className="w-[35px] h-[35px] mr-[10px]"
+                />
                 <h1 className="font-bold text-[20px] text-[#1d5c5c]">
                   CribXpert
                 </h1>
@@ -368,7 +372,7 @@ const Header: React.FC = () => {
 
               {/* Side Drawer Menu */}
               <div className="fixed top-0 left-0 w-full bg-white text-black z-50 md:hidden overflow-y-auto">
-                {/* Purple header */}
+                {/* teal header */}
                 <div className="bg-[#1d5c5c] flex justify-between items-center w-full p-4 text-white">
                   <Link to={'/'}>
                     <h1 className="text-base font-medium">CribXpert</h1>

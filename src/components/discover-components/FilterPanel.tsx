@@ -12,7 +12,7 @@ export default function FilterPanel({
       className={`${isOpen ? '-translate-x-0 w-full lg:w-1/4 lg:max-w-[276px] ' : '-translate-x-full w-full'} h-fit transition-all duration-200 p-4 pb-8 xl:pb-0 z-30 top-0 bg-white absolute lg:sticky border-r-[1px] md:pr-2`}
     >
       {isOpen && (
-        <div className='relative'>
+        <div className="relative">
           <div className="sticky top-0 z-10 bg-white pt-4">
             <div className="flex pb-4 justify-between">
               <span className="flex">
@@ -48,7 +48,7 @@ export default function FilterPanel({
                             <input
                               type="radio"
                               name="booking"
-                              className="accent-purple-500"
+                              className="accent-teal-500"
                             />
                             <span>{text}</span>
                           </label>
@@ -71,10 +71,7 @@ export default function FilterPanel({
                           key={idx}
                           className="flex items-center space-x-2"
                         >
-                          <input
-                            type="checkbox"
-                            className="accent-purple-500"
-                          />
+                          <input type="checkbox" className="accent-teal-500" />
                           <span>{amenity}</span>
                         </label>
                       ))}
@@ -110,7 +107,7 @@ export default function FilterPanel({
                           <input
                             type="radio"
                             name="price"
-                            className="accent-purple-500"
+                            className="accent-teal-500"
                           />
                           <span>{range}</span>
                         </label>
@@ -130,7 +127,7 @@ export default function FilterPanel({
                           <input
                             type="radio"
                             name="rating"
-                            className="accent-purple-500"
+                            className="accent-teal-500"
                           />
                           <span>
                             <span className="text-yellow-400">

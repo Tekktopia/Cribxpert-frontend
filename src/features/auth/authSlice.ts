@@ -1,21 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from './authService';
-
-// User type definition
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-}
-
-// Auth state interface
-interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
-}
+import { User, AuthState } from './authTypes';
 
 const initialState: AuthState = {
   user: null,
@@ -51,13 +36,10 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     // Login mutation
     builder
-      .addMatcher(
-        authApi.endpoints.login.matchPending,
-        (state) => {
-          state.isLoading = true;
-          state.error = null;
-        }
-      )
+      .addMatcher(authApi.endpoints.login.matchPending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addMatcher(
         authApi.endpoints.login.matchFulfilled,
         (state, { payload }) => {
@@ -66,34 +48,24 @@ export const authSlice = createSlice({
           state.user = payload.user;
           state.error = null;
           // Store token from the response
-          if (payload.token) {
-            localStorage.setItem('token', payload.token);
+          if (payload.accessToken) {
+            localStorage.setItem('token', payload.accessToken);
           }
         }
       )
-      .addMatcher(
-        authApi.endpoints.login.matchRejected,
-        (state, { error }) => {
-          state.isLoading = false;
-          state.error = error.message || 'Login failed';
-        }
-      )
-      
+      .addMatcher(authApi.endpoints.login.matchRejected, (state, { error }) => {
+        state.isLoading = false;
+        state.error = error.message || 'Login failed';
+      })
       // Register mutation
-      .addMatcher(
-        authApi.endpoints.register.matchPending,
-        (state) => {
-          state.isLoading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        authApi.endpoints.register.matchFulfilled,
-        (state) => {
-          state.isLoading = false;
-          // We don't automatically log in after registration
-        }
-      )
+      .addMatcher(authApi.endpoints.register.matchPending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addMatcher(authApi.endpoints.register.matchFulfilled, (state) => {
+        state.isLoading = false;
+        // We don't automatically log in after registration
+      })
       .addMatcher(
         authApi.endpoints.register.matchRejected,
         (state, { error }) => {
@@ -101,15 +73,11 @@ export const authSlice = createSlice({
           state.error = error.message || 'Registration failed';
         }
       )
-      
       // Get current user query
-      .addMatcher(
-        authApi.endpoints.getCurrentUser.matchPending,
-        (state) => {
-          state.isLoading = true;
-          state.error = null;
-        }
-      )
+      .addMatcher(authApi.endpoints.getCurrentUser.matchPending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addMatcher(
         authApi.endpoints.getCurrentUser.matchFulfilled,
         (state, { payload }) => {
@@ -128,22 +96,21 @@ export const authSlice = createSlice({
           state.error = error.message || 'Failed to fetch user';
           localStorage.removeItem('token');
         }
-      );
+      )
   },
 });
 
 // Export actions
-export const {
-  setUser,
-  clearUser,
-  updateUserProfile,
-  clearError,
-} = authSlice.actions;
+export const { setUser, clearUser, updateUserProfile, clearError } =
+  authSlice.actions;
 
 // Export selectors
-export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
-export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
-export const selectAuthLoading = (state: { auth: AuthState }) => state.auth.isLoading;
+export const selectCurrentUser = (state: { auth: AuthState }) =>
+  state.auth.user;
+export const selectIsAuthenticated = (state: { auth: AuthState }) =>
+  state.auth.isAuthenticated;
+export const selectAuthLoading = (state: { auth: AuthState }) =>
+  state.auth.isLoading;
 export const selectAuthError = (state: { auth: AuthState }) => state.auth.error;
 
 // Export reducer

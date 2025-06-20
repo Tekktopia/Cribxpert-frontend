@@ -5,7 +5,6 @@ import authReducer, {
   clearUser,
   updateUserProfile,
   clearError,
-  User,
 } from './authSlice';
 
 import {
@@ -13,6 +12,8 @@ import {
   useRegisterMutation,
   useGetCurrentUserQuery,
 } from './authService';
+
+import type { User } from './authTypes';
 
 // Re-export everything
 export {

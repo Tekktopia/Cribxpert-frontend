@@ -1,8 +1,8 @@
 import React from 'react';
-// import { FaFacebook } from "react-icons/fa";
 import CustomDropdown from './CustomDropdown';
-import { useSignUp} from '@clerk/clerk-react';
 import { GoogleSignUp } from './GoogleSignUp';
+import { useInitiateEmailVerificationMutation } from '@/features/auth/authService';
+import { Link } from 'react-router';
 
 type StepOneProps = {
   methodSelected: string | null;
@@ -27,54 +27,94 @@ const StepOne: React.FC<StepOneProps> = ({
   setPhoneNumber,
   setPassword,
 }) => {
-  const {
-    signUp,
-    // setActive,
-    // isLoaded
-  } = useSignUp();
   const [error, setError] = React.useState<string>('');
+  const [initiateEmailVerification, { isLoading }] =
+    useInitiateEmailVerificationMutation();
 
-  const redirectUrl =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:5173/onboarding'
-    : 'https://cribxpert.netlify.app/onboarding';
+  const isValidEmail = (email: string): boolean => {
+    // Basic format validation using regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const handleSignUp = async (e: React.FormEvent) => {
+    // Trim the email to remove any whitespace
+    const trimmedEmail = email.trim();
+
+    // Check for basic format validity
+    if (!emailRegex.test(trimmedEmail)) {
+      return false;
+    }
+
+    // Check for common mistakes
+    if (
+      trimmedEmail.includes('..') || // Double dots
+      !trimmedEmail.split('@')[1]?.includes('.') || // No dot after @
+      trimmedEmail.endsWith('.') // Ends with dot
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent default button click behavior
     e.preventDefault();
+    e.stopPropagation();
+
     try {
       if (methodSelected === 'Email Address') {
+        // Validate inputs
         if (!email || !password) {
           throw new Error('Email and password are required');
         }
-        // const result =
-        await signUp?.create({ emailAddress: email, password });
-        // console.log(result);
 
-        await signUp?.prepareEmailAddressVerification({
-          strategy: 'email_link',
-          redirectUrl: redirectUrl,
-        }); // Sends verification email
+        // Check email format
+        if (!isValidEmail(email)) {
+          throw new Error('Please enter a valid email address');
+        }
+
+        const result = await initiateEmailVerification({ email });
+
+        // Check for errors in the result
+        if ('error' in result) {
+          // console.error('API error:', result.error);
+          throw result.error;
+        }
+
+        // Access data safely
+        const response = result.data;
+        if (response?.user) {
+          localStorage.setItem('pendingUserId', response.user);
+          localStorage.setItem('pendingEmail', email);
+        }
+        // console.log('Verification email sent:', response?.message);
+
+        // Only proceed if we get here without errors
+        nextStep();
       } else {
+        // Phone number validation
         if (!phoneNumber || !password) {
           throw new Error('Phone number and password are required');
         } else if (phoneNumber.length < 11 || phoneNumber.length > 11) {
           throw new Error('Phone number must be 11 digits');
         }
-        phoneNumber = phoneNumber.replace(/^0/, '+234');
 
-        await signUp?.create({ phoneNumber, password });
-        await signUp?.preparePhoneNumberVerification(); // Sends verification code
+        // Phone verification not implemented
+        throw new Error('Phone verification is not implemented yet');
       }
-
-      //   setPendingVerification(true);
-
-      nextStep();
-    } catch (err: Error | unknown) {
-      if (err instanceof Error) {
-        console.log(err.message);
-        setError(err.message);
+    } catch (err: unknown) {
+      // Error handling
+      if (typeof err === 'object' && err !== null) {
+        const errorObj = err as {
+          data?: { message?: string };
+          message?: string;
+        };
+        setError(
+          errorObj.data?.message ||
+            errorObj.message ||
+            'An error occurred during sign-up'
+        );
       } else {
-        console.log('An unknown error occurred');
+        setError('An error occurred during sign-up');
       }
     }
   };
@@ -94,7 +134,7 @@ const StepOne: React.FC<StepOneProps> = ({
           </p>
         </div>
 
-        <GoogleSignUp setError={setError}/>
+        <GoogleSignUp setError={setError} />
 
         <div className="relative text-gray-500 my-4 flex items-center justify-center">
           <span className="bg-white px-2">Or</span>
@@ -113,6 +153,8 @@ const StepOne: React.FC<StepOneProps> = ({
               <label className="cursor-pointer flex flex-col items-start gap-2">
                 Email
                 <input
+                  type="email"
+                  name="email"
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
@@ -126,8 +168,10 @@ const StepOne: React.FC<StepOneProps> = ({
                 Enter mobile Number
                 <input
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  type="number"
-                  placeholder="07068839585"
+                  // type="number"
+                  name="phoneNumber"
+                  minLength={11}
+                  placeholder="0702*****00"
                   className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                   required
                 />
@@ -141,6 +185,8 @@ const StepOne: React.FC<StepOneProps> = ({
               Password
               <input
                 onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                minLength={6}
                 placeholder="Enter your Password"
                 className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                 required
@@ -153,22 +199,21 @@ const StepOne: React.FC<StepOneProps> = ({
             <span className="text-[#1D5C5C]">Terms of Service</span>.
           </p>
         </div>
-        {/* <button className='w-full p-3 border border-gray-300 text-[#1D5C5C] font-semibold rounded-md flex items-center justify-center gap-2'>
-          <span>Sign Up with Facebook</span>
-          <FaFacebook className='w-5 h-5 text-blue-600' />
-        </button> */}
 
         <button
           onClick={handleSignUp}
+          disabled={isLoading}
+          type="button"
           className="w-full p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
         >
-          Continue
+          {isLoading ? 'Sending verification...' : 'Continue'}
         </button>
+
         <p className="text-gray-500 text-[14px]">
           Already have an account?
-          <a href="/login">
+          <Link to="/login">
             <span className="text-[#1D5C5C]">Log in</span>
-          </a>
+          </Link>
           .
         </p>
       </div>

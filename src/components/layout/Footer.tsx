@@ -5,7 +5,7 @@ interface FooterProps {
   className?: string;
 }
 
-const Footer = ({className} : FooterProps) => {
+const Footer = ({ className }: FooterProps) => {
   return (
     <footer className={`bg-[#1D5C5C] text-white mt-20 ${className}`}>
       <div className="container mx-auto px-4 py-10">
@@ -14,14 +14,22 @@ const Footer = ({className} : FooterProps) => {
           <div>
             <h3 className="text-xl font-bold mb-4">CribXpert</h3>
             <p className="text-sm text-gray-200 mb-4">
-              Find your perfect short-term accommodation with ease.
-              Discover amazing properties for your next stay.
+              Find your perfect short-term accommodation with ease. Discover
+              amazing properties for your next stay.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-gray-300"><FaTwitter size={20} /></a>
-              <a href="#" className="hover:text-gray-300"><FaFacebook size={20} /></a>
-              <a href="#" className="hover:text-gray-300"><FaInstagram size={20} /></a>
-              <a href="#" className="hover:text-gray-300"><FaLinkedin size={20} /></a>
+              <a href="#" className="hover:text-gray-300">
+                <FaTwitter size={20} />
+              </a>
+              <a href="#" className="hover:text-gray-300">
+                <FaFacebook size={20} />
+              </a>
+              <a href="#" className="hover:text-gray-300">
+                <FaInstagram size={20} />
+              </a>
+              <a href="#" className="hover:text-gray-300">
+                <FaLinkedin size={20} />
+              </a>
             </div>
           </div>
 
@@ -29,10 +37,26 @@ const Footer = ({className} : FooterProps) => {
           <div>
             <h3 className="text-lg font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/discover" className="hover:underline">Find Properties</Link></li>
-              <li><Link to="/saved-listings" className="hover:underline">Saved Listings</Link></li>
-              <li><Link to="/my-bookings" className="hover:underline">My Bookings</Link></li>
-              <li><Link to="/payments" className="hover:underline">Payment Options</Link></li>
+              <li>
+                <Link to="/discover" className="hover:underline">
+                  Find Properties
+                </Link>
+              </li>
+              <li>
+                <Link to="/saved-listings" className="hover:underline">
+                  Saved Listings
+                </Link>
+              </li>
+              <li>
+                <Link to="/my-bookings" className="hover:underline">
+                  My Bookings
+                </Link>
+              </li>
+              <li>
+                <Link to="/payments" className="hover:underline">
+                  Payment Options
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -40,10 +64,26 @@ const Footer = ({className} : FooterProps) => {
           <div>
             <h3 className="text-lg font-bold mb-4">Support</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/support" className="hover:underline">Help Center</Link></li>
-              <li><Link to="/support-info" className="hover:underline">FAQs</Link></li>
-              <li><Link to="#" className="hover:underline">Terms & Conditions</Link></li>
-              <li><Link to="#" className="hover:underline">Privacy Policy</Link></li>
+              <li>
+                <Link to="/support" className="hover:underline">
+                  Help Center
+                </Link>
+              </li>
+              <li>
+                <Link to="/support-info" className="hover:underline">
+                  FAQs
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link to="#" className="hover:underline">
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -59,7 +99,7 @@ const Footer = ({className} : FooterProps) => {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-purple-400 mt-8 pt-6 text-center text-sm">
+        <div className="border-t border-teal-400 mt-8 pt-6 text-center text-sm">
           <p>© {new Date().getFullYear()} CribXpert. All rights reserved.</p>
         </div>
       </div>
