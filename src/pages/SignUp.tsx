@@ -3,13 +3,13 @@ import StepOne from '@/components/sign-up/StepOne.tsx';
 import StepTwoMain from '@/components/sign-up/StepTwoMain';
 
 const SignUp: React.FC = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [methodSelected, setMethodSelected] = useState<string | null>(
     'Email Address'
   );
 
   //Necessary onboarding info
-  const [email, setEmail] = useState('samuelolawumi65@gmail.com');
+  const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
 
