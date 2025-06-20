@@ -26,12 +26,17 @@ import { JSX } from 'react';
 import Preloader from '@/components/common/Preloader';
 import { useSelector } from 'react-redux';
 import { selectAuthLoading } from '@/features/auth/authSlice';
+import { useGetAmenitiesQuery } from './features/amenities';
+import { useGetListingsQuery } from './features/listing';
 
 // New AppContent component that handles authentication loading state
 const AppContent = () => {
   const authLoading = useSelector(selectAuthLoading);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
+  useGetAmenitiesQuery();
+  useGetListingsQuery();
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setInitialLoadComplete(true);

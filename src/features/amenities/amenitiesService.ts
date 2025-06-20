@@ -5,9 +5,11 @@ import { baseQuery } from '@/features/api';
 export interface Amenity {
   _id: string;
   name: string;
-  icon?: string;
-  category?: 'basic' | 'safety' | 'accessibility' | 'special';
-  description?: string;
+  icon?: {
+    _id?: string;
+    fileUrl: string;
+    fileType: string;
+  },
   createdAt?: string;
   updatedAt?: string;
 }

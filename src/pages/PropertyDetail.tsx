@@ -1,9 +1,13 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
-import { PropertyListingProps } from '@/types';
+import { PropertyListing } from '@/types';
+import { selectAllListings } from '@/features/listing/listingSlice';
+import { useDispatch } from 'react-redux';
+import { setCurrentListing } from '@/features/listing';
 
 // Import our new components
 import PropertyGallery from '@/components/property-details/PropertyGallery';
@@ -40,30 +44,36 @@ const createSlug = (name: string): string => {
     .replace(/\s+/g, '-');
 };
 
-const PropertyDetail = ({
-  listings = [],
-}: {
-  listings?: PropertyListingProps[];
-}) => {
+const PropertyDetail = () => {
   const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
 
+  // Fetch listings from the store
+  const listings = useSelector(selectAllListings) || [];
+
   // Find the property that matches the URL parameter
   const property = listings.find(
-    (item) => createSlug(item.propertyName) === name
+    (item: PropertyListing) => createSlug(item.name) === name
   );
+
+  const dispatch = useDispatch();
+
+  // Log the selected property to the console
+  useEffect(() => {
+    if (property) {
+      dispatch(setCurrentListing(property));
+      console.log('Selected property:', property);
+    } else {
+      navigate('/404', { replace: true });
+    }
+  }, [property, navigate, dispatch]);
 
   // Get similar properties (excluding current one)
   const similarProperties = property
-    ? listings.filter((item) => item.id !== property.id).slice(0, 3)
+    ? listings
+        .filter((item: PropertyListing) => item._id !== property._id)
+        .slice(0, 3)
     : listings.slice(0, 3);
-
-  useEffect(() => {
-    // If property is not found, we could redirect to 404 or home
-    if (!property && listings.length > 0) {
-      navigate('/404', { replace: true });
-    }
-  }, [property, navigate, listings]);
 
   // Show loading or not found message if no property
   if (!property) {
@@ -77,39 +87,20 @@ const PropertyDetail = ({
     );
   }
   // Prepare data for our components
-  const propertyImages = property.images?.length
-    ? property.images
-    : [property.image];
+  const propertyImages = property.listingImg.map((img) => img.fileUrl);
 
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
       <Header /> <HeaderSpacer />
       {/* Property Gallery Component */}
-      <PropertyGallery
-        images={propertyImages}
-        propertyName={property.propertyName}
-      />
+      <PropertyGallery images={propertyImages} propertyName={property.name} />
+      
       {/* Property Header Component */}
-      <PropertyHeader
-        propertyName={property.propertyName}
-        description={property.description}
-        rating={property.rating}
-        totalRatings={115}
-        shareIconUrl={IMAGES.share}
-      />
+      <PropertyHeader/>
+
       {/* Property Overview Component */}
-      <PropertyOverview
-        bedrooms={3}
-        bathrooms={3}
-        guests={6}
-        area="100 sq ft"
-        icons={{
-          bedroom: IMAGES.bedroom,
-          bathroom: IMAGES.bathroom,
-          guest: IMAGES.guest,
-          house: IMAGES.house,
-        }}
-      />{' '}
+      <PropertyOverview/>
+
       <section className="py-4 sm:py-6 px-4 sm:px-10">
         <div className="flex flex-col lg:flex-row justify-around gap-6 lg:gap-8">
           <div className="w-full lg:w-1/2">
@@ -157,7 +148,7 @@ const PropertyDetail = ({
         </div>
         {/* Similar Properties Component */}
         <SimilarProperties
-          propertyName={property.propertyName}
+          propertyName={property.name}
           similarProperties={similarProperties}
         />
       </section>

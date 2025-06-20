@@ -18,6 +18,9 @@ interface ListingState {
   // List of all current listings (for search results, etc.)
   currentListings: PropertyListing[];
 
+  // All listings fetched from the server
+  allListings?: PropertyListing[] | [];
+
   // Draft listing for multi-step form
   draftListing: DraftListing;
 
@@ -46,12 +49,13 @@ interface ListingState {
   isUsingGeolocation: boolean;
 
   initialListingsLoaded?: boolean; // Track if initial listings are loaded
-};
+}
 
 // Initial state
 const initialState: ListingState = {
   currentListing: null,
   currentListings: [],
+  allListings: [],
   draftListing: {
     step: 1,
     uploadProgress: 0,
@@ -94,6 +98,11 @@ export const listingSlice = createSlice({
     // Add these reducers
     setCurrentListings: (state, action: PayloadAction<PropertyListing[]>) => {
       state.currentListings = action.payload;
+    },
+
+    // Set all listings fetched from the server
+    setAllListings: (state, action: PayloadAction<PropertyListing[]>) => {
+      state.allListings = action.payload;
     },
 
     // Update a single filter
@@ -200,6 +209,15 @@ export const listingSlice = createSlice({
         state.error = null;
       })
       .addMatcher(
+        listingApi.endpoints.getListings.matchFulfilled,
+        (state, { payload }) => {
+          // When listings are fetched, update both currentListings and allListings
+          state.currentListings = payload.listings;
+          state.allListings = payload.listings;
+          state.initialListingsLoaded = true;
+        }
+      )
+      .addMatcher(
         listingApi.endpoints.getListings.matchRejected,
         (state, { error }) => {
           state.error = error.message || 'Failed to fetch listings';
@@ -275,6 +293,7 @@ export const listingSlice = createSlice({
 export const {
   setCurrentListing,
   setCurrentListings,
+  setAllListings,
   updateFilter,
   updateFilters,
   setUsingGeolocation,
@@ -306,6 +325,10 @@ export const selectInitialListingsLoaded = (state: { listing: ListingState }) =>
 
 export const selectCurrentListings = (state: { listing: ListingState }) =>
   state.listing.currentListings;
+
+// New selector to get all available listings from the server
+export const selectAllListings = (state: { listing: ListingState }) =>
+  state.listing.allListings;
 
 export const selectDraftListing = (state: { listing: ListingState }) =>
   state.listing.draftListing;

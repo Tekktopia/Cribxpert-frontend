@@ -1,69 +1,44 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { selectCurrentListing } from '@/features/listing/listingSlice';
+import { Bed, Bath, Users, Home } from 'lucide-react'; // Import Lucide icons
 
-interface PropertyOverviewProps {
-  bedrooms: number;
-  bathrooms: number;
-  guests: number;
-  area: string;
-  icons: {
-    bedroom: string;
-    bathroom: string;
-    guest: string;
-    house: string;
-  };
-}
+const PropertyOverview: React.FC = () => {
+  // Select current listing from the store
+  const currentListing = useSelector(selectCurrentListing);
 
-const PropertyOverview: React.FC<PropertyOverviewProps> = ({
-  bedrooms,
-  bathrooms,
-  guests,
-  area,
-  icons,
-}) => {
+  const displayBedrooms = currentListing?.bedroomNo ?? 0;
+  const displayBathrooms = currentListing?.bathroomNo ?? 0;
+  const displayGuests = currentListing?.guestNo ?? 0;
+
   return (
     <section className="py-4 sm:py-6 px-4 sm:px-10 overflow-x-auto">
       <div className="flex flex-row items-center gap-6 sm:9 whitespace-nowrap">
         <div className="flex items-center gap-2">
-          <img
-            src={icons.bedroom}
-            alt="Bedroom"
-            className="w-4 h-4 sm:w-[20px] sm:h-[20px]"
-          />
+          <Bed className="w-4 h-4 sm:w-[20px] sm:h-[20px] text-[#313131]" />
           <p className="text-[#313131] font-[400] text-xs sm:text-[14px]">
-            {bedrooms} bedroom{bedrooms !== 1 ? 's' : ''}
+            {displayBedrooms} bedroom{displayBedrooms !== 1 ? 's' : ''}
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <img
-            src={icons.bathroom}
-            alt="bathroom"
-            className="w-4 h-4 sm:w-[20px] sm:h-[20px]"
-          />
+          <Bath className="w-4 h-4 sm:w-[20px] sm:h-[20px] text-[#313131]" />
           <p className="text-[#313131] font-[400] text-xs sm:text-[14px]">
-            {bathrooms} bathroom{bathrooms !== 1 ? 's' : ''}
+            {displayBathrooms} bathroom{displayBathrooms !== 1 ? 's' : ''}
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <img
-            src={icons.guest}
-            alt="guest"
-            className="w-4 h-4 sm:w-[20px] sm:h-[20px]"
-          />
+          <Users className="w-4 h-4 sm:w-[20px] sm:h-[20px] text-[#313131]" />
           <p className="text-[#313131] font-[400] text-xs sm:text-[14px]">
-            {guests} guest{guests !== 1 ? 's' : ''}
+            {displayGuests} guest{displayGuests !== 1 ? 's' : ''}
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <img
-            src={icons.house}
-            alt="house"
-            className="w-4 h-4 sm:w-[20px] sm:h-[20px]"
-          />
+          <Home className="w-4 h-4 sm:w-[20px] sm:h-[20px] text-[#313131]" />
           <p className="text-[#313131] font-[400] text-xs sm:text-[14px]">
-            {area}
+            {'100 sq ft'}
           </p>
         </div>
       </div>
