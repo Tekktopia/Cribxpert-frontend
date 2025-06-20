@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
@@ -47,7 +47,9 @@ const PropertyDetail = () => {
   const navigate = useNavigate();
 
   // Fetch listings from the store
-  const listings = useSelector(selectAllListings) || [];
+  const rawListings = useSelector(selectAllListings);
+
+  const listings = useMemo(() => rawListings || [], [rawListings]);
 
   // Find the property that matches the URL parameter
   const property = listings.find(
@@ -89,7 +91,7 @@ const PropertyDetail = () => {
   const propertyImages = property.listingImg.map((img) => img.fileUrl);
 
   const mappedRules = (property.houseRules || []).map((rule) => ({
-    icon: "/icons/bell.svg", // Assuming a default icon, replace with actual icon if available
+    icon: '/icons/bell.svg', // Assuming a default icon, replace with actual icon if available
     title: rule,
     description: '',
   }));
