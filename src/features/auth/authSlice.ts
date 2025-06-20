@@ -18,6 +18,14 @@ export const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
     },
+    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+      if (!action.payload) {
+        state.user = null; // Clear user if not authenticated
+        localStorage.removeItem('token'); // Remove token from local storage
+      }
+    },
+
     clearUser: (state) => {
       state.user = null;
       state.isAuthenticated = false;
@@ -64,7 +72,7 @@ export const authSlice = createSlice({
 });
 
 // Export actions
-export const { setUser, clearUser, updateUserProfile, clearError } =
+export const { setUser, clearUser, updateUserProfile, clearError, setIsAuthenticated } =
   authSlice.actions;
 
 // Export selectors

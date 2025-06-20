@@ -5,6 +5,7 @@ import authReducer, {
   clearUser,
   updateUserProfile,
   clearError,
+  setIsAuthenticated,
 } from './authSlice';
 
 import {
@@ -18,6 +19,7 @@ import type { User } from './authTypes';
 // Re-export everything
 export {
   setUser,
+  setIsAuthenticated,
   clearUser,
   updateUserProfile,
   clearError,

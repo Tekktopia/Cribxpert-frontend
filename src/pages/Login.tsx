@@ -4,7 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import GoogleSignIn from '@/components/login/GoogleSignIn';
 import { useDispatch } from 'react-redux';
-import { clearError, setUser, useLoginMutation } from '@/features/auth';
+import {
+  clearError,
+  setIsAuthenticated,
+  setUser,
+  useLoginMutation,
+} from '@/features/auth';
 import { isValidEmail } from '@/utils/utils';
 
 const Login: React.FC = () => {
@@ -93,6 +98,8 @@ const Login: React.FC = () => {
       // Store the access token in localStorage
       if (result.accessToken) {
         localStorage.setItem('token', result.accessToken);
+
+        setIsAuthenticated(true);
 
         // store user data if needed
         if (result.user) {
