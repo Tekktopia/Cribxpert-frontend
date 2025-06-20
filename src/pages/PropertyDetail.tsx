@@ -27,11 +27,9 @@ import {
   IMAGES,
   BEDROOMS,
   NEARBY_LOCATIONS,
-  HOUSE_RULES,
   CANCELLATION_PERIODS,
   RATING_DISTRIBUTION,
   CUSTOMER_REVIEWS,
-  PROPERTY_DESCRIPTION,
   DAMAGE_POLICY,
   IMPORTANT_INFO,
 } from '@/utils/mockData';
@@ -60,13 +58,14 @@ const PropertyDetail = () => {
 
   // Log the selected property to the console
   useEffect(() => {
+    if (listings.length === 0) return; // Wait for listings to load
     if (property) {
       dispatch(setCurrentListing(property));
       console.log('Selected property:', property);
     } else {
       navigate('/404', { replace: true });
     }
-  }, [property, navigate, dispatch]);
+  }, [dispatch, navigate, property, listings]);
 
   // Get similar properties (excluding current one)
   const similarProperties = property
@@ -89,23 +88,28 @@ const PropertyDetail = () => {
   // Prepare data for our components
   const propertyImages = property.listingImg.map((img) => img.fileUrl);
 
+  const mappedRules = (property.houseRules || []).map((rule) => ({
+    icon: "/icons/bell.svg", // Assuming a default icon, replace with actual icon if available
+    title: rule,
+    description: '',
+  }));
+
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
       <Header /> <HeaderSpacer />
       {/* Property Gallery Component */}
       <PropertyGallery images={propertyImages} propertyName={property.name} />
-      
       {/* Property Header Component */}
-      <PropertyHeader/>
-
+      <PropertyHeader />
       {/* Property Overview Component */}
-      <PropertyOverview/>
-
+      <PropertyOverview />
       <section className="py-4 sm:py-6 px-4 sm:px-10">
         <div className="flex flex-col lg:flex-row justify-around gap-6 lg:gap-8">
           <div className="w-full lg:w-1/2">
             {/* Amenities Section */}
-            <AmenitiesSection /> {/* Location Component */}
+            <AmenitiesSection />
+
+            {/* Location Component */}
             <PropertyLocation
               mapImage={IMAGES.map}
               address="Federal Capital Territory Gombe"
@@ -116,19 +120,20 @@ const PropertyDetail = () => {
                 arrowRight: IMAGES.arrowright,
               }}
             />
-            {/* Bedrooms Component */} <PropertyBedrooms bedrooms={BEDROOMS} />
+
+            <PropertyBedrooms bedrooms={BEDROOMS} />
             {/* Description Component */}
-            <PropertyDescription description={PROPERTY_DESCRIPTION} />
+            <PropertyDescription description={property.description} />
           </div>
 
           <div className="w-full lg:w-1/2">
             <div className="sticky top-[80px]">
-              <BookingForm />
+              <BookingForm property={property} />
             </div>
           </div>
         </div>{' '}
         {/* House Rules Component */}
-        <PropertyRules rules={HOUSE_RULES} /> {/* Policies Component */}
+        <PropertyRules rules={mappedRules} /> {/* Policies Component */}
         <PropertyPolicies
           damagePolicy={DAMAGE_POLICY}
           cancellationPeriods={CANCELLATION_PERIODS}

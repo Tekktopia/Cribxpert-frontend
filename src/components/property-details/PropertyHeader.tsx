@@ -8,10 +8,12 @@ import { HeartIcon } from 'lucide-react';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentListing } from '@/features/listing/listingSlice';
+import useAlert from '@/hooks/useAlert';
 
 const PropertyHeader: React.FC = () => {
   // Get current listing from the store
   const currentListing = useSelector(selectCurrentListing);
+  const alert = useAlert();
 
   // Prepare fallback/default values for destructuring
   const {
@@ -36,16 +38,17 @@ const PropertyHeader: React.FC = () => {
 
   const onShareClick = () => {
     navigator.clipboard.writeText(window.location.href);
-    alert('Link copied to clipboard!');
+    alert({ icon: 'success', title: 'Link copied', text: 'Link copied to clipboard!' });
   };
+
 
   const onSave = () => {
     if (isFavourited) {
       removeFavourite({ listingId, userId });
-      alert('Property removed from saved!');
+      alert({ icon: 'success', title: 'Removed', text: 'Property removed from saved!' });
     } else {
       addFavourite({ listingId, userId });
-      alert('Property saved!');
+      alert({ icon: 'success', title: 'Saved', text: 'Property saved!' });
     }
   };
 

@@ -23,9 +23,6 @@ import SupportInfo from '@/pages/SupportInfo';
 import NotificationPage from '@/pages/NotificationPage';
 import NotFound404 from '@/pages/NotFound404';
 
-// Sample data (you might want to remove this later when fetching from API)
-import { SAMPLE_DATA } from '@/utils/data';
-
 export interface RouteConfig {
   path: string;
   element: React.ReactNode;
@@ -44,7 +41,7 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: '/propertydetail/:name',
-    element: <PropertyDetail listings={SAMPLE_DATA} />,
+    element: <PropertyDetail />,
     protected: false,
     title: 'Property Details'
   },

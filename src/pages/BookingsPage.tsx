@@ -5,10 +5,25 @@ import PastBookings from '@/components/BookingComponents/PastBookings';
 import UpcomingBookings from '@/components/BookingComponents/UpcomingBookings';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { ActiveBooking } from '@/types';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useLocation } from 'react-router';
 
 function BookingsPage() {
   const [active, setActive] = useState<ActiveBooking>(ActiveBooking.All);
+  const location = useLocation();
+  const { propertyId, startDate, endDate, guests, totalPrice, propertyName } =
+    location.state || {};
+
+  console.log(
+    'BookingsPage location state:',
+    propertyId,
+    startDate,
+    endDate,
+    guests,
+    totalPrice,
+    propertyName
+  );
+  
   return (
     <div>
       {' '}
