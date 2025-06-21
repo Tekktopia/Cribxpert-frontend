@@ -1,11 +1,10 @@
 import DiscoverResults from '@/components/discover-components/DiscoverResults';
 import FilterPanel from '@/components/discover-components/FilterPanel';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
-import { Filter } from '@/utils/data';
 import { Settings2Icon } from 'lucide-react';
 import { useState, useCallback } from 'react';
-import OptimizedImage from '@/components/common/OptimizedImage';
 import Footer from '@/components/layout/Footer';
+import FilterCategories from '@/components/home/FilterCategories';
 
 export default function DiscoverPage() {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
@@ -46,28 +45,7 @@ export default function DiscoverPage() {
               )}
 
               {/* Scrollable filter categories with optimized images */}
-              <div className="w-full overflow-x-auto py-2 scrollbar-hide">
-                <div className="flex items-center gap-6 min-w-max px-2">
-                  {Filter.map((filter, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col items-center text-center hover:opacity-80 transition-opacity cursor-pointer"
-                    >
-                      <OptimizedImage
-                        src={filter.image}
-                        alt={filter.name}
-                        width={24}
-                        height={24}
-                        loading={index < 5 ? 'eager' : 'lazy'}
-                        className="w-[24px] h-[24px] object-contain"
-                      />
-                      <p className="text-[14px] font-[400] text-[#999999] mt-1 whitespace-nowrap">
-                        {filter.name}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <FilterCategories />
             </div>
           </div>
 
