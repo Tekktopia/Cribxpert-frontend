@@ -47,7 +47,7 @@ export function useFavouritesOfflineSync() {
     // Only sync if we're online, have a user, and have pending operations
     if (
       isOnline &&
-      user?.id &&
+      user?._id &&
       (pendingSync.add.length > 0 || pendingSync.remove.length > 0)
     ) {
       const syncFavourites = async () => {
@@ -56,13 +56,13 @@ export function useFavouritesOfflineSync() {
           for (const listingId of pendingSync.add) {
             try {
               await addFavourite({
-                userId: user.id,
+                userId: user._id,
                 listingId,
               });
               // console.log(
               //   `Successfully synced addition of listing ${listingId}`
               // );
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (err) {
               // console.error(
               //   `Failed to sync addition of listing ${listingId}:`,
@@ -78,7 +78,7 @@ export function useFavouritesOfflineSync() {
           for (const listingId of pendingSync.remove) {
             try {
               await removeFavourite({
-                userId: user.id,
+                userId: user._id,
                 listingId,
               });
               console.log(

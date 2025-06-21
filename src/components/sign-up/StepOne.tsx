@@ -63,8 +63,9 @@ const StepOne: React.FC<StepOneProps> = ({
         // Access data safely
         const response = result.data;
         if (response?.user) {
-          localStorage.setItem('pendingUserId', response.user);
+          localStorage.setItem('pendingUserId', response.user._id);
           localStorage.setItem('pendingEmail', email);
+          localStorage.setItem('pendingPassword', password);
         }
         // console.log('Verification email sent:', response?.message);
 

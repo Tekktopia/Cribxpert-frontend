@@ -1,9 +1,16 @@
 // User type definition
 export interface User {
-  id: string;
-  name: string;
+  _id: string;
   email: string;
-  avatar?: string;
+  isVerified: boolean;
+  accountDisabled: boolean;
+  resetPasswordToken: string | null;
+  roles: {
+    User: number;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 // Auth state interface
@@ -20,7 +27,7 @@ export interface EmailVerificationRequest {
 }
 
 export interface EmailVerificationResponse {
-  user: string;
+  user: User;
   message: string;
 }
 
@@ -50,7 +57,7 @@ export interface CompleteRegistrationRequest {
 }
 
 export interface CompleteRegistrationResponse {
-  user: string;
+  user: User;
   message: string;
 }
 

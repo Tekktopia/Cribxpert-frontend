@@ -6,6 +6,8 @@ const VerifyEmail = () => {
   const { token } = useParams<{ token: string }>();
   const navigate = useNavigate();
 
+//   console.log('Email verification token:', token);
+
   // Skip the query if no token is provided
   const { isLoading, isSuccess, isError, error } = useVerifyEmailQuery(
     token ?? '',

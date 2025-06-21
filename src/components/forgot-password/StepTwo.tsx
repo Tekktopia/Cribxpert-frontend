@@ -76,10 +76,10 @@ const StepTwo: React.FC<StepTwoProps> = ({ methodSelected, signIn }) => {
   // ✅ Error handler
   const handleError = (err: unknown) => {
     if (err instanceof Error) {
-      console.error('Verification Error:', err.message);
+      // console.error('Verification Error:', err.message);
       setError(err.message);
     } else {
-      console.error('An unknown error occurred.');
+      // console.error('An unknown error occurred.');
       setError('An unknown error occurred. Please try again.');
     }
   };

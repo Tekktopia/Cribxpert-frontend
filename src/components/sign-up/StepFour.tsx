@@ -1,16 +1,18 @@
 import React, { FormEvent, useState } from 'react';
-import { useUser } from '@clerk/clerk-react';
-// import {
-//   EyeOff, Eye,
-//   CheckCircle,
-//   XCircle,
-// } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import {
+  useCompleteRegistrationMutation,
+  useLoginMutation,
+} from '@/features/auth/authService';
+import { useDispatch } from 'react-redux';
+import { setUser, setIsAuthenticated } from '@/features/auth/authSlice';
 
 type FormData = {
+  id: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  email: string;
+  phoneNo: string;
   password: string;
 };
 type StepFourProps = {
@@ -19,45 +21,73 @@ type StepFourProps = {
 };
 
 const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
-  // const [showPassword, setShowPassword] = useState(false);
-
-  // const togglePasswordVisibility = () => {
-  //   setShowPassword((prev) => !prev);
-  // };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // // Password validation
-  // const passwordCriteria = {
-  //   length: formData.password.length >= 8,
-  //   uppercase: /[A-Z]/.test(formData.password),
-  //   number: /\d/.test(formData.password),
-  //   symbol: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
-  // };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [completeRegistration, { isLoading }] =
+    useCompleteRegistrationMutation();
+  const [login] = useLoginMutation();
+  const [error, setError] = useState<string | null>(null);
 
-  const { user } = useUser();
-  const [loading, setLoading] = useState(false);
+  // Helper function to automatically log in the user
+  const handleAutoLogin = async (email: string, password: string) => {
+    try {
+      const loginResult = await login({ identifier: email, password }).unwrap();
+
+      if (loginResult.accessToken) {
+        localStorage.setItem('token', loginResult.accessToken);
+      }
+
+      if (loginResult.user) {
+        dispatch(setUser(loginResult.user));
+        dispatch(setIsAuthenticated(true));
+      }
+
+      return true;
+    } catch (loginError) {
+      console.error('Auto login failed:', loginError);
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setError(null);
 
     try {
-      await user?.update({
-        firstName: formData?.firstName,
-        lastName: formData?.lastName,
-        unsafeMetadata: {
-          dateOfBirth: formData.dateOfBirth,
-        },
-      });
+      const result = await completeRegistration({
+        id: formData.id,
+        fullName: formData.firstName + ' ' + formData.lastName,
+        dob: formData.dateOfBirth,
+        phoneNo: formData.phoneNo,
+        password: formData.password,
+      }).unwrap();
 
-      window.location.href = '/';
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    } finally {
-      setLoading(false);
+      // Get the email from the local storage or result
+      const email = localStorage.getItem('pendingEmail');
+
+      if (result.user) {
+        // First update Redux store with user data from registration
+        dispatch(setUser(result.user));
+        dispatch(setIsAuthenticated(true));
+
+        // Then attempt auto-login to get the auth token
+        if (email && formData.password) {
+          await handleAutoLogin(email, formData.password);
+        }
+
+        navigate('/');
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error('Error completing registration:', error);
+      setError(
+        error?.data?.message ||
+          'Failed to complete registration. Please try again.'
+      );
     }
   };
 
@@ -72,7 +102,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
           Additional Details
         </h2>
         <p className="text-[#313131] mb-6 text-left">
-          Just a little more information, and you’ll be ready to explore
+          Just a little more information, and you'll be ready to explore
         </p>
 
         {/* Form */}
@@ -80,6 +110,15 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
           onSubmit={handleSubmit}
           className="w-full space-y-4 px-2 overflow-y-scroll max-h-[60vh] custom-scrollbar"
         >
+          {error && (
+            <div
+              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-left"
+              role="alert"
+            >
+              <span className="block sm:inline">{error}</span>
+            </div>
+          )}
+
           {/* First Name */}
           <div>
             <label className="block text-left text-gray-700 font-medium mb-1">
@@ -91,6 +130,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               value={formData.firstName}
               onChange={handleChange}
               placeholder="Enter your first name"
+              required
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
@@ -106,6 +146,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               value={formData.lastName}
               onChange={handleChange}
               placeholder="Enter your last name"
+              required
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
@@ -120,74 +161,34 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
+              required
               className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
           </div>
 
-          {/* Email */}
-          {/* <div>
+          {/* Phone Number */}
+          <div>
             <label className="block text-left text-gray-700 font-medium mb-1">
-              Email
+              Phone Number
             </label>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
+              type="tel"
+              name="phoneNo"
+              value={formData.phoneNo}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="Enter your phone number"
+              required
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
             />
-          </div> */}
-
-          {/* Password */}
-          {/* <div className="relative">
-            <label className="block text-left text-gray-700 font-medium mb-1">
-              Password
-            </label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
-            />
-            {showPassword ? (
-              <EyeOff
-                className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
-                onClick={togglePasswordVisibility}
-              />
-            ) : (
-              <Eye
-                className="absolute right-3 top-10 text-gray-500 w-5 h-5 cursor-pointer"
-                onClick={togglePasswordVisibility}
-              />
-            )}
-          </div> */}
-
-          {/* Password Requirements
-          <ul className="text-sm grid grid-cols-2 mt-2">
-            {Object.entries(passwordCriteria).map(([key, met]) => (
-              <li
-                key={key}
-                className={`flex items-center gap-2 ${met ? 'text-green-500' : 'text-gray-500'}`}
-              >
-                {met ? <CheckCircle size={16} /> : <XCircle size={16} />}{' '}
-                {key === 'length' && 'Use 8+ characters'}
-                {key === 'uppercase' && 'Use upper & lower case letters'}
-                {key === 'number' && 'Use a number (e.g., 1234)'}
-                {key === 'symbol' && 'Use a symbol (e.g., !@#$)'}
-              </li>
-            ))}
-          </ul> */}
+          </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full mx-auto p-3 bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
           >
-            {loading ? 'Saving...' : 'Complete My Profile'}
+            {isLoading ? 'Saving...' : 'Complete My Profile'}
           </button>
         </form>
       </div>

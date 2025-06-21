@@ -66,21 +66,22 @@ export const FavouriteButton = ({
 
       if (isFavourited) {
         await removeFavourite({
-          userId: user.id,
+          userId: user._id,
           listingId,
         });
       } else {
         await addFavourite({
-          userId: user.id,
+          userId: user._id,
           listingId,
         });
       }
 
       setIsLoading(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setIsLoading(false);
       dispatch(setFavouriteError('Failed to update favourite status'));
-      console.error('Error toggling favourite:', error);
+      // console.error('Error toggling favourite:', error);
     }
   };
 

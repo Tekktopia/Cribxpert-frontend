@@ -119,7 +119,7 @@ const routeConfig: RouteConfig[] = [
   {
     path: '/onboarding',
     element: <Onboarding />,
-    protected: true,
+    protected: false,
     title: 'Complete Your Profile'
   },
   {

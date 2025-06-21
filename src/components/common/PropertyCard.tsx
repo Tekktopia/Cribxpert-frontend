@@ -135,9 +135,9 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
               loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
               priority={currentImageIndex === 0} // First image is priority
               className="w-full h-full object-cover rounded-t-lg transition-opacity duration-300"
-              onError={() => {
-                console.error(`Failed to load image for ${name}`);
-              }}
+              // onError={() => {
+              //   // console.error(`Failed to load image for ${name}`);
+              // }}
             />
             {/* Navigation Arrows - Only show when more than one image */}
             {allImages.length > 1 && (

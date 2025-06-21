@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import StepOne from '@/components/sign-up/StepOne.tsx';
 import StepTwoMain from '@/components/sign-up/StepTwoMain';
+import AuthLeftSide from '@/components/common/AuthLeftSide';
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -20,14 +21,7 @@ const SignUp: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 hidden lg:block h-full relative">
-        <img
-          src={`${'/authsidepane' + step + '.png'}`}
-          alt="Signup Background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-[#1D5C5C66] opacity-50"></div>
-      </div>
+      <AuthLeftSide/>
 
       {/* Right Side - Signup Section */}
       {step === 1 && (

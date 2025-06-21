@@ -11,6 +11,7 @@ import {
   useLoginMutation,
 } from '@/features/auth';
 import { isValidEmail } from '@/utils/utils';
+import AuthLeftSide from '@/components/common/AuthLeftSide';
 
 const Login: React.FC = () => {
   const [login, { isLoading, error: loginError }] = useLoginMutation();
@@ -114,14 +115,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 hidden lg:block h-full relative">
-        <img
-          src="/authsidepane2.png"
-          alt="Login Background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-[#1D5C5C66] opacity-50"></div>
-      </div>
+      <AuthLeftSide/>
 
       {/* Right Side - Login Section */}
       <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">

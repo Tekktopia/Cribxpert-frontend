@@ -8,7 +8,7 @@ const AmenitiesSection = () => {
   const currentListing = useSelector(selectCurrentListing);
   const allAmenities = useSelector(selectAllAmenities);
 
-  console.log('All Amenities:', allAmenities);
+  // console.log('All Amenities:', allAmenities);
 
   // Get the amenities for this property (full objects)
   const propertyAmenities = React.useMemo(() => {
