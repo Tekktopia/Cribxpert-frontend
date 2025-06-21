@@ -13,6 +13,7 @@ type FormData = {
   lastName: string;
   dateOfBirth: string;
   phoneNo: string;
+  email: string;
   password: string;
 };
 type StepFourProps = {
@@ -37,6 +38,8 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
     try {
       const loginResult = await login({ identifier: email, password }).unwrap();
 
+      // console.log('Auto login successful:', loginResult);
+
       if (loginResult.accessToken) {
         localStorage.setItem('token', loginResult.accessToken);
       }
@@ -47,8 +50,20 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
       }
 
       return true;
-    } catch (loginError) {
-      console.error('Auto login failed:', loginError);
+    } catch (loginError: unknown) {
+      // console.error('Auto login failed:', loginError);
+      let errorMessage = 'Auto login failed. Please log in manually.';
+      if (typeof loginError === 'string') {
+        errorMessage = loginError;
+      } else if (
+        typeof loginError === 'object' &&
+        loginError !== null &&
+        'data' in loginError &&
+        typeof (loginError as { data?: { message?: string } }).data?.message === 'string'
+      ) {
+        errorMessage = (loginError as { data?: { message?: string } }).data!.message!;
+      }
+      setError(errorMessage);
       return false;
     }
   };
@@ -66,24 +81,36 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
         password: formData.password,
       }).unwrap();
 
-      // Get the email from the local storage or result
-      const email = localStorage.getItem('pendingEmail');
+      // Get the email from formData
+      const email = formData.email;
+
+      // Don't update Redux store with user data until after successful auto-login
+      // Remove: dispatch(setUser(result.user));
 
       if (result.user) {
-        // First update Redux store with user data from registration
-        dispatch(setUser(result.user));
-        dispatch(setIsAuthenticated(true));
-
-        // Then attempt auto-login to get the auth token
+        // Attempt auto-login to get the auth token
         if (email && formData.password) {
-          await handleAutoLogin(email, formData.password);
+          const loginSuccessful = await handleAutoLogin(
+            email,
+            formData.password
+          );
+          if (!loginSuccessful) {
+            setError('Auto login failed. Please log in manually.');
+            navigate('/login'); // Redirect to login page instead of home
+            return;
+          } else {
+            // Only navigate to home if auto-login was successful
+            // console.log('Registration and auto-login completed successfully');
+            navigate('/');
+          }
+        } else {
+          setError('Email or password missing for auto-login');
+          navigate('/login');
         }
-
-        navigate('/');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error('Error completing registration:', error);
+      // console.error('Error completing registration:', error);
       setError(
         error?.data?.message ||
           'Failed to complete registration. Please try again.'

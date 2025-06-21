@@ -15,10 +15,11 @@ export default function Onboarding() {
     lastName: '',
     dateOfBirth: '',
     phoneNo: '',
+    email: localStorage.getItem('pendingEmail') || '',
     password: localStorage.getItem('pendingPassword') || '',
   });
 
-  console.log('Onboarding Form Data:', formData);
+  // console.log('Onboarding Form Data:', formData);
 
   // Redirect authenticated users away from this page
   useEffect(() => {
