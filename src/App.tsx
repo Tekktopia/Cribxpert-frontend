@@ -3,16 +3,11 @@ import './index.css';
 import { useEffect, useState } from 'react';
 
 // Routing related imports
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/common/ScrollToTop';
 
 // Data & Context Providers
 import { SavedListProvider } from './components/context/SavedListContext';
-
 
 import OfflineSyncHandler from './components/common/OfflineSyncHandler';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -35,8 +30,8 @@ const AppContent = () => {
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
   useGetAmenitiesQuery();
-  useGetListingsQuery();
-  
+  const { isLoading: listingsLoading } = useGetListingsQuery();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setInitialLoadComplete(true);
@@ -45,7 +40,7 @@ const AppContent = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (authLoading || !initialLoadComplete) {
+  if (authLoading || !initialLoadComplete || listingsLoading) {
     return <Preloader isLoading={true} />;
   }
 
