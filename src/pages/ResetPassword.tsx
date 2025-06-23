@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import StepOne from '@/components/reset-password/StepOne';
 import StepTwo from '@/components/reset-password/StepTwo';
 import { Link } from 'react-router';
+import AuthLeftSide from '@/components/common/AuthLeftSide';
 
 const ResetPassword: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -16,14 +17,7 @@ const ResetPassword: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <div className="w-1/2 h-full hidden lg:block relative">
-        <img
-          src="/authsidepane1.png"
-          alt="Login Background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-[#1D5C5C66] opacity-50"></div>
-      </div>
+      <AuthLeftSide/>
 
       {/* Right Side - Login Section*/}
       <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">

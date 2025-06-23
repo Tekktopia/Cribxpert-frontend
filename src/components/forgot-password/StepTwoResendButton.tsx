@@ -1,16 +1,20 @@
-import { useSignUp } from '@clerk/clerk-react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoReload } from 'react-icons/io5';
 
 type Props = {
   methodSelected: string | null;
   handleVerify: () => void;
+  requestReset: (e: React.FormEvent) => Promise<void>;
+  isLoading: boolean;
 };
-const StepTwoResendButton = ({ methodSelected, handleVerify }: Props) => {
-  const [resendDisabled, setResendDisabled] = React.useState(false);
-  const { signUp } = useSignUp();
 
-  const [timeLeft, setTimeLeft] = useState(120); // Countdown from 60 seconds
+const StepTwoResendButton = ({
+  methodSelected,
+  handleVerify,
+  requestReset,
+  isLoading,
+}: Props) => {
+  const [timeLeft, setTimeLeft] = useState(120); // Countdown from 120 seconds
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -18,27 +22,6 @@ const StepTwoResendButton = ({ methodSelected, handleVerify }: Props) => {
       return () => clearTimeout(timer);
     }
   }, [timeLeft]);
-
-  const handleResend = async () => {
-    if (resendDisabled) return;
-
-    setResendDisabled(true);
-    setTimeout(() => setResendDisabled(false), 120000); // 2-minute cooldown
-
-    try {
-      if (methodSelected === 'Email Address') {
-        await signUp?.prepareEmailAddressVerification({
-          strategy: 'email_link',
-          redirectUrl: 'http://localhost:5173/onboarding',
-        }); // Sends verification email
-      } else {
-        await signUp?.preparePhoneNumberVerification();
-        setTimeLeft(120);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
@@ -48,25 +31,52 @@ const StepTwoResendButton = ({ methodSelected, handleVerify }: Props) => {
       .padStart(2, '0')}`;
   };
 
+  // Wrapper function to handle resetting timer on request
+  const handleRequestReset = async (e: React.FormEvent) => {
+    await requestReset(e);
+    // Reset timer after request is completed
+    setTimeLeft(120);
+  };
+
   return (
     <>
-      <div>
-        <button
-          onClick={handleVerify}
-          className="w-full max-w-[422px] p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
-        >
-          Proceed
-        </button>
+      {methodSelected !== 'Email Address' ? (
+        <div>
+          <button
+            onClick={handleVerify}
+            className="w-full p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Processing...' : 'Proceed'}
+          </button>
 
-        <button
-          onClick={handleResend}
-          disabled={resendDisabled}
-          className="text-center w-full text-[14px] text-[#999999] mt-2 flex items-center justify-center gap-3"
-        >
-          <IoReload />
-          Resend Link: {timeLeft > 0 ? formatTime(timeLeft) : ''}
-        </button>
-      </div>
+          <button
+            onClick={handleRequestReset}
+            disabled={isLoading || timeLeft > 0}
+            className="text-center w-full text-[14px] text-[#999999] mt-2 flex items-center justify-center gap-3"
+          >
+            <IoReload />
+            Resend OTP: {timeLeft > 0 ? formatTime(timeLeft) : 'Resend'}
+          </button>
+        </div>
+      ) : (
+        <div>
+          <button
+            onClick={handleRequestReset}
+            disabled={isLoading || timeLeft > 0}
+            className={`w-full p-3 mx-auto ${isLoading || timeLeft > 0 ? 'bg-[#1D5C5C91]' : 'bg-[#1D5C5C]'} text-white text-[14px] rounded-md flex items-center justify-center gap-2 mt-4`}
+          >
+            {isLoading ? (
+              'Processing...'
+            ) : (
+              <>
+                <IoReload />
+                Resend Link {timeLeft > 0 ? formatTime(timeLeft) : ''}
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </>
   );
 };

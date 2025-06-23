@@ -44,7 +44,7 @@ export default function AuthLeftSide() {
   };
 
   return (
-    <div className="w-full lg:w-1/2 h-full relative lg:block">
+    <div className="w-full lg:w-1/2 h-full relative hidden lg:block">
       <div className="relative h-full overflow-hidden bg-[#1D5C5C]">
         {/* Slides */}
         {howItWorksSlides.map((slide, index) => (

@@ -144,14 +144,14 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
               <>
                 <button
                   onClick={prevImage}
-                  className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center z-10"
+                  className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center"
                   aria-label="Previous image"
                 >
                   <FaChevronLeft size={14} />
                 </button>
                 <button
                   onClick={nextImage}
-                  className="absolute top-1/2 right-2 z-20 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center"
+                  className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center"
                   aria-label="Next image"
                 >
                   <FaChevronRight size={14} className="text-white" />
@@ -214,7 +214,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
           </div>
 
           {/* Photo Count Badge */}
-          <div className="absolute bottom-3 right-3 flex items-center gap-2 z-20">
+          <div className="absolute bottom-3 right-3 flex items-center gap-2">
             <span className="bg-white text-black text-xs py-1 px-2 rounded-md">
               +{allImages.length - 1}
             </span>

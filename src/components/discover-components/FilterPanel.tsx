@@ -9,7 +9,7 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   return (
     <div
-      className={`${isOpen ? '-translate-x-0 w-full lg:w-1/4 lg:max-w-[276px] ' : '-translate-x-full w-full'} h-fit transition-all duration-200 p-4 pb-8 xl:pb-0 z-30 top-0 bg-white absolute lg:sticky border-r-[1px] md:pr-2`}
+      className={`${isOpen ? '-translate-x-0 w-full lg:w-1/4 lg:max-w-[276px] ' : '-translate-x-full w-0'} h-fit transition-all duration-200 p-4 pb-8 xl:pb-0 z-30 top-0 bg-white absolute lg:sticky border-r-[1px] md:pr-2`}
     >
       {isOpen && (
         <div className="relative">

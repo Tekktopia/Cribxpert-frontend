@@ -10,6 +10,7 @@ type StepOneProps = {
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
   requestReset: (e: React.FormEvent) => Promise<void>;
   error: string;
+  isLoading: boolean;
 };
 
 export default function StepOne({
@@ -19,6 +20,7 @@ export default function StepOne({
   methodSelected,
   setMethodSelected,
   error,
+  isLoading,
 }: StepOneProps) {
   return (
     <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
@@ -26,16 +28,18 @@ export default function StepOne({
         <div className="text-left w-full max-w-[342px] ">
           <h2 className="text-[20px] font-semibold mb-4">Forgot Password</h2>
           <p className="text-[#999] mb-6">
-            Enter your registered email, we’II send you a reset link
+            Enter your registered {methodSelected}, we’II send you a reset{' '}
+            {methodSelected === 'Email Address' ? 'link' : 'code'}
           </p>
         </div>
+        <p className="text-[14px] text-red-500 text-left">{error}</p>
         <CustomDropdown
           methodSelected={methodSelected}
           setMethodSelected={setMethodSelected}
         />
         {methodSelected === 'Email Address' ? (
           <div>
-            <p className='text-[14px] text-red-500 text-left'>{error}</p>
+            
             <label className="cursor-pointer flex flex-col items-start gap-2">
               Email
               <input
@@ -58,15 +62,16 @@ export default function StepOne({
                 required
               />
             </label>
-            <p className='text-[14px] text-red-500 text-left'>{error}</p>
+            {/* <p className="text-[14px] text-red-500 text-left">{error}</p> */}
           </div>
         )}
 
         <button
           onClick={requestReset}
+          disabled={isLoading}
           className="w-full p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
         >
-          Continue
+          {isLoading ? 'Processing...' : 'Continue'}
         </button>
       </div>
     </div>

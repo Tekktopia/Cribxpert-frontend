@@ -79,7 +79,9 @@ export interface ForgotPasswordRequest {
 }
 
 export interface ForgotPasswordResponse {
-  message: string;
+  message?: string;
+  data: { message: string };
+  status?: number;
 }
 
 // Reset password types
