@@ -96,9 +96,9 @@ const Login: React.FC = () => {
     }).unwrap();
 
     if (result) {
-      // Store the access token in localStorage
+      // Store the access token in sessionStorage
       if (result.accessToken) {
-        localStorage.setItem('token', result.accessToken);
+        sessionStorage.setItem('token', result.accessToken);
 
         setIsAuthenticated(true);
 
@@ -115,7 +115,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <AuthLeftSide/>
+      <AuthLeftSide />
 
       {/* Right Side - Login Section */}
       <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">

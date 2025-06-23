@@ -43,7 +43,7 @@ const StepTwoMain: React.FC<StepTwoMainProps> = ({
 
           // If we receive a token, store it
           if (response.token) {
-            localStorage.setItem('token', response.token);
+            sessionStorage.setItem('token', response.token);
           }
 
           // Redirect to onboarding

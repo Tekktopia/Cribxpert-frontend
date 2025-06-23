@@ -41,7 +41,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
       // console.log('Auto login successful:', loginResult);
 
       if (loginResult.accessToken) {
-        localStorage.setItem('token', loginResult.accessToken);
+        sessionStorage.setItem('token', loginResult.accessToken);
       }
 
       if (loginResult.user) {
@@ -59,9 +59,11 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
         typeof loginError === 'object' &&
         loginError !== null &&
         'data' in loginError &&
-        typeof (loginError as { data?: { message?: string } }).data?.message === 'string'
+        typeof (loginError as { data?: { message?: string } }).data?.message ===
+          'string'
       ) {
-        errorMessage = (loginError as { data?: { message?: string } }).data!.message!;
+        errorMessage = (loginError as { data?: { message?: string } }).data!
+          .message!;
       }
       setError(errorMessage);
       return false;

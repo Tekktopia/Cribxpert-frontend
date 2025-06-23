@@ -22,14 +22,14 @@ export const authSlice = createSlice({
       state.isAuthenticated = action.payload;
       if (!action.payload) {
         state.user = null; // Clear user if not authenticated
-        localStorage.removeItem('token'); // Remove token from local storage
+        sessionStorage.removeItem('token'); // Remove token from local storage
       }
     },
 
     clearUser: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
     },
     updateUserProfile: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
@@ -65,15 +65,20 @@ export const authSlice = createSlice({
           state.isAuthenticated = false;
           state.user = null;
           state.error = error.message || 'Failed to fetch user';
-          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
         }
-      )
+      );
   },
 });
 
 // Export actions
-export const { setUser, clearUser, updateUserProfile, clearError, setIsAuthenticated } =
-  authSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  updateUserProfile,
+  clearError,
+  setIsAuthenticated,
+} = authSlice.actions;
 
 // Export selectors
 export const selectCurrentUser = (state: { auth: AuthState }) =>

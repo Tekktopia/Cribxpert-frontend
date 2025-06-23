@@ -7,7 +7,7 @@ export const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 export const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (headers) => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }

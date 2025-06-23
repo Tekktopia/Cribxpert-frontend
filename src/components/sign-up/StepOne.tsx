@@ -17,7 +17,6 @@ type StepOneProps = {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
 };
 
-
 const StepOne: React.FC<StepOneProps> = ({
   methodSelected,
   nextStep,
@@ -32,8 +31,6 @@ const StepOne: React.FC<StepOneProps> = ({
   const [error, setError] = React.useState<string>('');
   const [initiateEmailVerification, { isLoading }] =
     useInitiateEmailVerificationMutation();
-
-  
 
   const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
     // Prevent default button click behavior
@@ -63,9 +60,9 @@ const StepOne: React.FC<StepOneProps> = ({
         // Access data safely
         const response = result.data;
         if (response?.user) {
-          localStorage.setItem('pendingUserId', response.user._id);
-          localStorage.setItem('pendingEmail', email);
-          localStorage.setItem('pendingPassword', password);
+          sessionStorage.setItem('pendingUserId', response.user._id);
+          sessionStorage.setItem('pendingEmail', email);
+          sessionStorage.setItem('pendingPassword', password);
         }
         // console.log('Verification email sent:', response?.message);
 
