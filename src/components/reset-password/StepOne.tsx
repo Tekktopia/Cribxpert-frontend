@@ -1,23 +1,31 @@
 import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { useState } from 'react';
-import { useSignIn } from '@clerk/clerk-react';
 
 type StepOneProps = {
   formData: {
     password: string;
+    email: string;
+    token: string;
   };
   setFormData: React.Dispatch<
     React.SetStateAction<{
       password: string;
+      email: string;
+      token: string;
     }>
   >;
   nextStep: () => void;
+  handleResetPassword: (password: string) => Promise<boolean>;
+  isLoading: boolean;
+  error: string;
 };
 
 export default function StepOne({
   formData,
   setFormData,
-  // nextStep,
+  handleResetPassword,
+  isLoading,
+  error,
 }: StepOneProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -50,42 +58,16 @@ export default function StepOne({
     symbol: /[!@#$%^&*(),.?":{}|<>]/.test(formData.password),
   };
 
-  const { signIn } = useSignIn();
-
-  const handlePasswordUpdate = async () => {
-    if (!signIn) {
-      console.error('Sign-in instance unavailable');
+  const toStepTwo = async () => {
+    // Check if passwords match and all criteria are met
+    if (passwordError || !Object.values(passwordCriteria).every(Boolean)) {
+      setPasswordError('Please ensure all password criteria are met');
       return;
     }
 
-    try {
-      // Ensure the signIn instance's status is 'needs_new_password'
-      if (signIn.status !== 'needs_new_password') {
-        console.error('Sign-in instance is not ready for a new password.');
-        return;
-      }
-
-      const result = await signIn.resetPassword({
-        password: formData.password,
-      });
-
-      if (result.status === 'complete') {
-        // Password reset successful
-        window.location.href = '/'; // Redirect to login
-      } else {
-        console.error('Unexpected status:', result.status);
-      }
-    } catch (error) {
-      console.error('Error resetting password:', error); // Handle error (e.g., show error message to user)
-    }
+    await handleResetPassword(formData.password);
   };
 
-  const toStepTwo = async () => {
-    if (passwordError === '') {
-      await handlePasswordUpdate();
-      // nextStep();
-    }
-  };
   return (
     <div className="w-full max-w-md text-center space-y-6">
       <div className="text-left w-full max-w-[342px] mb-2">
@@ -96,6 +78,9 @@ export default function StepOne({
       </div>
 
       <div className="space-y-6">
+        {/* Display API error if any */}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         {/* New Password */}
         <div className="relative">
           <label className="block text-left text-gray-700 font-medium mb-1">
@@ -157,7 +142,9 @@ export default function StepOne({
           {Object.entries(passwordCriteria).map(([key, met]) => (
             <li
               key={key}
-              className={`flex items-center gap-2 ${met ? 'text-green-500' : 'text-gray-500'}`}
+              className={`flex items-center gap-2 ${
+                met ? 'text-green-500' : 'text-gray-500'
+              }`}
             >
               {met ? <CheckCircle size={16} /> : <XCircle size={16} />}{' '}
               {key === 'length' && 'Use 8+ characters'}
@@ -171,9 +158,10 @@ export default function StepOne({
 
       <button
         onClick={toStepTwo}
+        disabled={isLoading}
         className="w-full p-3 mx-auto bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2"
       >
-        Continue
+        {isLoading ? 'Processing...' : 'Reset Password'}
       </button>
     </div>
   );

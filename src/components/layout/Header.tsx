@@ -5,13 +5,23 @@ import humburger from '@/assets/icons/hamburger.png';
 import { Link, NavLink } from 'react-router-dom';
 import { BiMenu, BiX } from 'react-icons/bi';
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth, useUser } from '@clerk/clerk-react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  selectCurrentUser,
+  selectIsAuthenticated,
+  clearUser,
+} from '@/features/auth/authSlice';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Get authentication state and user data from Redux
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(selectCurrentUser);
+  const dispatch = useDispatch();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -52,12 +62,8 @@ const Header: React.FC = () => {
     };
   }, [controlNavbar]);
 
-  // Get authentication state and user data from Clerk
-  const { isLoaded, isSignedIn, user } = useUser();
-  const { signOut } = useAuth();
-
-  const handleLogout = async () => {
-    await signOut();
+  const handleLogout = () => {
+    dispatch(clearUser());
     window.location.href = '/login';
   };
 
@@ -135,7 +141,7 @@ const Header: React.FC = () => {
               <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
 
               {/* Conditional rendering based on authentication status */}
-              {isLoaded && isSignedIn ? (
+              {isAuthenticated ? (
                 // Authenticated: Show Profile Menu
                 <div className="relative">
                   <div
@@ -147,17 +153,15 @@ const Header: React.FC = () => {
                       alt="hamburger Icon"
                       className="w-[18px] h-[10px]"
                     />
-                    {user?.hasImage ? (
+                    {user?.profileImage ? (
                       <img
-                        src={user.imageUrl}
+                        src={user.profileImage}
                         alt="Profile"
                         className="w-[32px] h-[32px] rounded-full object-cover"
                       />
                     ) : (
                       <div className="w-[32px] h-[32px] rounded-full bg-[#1D5C5C] text-white flex items-center justify-center text-sm font-medium">
-                        {user?.firstName?.charAt(0) ||
-                          user?.username?.charAt(0) ||
-                          'U'}
+                        {user?.email?.charAt(0)?.toUpperCase() || 'U'}
                       </div>
                     )}
                   </div>
@@ -168,10 +172,12 @@ const Header: React.FC = () => {
                       {/* User Info Section - with actual user data */}
                       <div className="px-4 py-3 border-b border-gray-100">
                         <p className="font-medium text-sm">
-                          {user?.fullName || user?.username || 'Account'}
+                          {user?.fullName
+                            ? `${user.fullName}`
+                            : user?.email || 'Account'}
                         </p>
                         <p className="text-gray-500 text-xs truncate">
-                          {user?.primaryEmailAddress?.emailAddress || ''}
+                          {user?.email || ''}
                         </p>
                       </div>
 

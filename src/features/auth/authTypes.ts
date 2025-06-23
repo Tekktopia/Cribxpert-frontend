@@ -11,6 +11,8 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  fullName?: string;
+  profileImage?: string;
 }
 
 // Auth state interface
