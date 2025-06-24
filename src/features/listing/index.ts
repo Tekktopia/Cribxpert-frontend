@@ -34,6 +34,7 @@ import listingReducer, {
   selectCurrentListing,
   selectDraftListing,
   selectListingStep,
+  resetFilters,
   selectActiveFilters,
   selectIsCreatingListing,
   selectIsFilteringListings,
@@ -79,7 +80,8 @@ export {
   setUploadProgress,
   toggleListingSelection,
   clearSelectedListings,
-  setInitialListingsLoaded
+  setInitialListingsLoaded,
+  resetFilters
 };
 
 // Export all selectors

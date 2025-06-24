@@ -10,7 +10,7 @@ interface DraftListing extends Partial<CreateListingRequest> {
   isDirty?: boolean;
 }
 
-// Define the state structure
+// Update the interface for activeFilters to include amenities as string[]
 interface ListingState {
   // Current listing being viewed or edited
   currentListing: PropertyListing | null;
@@ -30,10 +30,14 @@ interface ListingState {
     stateProvince?: string;
     city?: string;
     propertyType?: string;
-    priceRange?: string;
     bedrooms?: string;
-    amenities?: string;
-    [key: string]: string | undefined;
+    amenities?: string[] | string; // Update to support both string and string[] for backward compatibility
+    bookingAvailability?: string; // New field for booking availability
+    priceRange?: string; // New field for price range
+    priceMin?: string; // New field for minimum price
+    priceMax?: string; // New field for maximum price
+    rating?: string; // New field for rating
+    [key: string]: string | string[] | undefined;
   };
 
   // UI states
@@ -69,7 +73,7 @@ const initialState: ListingState = {
     propertyType: '',
     priceRange: '',
     bedrooms: '',
-    amenities: '',
+    amenities: [], // Update to initialize as an array
     startDate: '',
     endDate: '',
   },
@@ -108,7 +112,7 @@ export const listingSlice = createSlice({
     // Update a single filter
     updateFilter: (
       state,
-      action: PayloadAction<{ name: string; value: string }>
+      action: PayloadAction<{ name: string; value: string | string[] }>
     ) => {
       const { name, value } = action.payload;
       state.activeFilters = {
@@ -125,6 +129,12 @@ export const listingSlice = createSlice({
         ...action.payload,
       };
       state.isFiltering = true;
+    },
+
+    // Reset filters to initial values
+    resetFilters: (state) => {
+      state.activeFilters = { ...initialState.activeFilters };
+      state.isFiltering = false;
     },
 
     // Toggle geolocation usage
@@ -296,6 +306,7 @@ export const {
   setAllListings,
   updateFilter,
   updateFilters,
+  resetFilters,
   setUsingGeolocation,
   clearFilters,
   setListingError,
