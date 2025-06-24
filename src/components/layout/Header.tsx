@@ -369,59 +369,65 @@ const Header: React.FC = () => {
 
           {/* Mobile Drawer */}
           {isOpen && (
-            <>
-              {/* Backdrop */}
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-                onClick={() => setIsOpen(false)}
-              />
-
-              {/* Side Drawer Menu */}
-              <div className="fixed top-0 left-0 w-full bg-white text-black z-50 md:hidden overflow-y-auto">
-                {/* teal header */}
-                <div className="bg-[#1d5c5c] flex justify-between items-center w-full p-4 text-white">
-                  <Link to={'/'}>
-                    <h1 className="text-base font-medium">CribXpert</h1>
-                  </Link>
-
-                  <BiX className="text-2xl" onClick={toggleMenu} />
-                </div>
-
-                {/* Menu items */}
-                <div className="py-2">
-                  <ul className="flex flex-col">
-                    {navLinks.map((link, index) => (
-                      <li key={index} className="border-b border-gray-100">
-                        <NavLink
-                          to={link.route}
-                          className={({ isActive }) =>
-                            `px-4 py-2 block text-sm font-normal text-gray-800 ${isActive ? 'text-[#1d5c5c] font-bold' : 'text-[#999999] text-[14px] font-medium '}`
-                          }
-                          onClick={toggleMenu}
-                        >
-                          {link.label}
-                        </NavLink>
-                      </li>
-                    ))}
-
-                    {iconNavItems.map((item, index) => (
-                      <li
-                        key={`icon-${index}`}
-                        className="border-b border-gray-100"
+            <div className="md:hidden w-full bg-white shadow-lg border-t border-gray-200 z-40">
+              {/* Menu items */}
+              <div className="py-2 max-h-[80vh] overflow-y-auto">
+                <ul className="flex flex-col">
+                  {navLinks.map((link, index) => (
+                    <li key={index} className="border-b border-gray-100">
+                      <NavLink
+                        to={link.route}
+                        className={({ isActive }) =>
+                          `px-4 py-2 block text-sm font-normal text-gray-800 ${
+                            isActive
+                              ? 'text-[#1d5c5c] font-bold'
+                              : 'text-[#999999] text-[14px] font-medium '
+                          }`
+                        }
+                        onClick={toggleMenu}
                       >
+                        {link.label}
+                      </NavLink>
+                    </li>
+                  ))}
+
+                  {iconNavItems.map((item, index) => (
+                    <li
+                      key={`icon-${index}`}
+                      className="border-b border-gray-100"
+                    >
+                      <Link
+                        to={item.route}
+                        className="px-4 py-3.5 block text-sm font-normal text-gray-800"
+                        onClick={toggleMenu}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+
+                  {/* Authentication buttons for mobile */}
+                  {!isAuthenticated && (
+                    <li className="border-b border-gray-100 p-4">
+                      <div className="flex flex-col gap-2">
                         <Link
-                          to={item.route}
-                          className="px-4 py-3.5 block text-sm font-normal text-gray-800"
-                          onClick={toggleMenu}
+                          to="/login"
+                          className="w-full py-2 text-center text-[14px] text-[#1D5C5C] border border-[#1D5C5C] rounded-md font-medium"
                         >
-                          {item.label}
+                          Login
                         </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        <Link
+                          to="/sign-up"
+                          className="w-full py-2 text-center text-[14px] text-white bg-[#1D5C5C] rounded-md font-medium"
+                        >
+                          Sign Up
+                        </Link>
+                      </div>
+                    </li>
+                  )}
+                </ul>
               </div>
-            </>
+            </div>
           )}
         </div>
       </header>
