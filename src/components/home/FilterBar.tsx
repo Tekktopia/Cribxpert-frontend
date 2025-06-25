@@ -15,19 +15,14 @@ const FilterBar: React.FC = () => {
   const apiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
   const dispatch = useDispatch();
   const activeFilters = useSelector(selectActiveFilters);
-
-  // Use the filtering hook instead of direct API calls
   const { isLoading: isFiltering } = useFilteredListings();
 
-  // Keep geolocation functionality
   const [isGeolocationActive, setIsGeolocationActive] = useState(false);
   const userLocation = useGeolocation(isGeolocationActive);
 
   const handleFilterChange = (name: string, value: string) => {
-    // This will automatically trigger the filtering in the hook
     dispatch(updateFilter({ name, value }));
-    
-    // Clear dependent filters when parent filter changes
+
     if (name === 'country') {
       dispatch(updateFilter({ name: 'stateProvince', value: '' }));
       dispatch(updateFilter({ name: 'city', value: '' }));
@@ -43,98 +38,82 @@ const FilterBar: React.FC = () => {
     { name: 'priceRange', label: 'Price Range', options: [] },
   ]);
 
-  // Load country options
   useEffect(() => {
     fetch('https://restcountries.com/v3.1/all?fields=name,currencies,cca2')
       .then((res) => res.json())
-      .then(
-        (
-          data: Array<{
-            name: { common: string };
-            currencies?: Record<string, unknown>;
-          }>
-        ) => {
-          const countryOption = data
-            .map((country) => ({
-              value: country.name.common,
-              label: country.name.common,
-              currency: country.currencies
-                ? Object.keys(country.currencies)[0]
-                : '',
-            }))
-            .sort((a, b) => a.label.localeCompare(b.label));
+      .then((data) => {
+        const countryOption = data
+          .map((country: any) => ({
+            value: country.name.common,
+            label: country.name.common,
+            currency: country.currencies
+              ? Object.keys(country.currencies)[0]
+              : '',
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label));
 
-          setFilterParameters((prevParams) =>
-            prevParams.map((param) =>
-              param.name === 'country'
-                ? { ...param, options: countryOption }
-                : param
-            )
-          );
-        }
-      )
+        setFilterParameters((prevParams) =>
+          prevParams.map((param) =>
+            param.name === 'country'
+              ? { ...param, options: countryOption }
+              : param
+          )
+        );
+      })
       .catch((error) => console.error('Failed to fetch Countries', error));
   }, []);
 
-  const handleGeoLocation = async () => {
+  const handleGeoLocation = () => {
     setIsGeolocationActive(true);
   };
 
-  // Handle geolocation results
   useEffect(() => {
-    if (isGeolocationActive && !userLocation.loading) {
-      if (userLocation.latitude && userLocation.longitude) {
-        const fetchLocationDetails = async () => {
-          try {
-            const response = await fetch(
-              `https://api.opencagedata.com/geocode/v1/json?q=${userLocation.latitude}+${userLocation.longitude}&key=${apiKey}`
-            );
-            const data = await response.json();
-            const components = data?.results?.[0]?.components;
+    if (!isGeolocationActive || userLocation.loading) return;
 
-            const country = components?.country;
-            const state =
-              components?.state || components?.province || components?.region;
-            const city = components?.city || components?.town || components?.village;
+    if (userLocation.latitude && userLocation.longitude) {
+      const fetchLocationDetails = async () => {
+        try {
+          const response = await fetch(
+            `https://api.opencagedata.com/geocode/v1/json?q=${userLocation.latitude}+${userLocation.longitude}&key=${apiKey}`
+          );
+          const data = await response.json();
+          console.log('Reverse geocode result:', data);
 
-            if (country) {
-              dispatch(updateFilter({ name: 'location', value: country }));
-            }
+          const components = data?.results?.[0]?.components;
 
-            if (state) {
-              dispatch(updateFilter({ name: 'stateProvince', value: state }));
-            }
-            
-            if (city) {
-              dispatch(updateFilter({ name: 'city', value: city }));
-            }
-          } catch (error) {
-            console.error('Failed to reverse geocode location', error);
-            setFallbackLocationOptions();
-          } finally {
-            setIsGeolocationActive(false);
+          const country = components?.country;
+          const state =
+            components?.state || components?.province || components?.region;
+          const city =
+            components?.city || components?.town || components?.village;
+
+          if (country)
+            dispatch(updateFilter({ name: 'country', value: country }));
+
+          if (state)
+            dispatch(updateFilter({ name: 'stateProvince', value: state }));
+
+          if (city) {
+            const cleanedCity = city.trim();
+            dispatch(updateFilter({ name: 'city', value: cleanedCity }));
+          } else {
+            console.warn('City not found in location components:', components);
           }
-        };
+        } catch (err) {
+          console.error('Reverse geocoding failed:', err);
+          setFallbackLocationOptions();
+        } finally {
+          setIsGeolocationActive(false);
+        }
+      };
 
-        fetchLocationDetails();
-      } else if (userLocation.error) {
-        console.error(
-          'Geolocation error after activation:',
-          userLocation.error
-        );
-        setFallbackLocationOptions();
-        setIsGeolocationActive(false);
-      }
+      fetchLocationDetails();
+    } else if (userLocation.error) {
+      console.error('Geolocation error:', userLocation.error);
+      setFallbackLocationOptions();
+      setIsGeolocationActive(false);
     }
-  }, [
-    isGeolocationActive,
-    userLocation.latitude,
-    userLocation.longitude,
-    userLocation.error,
-    userLocation.loading,
-    apiKey,
-    dispatch,
-  ]);
+  }, [isGeolocationActive, userLocation, dispatch]);
 
   const setFallbackLocationOptions = () => {
     setFilterParameters((prevParams) =>
@@ -151,7 +130,6 @@ const FilterBar: React.FC = () => {
     );
   };
 
-  // Load states when country changes
   useEffect(() => {
     const selectedCountry = activeFilters.country;
     if (selectedCountry) {
@@ -162,13 +140,11 @@ const FilterBar: React.FC = () => {
             (country: any) => country.name === selectedCountry
           );
 
-          let stateOptions: FilterParameter['options'] = [];
-          if (countryData && countryData.states) {
-            stateOptions = countryData.states.map((state: any) => ({
+          const stateOptions =
+            countryData?.states?.map((state: any) => ({
               label: state.name,
               value: state.name,
-            }));
-          }
+            })) ?? [];
 
           setFilterParameters((prevParams) =>
             prevParams.map((param) =>
@@ -190,7 +166,6 @@ const FilterBar: React.FC = () => {
     }
   }, [activeFilters.country]);
 
-  // Load cities when state changes
   useEffect(() => {
     const selectedCountry = activeFilters.country;
     const selectedState = activeFilters.stateProvince;
@@ -208,26 +183,20 @@ const FilterBar: React.FC = () => {
       })
         .then((res) => res.json())
         .then((apiData) => {
-          let cityOptions: FilterParameter['options'] = [];
-          
-          if (apiData?.data) {
-            cityOptions = apiData.data.map((city: string) => ({
+          const cityOptions =
+            apiData?.data?.map((city: string) => ({
               label: city,
               value: city,
-            }));
-          }
+            })) ?? [];
 
           setFilterParameters((prevParams) =>
             prevParams.map((param) =>
-              param.name === 'city'
-                ? { ...param, options: cityOptions }
-                : param
+              param.name === 'city' ? { ...param, options: cityOptions } : param
             )
           );
         })
         .catch((error) => {
           console.error('Failed to fetch Cities', error);
-          // Set empty options on error
           setFilterParameters((prevParams) =>
             prevParams.map((param) =>
               param.name === 'city' ? { ...param, options: [] } : param
@@ -235,7 +204,6 @@ const FilterBar: React.FC = () => {
           );
         });
     } else {
-      // Clear city options when no state is selected
       setFilterParameters((prevParams) =>
         prevParams.map((param) =>
           param.name === 'city' ? { ...param, options: [] } : param
@@ -244,7 +212,6 @@ const FilterBar: React.FC = () => {
     }
   }, [activeFilters.country, activeFilters.stateProvince]);
 
-  // Define base price ranges
   const basePriceRanges = useMemo(
     () => [
       { value: '0-1000', label: '0 - 1,000' },
@@ -257,7 +224,6 @@ const FilterBar: React.FC = () => {
     []
   );
 
-  // Update price range options with currency when country changes
   useEffect(() => {
     const selectedCountryName = activeFilters.country;
     let selectedCurrency = '';
@@ -276,13 +242,13 @@ const FilterBar: React.FC = () => {
     }
 
     const priceRangeOptions = basePriceRanges.map((range) => {
-      let formattedLabel = range.label;
-      if (selectedCurrency) {
-        formattedLabel = `${selectedCurrency} ${range.label}`;
-      }
+      const label = selectedCurrency
+        ? `${selectedCurrency} ${range.label}`
+        : range.label;
+
       return {
         value: range.value,
-        label: formattedLabel,
+        label,
       };
     });
 
@@ -296,13 +262,11 @@ const FilterBar: React.FC = () => {
   }, [activeFilters.country, basePriceRanges]);
 
   const handleSearch = () => {
-    // The hook will automatically handle filtering based on active filters
-    // Force a refresh of the current filters
     console.log('Current filters:', activeFilters);
   };
 
   return (
-    <div className={`bg-[#1d5c5c] w-full py-4 px-3 md:px-8 hidden lg:block`}>
+    <div className="bg-[#1d5c5c] w-full py-4 px-3 md:px-8 hidden lg:block">
       <div className="md:hidden mb-2 flex justify-between items-center text-white">
         <span className="font-medium">Filters</span>
       </div>
@@ -321,9 +285,38 @@ const FilterBar: React.FC = () => {
 
         <button
           onClick={handleGeoLocation}
-          className="bg-[#2e7777] text-white h-[36px] px-4 py-2 rounded-md whitespace-nowrap text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end"
+          disabled={userLocation.loading}
+          className={`bg-[#2e7777] text-white h-[36px] px-4 py-2 rounded-md whitespace-nowrap text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end flex items-center justify-center ${
+            userLocation.loading ? 'opacity-70 cursor-not-allowed' : ''
+          }`}
         >
-          Use My Location
+          {userLocation.loading ? (
+            <>
+              <svg
+                className="animate-spin h-4 w-4 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+              Locating...
+            </>
+          ) : (
+            'Use My Location'
+          )}
         </button>
 
         <button
