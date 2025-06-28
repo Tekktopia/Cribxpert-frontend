@@ -2,11 +2,21 @@ import { PropertyListingCardProps } from '@/types';
 import { Link } from 'react-router-dom';
 import { CiHeart } from 'react-icons/ci';
 import { FaChevronLeft, FaChevronRight, FaHeart, FaStar } from 'react-icons/fa';
-import { useSavedList } from '../context/SavedListContext';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { IoLocationOutline } from 'react-icons/io5';
 import React, { useCallback, useState } from 'react';
 import OptimizedImage from './OptimizedImage';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store/store';
+import {
+  useAddFavouriteMutation,
+  useRemoveFavouriteMutation,
+} from '@/features/favourites/favouritesService';
+import {
+  addOfflineFavourite,
+  removeOfflineFavourite,
+  selectIsItemFavourited,
+} from '@/features/favourites/favouritesSlice';
 
 const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   id,
@@ -30,59 +40,59 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   // State for carousel
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const { addList, savedList, removeList } = useSavedList();
-  const isSavedProperty = savedList.some(
-    (savedProperty) => savedProperty.id === id
-  );
+  // Redux setup for favourites
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { isOnline } = useSelector((state: RootState) => state.favourites);
+  const isSavedProperty = useSelector(selectIsItemFavourited(id));
+
+  // API mutations
+  const [addFavourite] = useAddFavouriteMutation();
+  const [removeFavourite] = useRemoveFavouriteMutation();
 
   const handleIconToggle = useCallback(
-    (e: React.MouseEvent) => {
+    async (e: React.MouseEvent) => {
       e.preventDefault();
-      if (isSavedProperty) {
-        removeList({
-          id,
-          name,
-          price,
-          location,
-          rating,
-          description,
-          image,
-          images,
-          bedrooms,
-          propertyType,
-          minWidth,
-        });
-      } else {
-        addList({
-          id,
-          name,
-          price,
-          location,
-          rating,
-          description,
-          image,
-          images,
-          bedrooms,
-          propertyType,
-          minWidth,
-        });
+      e.stopPropagation();
+
+      // If user is not logged in, you might want to redirect to login
+      if (!user?._id) {
+        // Handle unauthenticated user - maybe show a login prompt
+        console.warn('User must be logged in to save favourites');
+        return;
+      }
+
+      try {
+        if (isSavedProperty) {
+          // Remove from favourites
+          if (isOnline) {
+            await removeFavourite({ userId: user._id, listingId: id });
+          } else {
+            // Handle offline removal
+            dispatch(removeOfflineFavourite(id));
+          }
+        } else {
+          // Add to favourites
+          if (isOnline) {
+            await addFavourite({ userId: user._id, listingId: id });
+          } else {
+            // Handle offline addition
+            dispatch(addOfflineFavourite(id));
+          }
+        }
+      } catch (error) {
+        console.error('Failed to update favourite:', error);
+        // You might want to show a toast notification here
       }
     },
     [
-      isSavedProperty,
       id,
-      name,
-      price,
-      location,
-      rating,
-      description,
-      image,
-      images,
-      bedrooms,
-      propertyType,
-      minWidth,
-      addList,
-      removeList,
+      isSavedProperty,
+      user,
+      isOnline,
+      addFavourite,
+      removeFavourite,
+      dispatch,
     ]
   );
 
@@ -113,10 +123,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
       .replace(/\s+/g, '-');
   };
 
-  const propertySlug = React.useMemo(
-    () => createSlug(name),
-    [name]
-  );
+  const propertySlug = React.useMemo(() => createSlug(name), [name]);
 
   return (
     <Link to={`/propertydetail/${propertySlug}`} className="block">
@@ -228,9 +235,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
         <div className="p-3">
           {/* Property Name */}
           <div className="mb-2">
-            <h3 className="font-medium text-lg leading-tight">
-              {name}
-            </h3>
+            <h3 className="font-medium text-lg leading-tight">{name}</h3>
             <p className="text-sm text-gray-600">{description}</p>
           </div>
 
