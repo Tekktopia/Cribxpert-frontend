@@ -10,13 +10,13 @@ export default function Onboarding() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const [formData, setFormData] = React.useState({
-    id: sessionStorage.getItem('pendingUserId') || '',
+    id: localStorage.getItem('pendingUserId') || '',
     firstName: '',
     lastName: '',
     dateOfBirth: '',
     phoneNo: '',
-    email: sessionStorage.getItem('pendingEmail') || '',
-    password: sessionStorage.getItem('pendingPassword') || '',
+    email: localStorage.getItem('pendingEmail') || '',
+    password: localStorage.getItem('pendingPassword') || '',
   });
 
   // console.log('Onboarding Form Data:', formData);
@@ -31,9 +31,9 @@ export default function Onboarding() {
   // Handle cleanup of local storage
   useEffect(() => {
     // Clear local storage after retrieving data
-    sessionStorage.removeItem('pendingUserId');
-    sessionStorage.removeItem('pendingEmail');
-    sessionStorage.removeItem('pendingPassword');
+    localStorage.removeItem('pendingUserId');
+    localStorage.removeItem('pendingEmail');
+    localStorage.removeItem('pendingPassword');
   }, []);
 
   return (
