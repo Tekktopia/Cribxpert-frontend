@@ -1,174 +1,47 @@
 import Header, { HeaderSpacer } from '@/components/layout/Header';
-// import { SAMPLE_DATA } from '@/utils/data';
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import PropertyListings from '@/components/PropertyListing';
-import Hero from '@/components/common/Hero';
-import FilterBar from '@/components/home/FilterBar';
-import Pagination from '@/components/discover-components/Pagination';
-import FilterCategories from '@/components/home/FilterCategories';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import {
-  selectCurrentListings,
   selectInitialListingsLoaded,
-  setCurrentListings,
-  setInitialListingsLoaded,
   useGetListingsQuery,
 } from '@/features/listing';
-import { useDispatch, useSelector } from 'react-redux';
-import { SearchX } from 'lucide-react';
-import { useGetCurrentUserQuery } from '@/features/auth/authService';
-import { setUser, setIsAuthenticated } from '@/features/auth/authSlice';
-
-// Hero carousel images array
-const heroImages = [
-  '/images/apartment2.jpg',
-  '/images/hero-image.jpeg',
-  '/images/apartment3.jpg',
-];
+import AuthHandler from '@/components/home/AuthHandler';
+import ListingsManager from '@/components/home/ListingsManager';
+import HeroSection from '@/components/home/HeroSection';
+import FilterSection from '@/components/home/FilterSection';
+import ListingsSection from '@/components/home/ListingsSection';
 
 const Home: React.FC = () => {
-  const dispatch = useDispatch();
   const initialListingsLoaded = useSelector(selectInitialListingsLoaded);
-  const [shouldFetchUser, setShouldFetchUser] = useState(false);
 
-  // Extract token from URL params and store in sessionStorage
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-
-    if (token) {
-      // Store token in sessionStorage
-      sessionStorage.setItem('token', token);
-
-      // Trigger user fetch after token is stored
-      setShouldFetchUser(true);
-
-      // Clean up URL by removing the token parameter
-      urlParams.delete('token');
-      const newUrl =
-        window.location.pathname +
-        (urlParams.toString() ? '?' + urlParams.toString() : '');
-      window.history.replaceState({}, '', newUrl);
+  // Check if we're in a loading state for initial listings
+  const { isLoading: isLoadingInitial } = useGetListingsQuery(
+    {},
+    {
+      skip: initialListingsLoaded,
     }
-  }, []);
+  );
 
-  // Fetch current user when token is available
-  const { data: currentUser, error: userError, isSuccess: userSuccess } = useGetCurrentUserQuery(undefined, {
-    skip: !shouldFetchUser,
-  });
-
-  // Handle user authentication response
-  useEffect(() => {
-    if (shouldFetchUser) {
-      if (userSuccess && currentUser) {
-        // User is authenticated - set user data and auth state
-        dispatch(setUser(currentUser.user));
-        dispatch(setIsAuthenticated(true));
-      } else if (userError) {
-        // Authentication failed - remove token and keep user signed out
-        sessionStorage.removeItem('token');
-        dispatch(setIsAuthenticated(false));
-      }
-      // Reset the fetch trigger
-      setShouldFetchUser(false);
-    }
-  }, [shouldFetchUser, userSuccess, currentUser, userError, dispatch]);
-
-  // Initial fetch of all listings (with no filters)
-  const { data: allListings, isLoading: isLoadingInitial } =
-    useGetListingsQuery(
-      {},
-      {
-        // Only fetch once on component mount
-        skip: initialListingsLoaded,
-      }
-    );
-
-  // Get current listings from Redux state
-  const currentListings = useSelector(selectCurrentListings);
-
-  // Set initial listings when they load
-  useEffect(() => {
-    if (allListings && !initialListingsLoaded) {
-      dispatch(setCurrentListings(allListings.listings));
-      dispatch(setInitialListingsLoaded(true));
-    }
-  }, [allListings, initialListingsLoaded, dispatch]);
-
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 12;
-
-  // Memoize the paginated data
-  const paginatedData = useMemo(() => {
-    return currentListings.slice(
-      (page - 1) * itemsPerPage,
-      page * itemsPerPage
-    );
-  }, [page, itemsPerPage, currentListings]);
-
-  const handlePageChange = useCallback((selected: number) => {
-    setPage(selected);
-  }, []);
-
-  // Determine if we're in a loading state
-  const isLoading =
-    isLoadingInitial || (!initialListingsLoaded && !allListings);
+  const isLoading = isLoadingInitial || !initialListingsLoaded;
 
   return (
     <div>
+      {/* Background components that handle side effects */}
+      <AuthHandler />
+      <ListingsManager />
+
       <Header />
       <section className="py-15 my-5">
         <HeaderSpacer />
-        <section className="relative w-full">
-          {/* Hero Section with Carousel */}
-          <Hero
-            images={heroImages}
-            title="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-            subtitle="Find Everything You Love, at Prices You'll Adore – Shop Now and Save Big."
-            buttonText="Shop Now"
-            buttonLink="/discover"
-          />
-        </section>
 
-        {/* Filter Bar - Made sticky */}
-        <div className="sticky top-0 z-30">
-          <FilterBar />
-          <FilterCategories />
-        </div>
+        {/* Hero Section */}
+        <HeroSection />
 
-        {/* Loading state */}
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#1D5C5C] mb-4"></div>
-            <p className="text-gray-500">Loading available properties...</p>
-          </div>
-        ) : currentListings.length === 0 ? (
-          // No results state
-          <div className="flex flex-col items-center justify-center py-20">
-            <SearchX
-              size={80}
-              className="mb-4 text-gray-400"
-              strokeWidth={1.5}
-            />
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              No properties found
-            </h3>
-            <p className="text-gray-500">
-              Try adjusting your filters to find what you're looking for.
-            </p>
-          </div>
-        ) : (
-          // Property Listings Section
-          <div className="my-5">
-            <PropertyListings listings={paginatedData} />
+        {/* Filter Section - Made sticky */}
+        <FilterSection />
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={page}
-              totalPages={Math.ceil(currentListings.length / itemsPerPage)}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        )}
+        {/* Listings Section with Loading/Empty States */}
+        <ListingsSection isLoading={isLoading} />
       </section>
     </div>
   );
