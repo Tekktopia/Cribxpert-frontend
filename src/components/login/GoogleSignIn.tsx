@@ -1,47 +1,23 @@
 import { FcGoogle } from 'react-icons/fc';
-import { useGoogleAuthQuery } from '@/features/auth/authService';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-type GoogleSignInProps = {
-  setError: React.Dispatch<React.SetStateAction<string>>;
-};
 
-export default function GoogleSignIn({ setError }: GoogleSignInProps) {
-  const [enabled, setEnabled] = useState(false);
-  const { data, error, isFetching } = useGoogleAuthQuery(undefined, {
-    skip: !enabled,
-  });
+export default function GoogleSignIn() {
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  useEffect(() => {
-    if (data?.url) {
-      window.location.href = data.url;
-    }
-    if (error) {
-      type GoogleAuthError = {
-        message?: string ;
-        error?: string;
-      };
-      const typedError = error as GoogleAuthError;
-      setError(
-        typedError?.message ||
-          typedError?.error ||
-          'An error occurred during Google sign-up.'
-      );
-      setEnabled(false);
-    }
-  }, [data, error, setError]);
-
-  const handleGoogleSignIn = () => {
-    setEnabled(true);
+  const handleGoogleLogin = () => {
+    window.location.href = 
+      "https://cribxpert-backend.onrender.com/auth/google";
+    setIsGoogleLoading(true);
   };
 
   return (
     <button
       className="w-full p-3 border border-gray-300 text-[#1D5C5C] font-semibold rounded-md flex items-center justify-center gap-2 mb-3"
-      onClick={handleGoogleSignIn}
-      disabled={isFetching}
+      onClick={handleGoogleLogin}
+      disabled={isGoogleLoading}
     >
-      <span>{isFetching ? 'Redirecting...' : 'Sign In with Google'}</span>
+      <span>{isGoogleLoading ? 'Redirecting...' : 'Sign In with Google'}</span>
       <FcGoogle className="w-5 h-5" />
     </button>
   );

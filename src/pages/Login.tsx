@@ -128,7 +128,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className="w-full max-h-[70vh] overflow-y-auto scrollbar-hide">
-            <GoogleSignIn setError={setError} />
+            <GoogleSignIn />
 
             <div className="relative text-gray-500 my-2 flex items-center justify-center">
               <span className="bg-white px-2">Or</span>

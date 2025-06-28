@@ -112,7 +112,7 @@ const StepOne: React.FC<StepOneProps> = ({
           </p>
         </div>
 
-        <GoogleSignUp setError={setError} />
+        <GoogleSignUp/>
 
         <div className="relative text-gray-500 my-4 flex items-center justify-center">
           <span className="bg-white px-2">Or</span>
