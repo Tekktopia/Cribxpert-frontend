@@ -22,7 +22,7 @@ import SupportPage from '@/pages/SupportPage';
 import SupportInfo from '@/pages/SupportInfo';
 import NotificationPage from '@/pages/NotificationPage';
 import NotFound404 from '@/pages/NotFound404';
-// import VerifyEmail from '@/pages/VerifyEmail';
+import VerifyEmail from '@/pages/VerifyEmail';
 
 export interface RouteConfig {
   path: string;
@@ -60,12 +60,12 @@ const routeConfig: RouteConfig[] = [
     protected: false,
     title: 'Sign Up'
   },
-  // {
-  //   path: '/verify-email/:token',
-  //   element: <VerifyEmail />,
-  //   protected: false,
-  //   title: 'Verify Email'
-  // },
+  {
+    path: '/verify-email/:token',
+    element: <VerifyEmail />,
+    protected: false,
+    title: 'Verify Email'
+  },
   {
     path: '/login',
     element: <Login />,
