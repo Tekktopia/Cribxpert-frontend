@@ -277,7 +277,7 @@ const FilterBar: React.FC = () => {
             <FilterItem
               key={index}
               param={param}
-              value={activeFilters[param.name] || ''}
+              // value={activeFilters[param.name]}
               handleFilterChange={handleFilterChange}
             />
           ))}

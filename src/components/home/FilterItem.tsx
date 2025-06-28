@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 export interface FilterItemProps {
   param: FilterParameter;
-  value: string;
+  value?: string;
   handleFilterChange: (name: string, value: string) => void;
 }
 
