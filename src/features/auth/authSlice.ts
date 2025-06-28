@@ -54,7 +54,7 @@ export const authSlice = createSlice({
         (state, { payload }) => {
           state.isLoading = false;
           state.isAuthenticated = true;
-          state.user = payload;
+          state.user = payload.user;
           state.error = null;
         }
       )

@@ -3,7 +3,12 @@ import './index.css';
 import { useEffect, useState } from 'react';
 
 // Routing related imports
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from 'react-router-dom';
 import ScrollToTop from './components/common/ScrollToTop';
 
 // Data & Context Providers
@@ -28,9 +33,14 @@ import { useGetListingsQuery } from './features/listing';
 const AppContent = () => {
   const authLoading = useSelector(selectAuthLoading);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const location = useLocation();
 
   useGetAmenitiesQuery();
   const { isLoading: listingsLoading } = useGetListingsQuery();
+
+  // Check if current route requires listings to be loaded
+  const requiresListings =
+    location.pathname === '/' || location.pathname === '/discover';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -40,7 +50,10 @@ const AppContent = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (authLoading || !initialLoadComplete || listingsLoading) {
+  // Only wait for listings if on home or discover routes
+  const shouldWaitForListings = requiresListings && listingsLoading;
+
+  if (authLoading || !initialLoadComplete || shouldWaitForListings) {
     return <Preloader isLoading={true} />;
   }
 

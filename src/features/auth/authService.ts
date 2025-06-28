@@ -35,7 +35,7 @@ export const authApi = createApi({
         body: userData,
       }),
     }),
-    getCurrentUser: builder.query<User, void>({
+    getCurrentUser: builder.query<{ message: string; user: User }, void>({
       query: () => '/auth/me',
     }),
     // Google OAuth
