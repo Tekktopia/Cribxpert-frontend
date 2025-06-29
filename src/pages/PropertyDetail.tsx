@@ -63,7 +63,7 @@ const PropertyDetail = () => {
     if (listings.length === 0) return; // Wait for listings to load
     if (property) {
       dispatch(setCurrentListing(property));
-      console.log('Selected property:', property);
+      // console.log('Selected property:', property);
     } else {
       navigate('/404', { replace: true });
     }

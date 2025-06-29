@@ -43,22 +43,25 @@ const BookNowPage: React.FC = () => {
     );
   }
   return (
-    <>
+    <div>
       <Header />
       <HeaderSpacer />
-      <div className="md:m-8 m-5 w-full">
+      <div className="container mx-auto m-5 px-5 w-full">
         <h2 className="md:text-2xl container mx-auto text-xl text-[#040404] mb-6">
           Begin your booking
         </h2>
         <div className="p-2 container mx-auto max-w-[1280px] h-auto border border-[#cccccc] bg-[#f1e6f1]/60 rounded-md flex items-center gap-2">
           <img src={danger} alt="Danger Icon" className="w-[20px] h-[20px]" />
-          <p className="text-[#6F6F6F] md:text-md text-sm">
-            Booking for {bookingData.propertyName} • {bookingData.guests} guest
-            {bookingData.guests > 1 ? 's' : ''} •
+            <p className="text-[#6F6F6F] md:text-md text-sm">
+            Booking for {bookingData.propertyName} •{" "}
             {bookingData.startDate &&
-              bookingData.endDate &&
-              ` ${Math.ceil((new Date(bookingData.endDate).getTime() - new Date(bookingData.startDate).getTime()) / (1000 * 60 * 60 * 24))} night${Math.ceil((new Date(bookingData.endDate).getTime() - new Date(bookingData.startDate).getTime()) / (1000 * 60 * 60 * 24)) !== 1 ? 's' : ''}`}
-          </p>
+              (() => {
+              const start = new Date(bookingData.startDate);
+              const sevenDaysBefore = new Date(start);
+              sevenDaysBefore.setDate(start.getDate() - 7);
+              return `You can cancel your booking until 7 days before check-in: ${sevenDaysBefore.toLocaleDateString()}`;
+              })()}
+            </p>
         </div>
       </div>
       <div className="container mx-auto">
@@ -71,7 +74,7 @@ const BookNowPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default BookNowPage;
