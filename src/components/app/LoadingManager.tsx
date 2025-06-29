@@ -1,38 +1,125 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectAuthLoading } from '@/features/auth/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { selectCurrentUser, selectIsAuthenticated } from '@/features/auth/authSlice';
+import { useGetCurrentUserQuery } from '@/features/auth/authService';
+import { useGetAmenitiesQuery } from '@/features/amenities';
+import { useGetFavouritesByUserIdQuery } from '@/features/favourites/favouritesService';
 import Preloader from '@/components/common/Preloader';
 
 interface LoadingManagerProps {
   children: React.ReactNode;
-  dataLoading?: boolean;
 }
 
-/**
- * Component responsible for managing all loading states
- * and showing the appropriate loading screen
- */
-const LoadingManager: React.FC<LoadingManagerProps> = ({
-  children,
-  dataLoading = false,
-}) => {
-  const authLoading = useSelector(selectAuthLoading);
+const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const user = useSelector(selectCurrentUser);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [timeoutExceeded, setTimeoutExceeded] = useState(false);
+  const [shouldFetchUser, setShouldFetchUser] = useState(false);
 
-  // Handle initial app load delay
+  // Handle URL token extraction and sessionStorage setup
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+    const sessionToken = sessionStorage.getItem('token');
+
+    if (urlToken) {
+      sessionStorage.setItem('token', urlToken);
+      setShouldFetchUser(true);
+      urlParams.delete('token');
+      const newUrl =
+        window.location.pathname +
+        (urlParams.toString() ? '?' + urlParams.toString() : '');
+      window.history.replaceState({}, '', newUrl);
+    } else if (sessionToken && !isAuthenticated && !initialLoadComplete) {
+      setShouldFetchUser(true);
+    } else if (!sessionToken && !initialLoadComplete) {
       setInitialLoadComplete(true);
-    }, 1000);
+    }
+  }, [isAuthenticated, initialLoadComplete]);
 
-    return () => clearTimeout(timer);
-  }, []);
+  // Fetch current user when token is available
+  const {
+    data: currentUser,
+    error: userError,
+    isLoading: userLoading,
+  } = useGetCurrentUserQuery(undefined, {
+    skip: !shouldFetchUser,
+  });
 
-  // Determine if we should show loading screen
-  const isLoading = authLoading || !initialLoadComplete || dataLoading;
+  useEffect(() => {
+    if (shouldFetchUser) {
+      if (currentUser) {
+        setInitialLoadComplete(true);
+      } else if (userError) {
+        sessionStorage.removeItem('token');
+        setInitialLoadComplete(true);
+      }
+      setShouldFetchUser(false);
+    }
+  }, [shouldFetchUser, currentUser, userError, dispatch]);
+
+  // Preload global data
+  useGetAmenitiesQuery();
+
+  // Fetch user's favourites if logged in
+  const { isLoading: favouritesLoading, isError: favouritesError } =
+    useGetFavouritesByUserIdQuery(user?._id || '', {
+      skip: !isAuthenticated || !user?._id, // Skip if user is not authenticated
+    });
+
+  // Check if current route requires favourites to be loaded
+  const requiresFavourites =
+    location.pathname === '/' ||
+    location.pathname === '/discover' ||
+    location.pathname === '/saved-listings';
+
+  const shouldWaitForFavourites =
+    isAuthenticated &&
+    user?._id &&
+    requiresFavourites &&
+    favouritesLoading &&
+    !timeoutExceeded;
+
+  const isDataLoading = Boolean(shouldWaitForFavourites);
+
+  // Safety timeout to prevent infinite loading (10 seconds)
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    if (shouldWaitForFavourites && !timeoutExceeded) {
+      timeoutId = setTimeout(() => {
+        setTimeoutExceeded(true);
+      }, 10000); // 10 seconds
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId); // Clear timeout on component unmount or changes
+      }
+    };
+  }, [shouldWaitForFavourites, timeoutExceeded]);
+
+  useEffect(() => {
+    if (favouritesError) {
+      console.error('Error fetching favourites:', favouritesError);
+      setTimeoutExceeded(true);
+    }
+  }, [favouritesError]);
+
+  // Reset timeout when route changes or user changes
+  useEffect(() => {
+    setTimeoutExceeded(false);
+  }, [location.pathname, user?._id]);
+
+  const isLoading =
+    (!initialLoadComplete || userLoading || isDataLoading) && !timeoutExceeded;
 
   if (isLoading) {
-    return <Preloader isLoading={true} />;
+    return <Preloader />;
   }
 
   return <>{children}</>;
