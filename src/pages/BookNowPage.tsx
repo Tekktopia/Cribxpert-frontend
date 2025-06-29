@@ -1,9 +1,47 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import danger from '@/assets/icons/danger.png';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
 import OrderSummary from '@/components/booking/OrderSummary';
 import Booking from '@/components/booking/Booking';
+
+interface BookingData {
+  propertyId: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  guests: number;
+  totalPrice: number;
+  propertyName: string;
+}
+
 const BookNowPage: React.FC = () => {
+  const location = useLocation();
+  const bookingData = location.state as BookingData;
+
+  // If no booking data, show a message or redirect
+  if (!bookingData) {
+    return (
+      <>
+        <Header />
+        <HeaderSpacer />
+        <div className="container mx-auto p-8 text-center">
+          <h2 className="text-2xl text-[#040404] mb-4">
+            Invalid Booking Request
+          </h2>
+          <p className="text-[#6F6F6F] mb-6">
+            No booking information found. Please start your booking from a
+            property page.
+          </p>
+          <a
+            href="/discover"
+            className="bg-[#006073] text-white px-6 py-3 rounded-lg hover:bg-[#3c8999] transition"
+          >
+            Browse Properties
+          </a>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <Header />
@@ -15,18 +53,21 @@ const BookNowPage: React.FC = () => {
         <div className="p-2 container mx-auto max-w-[1280px] h-auto border border-[#cccccc] bg-[#f1e6f1]/60 rounded-md flex items-center gap-2">
           <img src={danger} alt="Danger Icon" className="w-[20px] h-[20px]" />
           <p className="text-[#6F6F6F] md:text-md text-sm">
-            Price and availability may change. Free cancellation until Jan 17,
-            2025.
+            Booking for {bookingData.propertyName} • {bookingData.guests} guest
+            {bookingData.guests > 1 ? 's' : ''} •
+            {bookingData.startDate &&
+              bookingData.endDate &&
+              ` ${Math.ceil((new Date(bookingData.endDate).getTime() - new Date(bookingData.startDate).getTime()) / (1000 * 60 * 60 * 24))} night${Math.ceil((new Date(bookingData.endDate).getTime() - new Date(bookingData.startDate).getTime()) / (1000 * 60 * 60 * 24)) !== 1 ? 's' : ''}`}
           </p>
         </div>
       </div>
       <div className="container mx-auto">
         <div className="flex flex-col-reverse md:flex-row justify-around gap-8">
           <div className="md:w-1/2">
-            <Booking />
+            <Booking bookingData={bookingData} />
           </div>
           <div className="md:w-1/2">
-            <OrderSummary />
+            <OrderSummary bookingData={bookingData} />
           </div>
         </div>
       </div>
