@@ -1,12 +1,13 @@
 import React from 'react';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
 import NoSavedListImage from '../../assets/images/NoSavedListing.png';
-import { useSavedList } from '@/components/context/SavedListContext';
 import PropertyListing from '@/components/PropertyListing';
 import { Link } from 'react-router';
+import { useSelector } from 'react-redux';
+import { selectFavourites } from '@/features/favourites';
 
 const SavedListing: React.FC = () => {
-  const { savedList } = useSavedList();
+  const savedList = useSelector(selectFavourites)
   return (
     <div className=" bg-white">
       <Header />

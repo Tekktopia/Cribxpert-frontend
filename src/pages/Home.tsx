@@ -20,8 +20,9 @@ const Home: React.FC = () => {
       <ListingsManager />
 
       <Header />
-      <section className="py-15 my-5">
-        <HeaderSpacer />
+      <HeaderSpacer />
+      <section className="py-15">
+        
 
         {/* Hero Section */}
         <HeroSection />

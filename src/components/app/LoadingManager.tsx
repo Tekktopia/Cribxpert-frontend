@@ -113,7 +113,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
   // Reset timeout when route changes or user changes
   useEffect(() => {
     setTimeoutExceeded(false);
-  }, [location.pathname, user?._id]);
+  }, [user?._id]);
 
   const isLoading =
     (!initialLoadComplete || userLoading || isDataLoading) && !timeoutExceeded;

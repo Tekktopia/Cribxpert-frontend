@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FavouriteItem, favouritesApi } from './favouritesService';
+import { favouritesApi } from './favouritesService';
+import { PropertyListing } from '@/types';
 
 // Favourites state interface
 interface FavouritesState {
   // Online favourites from the API
-  items: FavouriteItem[];
+  items: PropertyListing[];
 
   // Loading state for API operations
   isLoading: boolean;
@@ -95,7 +96,7 @@ export const favouritesSlice = createSlice({
     },
 
     // Update favourite display order
-    reorderFavourites: (state, action: PayloadAction<FavouriteItem[]>) => {
+    reorderFavourites: (state, action: PayloadAction<PropertyListing[]>) => {
       state.items = action.payload;
     },
 
@@ -193,7 +194,7 @@ export const selectIsItemFavourited =
   (listingId: string) => (state: { favourites: FavouritesState }) => {
     // Check both online and offline favourites
     return (
-      state.favourites.items.some((item) => item.listingId === listingId) ||
+      state.favourites.items.some((item) => item._id === listingId) ||
       state.favourites.offlineFavourites.includes(listingId)
     );
   };

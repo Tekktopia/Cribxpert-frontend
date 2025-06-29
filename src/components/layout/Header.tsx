@@ -437,7 +437,7 @@ const Header: React.FC = () => {
 
 // Create a header spacer component to use where needed
 export const HeaderSpacer: React.FC = () => {
-  return <div className="h-[40px] md:h-[200px] lg:h-[125px]"></div>;
+  return <div className="h-[60px] md:h-[200px] lg:h-[125px]"></div>;
 };
 
 export default Header;
