@@ -28,6 +28,7 @@ export interface RouteConfig {
   path: string;
   element: React.ReactNode;
   protected: boolean;
+  authRoute?: boolean; // New property to identify auth routes
   title: string;
   children?: RouteConfig[];
 }
@@ -38,118 +39,122 @@ const routeConfig: RouteConfig[] = [
     path: '/',
     element: <Home />,
     protected: false,
-    title: 'Home'
+    title: 'Home',
   },
   {
     path: '/propertydetail/:name',
     element: <PropertyDetail />,
     protected: false,
-    title: 'Property Details'
+    title: 'Property Details',
   },
   {
     path: '/discover',
     element: <DiscoverPage />,
     protected: false,
-    title: 'Discover Properties'
+    title: 'Discover Properties',
   },
-  
+
   // Auth routes
   {
     path: '/sign-up',
     element: <SignUp />,
     protected: false,
-    title: 'Sign Up'
+    authRoute: true,
+    title: 'Sign Up',
   },
   {
     path: '/verify-email/:token',
     element: <VerifyEmail />,
     protected: false,
-    title: 'Verify Email'
+    title: 'Verify Email',
   },
   {
     path: '/login',
     element: <Login />,
     protected: false,
-    title: 'Login'
+    authRoute: true,
+    title: 'Login',
   },
   {
     path: '/forgot-password',
     element: <ForgotPassword />,
     protected: false,
-    title: 'Forgot Password'
+    authRoute: true,
+    title: 'Forgot Password',
   },
   {
     path: '/reset-password',
     element: <ResetPassword />,
     protected: false,
-    title: 'Reset Password'
+    authRoute: true,
+    title: 'Reset Password',
   },
-  
+
   // Protected routes
   {
     path: '/my-bookings',
     element: <BookingsPage />,
     protected: true,
-    title: 'My Bookings'
+    title: 'My Bookings',
   },
   {
     path: '/book-now',
     element: <BookNowPage />,
     protected: true,
-    title: 'Book Now'
+    title: 'Book Now',
   },
   {
     path: '/payments',
     element: <PaymentMethod />,
     protected: true,
-    title: 'Payment Methods'
+    title: 'Payment Methods',
   },
   {
     path: '/profile',
     element: <ProfilePage />,
     protected: true,
-    title: 'My Profile'
+    title: 'My Profile',
   },
   {
     path: '/saved-listings',
     element: <SavedListing />,
     protected: true,
-    title: 'Saved Listings'
+    title: 'Saved Listings',
   },
   {
     path: '/onboarding',
     element: <Onboarding />,
     protected: false,
-    title: 'Complete Your Profile'
+    title: 'Complete Your Profile',
   },
   {
     path: '/notification',
     element: <NotificationPage />,
     protected: true,
-    title: 'Notifications'
+    title: 'Notifications',
   },
-  
+
   // Support routes
   {
     path: '/support',
     element: <SupportPage />,
     protected: false,
-    title: 'Support'
+    title: 'Support',
   },
   {
     path: '/support-info',
     element: <SupportInfo />,
     protected: false,
-    title: 'Support Information'
+    title: 'Support Information',
   },
-  
+
   // 404 route - must be last
   {
     path: '*',
     element: <NotFound404 />,
     protected: false,
-    title: 'Page Not Found'
-  }
+    title: 'Page Not Found',
+  },
 ];
 
 export default routeConfig;

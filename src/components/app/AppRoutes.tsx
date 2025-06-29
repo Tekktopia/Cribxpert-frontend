@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '@/components/common/ProtectedRoute';
+import AuthGuard from '@/components/common/AuthGuard';
 import FooterWrapper from '@/components/layout/FooterWrapper';
 import routeConfig from '@/routes/RouteConfig';
 import { JSX } from 'react';
@@ -23,6 +24,10 @@ const AppRoutes: React.FC = () => {
                   <ProtectedRoute>
                     {route.element as JSX.Element}
                   </ProtectedRoute>
+                ) : null
+              ) : route.authRoute ? (
+                route.element ? (
+                  <AuthGuard>{route.element as JSX.Element}</AuthGuard>
                 ) : null
               ) : (
                 route.element
