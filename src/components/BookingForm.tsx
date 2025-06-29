@@ -30,13 +30,21 @@ const BookingForm: React.FC<BookingFormProps> = ({ property }) => {
     });
   };
 
+  // Extract property images
+  // Assuming property.listingImg is an array of image objects with fileUrl
+  const propertyImages = property.listingImg.map((img) => img.fileUrl);
+
   // Dummy charges
-  const cleaningFee = property.cleaningFee || 0; 
+  const cleaningFee = property.cleaningFee || 0;
   const securityDepositFee = property.securityDeposit || 0;
   const tax = (property.basePrice * 0.1).toFixed(2); // Assuming a 10% tax on the base price
 
   // Calculate total price
-  const totalPrice = (property.basePrice || 0) + cleaningFee + securityDepositFee + parseFloat(tax);
+  const totalPrice =
+    (property.basePrice || 0) +
+    cleaningFee +
+    securityDepositFee +
+    parseFloat(tax);
 
   return (
     <>
@@ -203,6 +211,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ property }) => {
             guests,
             totalPrice,
             propertyName: property.name,
+            propertyImages,
           }}
         >
           <button className="bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition">
