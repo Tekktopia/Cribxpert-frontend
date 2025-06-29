@@ -2,12 +2,37 @@ import DiscoverResults from '@/components/discover-components/DiscoverResults';
 import FilterPanel from '@/components/discover-components/FilterPanel';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { Settings2Icon } from 'lucide-react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Footer from '@/components/layout/Footer';
 import FilterCategories from '@/components/home/FilterCategories';
 
 export default function DiscoverPage() {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Get search query from URL params
+  useEffect(() => {
+    const searchParam = searchParams.get('search');
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    } else {
+      setSearchQuery('');
+    }
+  }, [searchParams]);
+
+  const clearSearch = useCallback(() => {
+    setSearchQuery('');
+    // Update URL to remove search param
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('search');
+    window.history.replaceState(
+      {},
+      '',
+      `${window.location.pathname}?${newParams}`
+    );
+  }, [searchParams]);
 
   const handleToggle = useCallback(() => {
     setIsFilterPanelOpen((prev) => !prev);
@@ -44,13 +69,40 @@ export default function DiscoverPage() {
                 </button>
               )}
 
+              {/* Show clear search button when there's an active search */}
+              {searchQuery && (
+                <button
+                  className="flex items-center gap-2 px-3 py-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-md transition-colors"
+                  onClick={clearSearch}
+                  aria-label="Clear search"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                  <span>Clear search: "{searchQuery}"</span>
+                </button>
+              )}
+
               {/* Scrollable filter categories with optimized images */}
               <FilterCategories />
             </div>
           </div>
 
           {/* Discovery results with responsive layout */}
-          <DiscoverResults isOpen={isFilterPanelOpen} />
+          <DiscoverResults
+            isOpen={isFilterPanelOpen}
+            searchQuery={searchQuery}
+          />
         </div>
       </div>
       <Footer className={`${isFilterPanelOpen ? 'hidden xl:block' : ''}`} />

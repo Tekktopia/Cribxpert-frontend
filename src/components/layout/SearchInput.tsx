@@ -190,6 +190,13 @@ const SearchInput: React.FC<SearchInputProps> = ({
     }
   }, [autoFocus]);
 
+    const createSlug = (name: string): string => {
+    return name
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .replace(/\s+/g, '-');
+    };
+    
   // Handle suggestion selection
   const handleSuggestionSelect = useCallback(
     (suggestion: SearchSuggestion) => {
@@ -200,7 +207,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       // If it's a property suggestion, navigate to the property detail page
       if (suggestion.type === 'property' && suggestion.listing) {
         navigate(
-          `/propertydetail/${encodeURIComponent(suggestion.listing.name)}`
+          `/propertydetail/${createSlug(suggestion.listing.name)}`
         );
       } else {
         // For other types, perform a search
