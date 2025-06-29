@@ -6,6 +6,7 @@ import { useGetCurrentUserQuery } from '@/features/auth/authService';
 import { useGetAmenitiesQuery } from '@/features/amenities';
 import { useGetFavouritesByUserIdQuery } from '@/features/favourites/favouritesService';
 import Preloader from '@/components/common/Preloader';
+import { useGetPropertyTypesQuery } from '@/features/propertyType';
 
 interface LoadingManagerProps {
   children: React.ReactNode;
@@ -64,6 +65,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
 
   // Preload global data
   useGetAmenitiesQuery();
+  useGetPropertyTypesQuery();
 
   // Fetch user's favourites if logged in
   const { isLoading: favouritesLoading, isError: favouritesError } =
