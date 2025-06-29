@@ -1,8 +1,8 @@
 import React from 'react';
 import danger from '@/assets/icons/danger.png';
-import Header, { HeaderSpacer } from '../layout/Header';
-import OrderSummary from './OrderSummary';
-import Booking from './Booking';
+import Header, { HeaderSpacer } from '@/components/layout/Header';
+import OrderSummary from '@/components/booking/OrderSummary';
+import Booking from '@/components/booking/Booking';
 const BookNowPage: React.FC = () => {
   return (
     <>

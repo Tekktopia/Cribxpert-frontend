@@ -14,7 +14,7 @@ import DiscoverPage from '@/pages/DiscoverPage';
 import PropertyDetail from '@/pages/PropertyDetail';
 import SavedListing from '@/pages/SavedListing/SavedListing';
 import BookingsPage from '@/pages/BookingsPage';
-import BookNowPage from '@/components/booking/BookNowPage';
+import BookNowPage from '@/pages/BookNowPage';
 
 // Support & Utility Pages
 import PaymentMethod from '@/pages/PaymentMethod';
