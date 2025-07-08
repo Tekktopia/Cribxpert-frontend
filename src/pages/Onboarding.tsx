@@ -1,40 +1,22 @@
 import AuthLeftSide from '@/components/common/AuthLeftSide';
 import StepFour from '@/components/sign-up/StepFour';
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { selectIsAuthenticated } from '@/features/auth/authSlice';
+import React from 'react';
+import {  useLocation } from 'react-router-dom';
 
 export default function Onboarding() {
-  const navigate = useNavigate();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const userId = searchParams.get('id');
 
   const [formData, setFormData] = React.useState({
-    id: localStorage.getItem('pendingUserId') || '',
+    id: userId || '',
     firstName: '',
     lastName: '',
     dateOfBirth: '',
     phoneNo: '',
-    email: localStorage.getItem('pendingEmail') || '',
-    password: localStorage.getItem('pendingPassword') || '',
   });
 
-  // console.log('Onboarding Form Data:', formData);
-
-  // Redirect authenticated users away from this page
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
-
-  // Handle cleanup of local storage
-  useEffect(() => {
-    // Clear local storage after retrieving data
-    localStorage.removeItem('pendingUserId');
-    localStorage.removeItem('pendingEmail');
-    localStorage.removeItem('pendingPassword');
-  }, []);
+  // console.log('Onboarding Form Data:', formData);  
 
   return (
     <div className="flex h-screen">

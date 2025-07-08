@@ -125,6 +125,7 @@ const routeConfig: RouteConfig[] = [
     path: '/onboarding',
     element: <Onboarding />,
     protected: false,
+    authRoute: true,
     title: 'Complete Your Profile',
   },
   {

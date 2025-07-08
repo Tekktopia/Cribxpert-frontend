@@ -1,11 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  useCompleteRegistrationMutation,
-  useLoginMutation,
-} from '@/features/auth/authService';
-import { useDispatch } from 'react-redux';
-import { setUser, setIsAuthenticated } from '@/features/auth/authSlice';
+import { useCompleteRegistrationMutation } from '@/features/auth/authService';
 
 type FormData = {
   id: string;
@@ -13,8 +8,6 @@ type FormData = {
   lastName: string;
   dateOfBirth: string;
   phoneNo: string;
-  email: string;
-  password: string;
 };
 type StepFourProps = {
   formData: FormData;
@@ -27,48 +20,9 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
   };
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [completeRegistration, { isLoading }] =
     useCompleteRegistrationMutation();
-  const [login] = useLoginMutation();
   const [error, setError] = useState<string | null>(null);
-
-  // Helper function to automatically log in the user
-  const handleAutoLogin = async (email: string, password: string) => {
-    try {
-      const loginResult = await login({ identifier: email, password }).unwrap();
-
-      // console.log('Auto login successful:', loginResult);
-
-      if (loginResult.accessToken) {
-        sessionStorage.setItem('token', loginResult.accessToken);
-      }
-
-      if (loginResult.user) {
-        dispatch(setUser(loginResult.user));
-        dispatch(setIsAuthenticated(true));
-      }
-
-      return true;
-    } catch (loginError: unknown) {
-      // console.error('Auto login failed:', loginError);
-      let errorMessage = 'Auto login failed. Please log in manually.';
-      if (typeof loginError === 'string') {
-        errorMessage = loginError;
-      } else if (
-        typeof loginError === 'object' &&
-        loginError !== null &&
-        'data' in loginError &&
-        typeof (loginError as { data?: { message?: string } }).data?.message ===
-          'string'
-      ) {
-        errorMessage = (loginError as { data?: { message?: string } }).data!
-          .message!;
-      }
-      setError(errorMessage);
-      return false;
-    }
-  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,36 +34,13 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
         fullName: formData.firstName + ' ' + formData.lastName,
         dob: formData.dateOfBirth,
         phoneNo: formData.phoneNo,
-        password: formData.password,
+        password: "null",
       }).unwrap();
 
-      // Get the email from formData
-      const email = formData.email;
-
-      // Don't update Redux store with user data until after successful auto-login
-      // Remove: dispatch(setUser(result.user));
-
       if (result.user) {
-        // Attempt auto-login to get the auth token
-        if (email && formData.password) {
-          const loginSuccessful = await handleAutoLogin(
-            email,
-            formData.password
-          );
-          if (!loginSuccessful) {
-            setError('Auto login failed. Please log in manually.');
-            navigate('/login'); // Redirect to login page instead of home
-            return;
-          } else {
-            // Only navigate to home if auto-login was successful
-            // console.log('Registration and auto-login completed successfully');
-            navigate('/');
-          }
-        } else {
-          setError('Email or password missing for auto-login');
-          navigate('/login');
-        }
+        navigate('/login');
       }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       // console.error('Error completing registration:', error);
@@ -141,7 +72,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
         >
           {error && (
             <div
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-left"
+              className="text-red-700 px-4 py-3 rounded relative text-left"
               role="alert"
             >
               <span className="block sm:inline">{error}</span>
