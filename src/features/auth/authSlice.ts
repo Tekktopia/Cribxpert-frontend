@@ -67,6 +67,29 @@ export const authSlice = createSlice({
           state.error = error.message || 'Failed to fetch user';
           sessionStorage.removeItem('token');
         }
+    );
+    // Login mutation
+    builder
+      .addMatcher(authApi.endpoints.login.matchPending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addMatcher(
+        authApi.endpoints.login.matchFulfilled,
+        (state, { payload }) => {
+          state.isLoading = false;
+          state.isAuthenticated = true;
+          state.user = payload.user;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        authApi.endpoints.login.matchRejected,
+        (state, { error }) => {
+          state.isLoading = false;
+          state.isAuthenticated = false;
+          state.error = error.message || 'Login failed';
+        }
       );
   },
 });
