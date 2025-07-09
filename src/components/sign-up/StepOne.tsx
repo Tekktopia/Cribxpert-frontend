@@ -11,10 +11,8 @@ type StepOneProps = {
   setMethodSelected: React.Dispatch<React.SetStateAction<string | null>>;
   email: string;
   phoneNumber: string;
-  password: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
-  setPassword: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const StepOne: React.FC<StepOneProps> = ({
@@ -23,10 +21,8 @@ const StepOne: React.FC<StepOneProps> = ({
   setMethodSelected,
   email,
   phoneNumber,
-  password,
   setEmail,
   setPhoneNumber,
-  setPassword,
 }) => {
   const [error, setError] = React.useState<string>('');
   const [initiateEmailVerification, { isLoading }] =
@@ -39,10 +35,6 @@ const StepOne: React.FC<StepOneProps> = ({
 
     try {
       if (methodSelected === 'Email Address') {
-        // Validate inputs
-        if (!email || !password) {
-          throw new Error('Email and password are required');
-        }
 
         // Check email format
         if (!isValidEmail(email)) {
@@ -60,9 +52,7 @@ const StepOne: React.FC<StepOneProps> = ({
         // Access data safely
         const response = result.data;
         if (response?.user) {
-          localStorage.setItem('pendingUserId', response.user._id);
           localStorage.setItem('pendingEmail', email);
-          localStorage.setItem('pendingPassword', password);
         }
         // console.log('Verification email sent:', response?.message);
 
@@ -70,8 +60,8 @@ const StepOne: React.FC<StepOneProps> = ({
         nextStep();
       } else {
         // Phone number validation
-        if (!phoneNumber || !password) {
-          throw new Error('Phone number and password are required');
+        if (!phoneNumber) {
+          throw new Error('Phone number is required');
         } else if (phoneNumber.length < 11 || phoneNumber.length > 11) {
           throw new Error('Phone number must be 11 digits');
         }
@@ -157,21 +147,6 @@ const StepOne: React.FC<StepOneProps> = ({
             </div>
           )}
 
-          <div>
-            {/* <p className='text-red-500'>Password is too weak, Try again.</p> */}
-            <label className="cursor-pointer flex flex-col items-start gap-2">
-              Password
-              <input
-                onChange={(e) => setPassword(e.target.value)}
-                name="password"
-                minLength={6}
-                placeholder="Enter your Password"
-                className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
-                required
-                type="password"
-              />
-            </label>
-          </div>
           <p className=" text-[14px] text-left">
             By clicking "Proceed" you agree to our{' '}
             <span className="text-[#1D5C5C]">Terms of Service</span>.

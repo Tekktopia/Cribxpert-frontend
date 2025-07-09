@@ -12,7 +12,6 @@ const SignUp: React.FC = () => {
   //Necessary onboarding info
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
 
   const nextStep = () => {
     setStep((prev) => prev + 1);
@@ -31,10 +30,8 @@ const SignUp: React.FC = () => {
           setMethodSelected={setMethodSelected}
           email={email}
           phoneNumber={phoneNumber}
-          password={password}
           setEmail={setEmail}
           setPhoneNumber={setPhoneNumber}
-          setPassword={setPassword}
         />
       )}
 

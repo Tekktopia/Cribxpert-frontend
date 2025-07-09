@@ -14,6 +14,7 @@ export default function Onboarding() {
     lastName: '',
     dateOfBirth: '',
     phoneNo: '',
+    password: ''
   });
 
   // console.log('Onboarding Form Data:', formData);  

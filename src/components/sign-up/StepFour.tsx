@@ -8,15 +8,52 @@ type FormData = {
   lastName: string;
   dateOfBirth: string;
   phoneNo: string;
+  password: string;
 };
+
 type StepFourProps = {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 };
 
+interface PasswordRequirement {
+  label: string;
+  met: boolean;
+}
+
 const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
+  const [passwordRequirements, setPasswordRequirements] = useState<
+    PasswordRequirement[]
+  >([
+    { label: 'Use 8 or more characters', met: false },
+    { label: 'Use upper and lower case letters (e.g. Aa)', met: false },
+    { label: 'Use a number (e.g. 1234)', met: false },
+    { label: 'Use a symbol (e.g. !@#$)', met: false },
+  ]);
+
+  const validatePassword = (password: string) => {
+    const requirements = [
+      { label: 'Use 8 or more characters', met: password.length >= 8 },
+      {
+        label: 'Use upper and lower case letters (e.g. Aa)',
+        met: /(?=.*[a-z])(?=.*[A-Z])/.test(password),
+      },
+      { label: 'Use a number (e.g. 1234)', met: /(?=.*\d)/.test(password) },
+      {
+        label: 'Use a symbol (e.g. !@#$)',
+        met: /(?=.*[!@#$%^&*])/.test(password),
+      },
+    ];
+    setPasswordRequirements(requirements);
+    return requirements.every((req) => req.met);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'password') {
+      validatePassword(value);
+    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const navigate = useNavigate();
@@ -28,13 +65,19 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
     e.preventDefault();
     setError(null);
 
+    // Validate password before submission
+    if (!validatePassword(formData.password)) {
+      setError('Please meet all password requirements');
+      return;
+    }
+
     try {
       const result = await completeRegistration({
         id: formData.id,
         fullName: formData.firstName + ' ' + formData.lastName,
         dob: formData.dateOfBirth,
         phoneNo: formData.phoneNo,
-        password: "null",
+        password: formData.password,
       }).unwrap();
 
       if (result.user) {
@@ -142,11 +185,53 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
             />
           </div>
 
+          <div className="space-y-2">
+            <label className="block text-left text-gray-700 font-medium">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                minLength={8}
+                placeholder="Enter your password"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
+                required
+              />
+            </div>
+            <div className="mt-2 grid lg:grid-cols-2">
+              {passwordRequirements.map((req, index) => (
+                <div key={index} className="flex items-center gap-1">
+                  <div
+                    className={`w-2 h-2 rounded-full ${
+                      req.met ? 'bg-green-500' : 'bg-gray-300'
+                    }`}
+                  />
+                  <span
+                    className={`text-sm ${
+                      req.met ? 'text-green-500' : 'text-gray-500'
+                    }`}
+                  >
+                    {req.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full mx-auto p-3 bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4"
+            disabled={
+              isLoading || !passwordRequirements.every((req) => req.met)
+            }
+            className={`w-full mx-auto p-3 text-white font-semibold rounded-md flex items-center justify-center gap-2 mt-4 ${
+              isLoading || !passwordRequirements.every((req) => req.met)
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-[#1D5C5C] hover:bg-[#164444]'
+            }`}
           >
             {isLoading ? 'Saving...' : 'Complete My Profile'}
           </button>
