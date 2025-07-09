@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { selectCurrentUser, selectIsAuthenticated } from '@/features/auth/authSlice';
+import {
+  selectCurrentUser,
+  selectIsAuthenticated,
+} from '@/features/auth/authSlice';
 import { useGetCurrentUserQuery } from '@/features/auth/authService';
 import { useGetAmenitiesQuery } from '@/features/amenities';
 import { useGetFavouritesByUserIdQuery } from '@/features/favourites/favouritesService';
@@ -23,6 +26,12 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
 
   // Handle URL token extraction and sessionStorage setup
   useEffect(() => {
+    // Skip token processing for reset-password route
+    if (location.pathname === '/reset-password') {
+      setInitialLoadComplete(true);
+      return;
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const urlToken = urlParams.get('token');
     const sessionToken = sessionStorage.getItem('token');
@@ -40,7 +49,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
     } else if (!sessionToken && !initialLoadComplete) {
       setInitialLoadComplete(true);
     }
-  }, [isAuthenticated, initialLoadComplete]);
+  }, [isAuthenticated, initialLoadComplete, location.pathname]);
 
   // Fetch current user when token is available
   const {
