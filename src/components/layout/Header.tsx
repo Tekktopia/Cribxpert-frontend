@@ -113,13 +113,11 @@ const Header: React.FC = () => {
           <div className="md:hidden flex justify-between items-center p-4">
             <Logo showIcon={false} />
 
+            {/* Menu Toggle Button */}
             {isOpen ? (
-              <BiX className="block md:hidden text-4xl" onClick={toggleMenu} />
+              <BiX className="text-4xl" onClick={toggleMenu} />
             ) : (
-              <BiMenu
-                className="block md:hidden text-4xl"
-                onClick={toggleMenu}
-              />
+              <BiMenu className="text-4xl" onClick={toggleMenu} />
             )}
           </div>
 
@@ -128,11 +126,15 @@ const Header: React.FC = () => {
             <MainNavigation />
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu with Profile/Auth */}
           <MobileMenu
             isOpen={isOpen}
             isAuthenticated={isAuthenticated}
             onClose={closeMobileMenu}
+            user={user}
+            showProfileMenu={showProfileMenu}
+            onToggleProfileMenu={toggleProfileMenu}
+            onCloseProfileMenu={closeProfileMenu}
           />
         </div>
       </header>

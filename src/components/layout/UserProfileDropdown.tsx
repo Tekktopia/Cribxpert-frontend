@@ -16,6 +16,7 @@ interface UserProfileDropdownProps {
   showProfileMenu: boolean;
   onToggleMenu: () => void;
   onCloseMenu: () => void;
+  isMobile?: boolean;
 }
 
 const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
@@ -23,6 +24,7 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
   showProfileMenu,
   onToggleMenu,
   onCloseMenu,
+  isMobile = false,
 }) => {
   const dispatch = useDispatch();
 
@@ -32,6 +34,36 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
     window.location.href = '/login';
   };
 
+  // Mobile view shows a simpler version
+  if (isMobile) {
+    return (
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center gap-3">
+          {user?.profileImage ? (
+            <img
+              src={user.profileImage}
+              alt="Profile"
+              className="w-[40px] h-[40px] rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-[40px] h-[40px] rounded-full bg-[#1D5C5C] text-white flex items-center justify-center text-lg font-medium">
+              {user?.email?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+          )}
+          <div>
+            <p className="font-medium text-sm">
+              {user?.fullName || user?.email || 'Account'}
+            </p>
+            <p className="text-gray-500 text-xs truncate">
+              {user?.email || ''}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop view remains the same
   return (
     <div className="relative">
       <div
