@@ -1,23 +1,19 @@
 // Import and re-export from favouritesService.ts
-import { 
+import {
   favouritesApi,
   useGetFavouritesByUserIdQuery,
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
-  type FavouriteItem
+  type FavouriteItem,
 } from './favouritesService';
 
 // Import and re-export from favouritesSlice.ts
 import favouritesReducer, {
   // Actions
-  setOnlineStatus,
-  addOfflineFavourite,
-  removeOfflineFavourite,
   clearFavourites,
   reorderFavourites,
   setFavouriteError,
-  clearPendingSync,
-  
+
   // Selectors
   selectFavourites,
   selectFavouritesLoading,
@@ -36,19 +32,11 @@ export default favouritesReducer;
 export {
   useGetFavouritesByUserIdQuery,
   useAddFavouriteMutation,
-  useRemoveFavouriteMutation
+  useRemoveFavouriteMutation,
 };
 
 // Export actions
-export {
-  setOnlineStatus,
-  addOfflineFavourite,
-  removeOfflineFavourite,
-  clearFavourites,
-  reorderFavourites,
-  setFavouriteError,
-  clearPendingSync
-};
+export { clearFavourites, reorderFavourites, setFavouriteError };
 
 // Export selectors
 export {
@@ -56,10 +44,8 @@ export {
   selectFavouritesLoading,
   selectFavouritesError,
   selectIsItemFavourited,
-  selectFavouritesByCity
+  selectFavouritesByCity,
 };
-  
+
 // Export types
-export type {
-  FavouriteItem,
-};
+export type { FavouriteItem };

@@ -4,95 +4,24 @@ import { PropertyListing } from '@/types';
 
 // Favourites state interface
 interface FavouritesState {
-  // Online favourites from the API
   items: PropertyListing[];
-
-  // Loading state for API operations
   isLoading: boolean;
-
-  // Error messages from API operations
   error: string | null;
-
-  // Offline favourites - just stores listing IDs when device is offline
-  offlineFavourites: string[];
-
-  // Pending operations to sync when back online
-  pendingSync: {
-    add: string[]; // Listing IDs to add when back online
-    remove: string[]; // Listing IDs to remove when back online
-  };
-
-  // Flag to track if we're currently online or offline
-  isOnline: boolean;
 }
 
 const initialState: FavouritesState = {
   items: [],
   isLoading: false,
   error: null,
-  offlineFavourites: [],
-  pendingSync: {
-    add: [],
-    remove: [],
-  },
-  isOnline: navigator.onLine, // Initialize with current online status
 };
 
 export const favouritesSlice = createSlice({
   name: 'favourites',
   initialState,
   reducers: {
-    // Update online status
-    setOnlineStatus: (state, action: PayloadAction<boolean>) => {
-      state.isOnline = action.payload;
-    },
-
-    // Add a favourite when offline
-    addOfflineFavourite: (state, action: PayloadAction<string>) => {
-      const listingId = action.payload;
-      if (!state.offlineFavourites.includes(listingId)) {
-        state.offlineFavourites.push(listingId);
-        // Also track this for syncing later
-        if (!state.pendingSync.add.includes(listingId)) {
-          state.pendingSync.add.push(listingId);
-        }
-        // Remove from pending removals if it was there
-        const removeIndex = state.pendingSync.remove.indexOf(listingId);
-        if (removeIndex !== -1) {
-          state.pendingSync.remove.splice(removeIndex, 1);
-        }
-      }
-    },
-
-    // Remove a favourite when offline
-    removeOfflineFavourite: (state, action: PayloadAction<string>) => {
-      const listingId = action.payload;
-      // Remove from offline favourites
-      const index = state.offlineFavourites.indexOf(listingId);
-      if (index !== -1) {
-        state.offlineFavourites.splice(index, 1);
-      }
-
-      // Track for syncing later
-      if (!state.pendingSync.remove.includes(listingId)) {
-        state.pendingSync.remove.push(listingId);
-      }
-
-      // Remove from pending additions if it was there
-      const addIndex = state.pendingSync.add.indexOf(listingId);
-      if (addIndex !== -1) {
-        state.pendingSync.add.splice(addIndex, 1);
-      }
-    },
-
     // Clear all favourites (for logout)
     clearFavourites: (state) => {
       state.items = [];
-      state.offlineFavourites = [];
-      state.pendingSync = {
-        add: [],
-        remove: [],
-      };
     },
 
     // Update favourite display order
@@ -103,14 +32,6 @@ export const favouritesSlice = createSlice({
     // Set an error message
     setFavouriteError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
-    },
-
-    // Clear pending sync after successful sync
-    clearPendingSync: (state) => {
-      state.pendingSync = {
-        add: [],
-        remove: [],
-      };
     },
   },
   extraReducers: (builder) => {
@@ -141,9 +62,12 @@ export const favouritesSlice = createSlice({
         }
       )
       // Reset loading when adding a favourite
-      .addMatcher(favouritesApi.endpoints.addFavourite.matchPending, (state) => {
-        state.error = null;
-      })
+      .addMatcher(
+        favouritesApi.endpoints.addFavourite.matchPending,
+        (state) => {
+          state.error = null;
+        }
+      )
       // Handle add favourite errors
       .addMatcher(
         favouritesApi.endpoints.addFavourite.matchRejected,
@@ -169,15 +93,8 @@ export const favouritesSlice = createSlice({
 });
 
 // Export actions
-export const {
-  setOnlineStatus,
-  addOfflineFavourite,
-  removeOfflineFavourite,
-  clearFavourites,
-  reorderFavourites,
-  setFavouriteError,
-  clearPendingSync,
-} = favouritesSlice.actions;
+export const { clearFavourites, reorderFavourites, setFavouriteError } =
+  favouritesSlice.actions;
 
 // Export selectors
 export const selectFavourites = (state: { favourites: FavouritesState }) =>
@@ -191,12 +108,8 @@ export const selectFavouritesError = (state: { favourites: FavouritesState }) =>
   state.favourites.error;
 
 export const selectIsItemFavourited =
-  (listingId: string) => (state: { favourites: FavouritesState }) => {
-    // Check both online and offline favourites
-    return (
-      state.favourites.items.some((item) => item._id === listingId) ||
-      state.favourites.offlineFavourites.includes(listingId)
-    );
+  (listingId: string) => (state: { favourites?: FavouritesState }) => {
+    return !!state.favourites?.items?.find((item) => item._id === listingId);
   };
 
 export const selectFavouritesByCity =

@@ -5,7 +5,7 @@ import { PropertyListing } from '@/types';
 interface FavouritesResponse {
   _id: string;
   userId: string;
-  listings: PropertyListing[];
+  listing: PropertyListing[];
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -25,7 +25,7 @@ export const favouritesApi = createApi({
         const favourites = response.favourites;
 
         // Map the nested listings to format
-        return favourites.listings;
+        return favourites.listing;
       },
       providesTags: (result) =>
         result

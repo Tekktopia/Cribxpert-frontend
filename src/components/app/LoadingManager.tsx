@@ -10,6 +10,8 @@ import { useGetAmenitiesQuery } from '@/features/amenities';
 import { useGetFavouritesByUserIdQuery } from '@/features/favourites/favouritesService';
 import Preloader from '@/components/common/Preloader';
 import { useGetPropertyTypesQuery } from '@/features/propertyType';
+import { useGetListingsQuery } from '@/features/listing';
+import { setAllListings } from '@/features/listing/listingSlice';
 
 interface LoadingManagerProps {
   children: React.ReactNode;
@@ -70,17 +72,58 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
       }
       setShouldFetchUser(false);
     }
-  }, [shouldFetchUser, currentUser, userError, dispatch]);
+  }, [shouldFetchUser, currentUser, userError]);
 
   // Preload global data
   useGetAmenitiesQuery();
   useGetPropertyTypesQuery();
 
+  // Fetch all listings
+  const {
+    data: listingsData,
+    error: listingsError,
+    isLoading: listingsLoading,
+  } = useGetListingsQuery();
+
   // Fetch user's favourites if logged in
-  const { isLoading: favouritesLoading, isError: favouritesError } =
-    useGetFavouritesByUserIdQuery(user?._id || '', {
-      skip: !isAuthenticated || !user?._id, // Skip if user is not authenticated
-    });
+  const {
+    data: favouritesData,
+    isLoading: favouritesLoading,
+    isError: favouritesError,
+  } = useGetFavouritesByUserIdQuery(user?._id || '', {
+    skip: !isAuthenticated || !user?._id, // Skip if user is not authenticated
+  });
+
+  console.log(favouritesData, user?._id, isAuthenticated);
+  console.log(listingsData);
+
+  // Merge listings and favourites after both are loaded and no errors
+  useEffect(() => {
+    if (
+      listingsData &&
+      (!isAuthenticated || favouritesData) &&
+      !listingsLoading &&
+      (!isAuthenticated || !favouritesLoading) &&
+      !listingsError &&
+      (!isAuthenticated || !favouritesError)
+    ) {
+      const favouriteIds = (favouritesData || []).map((fav) => fav._id);
+      const mergedListings = listingsData.listings.map((listing) => ({
+        ...listing,
+        isFavorited: favouriteIds.includes(listing._id),
+      }));
+      dispatch(setAllListings(mergedListings));
+    }
+  }, [
+    listingsData,
+    favouritesData,
+    isAuthenticated,
+    listingsLoading,
+    favouritesLoading,
+    listingsError,
+    favouritesError,
+    dispatch,
+  ]);
 
   // Check if current route requires favourites to be loaded
   const requiresFavourites =
@@ -127,7 +170,23 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
   }, [user?._id]);
 
   const isLoading =
-    (!initialLoadComplete || userLoading || isDataLoading) && !timeoutExceeded;
+    (!initialLoadComplete || userLoading || isDataLoading || listingsLoading) &&
+    !timeoutExceeded;
+
+  useEffect(() => {
+    if (
+      !userLoading &&
+      !listingsLoading &&
+      (!isAuthenticated || !favouritesLoading)
+    ) {
+      setInitialLoadComplete(true);
+    }
+  }, [userLoading, listingsLoading, favouritesLoading, isAuthenticated]);
+
+  if (listingsError) {
+    console.error('Error fetching listings:', listingsError);
+    // Optionally, you could show an error state here
+  }
 
   if (isLoading) {
     return <Preloader />;
