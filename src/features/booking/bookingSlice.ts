@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { bookingApi, BookingResponse } from './bookingService';
+import { Booking, bookingApi } from './bookingService';
 
 interface BookingDetails {
+  userId: string;
   propertyId: string;
   checkIn: string;
   checkOut: string;
@@ -12,7 +13,7 @@ interface BookingDetails {
 
 interface BookingState {
   currentBooking: BookingDetails | null;
-  bookingHistory: BookingResponse[];
+  bookingHistory: Booking[];
   isProcessing: boolean;
   error: string | null;
 }
@@ -54,7 +55,7 @@ export const bookingSlice = createSlice({
           state.isProcessing = false;
           state.currentBooking = null;
           // Add to history in a way that preserves BookingResponse type
-          state.bookingHistory = [payload as BookingResponse, ...state.bookingHistory];
+          state.bookingHistory = [payload.booking as Booking, ...state.bookingHistory];
         }
       )
       .addMatcher(
@@ -76,7 +77,7 @@ export const bookingSlice = createSlice({
         bookingApi.endpoints.getBookingsByUserId.matchFulfilled,
         (state, { payload }) => {
           state.isProcessing = false;
-          state.bookingHistory = payload as BookingResponse[];
+          state.bookingHistory = payload.map((response) => response.booking) as Booking[];
         }
       )
       .addMatcher(

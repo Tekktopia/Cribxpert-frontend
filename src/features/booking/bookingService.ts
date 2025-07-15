@@ -7,19 +7,32 @@ export interface BookingRequest {
   endDate: string;
   travelersNo: number;
   totalPrice: number;
+  userId: string;
   listing: string; // This is the property/listing ID
   specialRequests?: string; // Optional field you may want to keep
 }
 
-export interface BookingResponse {
-  id: string;
+export interface Booking {
+  userId: string;
   startDate: string;
   endDate: string;
   travelersNo: number;
   totalPrice: number;
+  status: string;
+  refundStatus: string;
+  cancellationDate: string | null;
+  cancellationReason: string | null;
+  cancellationBy: string | null;
+  totalRefund: number;
   listing: string;
-  status?: 'confirmed' | 'pending' | 'cancelled' | 'completed';
-  createdAt?: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+export interface BookingResponse {
+  message: string;
+  booking: Booking;
 }
 
 export const bookingApi = createApi({
@@ -44,7 +57,10 @@ export const bookingApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({ type: 'Booking' as const, id })),
+              ...result.map(({ booking }) => ({
+                type: 'Booking' as const,
+                _id: booking._id,
+              })),
               { type: 'Booking', id: 'LIST' },
             ]
           : [{ type: 'Booking', id: 'LIST' }],

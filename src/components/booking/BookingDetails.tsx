@@ -3,7 +3,6 @@ import DatePicker from 'react-datepicker';
 import { CiCircleCheck } from 'react-icons/ci';
 
 interface BookingDetailsProps {
-  isEditing: boolean;
   startDate: Date | null;
   endDate: Date | null;
   guests: number;
@@ -12,21 +11,9 @@ interface BookingDetailsProps {
   onEndDateChange: (date: Date | null) => void;
   onGuestChange: (delta: number) => void;
   onSave: () => void;
-  onCancel: () => void;
-  onEdit: () => void;
 }
 
-const formatDate = (date: Date | null) => {
-  if (!date) return 'Not selected';
-  return new Date(date).toLocaleDateString('en-US', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-  });
-};
-
 const BookingDetails: React.FC<BookingDetailsProps> = ({
-  isEditing,
   startDate,
   endDate,
   guests,
@@ -35,71 +22,26 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
   onEndDateChange,
   onGuestChange,
   onSave,
-  onCancel,
-  onEdit,
-}) => (
-  <div className="mt-5">
-    <div className="flex justify-between items-center mb-3">
-      <h3 className="text-[#313131] font-[500] text-[16px]">Booking Details</h3>
-    {!isEditing ? (
-      <button
-        onClick={onEdit}
-        className="p-2 hover:bg-gray-100 rounded"
-        title="Edit"
-      >
-        <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-        <path d="M14.85 2.85a1.207 1.207 0 0 1 1.7 1.7l-1.1 1.1-1.7-1.7 1.1-1.1ZM3 14.25V17h2.75l8.09-8.09-1.7-1.7L3 14.25Z" stroke="#006073" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-    ) : (
-      <div className="flex gap-2">
-        <button
-        onClick={onSave}
-        className="p-2 hover:bg-gray-100 rounded"
-        title="Save"
-        >
-        <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-          <path d="M5 10.5l3 3 7-7" stroke="#09974C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        </button>
-        <button
-        onClick={onCancel}
-        className="p-2 hover:bg-gray-100 rounded"
-        title="Cancel"
-        >
-        <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-          <path d="M6 6l8 8M14 6l-8 8" stroke="#999999" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        </button>
+}) => {
+  // Call onSave after each change
+  const handleStartDateChange = (date: Date | null) => {
+    onStartDateChange(date);
+    onSave();
+  };
+  const handleEndDateChange = (date: Date | null) => {
+    onEndDateChange(date);
+    onSave();
+  };
+  const handleGuestChange = (delta: number) => {
+    onGuestChange(delta);
+    onSave();
+  };
+
+  return (
+    <div className="mt-5">
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-[#313131] font-[500] text-[16px]">Booking Details</h3>
       </div>
-    )}
-    </div>
-    {!isEditing ? (
-      <div className="flex md:flex-row flex-col justify-around gap-8">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-[#6F6F6F] font-[400] text-[14px]">
-            Check-in date
-          </h2>
-          <p className="text-[#6F6F6F] font-[400] text-[14px]">
-            {formatDate(startDate)}
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="text-[#6F6F6F] font-[400] text-[14px]">
-            Check-out date
-          </h2>
-          <p className="text-[#6F6F6F] font-[400] text-[14px]">
-            {formatDate(endDate)}
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="text-[#6F6F6F] font-[400] text-[14px]">No of Guest</h2>
-          <p className="text-[#6F6F6F] font-[400] text-[14px]">
-            {guests} guest{guests > 1 ? 's' : ''}
-          </p>
-        </div>
-      </div>
-    ) : (
       <div className="space-y-3">
         {/* Date Selection */}
         <div className="flex gap-3">
@@ -123,7 +65,7 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
               <p className="text-[#6F6F6F] text-[12px]">Start date</p>
               <DatePicker
                 selected={startDate}
-                onChange={onStartDateChange}
+                onChange={handleStartDateChange}
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
@@ -153,7 +95,7 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
               <p className="text-[#6F6F6F] text-[12px]">End date</p>
               <DatePicker
                 selected={endDate}
-                onChange={onEndDateChange}
+                onChange={handleEndDateChange}
                 selectsEnd
                 startDate={startDate}
                 endDate={endDate}
@@ -173,7 +115,7 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
                 <button
                   type="button"
                   className="px-2 py-1 rounded bg-[#f3f3f3] text-[#313131] text-lg font-bold"
-                  onClick={() => onGuestChange(-1)}
+                  onClick={() => handleGuestChange(-1)}
                   disabled={guests <= 1}
                 >
                   -
@@ -184,7 +126,7 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
                 <button
                   type="button"
                   className="px-2 py-1 rounded bg-[#f3f3f3] text-[#313131] text-lg font-bold"
-                  onClick={() => onGuestChange(1)}
+                  onClick={() => handleGuestChange(1)}
                   disabled={guests >= maxGuests}
                 >
                   +
@@ -202,8 +144,8 @@ const BookingDetails: React.FC<BookingDetailsProps> = ({
           <p className="text-[#999999] text-[14px]">Your dates are available</p>
         </div>
       </div>
-    )}
-  </div>
-);
+    </div>
+  );
+};
 
 export default BookingDetails;
