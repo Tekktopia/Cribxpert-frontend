@@ -13,9 +13,9 @@ const HeroSection: React.FC = () => {
     <section className="relative w-full">
       <Hero
         images={heroImages}
-        title="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        subtitle="Find Everything You Love, at Prices You'll Adore – Shop Now and Save Big."
-        buttonText="Shop Now"
+        title="Where Comfort Meets Convenience"
+        subtitle="From cozy apartment to luxury spaces, find and book your perfect home away from home"
+        buttonText="Discover"
         buttonLink="/discover"
       />
     </section>

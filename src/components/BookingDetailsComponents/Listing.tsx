@@ -1,11 +1,6 @@
-import React from 'react';
-import star from '../../assets/icons/star.svg';
-import { bookingsData } from '@/utils/data';
-import { useParams } from 'react-router';
+import { Booking } from '@/features/booking/bookingService';
 
-const Listing = () => {
-  const { id } = useParams();
-  const booking = bookingsData.find((b) => b.id === id);
+const Listing = ({ booking }: { booking: Booking }) => {
   return (
     <div className="text-[#6F6F6F] p-4">
       <div className="flex flex-col lg:flex-row gap-6 ">
@@ -24,14 +19,14 @@ const Listing = () => {
           </div>
           <div>
             <p>
-              {booking.name} - {booking.description}
+              {booking.listing.name} - {booking.listing.description}
             </p>
           </div>
           {['pending', 'confirmed', 'cancelled'].includes(booking.status) && (
             <div className="flex gap-1 items-center mt-2">
               {/* boilerplate */}
-              <img src={star} alt="" />
-              <p>4.5 [115 verified positive feedbacks]</p>
+              {/* <img src={star} alt="" /> */}
+              <p>{booking.listing.rating} [115 verified positive feedbacks]</p>
             </div>
           )}
         </div>

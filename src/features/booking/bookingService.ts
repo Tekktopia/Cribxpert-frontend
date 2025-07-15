@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { baseQuery } from '@/features/api';
+import { PropertyListing } from '@/types';
 
 // API request format
 export interface BookingRequest {
@@ -24,15 +25,19 @@ export interface Booking {
   cancellationReason: string | null;
   cancellationBy: string | null;
   totalRefund: number;
-  listing: string;
+  listing: PropertyListing; // Changed from string to PropertyListing
   _id: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
 }
-export interface BookingResponse {
+interface CreateBookingResponse {
   message: string;
   booking: Booking;
+}
+export interface BookingResponse {
+  message: string;
+  bookings: Booking[];
 }
 
 export const bookingApi = createApi({
@@ -40,7 +45,7 @@ export const bookingApi = createApi({
   baseQuery,
   tagTypes: ['Booking'],
   endpoints: (builder) => ({
-    createBooking: builder.mutation<BookingResponse, BookingRequest>({
+    createBooking: builder.mutation<CreateBookingResponse, BookingRequest>({
       query: (booking) => ({
         url: '/booking',
         method: 'POST',
@@ -52,12 +57,12 @@ export const bookingApi = createApi({
       query: (id) => `/booking/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Booking', id }],
     }),
-    getBookingsByUserId: builder.query<BookingResponse[], string>({
+    getBookingsByUserId: builder.query<BookingResponse, string>({
       query: (userId) => `/booking/user/${userId}`,
       providesTags: (result) =>
-        result
+        result && result.bookings
           ? [
-              ...result.map(({ booking }) => ({
+              ...result.bookings.map((booking) => ({
                 type: 'Booking' as const,
                 _id: booking._id,
               })),

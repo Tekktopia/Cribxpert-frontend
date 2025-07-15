@@ -15,6 +15,7 @@ import PropertyDetail from '@/pages/PropertyDetail';
 import SavedListing from '@/pages/SavedListing/SavedListing';
 import BookingsPage from '@/pages/BookingsPage';
 import BookNowPage from '@/pages/BookNowPage';
+import BookingDetailsPage from '@/pages/BookingDetailsPage';
 
 // Support & Utility Pages
 import PaymentMethod from '@/pages/PaymentMethod';
@@ -102,6 +103,12 @@ const routeConfig: RouteConfig[] = [
     element: <BookNowPage />,
     protected: true,
     title: 'Book Now',
+  },
+  {
+    path: '/booking/:id',
+    element: <BookingDetailsPage />,
+    protected: true,
+    title: 'Booking Details',
   },
   {
     path: '/payments',

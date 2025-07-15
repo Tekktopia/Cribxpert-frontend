@@ -23,24 +23,23 @@ const StatusButton: React.FC<StatusButtonProps> = ({ status, type }) => {
     completed: 'bg-[#140BC1] text-white',
   };
 
-  const labelMap: Record<StatusType, string> = {
-    confirmed: 'Confirmed',
-    pending: 'Pending',
-    cancelled: 'Cancelled',
-    completed: 'Completed',
-  };
+  // const labelMap: Record<StatusType, string> = {
+  //   confirmed: 'Confirmed',
+  //   pending: 'Pending',
+  //   cancelled: 'Cancelled',
+  //   completed: 'Completed',
+  // };
 
   const appliedStyle =
-    type === 'details' ? buttonStyles[status] : statusStyles[status];
-
-  const label =
-    type === 'details' ? labelMap[status].toUpperCase() : labelMap[status];
+    type === 'details'
+      ? buttonStyles[status.toLowerCase() as StatusType]
+      : statusStyles[status.toLowerCase() as StatusType];
 
   return (
     <button
       className={`  font-semibold transition-colors duration-300 ${appliedStyle} ${type === 'details' ? 'px-2 py-1 rounded-xl ' : 'px-4 py-2 rounded-lg'}`}
     >
-      {label}
+      {status}
     </button>
   );
 };

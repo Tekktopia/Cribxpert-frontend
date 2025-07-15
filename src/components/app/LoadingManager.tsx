@@ -94,8 +94,8 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
     skip: !isAuthenticated || !user?._id, // Skip if user is not authenticated
   });
 
-  console.log(favouritesData, user?._id, isAuthenticated);
-  console.log(listingsData);
+  // console.log(favouritesData, user?._id, isAuthenticated);
+  // console.log(listingsData);
 
   // Merge listings and favourites after both are loaded and no errors
   useEffect(() => {
@@ -159,7 +159,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
 
   useEffect(() => {
     if (favouritesError) {
-      console.error('Error fetching favourites:', favouritesError);
+      // console.error('Error fetching favourites:', favouritesError);
       setTimeoutExceeded(true);
     }
   }, [favouritesError]);
@@ -184,7 +184,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
   }, [userLoading, listingsLoading, favouritesLoading, isAuthenticated]);
 
   if (listingsError) {
-    console.error('Error fetching listings:', listingsError);
+    // console.error('Error fetching listings:', listingsError);
     // Optionally, you could show an error state here
   }
 

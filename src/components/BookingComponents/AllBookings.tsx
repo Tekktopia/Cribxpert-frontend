@@ -1,10 +1,12 @@
-import React from 'react';
-
 import BookingsTable from './BookingsTable';
-import { bookingsData } from '@/utils/data';
+import { Booking } from '@/features/booking/bookingService';
 
-function AllBookings() {
-  return <BookingsTable bookings={bookingsData} />;
+interface AllBookingsProps {
+  bookings: Booking[];
+}
+
+function AllBookings({ bookings }: AllBookingsProps) {
+  return <BookingsTable bookings={bookings} />;
 }
 
 export default AllBookings;

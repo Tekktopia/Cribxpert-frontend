@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookingsType } from '@/types';
+import { Booking } from '@/features/booking/bookingService';
 import chevronLeft from '../../assets/icons/chevron-left.svg';
 import chevronRight from '../../assets/icons/chevron-right.svg';
 import { useNavigate } from 'react-router';
@@ -7,7 +7,7 @@ import StatusButton from './StatusButton';
 // import { useBookingStore } from '@/store/bookingStore';
 
 type BookingsTableProps = {
-  bookings: BookingsType[];
+  bookings: Booking[];
 };
 
 const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
@@ -27,6 +27,38 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
     navigate(`/booking/${id}`);
   };
 
+  // Helper to map Booking to UI fields
+  const mapBookingToUI = (booking: Booking) => {
+    let image = '';
+    if (booking.listing.listingImg && booking.listing.listingImg.length > 0) {
+      // Use fileUrl if present, otherwise fallback to the value itself (for legacy data)
+      const firstImg = booking.listing.listingImg[0];
+      image = typeof firstImg === 'string' ? firstImg : firstImg.fileUrl || '';
+    }
+    return {
+      id: booking._id,
+      image,
+      name: booking.listing.name,
+      checkin: new Date(booking.startDate).toLocaleDateString(),
+      checkout: new Date(booking.endDate).toLocaleDateString(),
+      status: booking.status,
+      description: booking.listing.description,
+    };
+  };
+
+  if (!bookings || bookings.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <img
+          src={'/images/no-bookings.png'}
+          alt="No bookings"
+          className="w-[50%] h-auto object-contain mb-4"
+        />
+        <p className="text-lg text-gray-500">No bookings found.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="pt-10">
       <div className="w-full bg-white rounded-lg shadow-md p-7 border border-[#E2E8F0]">
@@ -40,87 +72,92 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
         </div>
         <hr className="border hidden lg:flex border-neutralLight w-full" />
 
-        {currentBookings.map((booking, index) => (
-          <div
-            key={index}
-            className="hidden lg:flex  justify-between items-center py-4 border-b border-neutralLight"
-          >
-            <span className="text-neutralDark">{booking.id}</span>
-            <div className="flex items-center gap-4">
-              <img
-                src={booking.image}
-                alt={booking.name}
-                className="w-20 h-[70px] rounded-md object-cover"
-              />
-              <span className="text-neutralDark">{booking.name}</span>
-            </div>
-            <div>
-              <span className="text-neutralDark">{booking.checkin}</span>
-            </div>
-            <div>
-              <span className="text-neutralDark">{booking.checkout}</span>
-            </div>
-            <div>
-              <StatusButton status={booking.status} />
-            </div>
-            <button
-              type="button"
-              className="bg-transparent items-center justify-center  px-[5px] rounded-[5px] py-[8px] gap-4 w-[112px] hover:bg-primary hover:text-white flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
-              onClick={() => {
-                // setSelectedBooking(booking);
-                // navigate(`/booking/${booking.id}`);
-                handleViewDetails(booking.id);
-              }}
+        {currentBookings.map((booking, index) => {
+          const uiBooking = mapBookingToUI(booking);
+          return (
+            <div
+              key={index}
+              className="hidden lg:flex  justify-between items-center py-4 border-b border-neutralLight"
             >
-              View Details
-            </button>
-          </div>
-        ))}
+              <span className="text-neutralDark">{uiBooking.id}</span>
+              <div className="flex items-center gap-4">
+                <img
+                  src={uiBooking.image}
+                  alt={uiBooking.name}
+                  className="w-20 h-[70px] rounded-md object-cover"
+                />
+                <span className="text-neutralDark">{uiBooking.name}</span>
+              </div>
+              <div>
+                <span className="text-neutralDark">{uiBooking.checkin}</span>
+              </div>
+              <div>
+                <span className="text-neutralDark">{uiBooking.checkout}</span>
+              </div>
+              <div>
+                <StatusButton status={uiBooking.status} />
+              </div>
+              <button
+                type="button"
+                className="bg-transparent items-center justify-center  px-[5px] rounded-[5px] py-[8px] gap-4 w-[112px] hover:bg-primary hover:text-white flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
+                onClick={() => {
+                  handleViewDetails(uiBooking.id);
+                }}
+              >
+                View Details
+              </button>
+            </div>
+          );
+        })}
         {/* Mobile */}
-        {currentBookings.map((booking, index) => (
-          <div
-            key={index}
-            className="flex  lg:hidden flex-col justify-between items-center py-4 border-b border-neutralLight"
-          >
-            <div className="flex flex-col items-center gap-4">
-              <img
-                src={booking.image}
-                alt={booking.name}
-                className="w-full rounded-md object-cover"
-              />
-            </div>
-            <div className="mt-4 flex justify-between w-full items-center gap-2">
-              <span className="text-neutralDark">{booking.name}</span>
-              <span className="text-[12px] px-2 py-1">{booking.status}</span>
-            </div>
-            <div className="flex  w-full items-center gap-2">
-              <p className="text-[#6F6F6F]">Booking</p>
-              <span className="text-neutral">{booking.id}</span>
-            </div>
-
-            <div className="flex my-2 self-start justify-between w-3/4 items-start gap-2">
-              <div>
-                <p className="text-[#6F6F6F]">Check-in</p>
-                <span className="text-neutralDark text-[14px]">
-                  {booking.checkin}
-                </span>
-              </div>
-              <div>
-                <p className="text-[#6F6F6F]">Check-out</p>
-                <span className="text-neutralDark text-[14px]">
-                  {booking.checkout}
-                </span>
-              </div>
-            </div>
-            <button
-              type="button"
-              className="bg-transparent items-center justify-center hover:text-white px-[5px] rounded-[5px] py-[8px] gap-4 w-full hover:bg-primary flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
-              //   onClick={}
+        {currentBookings.map((booking, index) => {
+          const uiBooking = mapBookingToUI(booking);
+          return (
+            <div
+              key={index}
+              className="flex  lg:hidden flex-col justify-between items-center py-4 border-b border-neutralLight"
             >
-              View Details
-            </button>
-          </div>
-        ))}
+              <div className="flex flex-col items-center gap-4">
+                <img
+                  src={uiBooking.image}
+                  alt={uiBooking.name}
+                  className="w-full rounded-md object-cover"
+                />
+              </div>
+              <div className="mt-4 flex justify-between w-full items-center gap-2">
+                <span className="text-neutralDark">{uiBooking.name}</span>
+                <span className="text-[12px] px-2 py-1">
+                  {uiBooking.status}
+                </span>
+              </div>
+              <div className="flex  w-full items-center gap-2">
+                <p className="text-[#6F6F6F]">Booking</p>
+                <span className="text-neutral">{uiBooking.id}</span>
+              </div>
+
+              <div className="flex my-2 self-start justify-between w-3/4 items-start gap-2">
+                <div>
+                  <p className="text-[#6F6F6F]">Check-in</p>
+                  <span className="text-neutralDark text-[14px]">
+                    {uiBooking.checkin}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-[#6F6F6F]">Check-out</p>
+                  <span className="text-neutralDark text-[14px]">
+                    {uiBooking.checkout}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="bg-transparent items-center justify-center hover:text-white px-[5px] rounded-[5px] py-[8px] gap-4 w-full hover:bg-primary flex border-[1.5px] border-primary text-[12px] sm:text-[14px] text-primary"
+              >
+                View Details
+              </button>
+            </div>
+          );
+        })}
 
         <div className="flex flex-col lg:flex-row justify-between items-center  mt-4 gap-4">
           <div>
@@ -155,9 +192,6 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
             </div>
 
             <button
-              //   onClick={() =>
-              //     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              //   }
               onClick={() =>
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
