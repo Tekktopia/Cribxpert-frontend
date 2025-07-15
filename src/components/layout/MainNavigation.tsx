@@ -16,6 +16,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
     { label: 'My Bookings', route: '/my-bookings' },
     { label: 'Saved Listings', route: '/saved-listings' },
     { label: 'Payments', route: '/payments' },
+     { label: 'My Listings', route: '/my-listing' },
   ];
 
   if (isMobile) {

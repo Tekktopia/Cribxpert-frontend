@@ -15,6 +15,7 @@ import PropertyDetail from '@/pages/PropertyDetail';
 import SavedListing from '@/pages/SavedListing/SavedListing';
 import BookingsPage from '@/pages/BookingsPage';
 import BookNowPage from '@/pages/BookNowPage';
+import MyListing  from '@/pages/MyListing';
 
 // Support & Utility Pages
 import PaymentMethod from '@/pages/PaymentMethod';
@@ -52,6 +53,11 @@ const routeConfig: RouteConfig[] = [
     element: <DiscoverPage />,
     protected: false,
     title: 'Discover Properties',
+  },{
+    path: '/my-listing',
+    element: <MyListing />,
+    protected: false,
+    title: 'My Listing',
   },
 
   // Auth routes
