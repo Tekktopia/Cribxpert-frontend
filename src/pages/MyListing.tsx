@@ -6,6 +6,9 @@ import ListingsManager from '@/components/home/ListingsManager';
 import ListingHeader from '@/components/ListingComponents/ListingHeader';
 import ListingTabs from '@/components/ListingComponents/ListingTabs';
 import ListingCard from '@/components/ListingComponents/ListingCard';
+import InitialListCardText from '@/components/ListingComponents/InitialListCardText';
+import ListCardInitial from '@/components/ListingComponents/ListCardInitial';
+import RoadmapStepper from '@/components/ListingComponents/ListRoadMapper';
 
 
 
@@ -67,9 +70,25 @@ const listings = [
   },
 ];
 
+const steps = [
+  {
+    title: "Start with the basics",
+    description: "Add your location, property type, number of guests, and available amenities."
+  },
+  {
+    title: "Make It Shine",
+    description: "   Upload great photos, write a simple description and set price and availability"
+  },
+  {
+    title: "Finish & Go Live",
+    description: "   Double check your details, preview your listing, and publish it to start hosting"
+  }
+];
+
 const MyListing: React.FC = () => {
   const [activeTab, setActiveTab] = useState('All Listings');
-  const initialListingsLoaded = false; {/*useSelector(selectInitialListingsLoaded)*/};
+  const [userSteps, setUserSteps] = useState(0);
+  const initialListingsLoaded = true; {/*useSelector(selectInitialListingsLoaded)*/};
   
   const filteredListings =
     activeTab === "All Listings"
@@ -81,14 +100,41 @@ const MyListing: React.FC = () => {
       <ListingsManager />
       <Header />
       <HeaderSpacer />
-        <div className='px-8 py-4'>
+        <div className='px-10 py-4'>
 
-        {initialListingsLoaded && (
-          <div className='text-5xl'>e</div>
-          
-        )
+        {initialListingsLoaded && userSteps === 0 &&
+        <div className='grid grid-cols-2 gap-x-12 gap-y-8 mt-20'>
+          <div className=" col-span-1 row-start-2 justify-start flex ">
+            <InitialListCardText/> 
+            </div>
+
+                    {steps.map((step, index) => (
+            <div key={index} className=" col-start-2 flex justify-center">
+              <ListCardInitial
+                index={index}
+                title={step.title}
+                description={step.description}
+                image="/icons/house.png"
+              />
+            </div>
+
+            
+          ))}
+          <div className="col-start-2 flex justify-end mt-8">
+            <button 
+            onClick={() => setUserSteps(1)}
+            className="bg-[#1D5C5C] px-6 py-3 rounded-lg text-white text-sm hover:opacity-90 transition">
+              Get started
+            </button>
+          </div>
+                  
+            
+        </div>
         
       }
+        {userSteps >= 1 && (
+  <RoadmapStepper currentStep={userSteps} setCurrentStep={setUserSteps} />
+      )}
 
       { !initialListingsLoaded && <div className="container mx-auto p-4 md:p-8">
         <ListingHeader />
