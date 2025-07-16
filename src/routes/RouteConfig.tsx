@@ -24,6 +24,7 @@ import SupportInfo from '@/pages/SupportInfo';
 import NotificationPage from '@/pages/NotificationPage';
 import NotFound404 from '@/pages/NotFound404';
 import VerifyEmail from '@/pages/VerifyEmail';
+import MyListing from '@/pages/MyListing';
 
 export interface RouteConfig {
   path: string;

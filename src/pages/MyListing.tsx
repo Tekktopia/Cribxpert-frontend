@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
-import { useSelector } from 'react-redux';
-import { selectInitialListingsLoaded } from '@/features/listing';
-import ListingsManager from '@/components/home/ListingsManager';
 import ListingHeader from '@/components/ListingComponents/ListingHeader';
 import ListingTabs from '@/components/ListingComponents/ListingTabs';
 import ListingCard from '@/components/ListingComponents/ListingCard';
@@ -73,15 +70,20 @@ const listings = [
 const steps = [
   {
     title: "Start with the basics",
-    description: "Add your location, property type, number of guests, and available amenities."
+    description: "Add your location, property type, number of guests, and available amenities.",
+    image: "/icons/house-in-isometry.png"
   },
   {
     title: "Make It Shine",
-    description: "   Upload great photos, write a simple description and set price and availability"
+    description: "   Upload great photos, write a simple description and set price and availability",
+    image: "/icons/Livingroom.png"
+
   },
   {
     title: "Finish & Go Live",
-    description: "   Double check your details, preview your listing, and publish it to start hosting"
+    description: "   Double check your details, preview your listing, and publish it to start hosting",
+    image: "/icons/checkmark-pink.png"
+
   }
 ];
 
@@ -97,7 +99,7 @@ const MyListing: React.FC = () => {
 
   return (
     <div >
-      <ListingsManager />
+      
       <Header />
       <HeaderSpacer />
         <div className='px-10 py-4'>
@@ -114,7 +116,7 @@ const MyListing: React.FC = () => {
                 index={index}
                 title={step.title}
                 description={step.description}
-                image="/icons/house.png"
+                image= {step.image}
               />
             </div>
 
