@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { bookingApi, BookingResponse } from './bookingService';
+import { Booking, bookingApi } from './bookingService';
 
 interface BookingDetails {
+  userId: string;
   propertyId: string;
   checkIn: string;
   checkOut: string;
@@ -12,7 +13,7 @@ interface BookingDetails {
 
 interface BookingState {
   currentBooking: BookingDetails | null;
-  bookingHistory: BookingResponse[];
+  bookingHistory: Booking[];
   isProcessing: boolean;
   error: string | null;
 }
@@ -41,20 +42,20 @@ export const bookingSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Create booking matchers
-      .addMatcher(
-        bookingApi.endpoints.createBooking.matchPending,
-        (state) => {
-          state.isProcessing = true;
-          state.error = null;
-        }
-      )
+      .addMatcher(bookingApi.endpoints.createBooking.matchPending, (state) => {
+        state.isProcessing = true;
+        state.error = null;
+      })
       .addMatcher(
         bookingApi.endpoints.createBooking.matchFulfilled,
         (state, { payload }) => {
           state.isProcessing = false;
           state.currentBooking = null;
           // Add to history in a way that preserves BookingResponse type
-          state.bookingHistory = [payload as BookingResponse, ...state.bookingHistory];
+          state.bookingHistory = [
+            payload.booking as Booking,
+            ...state.bookingHistory,
+          ];
         }
       )
       .addMatcher(
@@ -64,7 +65,7 @@ export const bookingSlice = createSlice({
           state.error = error.message || 'Failed to create booking';
         }
       )
-      
+
       // Get bookings by user matchers
       .addMatcher(
         bookingApi.endpoints.getBookingsByUserId.matchPending,
@@ -76,7 +77,7 @@ export const bookingSlice = createSlice({
         bookingApi.endpoints.getBookingsByUserId.matchFulfilled,
         (state, { payload }) => {
           state.isProcessing = false;
-          state.bookingHistory = payload as BookingResponse[];
+          state.bookingHistory = payload.bookings;
         }
       )
       .addMatcher(
@@ -85,25 +86,22 @@ export const bookingSlice = createSlice({
           state.isProcessing = false;
           state.error = error.message || 'Failed to fetch bookings';
         }
-      )
+      );
   },
 });
 
 // Export actions
-export const {
-  startBooking,
-  clearCurrentBooking,
-  setBookingError,
-} = bookingSlice.actions;
+export const { startBooking, clearCurrentBooking, setBookingError } =
+  bookingSlice.actions;
 
 // Export selectors
-export const selectCurrentBooking = (state: { booking: BookingState }) => 
+export const selectCurrentBooking = (state: { booking: BookingState }) =>
   state.booking.currentBooking;
-export const selectBookingHistory = (state: { booking: BookingState }) => 
+export const selectBookingHistory = (state: { booking: BookingState }) =>
   state.booking.bookingHistory;
-export const selectIsProcessing = (state: { booking: BookingState }) => 
+export const selectIsProcessing = (state: { booking: BookingState }) =>
   state.booking.isProcessing;
-export const selectBookingError = (state: { booking: BookingState }) => 
+export const selectBookingError = (state: { booking: BookingState }) =>
   state.booking.error;
 
 export default bookingSlice.reducer;

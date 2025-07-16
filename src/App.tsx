@@ -7,7 +7,6 @@ import ScrollToTop from './components/common/ScrollToTop';
 
 // App components
 import LoadingManager from './components/app/LoadingManager';
-import AppProviders from './components/app/AppProviders';
 import AppRoutes from './components/app/AppRoutes';
 
 /**
@@ -16,9 +15,7 @@ import AppRoutes from './components/app/AppRoutes';
 const AppContent = () => {
   return (
     <LoadingManager>
-      <AppProviders>
-        <AppRoutes />
-      </AppProviders>
+      <AppRoutes />
     </LoadingManager>
   );
 };

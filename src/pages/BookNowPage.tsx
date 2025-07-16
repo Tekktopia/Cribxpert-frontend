@@ -1,22 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import danger from '@/assets/icons/danger.png';
 import Header, { HeaderSpacer } from '@/components/layout/Header';
 import OrderSummary from '@/components/booking/OrderSummary';
 import Booking from '@/components/booking/Booking';
-
-interface BookingData {
-  propertyId: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  guests: number;
-  totalPrice: number;
-  propertyName: string;
-}
+import type { BookingData } from '@/types';
 
 const BookNowPage: React.FC = () => {
   const location = useLocation();
-  const bookingData = location.state as BookingData;
+  const initialBookingData = location.state as BookingData;
+
+  // Local state to hold the booking data
+  const [bookingData, setBookingData] =
+    useState<BookingData>(initialBookingData);
+
+  // Function to handle booking updates
+  const handleBookingUpdate = (updatedData: BookingData) => {
+    setBookingData(updatedData);
+  };
 
   // If no booking data, show a message or redirect
   if (!bookingData) {
@@ -52,16 +53,16 @@ const BookNowPage: React.FC = () => {
         </h2>
         <div className="p-2 container mx-auto max-w-[1280px] h-auto border border-[#cccccc] bg-[#f1e6f1]/60 rounded-md flex items-center gap-2">
           <img src={danger} alt="Danger Icon" className="w-[20px] h-[20px]" />
-            <p className="text-[#6F6F6F] md:text-md text-sm">
-            Booking for {bookingData.propertyName} •{" "}
+          <p className="text-[#6F6F6F] md:text-md text-sm">
+            Booking for {bookingData.propertyName} •{' '}
             {bookingData.startDate &&
               (() => {
-              const start = new Date(bookingData.startDate);
-              const sevenDaysBefore = new Date(start);
-              sevenDaysBefore.setDate(start.getDate() - 7);
-              return `You can cancel your booking until 7 days before check-in: ${sevenDaysBefore.toLocaleDateString()}`;
+                const start = new Date(bookingData.startDate);
+                const sevenDaysBefore = new Date(start);
+                sevenDaysBefore.setDate(start.getDate() - 7);
+                return `You can cancel your booking until 7 days before check-in: ${sevenDaysBefore.toLocaleDateString()}`;
               })()}
-            </p>
+          </p>
         </div>
       </div>
       <div className="container mx-auto">
@@ -70,7 +71,10 @@ const BookNowPage: React.FC = () => {
             <Booking bookingData={bookingData} />
           </div>
           <div className="md:w-1/2">
-            <OrderSummary bookingData={bookingData} />
+            <OrderSummary
+              bookingData={bookingData}
+              onBookingUpdate={handleBookingUpdate}
+            />
           </div>
         </div>
       </div>

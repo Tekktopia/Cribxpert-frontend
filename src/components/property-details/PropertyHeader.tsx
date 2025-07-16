@@ -3,11 +3,6 @@ import {
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
 } from '@/features/favourites';
-import {
-  addOfflineFavourite,
-  removeOfflineFavourite,
-} from '@/features/favourites/favouritesSlice';
-import { useFavouritesOfflineSync } from '@/features/favourites/useOfflineSync';
 import { ShareIcon } from '@heroicons/react/24/solid';
 import { HeartIcon } from 'lucide-react';
 import React from 'react';
@@ -22,14 +17,10 @@ import useAlert from '@/hooks/useAlert';
 import { RootState } from '@/store/store';
 
 const PropertyHeader: React.FC = () => {
-  // Initialize offline sync for favorites (handles synchronization when coming back online)
-  useFavouritesOfflineSync();
-
   // Get current listing from the store
   const currentListing = useSelector(selectCurrentListing);
   const currentUser = useSelector(selectCurrentUser);
   const isAuthenticated = useSelector(selectIsAuthenticated);
-  const { isOnline } = useSelector((state: RootState) => state.favourites);
   const navigate = useNavigate();
   const alert = useAlert();
   const dispatch = useDispatch();
@@ -72,41 +63,36 @@ const PropertyHeader: React.FC = () => {
         title: 'Login Required',
         text: 'Please log in to save properties to your favorites.',
       });
-      // Optionally redirect to login page
       navigate('/login');
+      return;
+    }
+
+    // Only allow if online
+    if (!navigator.onLine) {
+      alert({
+        icon: 'error',
+        title: 'Offline',
+        text: 'Unable to add favorites, restore your connection.',
+      });
       return;
     }
 
     try {
       if (isFavourited) {
         // Remove from favourites
-        if (isOnline) {
-          await removeFavourite({ listingId, userId }).unwrap();
-        } else {
-          // Handle offline removal
-          dispatch(removeOfflineFavourite(listingId));
-        }
+        await removeFavourite({ listingId, userId }).unwrap();
         alert({
           icon: 'success',
           title: 'Removed',
-          text: isOnline
-            ? 'Property removed from saved!'
-            : 'Property removed from saved! Changes will sync when you reconnect.',
+          text: 'Property removed from saved!',
         });
       } else {
         // Add to favourites
-        if (isOnline) {
-          await addFavourite({ listingId, userId }).unwrap();
-        } else {
-          // Handle offline addition
-          dispatch(addOfflineFavourite(listingId));
-        }
+        await addFavourite({ listingId, userId }).unwrap();
         alert({
           icon: 'success',
           title: 'Saved',
-          text: isOnline
-            ? 'Property saved!'
-            : 'Property saved! Changes will sync when you reconnect.',
+          text: 'Property saved!',
         });
       }
     } catch (error) {
@@ -142,13 +128,7 @@ const PropertyHeader: React.FC = () => {
                 : 'bg-[#f0f0f0] cursor-pointer opacity-75 hover:opacity-100'
             }`}
             onClick={onSave}
-            title={
-              !isAuthenticated
-                ? 'Login to save properties'
-                : !isOnline
-                  ? 'Offline - changes will sync when you reconnect'
-                  : undefined
-            }
+            title={!isAuthenticated ? 'Login to save properties' : undefined}
           >
             <div className="flex items-center gap-2">
               <HeartIcon

@@ -8,15 +8,7 @@ import {
 import { useCreateBookingMutation } from '@/features/booking/bookingService';
 import { startBooking } from '@/features/booking';
 import useAlert from '@/hooks/useAlert';
-
-interface BookingData {
-  propertyId: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  guests: number;
-  totalPrice: number;
-  propertyName: string;
-}
+import type { BookingData } from '@/types';
 
 interface BookingProps {
   bookingData?: BookingData;
@@ -51,15 +43,16 @@ const Booking: React.FC<BookingProps> = ({ bookingData }) => {
       dispatch(
         startBooking({
           propertyId: bookingData.propertyId,
-          checkIn: bookingData.startDate?.toISOString() || '',
-          checkOut: bookingData.endDate?.toISOString() || '',
+          checkIn: bookingData.startDate?.toLocaleDateString('en-CA') || '',
+          checkOut: bookingData.endDate?.toLocaleDateString('en-CA') || '',
           guests: bookingData.guests,
           totalPrice: bookingData.totalPrice,
+          userId: currentUser?._id || '',
           specialRequests: message,
         })
       );
     }
-  }, [bookingData, message, dispatch]);
+  }, [bookingData, message, dispatch, currentUser?._id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,6 +95,7 @@ const Booking: React.FC<BookingProps> = ({ bookingData }) => {
         endDate: bookingData.endDate.toISOString(),
         travelersNo: bookingData.guests,
         totalPrice: bookingData.totalPrice,
+        userId: currentUser?._id || '',
         listing: bookingData.propertyId,
         specialRequests: message || undefined,
       };
@@ -117,7 +111,7 @@ const Booking: React.FC<BookingProps> = ({ bookingData }) => {
       // Navigate to payment page with booking ID
       navigate('/payments', {
         state: {
-          bookingId: result.id,
+          bookingId: result.booking._id,
           totalPrice: bookingData.totalPrice,
           propertyName: bookingData.propertyName,
         },

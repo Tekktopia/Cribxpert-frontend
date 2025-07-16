@@ -1,10 +1,14 @@
 import React from 'react';
-
 import BookingsTable from './BookingsTable';
-import { cancelledBookingsData } from '@/utils/data';
+import { Booking } from '@/features/booking/bookingService';
 
-const CancelledBookings = () => {
-  return <BookingsTable bookings={cancelledBookingsData} />;
-};
+interface CancelledBookingsProps {
+  bookings: Booking[];
+}
+
+function CancelledBookings({ bookings }: CancelledBookingsProps) {
+  const filtered = bookings.filter((b) => b.status === 'Cancelled');
+  return <BookingsTable bookings={filtered} />;
+}
 
 export default CancelledBookings;

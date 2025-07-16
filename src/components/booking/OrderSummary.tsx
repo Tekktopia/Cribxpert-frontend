@@ -4,17 +4,7 @@ import ImageCarousel from './ImageCarousel';
 import PropertyDetails from './PropertyDetails';
 import BookingDetails from './BookingDetails';
 import PriceBreakdown from './PriceBreakdown';
-
-interface BookingData {
-  propertyId: string;
-  startDate: Date | null;
-  endDate: Date | null;
-  guests: number;
-  totalPrice: number;
-  propertyName: string;
-  propertyImages?: string[];
-  maxGuests?: number;
-}
+import type { BookingData } from '@/types';
 
 interface OrderSummaryProps {
   bookingData?: BookingData;
@@ -32,7 +22,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Editable booking details
+  // Editable booking details state
   const [startDate, setStartDate] = useState<Date | null>(
     bookingData?.startDate || null
   );
@@ -40,7 +30,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     bookingData?.endDate || null
   );
   const [guests, setGuests] = useState<number>(bookingData?.guests || 1);
-  const [isEditing, setIsEditing] = useState(false);
 
   // Get property images or use a default placeholder
   const propertyImages = bookingData?.propertyImages || [];
@@ -64,6 +53,21 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     };
   }, []);
 
+  // Autosave booking changes
+  useEffect(() => {
+    if (bookingData && onBookingUpdate) {
+      const updatedData: BookingData = {
+        ...bookingData,
+        startDate: startDate || null,
+        endDate: endDate || null,
+        guests,
+        totalPrice: calculateTotalPrice(),
+      };
+      onBookingUpdate(updatedData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate, endDate, guests]);
+
   // Handle guest count changes
   const handleGuestChange = (delta: number) => {
     setGuests((prev) => {
@@ -72,29 +76,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       if (next > maxGuests) return maxGuests;
       return next;
     });
-  };
-
-  // Handle saving changes
-  const handleSaveChanges = () => {
-    if (bookingData && onBookingUpdate) {
-      const updatedData = {
-        ...bookingData,
-        startDate,
-        endDate,
-        guests,
-        totalPrice: calculateTotalPrice(),
-      };
-      onBookingUpdate(updatedData);
-    }
-    setIsEditing(false);
-  };
-
-  // Handle canceling changes
-  const handleCancelChanges = () => {
-    setStartDate(bookingData?.startDate || null);
-    setEndDate(bookingData?.endDate || null);
-    setGuests(bookingData?.guests || 1);
-    setIsEditing(false);
   };
 
   // Handle opening carousel
@@ -301,9 +282,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         feedbackCount={115}
       />
 
-      {/* Booking Details - Editable */}
+      {/* Booking Details - Always Editable */}
       <BookingDetails
-        isEditing={isEditing}
         startDate={startDate}
         endDate={endDate}
         guests={guests}
@@ -311,9 +291,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
         onGuestChange={handleGuestChange}
-        onSave={handleSaveChanges}
-        onCancel={handleCancelChanges}
-        onEdit={() => setIsEditing(true)}
+        onSave={() => {}}
       />
 
       {/* Price Breakdown */}
@@ -324,7 +302,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         serviceFee={serviceFee}
         totalPrice={totalPrice}
         isSubmitting={isSubmitting}
-        isEditing={isEditing}
+        isEditing={false}
         onConfirm={() => {
           const form = document.getElementById(
             'booking-form'

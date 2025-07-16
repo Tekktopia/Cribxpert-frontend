@@ -1,15 +1,10 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import {
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
 } from '@/features/favourites/favouritesService';
-import {
-  selectIsItemFavourited,
-  addOfflineFavourite,
-  removeOfflineFavourite,
-  setFavouriteError,
-} from '@/features/favourites/favouritesSlice';
+import { selectIsItemFavourited } from '@/features/favourites/favouritesSlice';
 import { RootState } from '@/store/store';
 
 interface FavouriteButtonProps {
@@ -18,22 +13,15 @@ interface FavouriteButtonProps {
   showText?: boolean;
 }
 
-/**
- * A button component to toggle favourite status with offline support
- */
 export const FavouriteButton = ({
   listingId,
   className = '',
   showText = false,
 }: FavouriteButtonProps) => {
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get current user and online status
   const { user } = useSelector((state: RootState) => state.auth);
-  const { isOnline } = useSelector((state: RootState) => state.favourites);
 
-  // Check if this item is already favourited
   const isFavourited = useSelector(selectIsItemFavourited(listingId));
 
   // Get API mutation hooks
@@ -41,47 +29,25 @@ export const FavouriteButton = ({
   const [removeFavourite] = useRemoveFavouriteMutation();
 
   const handleToggleFavourite = async () => {
-    // If no user is logged in, you might want to redirect to login
     if (!user) {
-      // Optionally, redirect to login or show a message
       alert('Please login to save favourites');
       return;
     }
-
-    // If we're offline, use offline state management
-    if (!isOnline) {
-      if (isFavourited) {
-        dispatch(removeOfflineFavourite(listingId));
-      } else {
-        dispatch(addOfflineFavourite(listingId));
-      }
-      // Show feedback to the user that this will sync when online
-      alert("You're offline. This will be synced when you're back online.");
+    if (!navigator.onLine) {
+      alert('Unable to add favorites, restore your connection.');
       return;
     }
-
-    // If we're online, make the API call
     try {
       setIsLoading(true);
-
       if (isFavourited) {
-        await removeFavourite({
-          userId: user._id,
-          listingId,
-        });
+        await removeFavourite({ userId: user._id, listingId });
       } else {
-        await addFavourite({
-          userId: user._id,
-          listingId,
-        });
+        await addFavourite({ userId: user._id, listingId });
       }
-
       setIsLoading(false);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    } catch {
       setIsLoading(false);
-      dispatch(setFavouriteError('Failed to update favourite status'));
-      // console.error('Error toggling favourite:', error);
+      alert('Failed to update favourite status');
     }
   };
 

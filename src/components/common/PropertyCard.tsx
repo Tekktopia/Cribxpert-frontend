@@ -1,22 +1,18 @@
 import { PropertyListingCardProps } from '@/types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CiHeart } from 'react-icons/ci';
 import { FaChevronLeft, FaChevronRight, FaHeart, FaStar } from 'react-icons/fa';
 import { HiOutlineCamera } from 'react-icons/hi';
 import { IoLocationOutline } from 'react-icons/io5';
 import React, { useCallback, useState } from 'react';
 import OptimizedImage from './OptimizedImage';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import {
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
 } from '@/features/favourites/favouritesService';
-import {
-  addOfflineFavourite,
-  removeOfflineFavourite,
-  selectIsItemFavourited,
-} from '@/features/favourites/favouritesSlice';
+import { selectIsItemFavourited } from '@/features/favourites/favouritesSlice';
 
 const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   id,
@@ -31,6 +27,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   propertyType = 'Apartment', // Default value if not provided
   minWidth = 'min-w-[350px]',
 }) => {
+  const navigate = useNavigate();
   // Use the provided image as fallback if no images array is provided
   const allImages = React.useMemo(
     () => (images.length > 0 ? images : [image]),
@@ -41,9 +38,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Redux setup for favourites
-  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  const { isOnline } = useSelector((state: RootState) => state.favourites);
   const isSavedProperty = useSelector(selectIsItemFavourited(id));
 
   // API mutations
@@ -59,41 +54,30 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
       if (!user?._id) {
         // Handle unauthenticated user - maybe show a login prompt
         console.warn('User must be logged in to save favourites');
+        navigate('/login');
+        return;
+      }
+
+      // Only allow if online
+      if (!navigator.onLine) {
+        alert('Unable to add favorites, restore your connection.');
         return;
       }
 
       try {
         if (isSavedProperty) {
           // Remove from favourites
-          if (isOnline) {
-            await removeFavourite({ userId: user._id, listingId: id });
-          } else {
-            // Handle offline removal
-            dispatch(removeOfflineFavourite(id));
-          }
+          await removeFavourite({ userId: user._id, listingId: id });
         } else {
           // Add to favourites
-          if (isOnline) {
-            await addFavourite({ userId: user._id, listingId: id });
-          } else {
-            // Handle offline addition
-            dispatch(addOfflineFavourite(id));
-          }
+          await addFavourite({ userId: user._id, listingId: id });
         }
       } catch (error) {
         console.error('Failed to update favourite:', error);
         // You might want to show a toast notification here
       }
     },
-    [
-      id,
-      isSavedProperty,
-      user,
-      isOnline,
-      addFavourite,
-      removeFavourite,
-      dispatch,
-    ]
+    [id, isSavedProperty, user, addFavourite, removeFavourite, navigate]
   );
 
   const nextImage = useCallback(

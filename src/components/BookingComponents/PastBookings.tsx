@@ -1,10 +1,15 @@
 import React from 'react';
-
 import BookingsTable from './BookingsTable';
-import { completedBookingsData } from '@/utils/data';
+import { Booking } from '@/features/booking/bookingService';
 
-const PastBookings = () => {
-  return <BookingsTable bookings={completedBookingsData} />;
-};
+interface PastBookingsProps {
+  bookings: Booking[];
+}
+
+function PastBookings({ bookings }: PastBookingsProps) {
+  const now = new Date();
+  const filtered = bookings.filter((b) => new Date(b.endDate) < now);
+  return <BookingsTable bookings={filtered} />;
+}
 
 export default PastBookings;

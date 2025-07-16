@@ -4,7 +4,7 @@ export interface PropertyListing {
   _id: string;
   name: string;
   description: string;
-  amenities: string[];  // Array of amenity IDs
+  amenities: string[]; // Array of amenity IDs
   propertyType: string; // Property type ID
   street: string;
   city: string;
@@ -123,7 +123,7 @@ export type ContactInfo = {
 export type FilterOption = {
   value: string;
   label: string;
-  currency?:string
+  currency?: string;
 };
 
 export type FilterParameter = {
@@ -131,3 +131,15 @@ export type FilterParameter = {
   label: string;
   options: FilterOption[];
 };
+
+export interface BookingData {
+  userId: string;
+  propertyId: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  guests: number;
+  totalPrice: number;
+  propertyName: string;
+  propertyImages?: string[];
+  maxGuests?: number;
+}
