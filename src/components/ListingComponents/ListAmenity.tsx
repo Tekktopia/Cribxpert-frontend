@@ -4,11 +4,10 @@ export interface Amenity {
   input: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'checked' | 'onChange'>;
   icon: string;
   description: string;
-  checked: boolean;  // Add checked directly
-  onChange: () => void; // Add onChange for event handling
+ 
 }
 
-const ListAmenity = ({ input, icon, description, checked, onChange }: Amenity) => {
+const ListAmenity = ({ input, icon, description }: Amenity) => {
   const [isChecked, setIsChecked] = useState(input.checked);
 
   const handleChange = () => {
