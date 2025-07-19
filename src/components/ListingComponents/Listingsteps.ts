@@ -17,8 +17,8 @@ export const stepData: ListingCardStepsProps[] = [
     image: "/images/step3.png",
   },
   {
-    title: "Test",
-    description: "Ensure everything works as expected.",
+    title: "Amenities",
+    description: "Select all the amenities available at your property. You must select at least one.",
     image: "/images/step4.png",
   },
   {

@@ -5,7 +5,9 @@ import PropertyTypeLabelIcon from '../ListingComponents/PropertyTypeLabelIcon';
 import { propertyTypeData } from '../ListingComponents/PropertyTypeData';
 import { ListingCardStepTwoData } from './ListingCardTwoData';
 import ListingCardStepTwo from './ListingCardStepTwo';
-import ListingMap from './LIsitingMap';
+import ListingMap from './LisitingMap';
+import ListAmenity from './ListAmenity';
+import {AmenityData} from './ListAmenityData'
 
 const RoadmapStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -80,6 +82,21 @@ const RoadmapStepper: React.FC = () => {
             <ListingMap />
           </div>
         )}
+
+
+        {activeStep === 3 && (
+          <div className=' grid grid-cols-2   mx-auto mt-20 max-w-5xl'>
+            {AmenityData.map((item,index)=>(
+              <ListAmenity 
+              key={item.input.id}
+              input={item.input}
+              icon={item.icon}
+              description={item.description}
+              />
+            ))}
+          </div>
+        )}
+
             {/* Navigation */}
       <div className="flex justify-between mt-8">
         <button
