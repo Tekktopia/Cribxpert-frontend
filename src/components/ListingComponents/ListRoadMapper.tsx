@@ -7,7 +7,8 @@ import { ListingCardStepTwoData } from './ListingCardTwoData';
 import ListingCardStepTwo from './ListingCardStepTwo';
 import ListingMap from './LisitingMap';
 import ListAmenity from './ListAmenity';
-import {AmenityData} from './ListAmenityData'
+import {AmenityData} from './ListAmenityData';
+import ListingPropertyPage from './ListingPropertyPage';
 
 const RoadmapStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -78,7 +79,7 @@ const RoadmapStepper: React.FC = () => {
         </div>
       )}
         {activeStep === 2 && (
-          <div className='max-w-[760px] max-h-[560px] mx-auto'>
+          <div className='max-w-[760px] max-h-[560px] mx-auto '>
             <ListingMap />
           </div>
         )}
@@ -94,6 +95,13 @@ const RoadmapStepper: React.FC = () => {
               description={item.description}
               />
             ))}
+          </div>
+        )}
+
+
+        {activeStep === 4 && (
+          <div className='flex justify-center  mx-auto'>
+            <ListingPropertyPage />
           </div>
         )}
 

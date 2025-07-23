@@ -22,8 +22,8 @@ export const stepData: ListingCardStepsProps[] = [
     image: "/images/step4.png",
   },
   {
-    title: "Launch",
-    description: "Share your product with the world.",
+    title: "Property Photos",
+    description: "Upload at least 5 high quality photos of your property, include image of all major area such as living room, bedrooms, bathrooms, kitchen and exterior",
     image: "/images/step5.png",
   },
   {
