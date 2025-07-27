@@ -23,36 +23,40 @@ const RoadmapStepper: React.FC = () => {
 
   return (
     <div className="w-full p-6">
-      {/* Step Indicators */}
-      <div className="relative flex items-center justify-between mb-10">
-        <div className="absolute left-0 right-0 top-5 h-1 bg-gray-300 z-0" />
-        <div
-          className="absolute top-5 h-1 bg-[#1D5C5C] z-10 transition-all duration-300"
-          style={{ width: `${(activeStep / (stepData.length - 1)) * 100}%` }}
-        />
-        {stepData.map((_, index) => (
-          <div key={index} className="flex flex-col items-center relative z-20">
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                index <= activeStep
-                  ? 'bg-[#1D5C5C] text-white'
-                  : 'bg-gray-300 text-gray-700'
-              }`}
-            >
-              {index + 1}
+      {/* Step Indicators (hide on step 5) */}
+      {activeStep !== 4 && (
+        <div className="relative flex items-center justify-between mb-10">
+          <div className="absolute left-0 right-0 top-5 h-1 bg-gray-300 z-0" />
+          <div
+            className="absolute top-5 h-1 bg-[#1D5C5C] z-10 transition-all duration-300"
+            style={{ width: `${(activeStep / (stepData.length - 1)) * 100}%` }}
+          />
+          {stepData.map((_, index) => (
+            <div key={index} className="flex flex-col items-center relative z-20">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  index <= activeStep
+                    ? 'bg-[#1D5C5C] text-white'
+                    : 'bg-gray-300 text-gray-700'
+                }`}
+              >
+                {index + 1}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Step Content */}
-      <div className="flex justify-center text-center mb-8">
-        <ListingCardSteps
-          title={stepData[activeStep].title}
-          description={stepData[activeStep].description}
-          image={stepData[activeStep].image}
-        />
-      </div>
+    {activeStep !== 4 && (
+  <div className="flex justify-center text-center mb-8">
+    <ListingCardSteps
+      title={stepData[activeStep].title}
+      description={stepData[activeStep].description}
+      image={stepData[activeStep].image}
+    />
+  </div>
+)}
 
       {activeStep === 0 && (
         <div className="max-w-[760px] max-h-[560px] mx-auto">
@@ -108,24 +112,24 @@ const RoadmapStepper: React.FC = () => {
         </div>
       )}
 
-      {/* Navigation for steps 0-3 only */}
-     {activeStep !== 4 && activeStep !== 7 && (
-  <div className="flex justify-between items-center mt-8 max-w-[760px] mx-auto w-full">
-    <button
-      onClick={prevStep}
-      disabled={activeStep === 0}
-      className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
-    >
-      Previous
-    </button>
-    <button
-      onClick={nextStep}
-      className="bg-[#1D5C5C] text-white px-4 py-2 rounded"
-    >
-      Next
-    </button>
-  </div>
-)}
+      {/* Navigation for steps 0-3 only (hide on step 5) */}
+      {activeStep !== 4 && (
+        <div className="flex justify-between items-center mt-8 max-w-[760px] mx-auto w-full">
+          <button
+            onClick={prevStep}
+            disabled={activeStep === 0}
+            className="bg-gray-300 px-4 py-2 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={nextStep}
+            className="bg-[#1D5C5C] text-white px-4 py-2 rounded"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 interface ListingPropertyPageProps {
   nextStep: () => void;
   prevStep: () => void;
+  onUploadComplete?: () => void; // Optional prop in case you want it later
 }
 
 const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, prevStep }) => {
@@ -50,6 +51,17 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
+      {/* Instruction text moved to the top */}
+      {!uploadCompleted && (
+        <div className="w-[644px] mb-6 text-center">
+          <h2 className="text-xl font-semibold mb-1">Property Photos</h2>
+          <p>
+            Upload at least 5 high quality photos of your property, include images of all major areas such as
+            living room, bedrooms, bathrooms, kitchen and exterior.
+          </p>
+        </div>
+      )}
+
       {/* Upload Box */}
       {showUploadBox && (
         <div
@@ -78,12 +90,27 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
         </div>
       )}
 
-      {/* Image Preview Grid */}
+      {/* Review instructions after upload is complete */}
+      {uploadCompleted && (
+        <div className="w-[644px] mt-6 text-center">
+          <h2 className="text-xl font-semibold mb-1">Review Your Photos</h2>
+          <p>Click to select a cover photo. By default, the first image will be used as the cover.</p>
+        </div>
+      )}
+
+      {/* Preview Section */}
       {selectedFiles.length > 0 && (
         <>
-          <p className="text-sm text-gray-700 mt-4 font-bold text-center">
-            Selected Photos: ({selectedFiles.length}/6)
-          </p>
+          {!isUploading && !uploadCompleted && (
+            <p className="text-sm text-gray-700 mt-4 font-bold text-center">
+              Selected Photos: ({selectedFiles.length}/6)
+            </p>
+          )}
+          {isUploading && (
+            <p className="text-sm mt-2 font-medium text-center">
+              {uploadedIndexes.length} photos uploaded
+            </p>
+          )}
 
           <div className="grid grid-cols-2 gap-4 mt-6">
             {previews.map((src, index) => (
@@ -91,7 +118,6 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
                 key={index}
                 className="relative border-2 border-gray-200 p-4 w-[300px] h-[250px] shadow-sm rounded"
               >
-                {/* Delete Icon */}
                 <button
                   onClick={() => setConfirmDeleteIndex(index)}
                   disabled={isUploading}
@@ -100,22 +126,17 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
                   🗑️
                 </button>
 
-                {/* Image Preview */}
                 <div className="relative w-full h-32 mb-2">
                   <img
                     src={src}
                     alt={`Uploaded ${index}`}
                     className="w-full h-full object-cover rounded-md"
                   />
-
-                  {/* Spinner overlay */}
                   {isUploading && !uploadedIndexes.includes(index) && (
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-md z-10">
                       <div className="loader border-white h-6 w-6 animate-spin rounded-full border-4 border-t-transparent" />
                     </div>
                   )}
-
-                  {/* Checkmark overlay */}
                   {!isUploading && uploadedIndexes.includes(index) && (
                     <div className="absolute top-2 left-2 text-green-500 text-xl z-10">✔️</div>
                   )}
@@ -127,66 +148,64 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
               </div>
             ))}
           </div>
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between w-full max-w-[644px] mt-6">
-            <button
-              onClick={prevStep}
-              className="bg-gray-300 text-black px-4 py-2 rounded"
-              disabled={isUploading}
-            >
-              Previous
-            </button>
-
-            <button
-              onClick={() => {
-                if (!uploadCompleted) {
-                  setIsUploading(true);
-                  setShowUploadBox(false);
-                  selectedFiles.forEach((_, index) => {
-                    setTimeout(() => {
-                      setUploadedIndexes((prev) => [...prev, index]);
-                      if (index === selectedFiles.length - 1) {
-                        setTimeout(() => {
-                          setIsUploading(false);
-                          setUploadCompleted(true);
-                        }, 1000);
-                      }
-                    }, 1000 + index * 600);
-                  });
-                } else {
-                  nextStep();
-                }
-              }}
-              disabled={selectedFiles.length === 0 || isUploading}
-              className="bg-[#1D5C5C] text-white px-4 py-2 rounded flex items-center"
-            >
-              {isUploading && (
-                <svg
-                  className="animate-spin h-5 w-5 mr-2 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8z"
-                  />
-                </svg>
-              )}
-              {uploadCompleted ? 'Next' : 'Upload'}
-            </button>
-          </div>
         </>
+      )}
+
+      {/* Navigation Buttons */}
+      {(!isUploading || uploadCompleted) && (
+        <div className="flex justify-between w-full max-w-[644px] mt-6">
+          <button
+            onClick={prevStep}
+            className="bg-gray-300 text-black px-4 py-2 rounded"
+            disabled={isUploading}
+          >
+            Previous
+          </button>
+
+          <button
+            onClick={() => {
+              if (!uploadCompleted) {
+                setIsUploading(true);
+                setShowUploadBox(false);
+                selectedFiles.forEach((_, index) => {
+                  setTimeout(() => {
+                    setUploadedIndexes((prev) => [...prev, index]);
+                    if (index === selectedFiles.length - 1) {
+                      setTimeout(() => {
+                        setIsUploading(false);
+                        setUploadCompleted(true);
+                      }, 1000);
+                    }
+                  }, 1000 + index * 600);
+                });
+              } else {
+                nextStep();
+              }
+            }}
+            disabled={selectedFiles.length === 0 || isUploading}
+            className="bg-[#1D5C5C] text-white px-4 py-2 rounded flex items-center"
+          >
+            {isUploading && (
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+            )}
+            {uploadCompleted ? 'Next' : 'Upload'}
+          </button>
+        </div>
       )}
 
       {/* Delete Confirmation Modal */}
