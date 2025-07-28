@@ -1,4 +1,3 @@
-import React from 'react';
 import BookingsTable from './BookingsTable';
 import { Booking } from '@/features/booking/bookingService';
 

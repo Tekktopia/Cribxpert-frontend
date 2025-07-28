@@ -20,10 +20,12 @@ function BookingsPage() {
     data: bookingsData,
     isLoading,
     error,
-  } = useGetBookingsByUserIdQuery(userId || '');
+  } = useGetBookingsByUserIdQuery(userId || '', {
+    skip: !userId,
+  });
 
   // bookingsData is an array of { message, booking }
-  const bookings = bookingsData ? bookingsData.bookings : [];
+  const bookings = bookingsData?.bookings || [];
 
   return (
     <div className="h-full">
@@ -38,7 +40,7 @@ function BookingsPage() {
         )}
         {error && (
           <div className="flex justify-center py-10 text-red-500">
-            Error loading bookings.
+            Error loading bookings. Please try again.
           </div>
         )}
         {!isLoading && !error && (
