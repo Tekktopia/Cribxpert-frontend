@@ -8,6 +8,8 @@ import { PropertyListing } from '@/types';
 import { selectAllListings } from '@/features/listing/listingSlice';
 import { useDispatch } from 'react-redux';
 import { setCurrentListing } from '@/features/listing';
+import { useCreateBookingMutation } from '@/features/booking/bookingService';
+import { selectCurrentUser } from '@/features/auth/authSlice';
 
 // Import our new components
 import PropertyGallery from '@/components/property-details/PropertyGallery';
@@ -57,6 +59,52 @@ const PropertyDetail = () => {
   );
 
   const dispatch = useDispatch();
+
+  // Get current user for booking
+  const currentUser = useSelector(selectCurrentUser);
+
+  // Add booking mutation
+  const [createBooking, { isLoading: isCreatingBooking }] =
+    useCreateBookingMutation();
+
+  // Handle booking submission
+  const handleBookingSubmit = async (formData: {
+    checkInDate: Date;
+    checkOutDate: Date;
+    guests: number;
+  }) => {
+    if (!property || !currentUser) {
+      console.error('Property or user not found');
+      return;
+    }
+
+    try {
+      // Calculate total price
+      const numberOfNights = Math.ceil(
+        (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+      const totalPrice = numberOfNights * property.basePrice;
+
+      const bookingData = {
+        startDate: formData.checkInDate.toISOString(),
+        endDate: formData.checkOutDate.toISOString(),
+        travelersNo: formData.guests,
+        totalPrice: totalPrice,
+        userId: currentUser._id,
+        listing: property._id,
+        specialRequests: '', // Optional field
+      };
+
+      await createBooking(bookingData).unwrap();
+      console.log('Booking created successfully!');
+      alert('Booking created successfully!');
+      navigate('/bookings');
+    } catch (error) {
+      console.error('Booking failed:', error);
+      alert('Failed to create booking. Please try again.');
+    }
+  };
 
   // Log the selected property to the console
   useEffect(() => {
@@ -130,7 +178,11 @@ const PropertyDetail = () => {
 
           <div className="w-full lg:w-1/2">
             <div className="sticky top-[80px]">
-              <BookingForm property={property} />
+              <BookingForm
+                property={property}
+                onBookingSubmit={handleBookingSubmit}
+                isSubmitting={isCreatingBooking}
+              />
             </div>
           </div>
         </div>{' '}

@@ -8,8 +8,11 @@ import {
   useGetUserListingsQuery,
   useGetUncompletedListingsQuery,
   useDeleteListingImageMutation,
+  useGetListingUnavailableDatesQuery,
   type ListingFilter,
-  type CreateListingRequest
+  type CreateListingRequest,
+  type UnavailableDate,
+  type UnavailableDatesResponse
 } from './listingService';
 
 // Re-export from listingSlice
@@ -61,7 +64,8 @@ export {
   useDeleteListingMutation,
   useGetUserListingsQuery,
   useGetUncompletedListingsQuery,
-  useDeleteListingImageMutation
+  useDeleteListingImageMutation,
+  useGetListingUnavailableDatesQuery
 };
 
 // Export all actions
@@ -107,4 +111,6 @@ export {
 export type {
   ListingFilter,
   CreateListingRequest,
+  UnavailableDate,
+  UnavailableDatesResponse,
 };
