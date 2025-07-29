@@ -37,6 +37,7 @@ interface ListingState {
     priceMin?: string; // New field for minimum price
     priceMax?: string; // New field for maximum price
     rating?: string; // New field for rating
+    location?: string; // New field for location search
     [key: string]: string | string[] | undefined;
   };
 
@@ -74,6 +75,11 @@ const initialState: ListingState = {
     priceRange: '',
     bedrooms: '',
     amenities: [], // Update to initialize as an array
+    bookingAvailability: '',
+    priceMin: '',
+    priceMax: '',
+    rating: '',
+    location: '',
     startDate: '',
     endDate: '',
   },

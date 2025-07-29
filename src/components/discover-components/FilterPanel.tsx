@@ -5,7 +5,11 @@ import {
   selectActiveFilters,
   updateFilter,
   resetFilters,
+  selectAllListings,
 } from '@/features/listing';
+import { useGetAmenitiesQuery } from '@/features/amenities';
+import { calculatePriceRanges } from '@/utils/filterUtils';
+import { PropertyListing } from '@/types';
 
 type FilterPanelProps = {
   isOpen: boolean;
@@ -18,6 +22,11 @@ export default function FilterPanel({
 }: FilterPanelProps) {
   const dispatch = useDispatch();
   const activeFilters = useSelector(selectActiveFilters);
+  const allListings = useSelector(selectAllListings);
+
+  // Fetch amenities from API
+  const { data: amenitiesData, isLoading: amenitiesLoading } =
+    useGetAmenitiesQuery();
 
   // Local state to track temporary filter changes before applying
   const [tempFilters, setTempFilters] = useState({
@@ -29,6 +38,23 @@ export default function FilterPanel({
     rating: '',
     location: 'Lagos, Nigeria',
   });
+
+  // Calculate dynamic price ranges based on actual listings
+  const priceRanges = useMemo(() => {
+    return calculatePriceRanges(allListings || []);
+  }, [allListings]);
+
+  // Get unique locations from listings
+  const uniqueLocations = useMemo(() => {
+    if (!allListings || allListings.length === 0) return ['Lagos, Nigeria'];
+
+    const locations = new Set<string>();
+    (allListings as PropertyListing[]).forEach((listing: PropertyListing) => {
+      const location = `${listing.city}, ${listing.state}, ${listing.country}`;
+      locations.add(location);
+    });
+    return Array.from(locations).sort();
+  }, [allListings]);
 
   // Sync with active filters when panel opens
   useEffect(() => {
@@ -56,12 +82,12 @@ export default function FilterPanel({
   }, [isOpen, activeFilters]);
 
   // Handle checkbox changes for amenities
-  const handleAmenityChange = (amenity: string, checked: boolean) => {
+  const handleAmenityChange = (amenityId: string, checked: boolean) => {
     setTempFilters((prev) => ({
       ...prev,
       amenities: checked
-        ? [...prev.amenities, amenity]
-        : prev.amenities.filter((a) => a !== amenity),
+        ? [...prev.amenities, amenityId]
+        : prev.amenities.filter((a) => a !== amenityId),
     }));
   };
 
@@ -116,21 +142,11 @@ export default function FilterPanel({
         'Available Next Month',
         'All Availability',
       ],
-      amenitiesList: [
-        'Parking available',
-        'Washer',
-        'Air conditioning',
-        'Kitchen',
-        '24/7 WiFi connection',
-      ],
-      priceRanges: [
-        { label: 'Under 100k', value: 'under-100k', max: 100000 },
-        { label: '100k - 500k', value: '100k-500k', min: 100000, max: 500000 },
-        { label: '500k - 2M', value: '500k-2M', min: 500000, max: 2000000 },
-        { label: 'More than 2M', value: 'over-2M', min: 2000000 },
-      ],
+      amenitiesList: amenitiesData || [],
+      priceRanges: priceRanges,
+      locations: uniqueLocations,
     }),
-    []
+    [amenitiesData, priceRanges, uniqueLocations]
   );
 
   // Memoize filter section content to prevent unnecessary re-renders
@@ -161,19 +177,35 @@ export default function FilterPanel({
         title: 'Amenities',
         content: (
           <div className="space-y-1 mt-2 bg-white p-2">
-            {filterOptions.amenitiesList.map((amenity, idx) => (
-              <label key={idx} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  className="accent-[#1D5C5C]"
-                  checked={tempFilters.amenities.includes(amenity)}
-                  onChange={(e) =>
-                    handleAmenityChange(amenity, e.target.checked)
-                  }
-                />
-                <span>{amenity}</span>
-              </label>
-            ))}
+            {amenitiesLoading ? (
+              <div className="text-sm text-gray-500">Loading amenities...</div>
+            ) : (
+              filterOptions.amenitiesList.map((amenity) => (
+                <label
+                  key={amenity._id}
+                  className="flex items-center space-x-2"
+                >
+                  <input
+                    type="checkbox"
+                    className="accent-[#1D5C5C]"
+                    checked={tempFilters.amenities.includes(amenity._id)}
+                    onChange={(e) =>
+                      handleAmenityChange(amenity._id, e.target.checked)
+                    }
+                  />
+                  <span className="flex items-center gap-2">
+                    {amenity.icon && (
+                      <img
+                        src={amenity.icon.fileUrl}
+                        alt={amenity.name}
+                        className="w-4 h-4"
+                      />
+                    )}
+                    <span>{amenity.name}</span>
+                  </span>
+                </label>
+              ))
+            )}
           </div>
         ),
       },
@@ -257,12 +289,17 @@ export default function FilterPanel({
         title: 'Location',
         content: (
           <div className="mt-2 bg-white p-2">
-            <input
-              type="text"
+            <select
               value={tempFilters.location}
               onChange={(e) => handleInputChange('location', e.target.value)}
               className="w-full border rounded p-1 text-sm"
-            />
+            >
+              {filterOptions.locations.map((location, idx) => (
+                <option key={idx} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
           </div>
         ),
       },
@@ -331,14 +368,14 @@ export default function FilterPanel({
             </div>
           </div>
 
-          {/* Filter Counts - Fix destructuring pattern */}
+          {/* Filter Counts */}
           <div className="mt-4 text-sm text-gray-500">
-            {Object.entries(tempFilters).filter(([value]) =>
+            {Object.entries(tempFilters).filter(([, value]) =>
               Array.isArray(value) ? value.length > 0 : value !== ''
             ).length > 0 ? (
               <div className="text-teal-600 font-medium">
                 {
-                  Object.entries(tempFilters).filter(([value]) =>
+                  Object.entries(tempFilters).filter(([, value]) =>
                     Array.isArray(value) ? value.length > 0 : value !== ''
                   ).length
                 }{' '}

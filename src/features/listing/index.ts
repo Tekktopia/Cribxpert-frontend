@@ -12,7 +12,7 @@ import {
   type ListingFilter,
   type CreateListingRequest,
   type UnavailableDate,
-  type UnavailableDatesResponse
+  type UnavailableDatesResponse,
 } from './listingService';
 
 // Re-export from listingSlice
@@ -47,7 +47,8 @@ import listingReducer, {
   selectIsDraftDirty,
   selectIsListingSelected,
   setInitialListingsLoaded,
-  selectInitialListingsLoaded
+  selectInitialListingsLoaded,
+  selectAllListings,
 } from './listingSlice';
 
 // Export the API
@@ -65,7 +66,7 @@ export {
   useGetUserListingsQuery,
   useGetUncompletedListingsQuery,
   useDeleteListingImageMutation,
-  useGetListingUnavailableDatesQuery
+  useGetListingUnavailableDatesQuery,
 };
 
 // Export all actions
@@ -85,7 +86,7 @@ export {
   toggleListingSelection,
   clearSelectedListings,
   setInitialListingsLoaded,
-  resetFilters
+  resetFilters,
 };
 
 // Export all selectors
@@ -104,7 +105,8 @@ export {
   selectUploadProgress,
   selectSelectedListingIds,
   selectIsDraftDirty,
-  selectIsListingSelected
+  selectIsListingSelected,
+  selectAllListings,
 };
 
 // Export types

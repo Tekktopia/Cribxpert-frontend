@@ -5,9 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   selectAllListings,
   setCurrentListings,
+  selectActiveFilters,
 } from '@/features/listing/listingSlice';
 import { selectAllPropertyTypes } from '@/features/propertyType';
 import { selectAllAmenities } from '@/features/amenities/amenitiesSlice';
+import { filterListings } from '@/utils/filterUtils';
 
 type DiscoverResultsProps = {
   isOpen: boolean;
@@ -24,6 +26,7 @@ export default function DiscoverResults({
   const rawListings = useSelector(selectAllListings);
   const rawPropertyTypes = useSelector(selectAllPropertyTypes);
   const rawAmenities = useSelector(selectAllAmenities);
+  const activeFilters = useSelector(selectActiveFilters);
 
   // Memoize the data to prevent unnecessary re-renders
   const allListings = useMemo(() => rawListings || [], [rawListings]);
@@ -69,53 +72,80 @@ export default function DiscoverResults({
       );
   }, [propertyTypes]);
 
-  // Filter listings based on search query
+  // Filter listings based on search query and active filters
   const filteredListings = useMemo(() => {
-    if (!searchQuery.trim()) {
-      return allListings;
+    let filtered = allListings;
+
+    // Apply search query filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+
+      filtered = filtered.filter((listing) => {
+        // Search in property name
+        if (listing.name.toLowerCase().includes(query)) {
+          return true;
+        }
+
+        // Search in location (city, state, country)
+        if (
+          listing.city.toLowerCase().includes(query) ||
+          listing.state.toLowerCase().includes(query) ||
+          listing.country.toLowerCase().includes(query)
+        ) {
+          return true;
+        }
+
+        // Search in property type name
+        const propertyTypeName = getPropertyTypeNameById(listing.propertyType);
+        if (propertyTypeName.toLowerCase().includes(query)) {
+          return true;
+        }
+
+        // Search in amenity names
+        const hasMatchingAmenity = listing.amenities?.some((amenityId) => {
+          const amenityName = getAmenityNameById(amenityId);
+          return amenityName.toLowerCase().includes(query);
+        });
+
+        if (hasMatchingAmenity) {
+          return true;
+        }
+
+        // Search in description
+        if (listing.description.toLowerCase().includes(query)) {
+          return true;
+        }
+
+        return false;
+      });
     }
 
-    const query = searchQuery.toLowerCase().trim();
+    // Apply active filters
+    if (
+      Object.keys(activeFilters).some(
+        (key) => activeFilters[key] && activeFilters[key] !== ''
+      )
+    ) {
+      // Normalize amenities to always be an array
+      const normalizedFilters = {
+        ...activeFilters,
+        amenities: Array.isArray(activeFilters.amenities)
+          ? activeFilters.amenities
+          : activeFilters.amenities
+            ? [activeFilters.amenities as string]
+            : [],
+      };
+      filtered = filterListings(filtered, normalizedFilters);
+    }
 
-    return allListings.filter((listing) => {
-      // Search in property name
-      if (listing.name.toLowerCase().includes(query)) {
-        return true;
-      }
-
-      // Search in location (city, state, country)
-      if (
-        listing.city.toLowerCase().includes(query) ||
-        listing.state.toLowerCase().includes(query) ||
-        listing.country.toLowerCase().includes(query)
-      ) {
-        return true;
-      }
-
-      // Search in property type name
-      const propertyTypeName = getPropertyTypeNameById(listing.propertyType);
-      if (propertyTypeName.toLowerCase().includes(query)) {
-        return true;
-      }
-
-      // Search in amenity names
-      const hasMatchingAmenity = listing.amenities?.some((amenityId) => {
-        const amenityName = getAmenityNameById(amenityId);
-        return amenityName.toLowerCase().includes(query);
-      });
-
-      if (hasMatchingAmenity) {
-        return true;
-      }
-
-      // Search in description
-      if (listing.description.toLowerCase().includes(query)) {
-        return true;
-      }
-
-      return false;
-    });
-  }, [allListings, searchQuery, getPropertyTypeNameById, getAmenityNameById]);
+    return filtered;
+  }, [
+    allListings,
+    searchQuery,
+    getPropertyTypeNameById,
+    getAmenityNameById,
+    activeFilters,
+  ]);
 
   // Memoize pagination calculations
   const paginationData = useMemo(() => {
@@ -134,10 +164,10 @@ export default function DiscoverResults({
     setCurrentPage(selected);
   }, []);
 
-  // Reset to first page when search query changes
+  // Reset to first page when search query or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery]);
+  }, [searchQuery, activeFilters]);
 
   // Update currentListings in Redux store when filtered results change
   useEffect(() => {
@@ -161,10 +191,15 @@ export default function DiscoverResults({
   return (
     <div className="mt-8 w-full max-w-none">
       {/* Search results header */}
-      {searchQuery && (
+      {(searchQuery ||
+        Object.keys(activeFilters).some(
+          (key) => activeFilters[key] && activeFilters[key] !== ''
+        )) && (
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Search Results for "{searchQuery}"
+            {searchQuery
+              ? `Search Results for "${searchQuery}"`
+              : 'Filtered Results'}
           </h2>
           <p className="text-gray-600">
             {filteredListings.length}{' '}
@@ -192,11 +227,19 @@ export default function DiscoverResults({
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {searchQuery ? 'No properties found' : 'No properties available'}
+              {searchQuery ||
+              Object.keys(activeFilters).some(
+                (key) => activeFilters[key] && activeFilters[key] !== ''
+              )
+                ? 'No properties found'
+                : 'No properties available'}
             </h3>
             <p className="text-gray-500 max-w-md">
-              {searchQuery
-                ? `Try adjusting your search term or browse all available properties.`
+              {searchQuery ||
+              Object.keys(activeFilters).some(
+                (key) => activeFilters[key] && activeFilters[key] !== ''
+              )
+                ? `Try adjusting your search term or filters to find more properties.`
                 : 'Check back later for new property listings.'}
             </p>
           </div>
