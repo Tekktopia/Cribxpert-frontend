@@ -24,6 +24,11 @@ function BookingsPage() {
     skip: !userId,
   });
 
+  // Check if we have a successful response (even if empty)
+  const NoBookings =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (error as any)?.data?.message === 'No bookings found for this user';
+
   // bookingsData is an array of { message, booking }
   const bookings = bookingsData?.bookings || [];
 
@@ -38,12 +43,12 @@ function BookingsPage() {
             <Spinner />
           </div>
         )}
-        {error && (
+        {error && !NoBookings && (
           <div className="flex justify-center py-10 text-red-500">
             Error loading bookings. Please try again.
           </div>
         )}
-        {!isLoading && !error && (
+        {!isLoading && (
           <>
             {active === ActiveBooking.All && (
               <AllBookings bookings={bookings} />
