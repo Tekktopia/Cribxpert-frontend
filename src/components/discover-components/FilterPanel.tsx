@@ -1,5 +1,5 @@
 import { ArrowLeft, Settings2Icon, XIcon, Star } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectActiveFilters,
@@ -106,166 +106,182 @@ export default function FilterPanel({
     });
   };
 
-  // Define available options
-  const bookingOptions = [
-    'Available Now',
-    'Available This Weekend',
-    'Available Next Week',
-    'Available Next Month',
-    'All Availability',
-  ];
+  // Memoize filter options to prevent unnecessary re-renders
+  const filterOptions = useMemo(
+    () => ({
+      bookingOptions: [
+        'Available Now',
+        'Available This Weekend',
+        'Available Next Week',
+        'Available Next Month',
+        'All Availability',
+      ],
+      amenitiesList: [
+        'Parking available',
+        'Washer',
+        'Air conditioning',
+        'Kitchen',
+        '24/7 WiFi connection',
+      ],
+      priceRanges: [
+        { label: 'Under 100k', value: 'under-100k', max: 100000 },
+        { label: '100k - 500k', value: '100k-500k', min: 100000, max: 500000 },
+        { label: '500k - 2M', value: '500k-2M', min: 500000, max: 2000000 },
+        { label: 'More than 2M', value: 'over-2M', min: 2000000 },
+      ],
+    }),
+    []
+  );
 
-  const amenitiesList = [
-    'Parking available',
-    'Washer',
-    'Air conditioning',
-    'Kitchen',
-    '24/7 WiFi connection',
-  ];
-
-  const priceRanges = [
-    { label: 'Under 100k', value: 'under-100k', max: 100000 },
-    { label: '100k - 500k', value: '100k-500k', min: 100000, max: 500000 },
-    { label: '500k - 2M', value: '500k-2M', min: 500000, max: 2000000 },
-    { label: 'More than 2M', value: 'over-2M', min: 2000000 },
-  ];
-
-  // Filter section content definitions
-  const filterParams = [
-    {
-      title: 'Booking Availability',
-      content: (
-        <div className="space-y-1 mt-2 bg-white p-2">
-          {bookingOptions.map((option, idx) => (
-            <label key={idx} className="flex items-center space-x-2">
+  // Memoize filter section content to prevent unnecessary re-renders
+  const filterParams = useMemo(
+    () => [
+      {
+        title: 'Booking Availability',
+        content: (
+          <div className="space-y-1 mt-2 bg-white p-2">
+            {filterOptions.bookingOptions.map((option, idx) => (
+              <label key={idx} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="booking"
+                  className="accent-[#1D5C5C]"
+                  checked={tempFilters.bookingAvailability === option}
+                  onChange={() =>
+                    handleRadioChange('bookingAvailability', option)
+                  }
+                />
+                <span>{option}</span>
+              </label>
+            ))}
+          </div>
+        ),
+      },
+      {
+        title: 'Amenities',
+        content: (
+          <div className="space-y-1 mt-2 bg-white p-2">
+            {filterOptions.amenitiesList.map((amenity, idx) => (
+              <label key={idx} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  className="accent-[#1D5C5C]"
+                  checked={tempFilters.amenities.includes(amenity)}
+                  onChange={(e) =>
+                    handleAmenityChange(amenity, e.target.checked)
+                  }
+                />
+                <span>{amenity}</span>
+              </label>
+            ))}
+          </div>
+        ),
+      },
+      {
+        title: 'Price Range',
+        content: (
+          <div className="space-y-2 mt-2 bg-white p-2">
+            <div className="flex space-x-2">
               <input
-                type="radio"
-                name="booking"
-                className="accent-[#1D5C5C]"
-                checked={tempFilters.bookingAvailability === option}
-                onChange={() =>
-                  handleRadioChange('bookingAvailability', option)
-                }
+                type="number"
+                placeholder="Min price"
+                className="w-1/2 border rounded p-1 text-sm"
+                value={tempFilters.priceMin}
+                onChange={(e) => handleInputChange('priceMin', e.target.value)}
               />
-              <span>{option}</span>
-            </label>
-          ))}
-        </div>
-      ),
-    },
-    {
-      title: 'Amenities',
-      content: (
-        <div className="space-y-1 mt-2 bg-white p-2">
-          {amenitiesList.map((amenity, idx) => (
-            <label key={idx} className="flex items-center space-x-2">
               <input
-                type="checkbox"
-                className="accent-[#1D5C5C]"
-                checked={tempFilters.amenities.includes(amenity)}
-                onChange={(e) => handleAmenityChange(amenity, e.target.checked)}
+                type="number"
+                placeholder="Max price"
+                className="w-1/2 border rounded p-1 text-sm"
+                value={tempFilters.priceMax}
+                onChange={(e) => handleInputChange('priceMax', e.target.value)}
               />
-              <span>{amenity}</span>
-            </label>
-          ))}
-        </div>
-      ),
-    },
-    {
-      title: 'Price Range',
-      content: (
-        <div className="space-y-2 mt-2 bg-white p-2">
-          <div className="flex space-x-2">
+            </div>
+            {filterOptions.priceRanges.map((range, idx) => (
+              <label key={idx} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="price"
+                  className="accent-[#1D5C5C]"
+                  checked={tempFilters.priceRange === range.value}
+                  onChange={() => {
+                    handleRadioChange('priceRange', range.value);
+                    if (range.min)
+                      handleInputChange('priceMin', range.min.toString());
+                    if (range.max)
+                      handleInputChange('priceMax', range.max.toString());
+                  }}
+                />
+                <span>{range.label}</span>
+              </label>
+            ))}
+          </div>
+        ),
+      },
+      {
+        title: 'Rating',
+        content: (
+          <div className="space-y-2 mt-2 bg-white p-2">
+            {[5, 4, 3, 2, 1].map((stars, idx) => (
+              <label key={idx} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="rating"
+                  className="accent-[#1D5C5C]"
+                  checked={tempFilters.rating === stars.toString()}
+                  onChange={() => handleRadioChange('rating', stars.toString())}
+                />
+                <span className="flex items-center">
+                  <span className="flex">
+                    {[...Array(stars)].map((_, index) => (
+                      <Star
+                        key={index}
+                        className="w-4 h-4 text-[#1D5C5C] fill-current"
+                      />
+                    ))}
+                    {[...Array(5 - stars)].map((_, index) => (
+                      <Star
+                        key={stars + index}
+                        className="w-4 h-4 text-gray-300"
+                      />
+                    ))}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-500">(200)</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        ),
+      },
+      {
+        title: 'Location',
+        content: (
+          <div className="mt-2 bg-white p-2">
             <input
-              type="number"
-              placeholder="Min price"
-              className="w-1/2 border rounded p-1 text-sm"
-              value={tempFilters.priceMin}
-              onChange={(e) => handleInputChange('priceMin', e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Max price"
-              className="w-1/2 border rounded p-1 text-sm"
-              value={tempFilters.priceMax}
-              onChange={(e) => handleInputChange('priceMax', e.target.value)}
+              type="text"
+              value={tempFilters.location}
+              onChange={(e) => handleInputChange('location', e.target.value)}
+              className="w-full border rounded p-1 text-sm"
             />
           </div>
-          {priceRanges.map((range, idx) => (
-            <label key={idx} className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="price"
-                className="accent-[#1D5C5C]"
-                checked={tempFilters.priceRange === range.value}
-                onChange={() => {
-                  handleRadioChange('priceRange', range.value);
-                  if (range.min)
-                    handleInputChange('priceMin', range.min.toString());
-                  if (range.max)
-                    handleInputChange('priceMax', range.max.toString());
-                }}
-              />
-              <span>{range.label}</span>
-            </label>
-          ))}
-        </div>
-      ),
-    },
-    {
-      title: 'Rating',
-      content: (
-        <div className="space-y-2 mt-2 bg-white p-2">
-          {[5, 4, 3, 2, 1].map((stars, idx) => (
-            <label key={idx} className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="rating"
-                className="accent-[#1D5C5C]"
-                checked={tempFilters.rating === stars.toString()}
-                onChange={() => handleRadioChange('rating', stars.toString())}
-              />
-              <span className="flex items-center">
-                <span className="flex">
-                  {[...Array(stars)].map((_, index) => (
-                    <Star
-                      key={index}
-                      className="w-4 h-4 text-[#1D5C5C] fill-current"
-                    />
-                  ))}
-                  {[...Array(5 - stars)].map((_, index) => (
-                    <Star
-                      key={stars + index}
-                      className="w-4 h-4 text-gray-300"
-                    />
-                  ))}
-                </span>
-                <span className="ml-2 text-sm text-gray-500">(200)</span>
-              </span>
-            </label>
-          ))}
-        </div>
-      ),
-    },
-    {
-      title: 'Location',
-      content: (
-        <div className="mt-2 bg-white p-2">
-          <input
-            type="text"
-            value={tempFilters.location}
-            onChange={(e) => handleInputChange('location', e.target.value)}
-            className="w-full border rounded p-1 text-sm"
-          />
-        </div>
-      ),
-    },
-  ];
+        ),
+      },
+    ],
+    [tempFilters, filterOptions]
+  );
+
+  // Memoize the panel classes for better performance
+  const panelClasses = useMemo(() => {
+    const baseClasses =
+      'h-fit p-4 pb-8 xl:pb-0 z-30 top-0 bg-white border-r-[1px] md:pr-2';
+    const transformClasses = isOpen
+      ? 'translate-x-0 w-full lg:w-1/4 lg:max-w-[276px]'
+      : '-translate-x-full w-0';
+    return `${transformClasses} ${baseClasses} transition-transform duration-150 ease-out absolute lg:sticky`;
+  }, [isOpen]);
 
   return (
-    <div
-      className={`${isOpen ? '-translate-x-0 w-full lg:w-1/4 lg:max-w-[276px] ' : '-translate-x-full w-0'} h-fit transition-all duration-200 p-4 pb-8 xl:pb-0 z-30 top-0 bg-white absolute lg:sticky border-r-[1px] md:pr-2`}
-    >
+    <div className={panelClasses}>
       {isOpen && (
         <div className="relative">
           <div className="sticky top-0 z-10 bg-white pt-4">

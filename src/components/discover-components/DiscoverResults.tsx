@@ -1,5 +1,5 @@
 import PropertyListingCard from '../common/PropertyCard';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import Pagination from './Pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -53,6 +53,22 @@ export default function DiscoverResults({
     };
   }, [propertyTypes]);
 
+  // Memoize property type names lookup for better performance
+  const propertyTypeNames = useMemo(() => {
+    return propertyTypes
+      .map((type) => ({
+        id: type._id,
+        name: type.name,
+      }))
+      .reduce(
+        (acc, type) => {
+          acc[type.id] = type.name;
+          return acc;
+        },
+        {} as Record<string, string>
+      );
+  }, [propertyTypes]);
+
   // Filter listings based on search query
   const filteredListings = useMemo(() => {
     if (!searchQuery.trim()) {
@@ -101,14 +117,22 @@ export default function DiscoverResults({
     });
   }, [allListings, searchQuery, getPropertyTypeNameById, getAmenityNameById]);
 
-  // Calculate the data to display for the current page
-  const offset = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredListings.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(filteredListings.length / itemsPerPage);
+  // Memoize pagination calculations
+  const paginationData = useMemo(() => {
+    const offset = (currentPage - 1) * itemsPerPage;
+    const currentItems = filteredListings.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredListings.length / itemsPerPage);
 
-  const handlePageChange = (selected: number) => {
+    return {
+      currentItems,
+      pageCount,
+      offset,
+    };
+  }, [filteredListings, currentPage, itemsPerPage]);
+
+  const handlePageChange = useCallback((selected: number) => {
     setCurrentPage(selected);
-  };
+  }, []);
 
   // Reset to first page when search query changes
   useEffect(() => {
@@ -127,21 +151,12 @@ export default function DiscoverResults({
     }
   }, [dispatch, allListings, searchQuery]);
 
-  // Precompute property type names for rendering
-  const propertyTypeNames = useMemo(() => {
-    return propertyTypes
-      .map((type) => ({
-        id: type._id,
-        name: type.name,
-      }))
-      .reduce(
-        (acc, type) => {
-          acc[type.id] = type.name;
-          return acc;
-        },
-        {} as Record<string, string>
-      );
-  }, [propertyTypes]);
+  // Memoize the grid classes to prevent unnecessary recalculations
+  const gridClasses = useMemo(() => {
+    return `grid grid-cols-1 sm:grid-cols-2 ${
+      isOpen ? 'xl:grid-cols-3' : 'xl:grid-cols-4'
+    } max-h-[90vh] overflow-y-scroll scrollbar-hide gap-4 mb-14`;
+  }, [isOpen]);
 
   return (
     <div className="mt-8 w-full max-w-none">
@@ -158,10 +173,8 @@ export default function DiscoverResults({
         </div>
       )}
 
-      <div
-        className={`grid grid-cols-1 sm:grid-cols-2 ${isOpen ? 'xl:grid-cols-2' : 'xl:grid-cols-3'} max-h-[90vh] overflow-y-scroll scrollbar-hide gap-4 mb-14 place-items-center`}
-      >
-        {currentItems.length === 0 ? (
+      <div className={gridClasses}>
+        {paginationData.currentItems.length === 0 ? (
           <div className="col-span-full flex flex-col items-center justify-center py-12 text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <svg
@@ -188,7 +201,7 @@ export default function DiscoverResults({
             </p>
           </div>
         ) : (
-          currentItems.map(
+          paginationData.currentItems.map(
             (
               {
                 _id,
@@ -222,6 +235,7 @@ export default function DiscoverResults({
                   images={images}
                   bedrooms={bedroomNo}
                   propertyType={propertyTypeName}
+                  minWidth="min-w-[200px]"
                 />
               );
             }
@@ -229,10 +243,10 @@ export default function DiscoverResults({
         )}
       </div>
       {/* Only show pagination if there are results */}
-      {currentItems.length > 0 && (
+      {paginationData.currentItems.length > 0 && (
         <Pagination
           currentPage={currentPage}
-          totalPages={pageCount}
+          totalPages={paginationData.pageCount}
           onPageChange={handlePageChange}
         />
       )}
