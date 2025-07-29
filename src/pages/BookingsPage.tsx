@@ -20,6 +20,7 @@ function BookingsPage() {
     data: bookingsData,
     isLoading,
     error,
+    refetch,
   } = useGetBookingsByUserIdQuery(userId || '', {
     skip: !userId,
   });
@@ -32,6 +33,32 @@ function BookingsPage() {
   // bookingsData is an array of { message, booking }
   const bookings = bookingsData?.bookings || [];
 
+  // Handle retry functionality
+  const handleRetry = () => {
+    refetch();
+  };
+
+  // Get error message for display
+  const getErrorMessage = () => {
+    if (!error) return null;
+
+    // Handle different error types
+    if (typeof error === 'string') {
+      return error;
+    }
+
+    // Handle RTK Query error object
+    if (error && typeof error === 'object' && 'data' in error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errorData = (error as any).data;
+      if (errorData?.message) {
+        return errorData.message;
+      }
+    }
+
+    return 'Failed to load bookings. Please try again.';
+  };
+
   return (
     <div className="h-full">
       <Header />
@@ -43,24 +70,35 @@ function BookingsPage() {
             <Spinner />
           </div>
         )}
-        {error && !NoBookings && (
-          <div className="flex justify-center py-10 text-red-500">
-            Error loading bookings. Please try again.
-          </div>
-        )}
         {!isLoading && (
           <>
             {active === ActiveBooking.All && (
-              <AllBookings bookings={bookings} />
+              <AllBookings
+                bookings={bookings}
+                error={NoBookings ? null : getErrorMessage()}
+                onRetry={handleRetry}
+              />
             )}
             {active === ActiveBooking.Upcoming && (
-              <UpcomingBookings bookings={bookings} />
+              <UpcomingBookings
+                bookings={bookings}
+                error={NoBookings ? null : getErrorMessage()}
+                onRetry={handleRetry}
+              />
             )}
             {active === ActiveBooking.Past && (
-              <PastBookings bookings={bookings} />
+              <PastBookings
+                bookings={bookings}
+                error={NoBookings ? null : getErrorMessage()}
+                onRetry={handleRetry}
+              />
             )}
             {active === ActiveBooking.Cancelled && (
-              <CancelledBookings bookings={bookings} />
+              <CancelledBookings
+                bookings={bookings}
+                error={NoBookings ? null : getErrorMessage()}
+                onRetry={handleRetry}
+              />
             )}
           </>
         )}

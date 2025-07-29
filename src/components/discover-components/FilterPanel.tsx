@@ -1,4 +1,4 @@
-import { ArrowLeft, Settings2Icon, XIcon } from 'lucide-react';
+import { ArrowLeft, Settings2Icon, XIcon, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -141,7 +141,7 @@ export default function FilterPanel({
               <input
                 type="radio"
                 name="booking"
-                className="accent-teal-500"
+                className="accent-[#1D5C5C]"
                 checked={tempFilters.bookingAvailability === option}
                 onChange={() =>
                   handleRadioChange('bookingAvailability', option)
@@ -161,7 +161,7 @@ export default function FilterPanel({
             <label key={idx} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                className="accent-teal-500"
+                className="accent-[#1D5C5C]"
                 checked={tempFilters.amenities.includes(amenity)}
                 onChange={(e) => handleAmenityChange(amenity, e.target.checked)}
               />
@@ -196,7 +196,7 @@ export default function FilterPanel({
               <input
                 type="radio"
                 name="price"
-                className="accent-teal-500"
+                className="accent-[#1D5C5C]"
                 checked={tempFilters.priceRange === range.value}
                 onChange={() => {
                   handleRadioChange('priceRange', range.value);
@@ -221,13 +221,25 @@ export default function FilterPanel({
               <input
                 type="radio"
                 name="rating"
-                className="accent-teal-500"
+                className="accent-[#1D5C5C]"
                 checked={tempFilters.rating === stars.toString()}
                 onChange={() => handleRadioChange('rating', stars.toString())}
               />
-              <span>
-                <span className="text-yellow-400">{'★'.repeat(stars)}</span>
-                <span className="text-gray-300">{'★'.repeat(5 - stars)}</span>
+              <span className="flex items-center">
+                <span className="flex">
+                  {[...Array(stars)].map((_, index) => (
+                    <Star
+                      key={index}
+                      className="w-4 h-4 text-[#1D5C5C] fill-current"
+                    />
+                  ))}
+                  {[...Array(5 - stars)].map((_, index) => (
+                    <Star
+                      key={stars + index}
+                      className="w-4 h-4 text-gray-300"
+                    />
+                  ))}
+                </span>
                 <span className="ml-2 text-sm text-gray-500">(200)</span>
               </span>
             </label>
@@ -279,7 +291,7 @@ export default function FilterPanel({
                 <details
                   key={i}
                   open
-                  className="rounded-md border pt-2 bg-[#F1E6F199]"
+                  className="rounded-md border pt-2 bg-[#e6eff199]"
                 >
                   <summary className="flex justify-between items-center cursor-pointer font-medium">
                     <span className="px-2">{title}</span>

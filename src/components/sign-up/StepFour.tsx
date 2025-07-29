@@ -1,6 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCompleteRegistrationMutation } from '@/features/auth/authService';
+import { Eye, EyeOff } from 'lucide-react';
 
 type FormData = {
   id: string;
@@ -30,6 +31,8 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
     { label: 'Use a number (e.g. 1234)', met: false },
     { label: 'Use a symbol (e.g. !@#$)', met: false },
   ]);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const validatePassword = (password: string) => {
     const requirements = [
@@ -191,7 +194,7 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
             </label>
             <div className="relative">
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
@@ -200,6 +203,12 @@ const StepFour: React.FC<StepFourProps> = ({ formData, setFormData }) => {
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]"
                 required
               />
+              <span
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff /> : <Eye />}
+              </span>
             </div>
             <div className="mt-2 grid lg:grid-cols-2">
               {passwordRequirements.map((req, index) => (
