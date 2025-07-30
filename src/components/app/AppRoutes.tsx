@@ -22,7 +22,7 @@ const AppRoutes: React.FC = () => {
             element={
               route.protected ? (
                 route.element ? (
-                  <PageLayout>
+                  <PageLayout header={route.header}>
                     <ProtectedRoute>
                       {route.element as JSX.Element}
                     </ProtectedRoute>
@@ -33,7 +33,9 @@ const AppRoutes: React.FC = () => {
                   <AuthGuard>{route.element as JSX.Element}</AuthGuard>
                 ) : null
               ) : (
-                <PageLayout>{route.element as JSX.Element}</PageLayout>
+                <PageLayout header={route.header}>
+                  {route.element as JSX.Element}
+                </PageLayout>
               )
             }
           />

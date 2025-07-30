@@ -35,6 +35,7 @@ export interface RouteConfig {
   authRoute?: boolean; // New property to identify auth routes
   title: string;
   children?: RouteConfig[];
+  header?: boolean;
 }
 
 const routeConfig: RouteConfig[] = [
@@ -130,6 +131,7 @@ const routeConfig: RouteConfig[] = [
     element: <PaymentMethod />,
     protected: true,
     title: 'Payment Methods',
+    header: false
   },
   {
     path: '/profile',
