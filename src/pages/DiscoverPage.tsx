@@ -44,7 +44,7 @@ export default function DiscoverPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Main content with proper spacing */}
-      <div className="xl:container mx-auto lg:mt-8 w-full flex flex-col md:flex-row relative bg-white pb-6">
+      <div className="xl:container mx-auto lg:mt-4 w-full flex flex-col md:flex-row relative bg-white pb-6">
         {/* Filter panel */}
         <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
 

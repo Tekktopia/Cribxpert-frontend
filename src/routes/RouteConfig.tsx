@@ -126,7 +126,7 @@ const routeConfig: RouteConfig[] = [
     title: 'Payment History Details',
   },
   {
-    path: '/payment-methods',
+    path: '/pay',
     element: <PaymentMethod />,
     protected: true,
     title: 'Payment Methods',

@@ -60,7 +60,7 @@ function BookingsPage() {
 
   return (
     <div className="h-full">
-      <div className=" px-[30px] lg:px-[80px] container mt-20">
+      <div className=" px-[30px] lg:px-[80px] container mt-12">
         <BookingsNav active={active} setActive={setActive} />
         {isLoading && (
           <div className="flex justify-center py-10 min-h-[calc(100vh-100px)] items-center">

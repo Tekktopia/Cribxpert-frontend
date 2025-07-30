@@ -10,7 +10,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   return (
     <div className="h-full">
       <Header />
-      <div>
+      <div className="pb-6 lg:pb-8">
         <HeaderSpacer />
         {children}
       </div>

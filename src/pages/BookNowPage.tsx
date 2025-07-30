@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import danger from '@/assets/icons/danger.png';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 import OrderSummary from '@/components/booking/OrderSummary';
 import Booking from '@/components/booking/Booking';
 import type { BookingData } from '@/types';
@@ -22,9 +21,7 @@ const BookNowPage: React.FC = () => {
   // If no booking data, show a message or redirect
   if (!bookingData) {
     return (
-      <>
-        <Header />
-        <HeaderSpacer />
+      <div className="h-full mt-[130px]">
         <div className="container mx-auto p-8 text-center">
           <h2 className="text-2xl text-[#040404] mb-4">
             Invalid Booking Request
@@ -40,7 +37,7 @@ const BookNowPage: React.FC = () => {
             Browse Properties
           </a>
         </div>
-      </>
+      </div>
     );
   }
   return (

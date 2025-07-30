@@ -1,5 +1,4 @@
 import React from 'react';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 import PropertyListing from '@/components/PropertyListing';
 import { Link } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -9,8 +8,6 @@ const SavedListing: React.FC = () => {
   const savedList = useSelector(selectFavourites)
   return (
     <div className=" bg-white">
-      <Header />
-      <HeaderSpacer />
       <div className="sticky top-0 z-30 bg-white">
         <div className="py-8 px-4 xl:px-8 container mx-auto">
           <h1 className=" text-2xl">Your Saved Listings</h1>
