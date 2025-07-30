@@ -27,18 +27,18 @@ export const stepData: ListingCardStepsProps[] = [
     image: "/images/step5.png",
   },
   {
-    title: "Grow",
-    description: "Expand your reach and optimize performance.",
+    title: "Property Description",
+    description: "Write a detailed description of your property. Include unique features , nearby attractions,and anything that makes your place special. (Maximum 500 words",
     image: "/images/step6.png",
   },
   {
-    title: "Scale",
-    description: "Take it to the next level with scaling strategies.",
+    title: "Pricing & Availability",
+    description: "Set your rates and choose when your property is available",
     image: "/images/step7.png",
   },
   {
-    title: "Sustain",
-    description: "Maintain success over the long term.",
+    title: "House Rules",
+    description: "Set clear house rules to help guests understand what is and isn’t allowed at your property",
     image: "/images/step8.png",
   },
 ];

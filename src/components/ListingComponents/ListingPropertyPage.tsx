@@ -123,7 +123,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
                   disabled={isUploading}
                   className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-100 z-20"
                 >
-                  🗑️
+                  <img src="../../../public/icons/delete-icon-green.png" alt="" />
                 </button>
 
                 <div className="relative w-full h-32 mb-2">
@@ -138,7 +138,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
                     </div>
                   )}
                   {!isUploading && uploadedIndexes.includes(index) && (
-                    <div className="absolute top-2 left-2 text-green-500 text-xl z-10">✔️</div>
+                    <div className="absolute top-2 left-2 text-green-500 text-xl z-10"><img src="../../../public/icons/green-tick.png" alt="" /></div>
                   )}
                 </div>
 

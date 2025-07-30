@@ -9,7 +9,8 @@ import ListingMap from './LisitingMap';
 import ListAmenity from './ListAmenity';
 import { AmenityData } from './ListAmenityData';
 import ListingPropertyPage from './ListingPropertyPage';
-
+import PropertyPage from './PropertyPage';
+import PricingPage from './Pricing&Availbility';
 const RoadmapStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -111,6 +112,19 @@ const RoadmapStepper: React.FC = () => {
           <ListingPropertyPage nextStep={nextStep} prevStep={prevStep} />
         </div>
       )}
+      {activeStep === 5 && (
+        <div className="w-[700px] h-[450px] justify-center mx-auto">
+          <PropertyPage />
+        </div>
+      )}
+
+      {activeStep === 6 && (
+        <div className="w-[700px] h-[630px] justify-center mx-auto">
+          <PricingPage />
+        </div>
+      )
+
+      }
 
       {/* Navigation for steps 0-3 only (hide on step 5) */}
       {activeStep !== 4 && (
