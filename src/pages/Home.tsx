@@ -1,4 +1,3 @@
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectInitialListingsLoaded } from '@/features/listing';
@@ -15,9 +14,6 @@ const Home: React.FC = () => {
 
   return (
     <div>
-
-      <Header />
-      <HeaderSpacer />
       <section className="py-15">
         {/* Hero Section */}
         <HeroSection />

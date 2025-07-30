@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import slider from '../../assets/icons/slider.svg';
+import { useState } from 'react';
 import { ActiveBooking } from '@/types';
 import BookingsLinks from './BookingsLinks';
 import { Menu, X } from 'lucide-react';
@@ -48,9 +47,8 @@ const BookingsNav = ({ active, setActive }: Props) => {
           </div>
         </div>
         <div>
-          <button className="text-neutral flex py-[10px] lg:px-[14px] justify-center items-center gap-2 rounded-xl lg:border border-neutralLight h-[36px]">
-            <img src={slider} alt="slider-icon" />
-            <p className="lg:block hidden text-[14px]">Filters</p>
+          <button className="text-white p-[10px] w-full text-nowrap  bg-primary rounded-xl">
+            Discover Properties
           </button>
         </div>
         <div className="lg:hidden gap-3 w-full text-primary  flex items-center justify-between py-2  px-4">

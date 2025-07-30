@@ -24,6 +24,9 @@ import SupportInfo from '@/pages/SupportInfo';
 import NotificationPage from '@/pages/NotificationPage';
 import NotFound404 from '@/pages/NotFound404';
 import VerifyEmail from '@/pages/VerifyEmail';
+import Message from '@/pages/Message';
+import PaymentHistory from '@/pages/PaymentHistory';
+import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
 
 export interface RouteConfig {
   path: string;
@@ -112,6 +115,18 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: '/payments',
+    element: <PaymentHistory />,
+    protected: true,
+    title: 'Payment History',
+  },
+  {
+    path: '/payment-history/:id',
+    element: <PaymentHistoryDetails />,
+    protected: true,
+    title: 'Payment History Details',
+  },
+  {
+    path: '/payment-methods',
     element: <PaymentMethod />,
     protected: true,
     title: 'Payment Methods',
@@ -154,6 +169,12 @@ const routeConfig: RouteConfig[] = [
     element: <SupportInfo />,
     protected: false,
     title: 'Support Information',
+  },
+  {
+    path: '/message',
+    element: <Message />,
+    protected: true,
+    title: 'Message',
   },
 
   // 404 route - must be last

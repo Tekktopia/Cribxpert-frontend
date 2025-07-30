@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { ActiveNotification } from '@/types';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import {
@@ -57,8 +56,6 @@ const NotificationPage = () => {
   return (
     <div>
       {' '}
-      <Header />
-      <HeaderSpacer />
       <div className=" px-[30px] lg:px-[80px] container mx-auto">
         <h1 className="pt-[43px] text-[20px] text-[#040404]">Notifications</h1>
         <NotificationNav active={active} setActive={setActive} />

@@ -45,8 +45,6 @@ const BookNowPage: React.FC = () => {
   }
   return (
     <div>
-      <Header />
-      <HeaderSpacer />
       <div className="container mx-auto m-5 px-5 w-full">
         <h2 className="md:text-2xl container mx-auto text-xl text-[#040404] mb-6">
           Begin your booking

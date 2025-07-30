@@ -14,7 +14,6 @@ const All: React.FC<NotificationComponentProps> = ({
       isLoading={isLoading}
       error={error}
       onMarkAsRead={onMarkAsRead}
-      emptyMessage="No notifications yet"
     />
   );
 };

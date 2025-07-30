@@ -14,7 +14,6 @@ import Listing from '@/components/BookingDetailsComponents/Listing';
 import CancellationPolicy from '@/components/BookingDetailsComponents/CancellationPolicy';
 import Payment from '@/components/BookingDetailsComponents/Payment';
 import Ratings from '@/components/BookingDetailsComponents/Ratings';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 
 const BookingDetailsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -28,8 +27,6 @@ const BookingDetailsPage: React.FC = () => {
 
   return (
     <div className="h-full">
-      <Header />
-      <HeaderSpacer />
       <div className=" px-[30px] lg:px-[80px] container mt-8"></div>
       <button
         onClick={() => navigate(-1)}

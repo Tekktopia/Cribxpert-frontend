@@ -45,7 +45,6 @@ const Reviews: React.FC<NotificationComponentProps> = ({
       isLoading={isLoading}
       error={error}
       onMarkAsRead={onMarkAsRead}
-      emptyMessage="No review notifications"
     />
   );
 };

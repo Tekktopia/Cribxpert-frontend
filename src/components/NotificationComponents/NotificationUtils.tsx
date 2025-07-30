@@ -4,6 +4,7 @@ import { Notification } from '@/features/notification';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { getNotificationIcon, formatTimeAgo } from './notificationHelpers';
+import NoNotification from './NoNotification';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -60,7 +61,6 @@ export const NotificationList: React.FC<NotificationListProps> = ({
   isLoading,
   error,
   onMarkAsRead,
-  emptyMessage = 'No notifications yet',
 }) => {
   if (isLoading) {
     return (
@@ -84,8 +84,10 @@ export const NotificationList: React.FC<NotificationListProps> = ({
 
   if (notifications.length === 0) {
     return (
-      <div className="w-full flex justify-center items-center my-6 sm:my-9">
-        <p className="text-[#999] text-[14px] sm:text-[16px]">{emptyMessage}</p>
+      <div className="w-full flex flex-col gap-6 my-9">
+        <div>
+          <NoNotification />
+        </div>
       </div>
     );
   }

@@ -3,7 +3,6 @@ import BookingsNav from '@/components/BookingComponents/BookingsNav';
 import CancelledBookings from '@/components/BookingComponents/CancelledBookings';
 import PastBookings from '@/components/BookingComponents/PastBookings';
 import UpcomingBookings from '@/components/BookingComponents/UpcomingBookings';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 import Spinner from '@/components/common/Spinner';
 import { ActiveBooking } from '@/types';
 import { useState } from 'react';
@@ -61,8 +60,6 @@ function BookingsPage() {
 
   return (
     <div className="h-full">
-      <Header />
-      <HeaderSpacer />
       <div className=" px-[30px] lg:px-[80px] container mt-20">
         <BookingsNav active={active} setActive={setActive} />
         {isLoading && (

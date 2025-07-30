@@ -146,7 +146,7 @@ const PropertyDetail = () => {
 
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
-      <Header /> <HeaderSpacer />
+      <HeaderSpacer /> 
       {/* Property Gallery Component */}
       <PropertyGallery images={propertyImages} propertyName={property.name} />
       {/* Property Header Component */}
@@ -177,7 +177,7 @@ const PropertyDetail = () => {
           </div>
 
           <div className="w-full lg:w-1/2">
-            <div className="sticky top-[80px]">
+            <div className="">
               <BookingForm
                 property={property}
                 onBookingSubmit={handleBookingSubmit}

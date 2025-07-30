@@ -45,7 +45,6 @@ const Bookings: React.FC<NotificationComponentProps> = ({
       isLoading={isLoading}
       error={error}
       onMarkAsRead={onMarkAsRead}
-      emptyMessage="No booking notifications"
     />
   );
 };

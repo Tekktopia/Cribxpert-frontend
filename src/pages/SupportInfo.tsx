@@ -1,4 +1,3 @@
-import Header from '../components/layout/Header';
 import SupportHeader from '../components/support/SupportHeader';
 import {
   HandThumbUpIcon,
@@ -8,7 +7,6 @@ import {
 const SupportInfo = () => {
   return (
     <div>
-      <Header />
       <div className="mt-32">
         <SupportHeader />
         <div className="lg:p-8">

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Copy, CreditCard, Banknote, Link, Smartphone } from 'lucide-react';
 
@@ -17,8 +16,6 @@ const PaymentMethod: React.FC = () => {
   const accountNumber = '0002224449';
   return (
     <>
-      <Header />
-      <HeaderSpacer />
       <section className="container xl:mt-12 mx-auto p-6">
         <div className="flex flex-col md:flex-row md:gap-6 relative">
           {/* Left: Payment Methods */}

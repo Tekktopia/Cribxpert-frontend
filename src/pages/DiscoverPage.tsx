@@ -1,6 +1,5 @@
 import DiscoverResults from '@/components/discover-components/DiscoverResults';
 import FilterPanel from '@/components/discover-components/FilterPanel';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
 import { Settings2Icon } from 'lucide-react';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -44,12 +43,6 @@ export default function DiscoverPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Fixed header */}
-      <div className="fixed top-0 w-full z-40 bg-white shadow-sm">
-        <Header />
-      </div>
-      {/* Spacer to prevent content from being hidden behind the fixed header */}
-      <HeaderSpacer />
       {/* Main content with proper spacing */}
       <div className="xl:container mx-auto lg:mt-8 w-full flex flex-col md:flex-row relative bg-white pb-6">
         {/* Filter panel */}

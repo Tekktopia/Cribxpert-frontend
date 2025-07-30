@@ -62,7 +62,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
   return (
     <>
-      <div className="w-full max-w-[480px] bg-white shadow-md border border-[#E6E6E6] rounded-lg p-5">
+      <div className="w-full max-w-[480px] ml-auto bg-white border border-[#E6E6E6] rounded-lg p-5">
         {/* Price & Cancellation */}
         <div className="mb-4">
           <h4 className="text-[#000] text-[14px] font-bold">
