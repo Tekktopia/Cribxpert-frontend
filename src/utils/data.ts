@@ -1,13 +1,61 @@
 import otherFilterIcon from '@/assets/icons/otherFilterIcon.png';
-import { PropertyListingProps } from '@/types';
+import { PropertyListingCardProps } from '@/types';
 import { BookingsType } from '@/types';
 import beachside from '../assets/images/beachside.jpg';
 import cityview from '../assets/images/cityview.jpg';
 import downtown from '../assets/images/downtown.jpg';
 
-const SAMPLE_DATA: PropertyListingProps[] = [
+// Payment History Types
+export interface PaymentHistoryItem {
+  id: string;
+  bookingId: string;
+  propertyName: string;
+  propertyImage: string;
+  checkInDate: string;
+  checkOutDate: string;
+  paymentStatus: 'CONFIRMED' | 'PENDING' | 'FAILED';
+  amount: number;
+  paymentMethod: string;
+  transactionDate: string;
+}
+
+export interface PaymentHistoryFilters {
+  status: 'all' | 'pending' | 'failed' | 'confirmed';
+  dateRange?: {
+    start: string;
+    end: string;
+  };
+  propertyName?: string;
+}
+
+export interface PaymentHistoryDetail {
+  id: string;
+  bookingId: string;
+  status: 'CONFIRMED' | 'PENDING' | 'FAILED';
+  propertyImage: string;
+  listingName: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  guests: {
+    adults: number;
+    children: number;
+    total: number;
+  };
+  bookingDate: string;
+  bookingTime: string;
+  paymentMethod: string;
+  paymentDate: string;
+  paymentTime: string;
+  subtotal: number;
+  securityDeposit: number;
+  serviceCharge: number;
+  totalAmount: number;
+}
+
+const SAMPLE_DATA: PropertyListingCardProps[] = [
   {
-    id: 1,
+    id: '1',
     image: '/images/apartment4.jpg',
     images: [
       '/images/apartment4.jpg',
@@ -23,7 +71,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Apartment',
   },
   {
-    id: 2,
+    id: '2',
     image: '/images/apartment5.jpg',
     images: [
       '/images/apartment5.jpg',
@@ -40,7 +88,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Villa',
   },
   {
-    id: 3,
+    id: '3',
     image: '/images/apartment6.jpg',
     images: ['/images/apartment6.jpg', '/images/apartment2.jpg'],
     name: 'Downtown Abuja Studio',
@@ -52,7 +100,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Studio',
   },
   {
-    id: 4,
+    id: '4',
     image: '/images/apartment7.jpg',
     images: [
       '/images/apartment7.jpg',
@@ -68,7 +116,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Cottage',
   },
   {
-    id: 5,
+    id: '5',
     image: '/images/apartment8.jpg',
     images: [
       '/images/apartment8.jpg',
@@ -85,7 +133,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Cabin',
   },
   {
-    id: 6,
+    id: '6',
     image: '/images/apartment9.jpg',
     images: ['/images/apartment9.jpg', '/images/apartment6.jpg'],
     name: 'Modern High-Rise',
@@ -97,7 +145,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Apartment',
   },
   {
-    id: 7,
+    id: '7',
     image: '/images/apartment4.jpg',
     images: [
       '/images/apartment4.jpg',
@@ -113,7 +161,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'House',
   },
   {
-    id: 8,
+    id: '8',
     image: '/images/apartment7.jpg',
     images: ['/images/apartment7.jpg', '/images/apartment9.jpg'],
     name: 'Beachfront Paradise',
@@ -125,7 +173,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Beach House',
   },
   {
-    id: 9,
+    id: '9',
     image: '/images/apartment6.jpg',
     images: [
       '/images/apartment6.jpg',
@@ -141,7 +189,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Loft',
   },
   {
-    id: 10,
+    id: '10',
     image: '/images/apartment5.jpg',
     images: [
       '/images/apartment5.jpg',
@@ -158,7 +206,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Cottage',
   },
   {
-    id: 11,
+    id: '11',
     image: '/images/apartment9.jpg',
     images: ['/images/apartment9.jpg', '/images/apartment8.jpg'],
     name: 'Executive Suite',
@@ -170,7 +218,7 @@ const SAMPLE_DATA: PropertyListingProps[] = [
     propertyType: 'Suite',
   },
   {
-    id: 12,
+    id: '12',
     image: '/images/apartment4.jpg',
     images: [
       '/images/apartment4.jpg',
@@ -420,6 +468,303 @@ const completedBookingsData: Array<BookingsType> = [
   },
 ];
 
+// Payment History Data
+const paymentHistoryData: PaymentHistoryItem[] = [
+  {
+    id: '1',
+    bookingId: '#100001',
+    propertyName: 'Beachside Villa',
+    propertyImage: beachside,
+    checkInDate: 'Dec 12, 2024',
+    checkOutDate: 'Dec 15, 2024',
+    paymentStatus: 'CONFIRMED',
+    amount: 150000,
+    paymentMethod: 'Bank Transfer',
+    transactionDate: 'Dec 10, 2024',
+  },
+  {
+    id: '2',
+    bookingId: '#100002',
+    propertyName: 'City View Cabin',
+    propertyImage: cityview,
+    checkInDate: 'Mar 10, 2025',
+    checkOutDate: 'Mar 12, 2025',
+    paymentStatus: 'PENDING',
+    amount: 85000,
+    paymentMethod: 'Card Payment',
+    transactionDate: 'Mar 8, 2025',
+  },
+  {
+    id: '3',
+    bookingId: '#100003',
+    propertyName: 'Downtown Villa',
+    propertyImage: downtown,
+    checkInDate: 'Mar 10, 2025',
+    checkOutDate: 'Mar 12, 2025',
+    paymentStatus: 'FAILED',
+    amount: 120000,
+    paymentMethod: 'Card Payment',
+    transactionDate: 'Mar 8, 2025',
+  },
+  {
+    id: '4',
+    bookingId: '#100004',
+    propertyName: 'Downtown Villa',
+    propertyImage: downtown,
+    checkInDate: 'Mar 10, 2025',
+    checkOutDate: 'Mar 12, 2025',
+    paymentStatus: 'CONFIRMED',
+    amount: 120000,
+    paymentMethod: 'USSD',
+    transactionDate: 'Mar 8, 2025',
+  },
+  {
+    id: '5',
+    bookingId: '#100005',
+    propertyName: 'Cozy Cabin',
+    propertyImage: beachside,
+    checkInDate: 'Mar 10, 2025',
+    checkOutDate: 'Mar 12, 2025',
+    paymentStatus: 'CONFIRMED',
+    amount: 95000,
+    paymentMethod: 'Payment Link',
+    transactionDate: 'Mar 8, 2025',
+  },
+  {
+    id: '6',
+    bookingId: '#100006',
+    propertyName: 'Luxury Apartment',
+    propertyImage: cityview,
+    checkInDate: 'Apr 15, 2025',
+    checkOutDate: 'Apr 18, 2025',
+    paymentStatus: 'PENDING',
+    amount: 180000,
+    paymentMethod: 'Bank Transfer',
+    transactionDate: 'Apr 12, 2025',
+  },
+  {
+    id: '7',
+    bookingId: '#100007',
+    propertyName: 'Mountain Retreat',
+    propertyImage: downtown,
+    checkInDate: 'May 20, 2025',
+    checkOutDate: 'May 25, 2025',
+    paymentStatus: 'CONFIRMED',
+    amount: 220000,
+    paymentMethod: 'Card Payment',
+    transactionDate: 'May 18, 2025',
+  },
+  {
+    id: '8',
+    bookingId: '#100008',
+    propertyName: 'Beach House',
+    propertyImage: beachside,
+    checkInDate: 'Jun 5, 2025',
+    checkOutDate: 'Jun 8, 2025',
+    paymentStatus: 'FAILED',
+    amount: 135000,
+    paymentMethod: 'USSD',
+    transactionDate: 'Jun 3, 2025',
+  },
+];
+
+// Payment History Details Data
+const paymentHistoryDetailsData: PaymentHistoryDetail[] = [
+  {
+    id: '1',
+    bookingId: '#100001',
+    status: 'CONFIRMED',
+    propertyImage: beachside,
+    listingName:
+      'Beachside Villa - Newly Remodeled Federal Capital Territory Gombe',
+    checkIn: 'December 12, 2024',
+    checkOut: 'December 15, 2024',
+    nights: 3,
+    guests: {
+      adults: 2,
+      children: 1,
+      total: 3,
+    },
+    bookingDate: 'December 10, 2024',
+    bookingTime: '04:20pm',
+    paymentMethod: 'Bank Transfer',
+    paymentDate: 'December 10, 2024',
+    paymentTime: '04:20pm',
+    subtotal: 150000,
+    securityDeposit: 60000,
+    serviceCharge: 15000,
+    totalAmount: 225000,
+  },
+  {
+    id: '2',
+    bookingId: '#100002',
+    status: 'PENDING',
+    propertyImage: cityview,
+    listingName: 'City View Cabin - Luxury Waterfront Property',
+    checkIn: 'March 10, 2025',
+    checkOut: 'March 12, 2025',
+    nights: 2,
+    guests: {
+      adults: 3,
+      children: 0,
+      total: 3,
+    },
+    bookingDate: 'March 8, 2025',
+    bookingTime: '02:15pm',
+    paymentMethod: 'Card Payment',
+    paymentDate: 'March 8, 2025',
+    paymentTime: '02:15pm',
+    subtotal: 85000,
+    securityDeposit: 40000,
+    serviceCharge: 8500,
+    totalAmount: 133500,
+  },
+  {
+    id: '3',
+    bookingId: '#100003',
+    status: 'FAILED',
+    propertyImage: downtown,
+    listingName: 'Downtown Villa - Modern City Living',
+    checkIn: 'March 10, 2025',
+    checkOut: 'March 12, 2025',
+    nights: 2,
+    guests: {
+      adults: 2,
+      children: 2,
+      total: 4,
+    },
+    bookingDate: 'March 8, 2025',
+    bookingTime: '11:30am',
+    paymentMethod: 'Card Payment',
+    paymentDate: 'March 8, 2025',
+    paymentTime: '11:30am',
+    subtotal: 120000,
+    securityDeposit: 50000,
+    serviceCharge: 12000,
+    totalAmount: 182000,
+  },
+  {
+    id: '4',
+    bookingId: '#100004',
+    status: 'CONFIRMED',
+    propertyImage: downtown,
+    listingName: 'Downtown Villa - Modern City Living',
+    checkIn: 'March 10, 2025',
+    checkOut: 'March 12, 2025',
+    nights: 2,
+    guests: {
+      adults: 2,
+      children: 1,
+      total: 3,
+    },
+    bookingDate: 'March 8, 2025',
+    bookingTime: '03:45pm',
+    paymentMethod: 'USSD',
+    paymentDate: 'March 8, 2025',
+    paymentTime: '03:45pm',
+    subtotal: 120000,
+    securityDeposit: 50000,
+    serviceCharge: 12000,
+    totalAmount: 182000,
+  },
+  {
+    id: '5',
+    bookingId: '#100005',
+    status: 'CONFIRMED',
+    propertyImage: beachside,
+    listingName: 'Cozy Cabin - Scenic Mountain Retreat',
+    checkIn: 'March 10, 2025',
+    checkOut: 'March 12, 2025',
+    nights: 2,
+    guests: {
+      adults: 2,
+      children: 0,
+      total: 2,
+    },
+    bookingDate: 'March 8, 2025',
+    bookingTime: '01:20pm',
+    paymentMethod: 'Payment Link',
+    paymentDate: 'March 8, 2025',
+    paymentTime: '01:20pm',
+    subtotal: 95000,
+    securityDeposit: 45000,
+    serviceCharge: 9500,
+    totalAmount: 149500,
+  },
+  {
+    id: '6',
+    bookingId: '#100006',
+    status: 'PENDING',
+    propertyImage: cityview,
+    listingName: 'Luxury Apartment - Skyline Views',
+    checkIn: 'April 15, 2025',
+    checkOut: 'April 18, 2025',
+    nights: 3,
+    guests: {
+      adults: 4,
+      children: 1,
+      total: 5,
+    },
+    bookingDate: 'April 12, 2025',
+    bookingTime: '10:30am',
+    paymentMethod: 'Bank Transfer',
+    paymentDate: 'April 12, 2025',
+    paymentTime: '10:30am',
+    subtotal: 180000,
+    securityDeposit: 80000,
+    serviceCharge: 18000,
+    totalAmount: 278000,
+  },
+  {
+    id: '7',
+    bookingId: '#100007',
+    status: 'CONFIRMED',
+    propertyImage: downtown,
+    listingName: 'Mountain Retreat - Scenic Mountain Views',
+    checkIn: 'May 20, 2025',
+    checkOut: 'May 25, 2025',
+    nights: 5,
+    guests: {
+      adults: 3,
+      children: 2,
+      total: 5,
+    },
+    bookingDate: 'May 18, 2025',
+    bookingTime: '09:15am',
+    paymentMethod: 'Card Payment',
+    paymentDate: 'May 18, 2025',
+    paymentTime: '09:15am',
+    subtotal: 220000,
+    securityDeposit: 100000,
+    serviceCharge: 22000,
+    totalAmount: 342000,
+  },
+  {
+    id: '8',
+    bookingId: '#100008',
+    status: 'FAILED',
+    propertyImage: beachside,
+    listingName: 'Beach House - Direct Beach Access',
+    checkIn: 'June 5, 2025',
+    checkOut: 'June 8, 2025',
+    nights: 3,
+    guests: {
+      adults: 2,
+      children: 1,
+      total: 3,
+    },
+    bookingDate: 'June 3, 2025',
+    bookingTime: '02:45pm',
+    paymentMethod: 'USSD',
+    paymentDate: 'June 3, 2025',
+    paymentTime: '02:45pm',
+    subtotal: 135000,
+    securityDeposit: 60000,
+    serviceCharge: 13500,
+    totalAmount: 208500,
+  },
+];
+
 export {
   SAMPLE_DATA,
   Filter,
@@ -427,4 +772,6 @@ export {
   cancelledBookingsData,
   completedBookingsData,
   upcomingBookingsData,
+  paymentHistoryData,
+  paymentHistoryDetailsData,
 };

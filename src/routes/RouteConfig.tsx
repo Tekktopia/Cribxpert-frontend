@@ -27,6 +27,8 @@ import VerifyEmail from '@/pages/VerifyEmail';
 import Message from '@/pages/Message';
 import PaymentHistory from '@/pages/PaymentHistory';
 import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
+// import ListingMgmtPage from '@/pages/ListingManagementPage';
+import PaymentDetailsDownload from '@/pages/PaymentDetailsDownload';
 
 export interface RouteConfig {
   path: string;
@@ -127,6 +129,12 @@ const routeConfig: RouteConfig[] = [
     title: 'Payment History Details',
   },
   {
+    path: '/invoice/:id',
+    element: <PaymentDetailsDownload />,
+    protected: true,
+    title: 'Payment Invoice',
+  },
+  {
     path: '/pay',
     element: <PaymentMethod />,
     protected: true,
@@ -178,6 +186,16 @@ const routeConfig: RouteConfig[] = [
     protected: true,
     title: 'Message',
   },
+
+  //Must be removed in production
+  //This is a simple page to manage listing in development with admin priviledges
+  // {
+  //   path: '/listing-management',
+  //   element: <ListingMgmtPage />,
+  //   protected: true,
+  //   title: 'Listing Management',
+  //   header: false,
+  // },
 
   // 404 route - must be last
   {
