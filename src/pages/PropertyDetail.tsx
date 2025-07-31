@@ -3,11 +3,17 @@ import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
-import Header, { HeaderSpacer } from '@/components/layout/Header';
+import Header from '@/components/layout/Header';
 import { PropertyListing } from '@/types';
 import { selectAllListings } from '@/features/listing/listingSlice';
 import { useDispatch } from 'react-redux';
 import { setCurrentListing } from '@/features/listing';
+import { useCreateBookingMutation } from '@/features/booking/bookingService';
+import { selectCurrentUser } from '@/features/auth/authSlice';
+import {
+  useCreateReviewMutation,
+  useGetReviewsByListingIdQuery,
+} from '@/features/review/reviewService';
 
 // Import our new components
 import PropertyGallery from '@/components/property-details/PropertyGallery';
@@ -20,7 +26,9 @@ import PropertyRules from '@/components/property-details/PropertyRules';
 import PropertyPolicies from '@/components/property-details/PropertyPolicies';
 import PropertyRatings from '@/components/property-details/PropertyRatings';
 import CustomerReviews from '@/components/property-details/CustomerReviews';
+import LeaveReviewForm from '@/components/property-details/LeaveReviewForm';
 import SimilarProperties from '@/components/property-details/SimilarProperties';
+import useAlert from '@/hooks/useAlert';
 
 // Import mock data from utility files
 import {
@@ -45,7 +53,7 @@ const createSlug = (name: string): string => {
 const PropertyDetail = () => {
   const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
-
+  const showAlert = useAlert();
   // Fetch listings from the store
   const rawListings = useSelector(selectAllListings);
 
@@ -57,6 +65,107 @@ const PropertyDetail = () => {
   );
 
   const dispatch = useDispatch();
+
+  // Get current user for booking
+  const currentUser = useSelector(selectCurrentUser);
+
+  // Add booking mutation
+  const [createBooking, { isLoading: isCreatingBooking }] =
+    useCreateBookingMutation();
+
+  // Add review mutations and queries
+  const [createReview, { isLoading: isCreatingReview }] =
+    useCreateReviewMutation();
+  const { data: apiReviews } =
+    useGetReviewsByListingIdQuery(property?._id || '', {
+      skip: !property?._id,
+    });
+
+  // Transform API reviews to match CustomerReviews component format
+  const transformedReviews =
+    apiReviews?.reviews.map((review) => ({
+      text: review.review,
+      author: review.name,
+      rating: review.rating,
+      image: undefined, // API doesn't provide images yet
+    })) || [];
+
+  // Handle booking submission
+  const handleBookingSubmit = async (formData: {
+    checkInDate: Date;
+    checkOutDate: Date;
+    guests: number;
+  }) => {
+    if (!property || !currentUser) {
+      console.error('Property or user not found');
+      return;
+    }
+
+    try {
+      // Calculate total price
+      const numberOfNights = Math.ceil(
+        (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+      const totalPrice = numberOfNights * property.basePrice;
+
+      const bookingData = {
+        startDate: formData.checkInDate.toISOString(),
+        endDate: formData.checkOutDate.toISOString(),
+        travelersNo: formData.guests,
+        totalPrice: totalPrice,
+        userId: currentUser._id,
+        listing: property._id,
+        specialRequests: '', // Optional field
+      };
+
+      await createBooking(bookingData).unwrap();
+      console.log('Booking created successfully!');
+      showAlert({
+        title: 'Booking created successfully!',
+        icon: 'success'
+      });
+      navigate('/bookings');
+    } catch (error) {
+      console.error('Booking failed:', error);
+      showAlert({
+        title: 'Failed to create booking. Please try again.',
+        icon: 'error'
+      });
+    }
+  };
+
+  // Handle review submission
+  const handleReviewSubmit = async (reviewData: {
+    rating: number;
+    name: string;
+    email: string;
+    review: string;
+  }) => {
+    if (!property || !currentUser) {
+      console.error('Property or user not found');
+      return;
+    }
+
+    try {
+      const reviewPayload = {
+        ...reviewData,
+        listing: property._id,
+      };
+
+      await createReview(reviewPayload).unwrap();
+      showAlert({
+        title: 'Review submitted successfully!',
+        icon: 'success',
+      });
+    } catch (error) {
+      console.error('Review submission failed:', error);
+      showAlert({
+        title: 'Failed to submit review. Please try again.',
+        icon: 'error',
+      });
+    }
+  };
 
   // Log the selected property to the console
   useEffect(() => {
@@ -98,7 +207,6 @@ const PropertyDetail = () => {
 
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
-      <Header /> <HeaderSpacer />
       {/* Property Gallery Component */}
       <PropertyGallery images={propertyImages} propertyName={property.name} />
       {/* Property Header Component */}
@@ -129,8 +237,12 @@ const PropertyDetail = () => {
           </div>
 
           <div className="w-full lg:w-1/2">
-            <div className="sticky top-[80px]">
-              <BookingForm property={property} />
+            <div className="">
+              <BookingForm
+                property={property}
+                onBookingSubmit={handleBookingSubmit}
+                isSubmitting={isCreatingBooking}
+              />
             </div>
           </div>
         </div>{' '}
@@ -142,16 +254,36 @@ const PropertyDetail = () => {
           importantInfo={IMPORTANT_INFO}
         />
         {/* Ratings and Reviews Section */}
-        <div className="py-6 sm:py-8 px-4 md:px-10">
-          {' '}
-          {/* Ratings Component */}
-          <PropertyRatings
-            rating={4}
-            totalRatings={1394}
-            ratingDistribution={RATING_DISTRIBUTION}
-          />
-          {/* Customer Reviews Component */}
-          <CustomerReviews reviews={CUSTOMER_REVIEWS} />
+        <div className="flex flex-col md:flex-row gap-6 justify-between py-6 sm:py-8 px-4 md:px-10">
+          <div className="w-full lg:w-1/2">
+            <h2 className="text-lg sm:text-[20px] text-[#040404] font-[500] mb-4 lg:mb-0">
+              Verified Ratings (1394)
+            </h2>
+          </div>
+
+          <div>
+            {/* Ratings Component */}
+            <PropertyRatings
+              rating={4}
+              totalRatings={1394}
+              ratingDistribution={RATING_DISTRIBUTION}
+            />
+
+            {/* Leave a Review Form */}
+            <LeaveReviewForm
+              onSubmit={handleReviewSubmit}
+              isSubmitting={isCreatingReview}
+            />
+
+            {/* Customer Reviews Component */}
+            <CustomerReviews
+              reviews={
+                transformedReviews.length > 0
+                  ? transformedReviews
+                  : CUSTOMER_REVIEWS
+              }
+            />
+          </div>
         </div>
         {/* Similar Properties Component */}
         <SimilarProperties

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropertyListings from '@/components/PropertyListing';
-import { PropertyListingProps } from '@/types';
+import { PropertyListing } from '@/types';
 
 interface SimilarPropertiesProps {
   propertyName: string;
-  similarProperties: PropertyListingProps[];
+  similarProperties: PropertyListing[];
 }
 
 const SimilarProperties: React.FC<SimilarPropertiesProps> = ({

@@ -1,10 +1,8 @@
-import Header from '@/components/layout/Header';
 import { Link } from 'react-router-dom';
 
 const NotFound404 = () => {
   return (
     <>
-      <Header />
       <div className="flex flex-col items-center justify-center min-h-screen px-4 py-12 bg-white">
         <h1 className="text-6xl font-bold text-gray-800 md:text-8xl">404</h1>
         <h2 className="mt-4 text-2xl font-semibold text-gray-600 md:text-3xl">

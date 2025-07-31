@@ -1,4 +1,3 @@
-import React from 'react';
 import { bookingsData } from '@/utils/data';
 import { useParams } from 'react-router';
 
@@ -36,7 +35,7 @@ const Payment = () => {
         <p>₦278,000</p>
       </div>
       <hr />
-      {booking.status === 'pending' && (
+      {booking?.status === 'pending' && (
         <div>
           <button className="w-full bg-primary p-3 rounded-lg text-white font-semibold hover:bg-primary/90 transition-colors duration-300">
             Make Payment

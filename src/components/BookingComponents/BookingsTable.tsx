@@ -4,13 +4,20 @@ import chevronLeft from '../../assets/icons/chevron-left.svg';
 import chevronRight from '../../assets/icons/chevron-right.svg';
 import { useNavigate } from 'react-router';
 import StatusButton from './StatusButton';
+import { RefreshCw } from 'lucide-react';
 // import { useBookingStore } from '@/store/bookingStore';
 
 type BookingsTableProps = {
   bookings: Booking[];
+  error?: string | null;
+  onRetry?: () => void;
 };
 
-const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
+const BookingsTable: React.FC<BookingsTableProps> = ({
+  bookings,
+  error,
+  onRetry,
+}) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 3;
   const totalPages = Math.ceil(bookings.length / itemsPerPage);
@@ -46,6 +53,30 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
     };
   };
 
+  // Show error state with retry button
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            Failed to load bookings
+          </h3>
+          <p className="text-gray-500 mb-4">{error}</p>
+          {onRetry && (
+            <button
+              onClick={onRetry}
+              className="bg-[#1D5C5C] text-white px-6 py-2 rounded-lg hover:bg-[#164444] transition flex items-center gap-2 mx-auto"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Try Again
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state (no bookings found)
   if (!bookings || bookings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -54,7 +85,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookings }) => {
           alt="No bookings"
           className="w-[50%] h-auto object-contain mb-4"
         />
-        <p className="text-lg text-gray-500">No bookings found.</p>
+        {/* <p className="text-lg text-gray-500">No bookings found.</p> */}
       </div>
     );
   }

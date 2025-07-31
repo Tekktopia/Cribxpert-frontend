@@ -24,6 +24,11 @@ import SupportInfo from '@/pages/SupportInfo';
 import NotificationPage from '@/pages/NotificationPage';
 import NotFound404 from '@/pages/NotFound404';
 import VerifyEmail from '@/pages/VerifyEmail';
+import Message from '@/pages/Message';
+import PaymentHistory from '@/pages/PaymentHistory';
+import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
+// import ListingMgmtPage from '@/pages/ListingManagementPage';
+import PaymentDetailsDownload from '@/pages/PaymentDetailsDownload';
 
 export interface RouteConfig {
   path: string;
@@ -32,6 +37,7 @@ export interface RouteConfig {
   authRoute?: boolean; // New property to identify auth routes
   title: string;
   children?: RouteConfig[];
+  header?: boolean;
 }
 
 const routeConfig: RouteConfig[] = [
@@ -112,9 +118,28 @@ const routeConfig: RouteConfig[] = [
   },
   {
     path: '/payments',
+    element: <PaymentHistory />,
+    protected: true,
+    title: 'Payment History',
+  },
+  {
+    path: '/payment-history/:id',
+    element: <PaymentHistoryDetails />,
+    protected: true,
+    title: 'Payment History Details',
+  },
+  {
+    path: '/invoice/:id',
+    element: <PaymentDetailsDownload />,
+    protected: true,
+    title: 'Payment Invoice',
+  },
+  {
+    path: '/pay',
     element: <PaymentMethod />,
     protected: true,
     title: 'Payment Methods',
+    header: false
   },
   {
     path: '/profile',
@@ -155,6 +180,22 @@ const routeConfig: RouteConfig[] = [
     protected: false,
     title: 'Support Information',
   },
+  {
+    path: '/message',
+    element: <Message />,
+    protected: true,
+    title: 'Message',
+  },
+
+  //Must be removed in production
+  //This is a simple page to manage listing in development with admin priviledges
+  // {
+  //   path: '/listing-management',
+  //   element: <ListingMgmtPage />,
+  //   protected: true,
+  //   title: 'Listing Management',
+  //   header: false,
+  // },
 
   // 404 route - must be last
   {

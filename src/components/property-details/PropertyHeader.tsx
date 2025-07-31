@@ -6,7 +6,7 @@ import {
 import { ShareIcon } from '@heroicons/react/24/solid';
 import { HeartIcon } from 'lucide-react';
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectCurrentListing } from '@/features/listing/listingSlice';
 import {
   selectCurrentUser,
@@ -14,7 +14,6 @@ import {
 } from '@/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import useAlert from '@/hooks/useAlert';
-import { RootState } from '@/store/store';
 
 const PropertyHeader: React.FC = () => {
   // Get current listing from the store
@@ -23,7 +22,6 @@ const PropertyHeader: React.FC = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
   const alert = useAlert();
-  const dispatch = useDispatch();
 
   // Prepare fallback/default values for destructuring
   const {
@@ -132,7 +130,7 @@ const PropertyHeader: React.FC = () => {
           >
             <div className="flex items-center gap-2">
               <HeartIcon
-                fill={isAuthenticated && isFavourited ? '#e63946' : 'none'}
+                fill={isAuthenticated && isFavourited ? '#006073' : 'none'}
                 className={`w-4 h-4 sm:w-[20px] sm:h-[20px] ${
                   isAuthenticated ? 'text-[#070707]' : 'text-[#999999]'
                 }`}

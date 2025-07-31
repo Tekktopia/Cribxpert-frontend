@@ -3,10 +3,12 @@ import { Booking } from '@/features/booking/bookingService';
 
 interface AllBookingsProps {
   bookings: Booking[];
+  error?: string | null;
+  onRetry?: () => void;
 }
 
-function AllBookings({ bookings }: AllBookingsProps) {
-  return <BookingsTable bookings={bookings} />;
+function AllBookings({ bookings, error, onRetry }: AllBookingsProps) {
+  return <BookingsTable bookings={bookings} error={error} onRetry={onRetry} />;
 }
 
 export default AllBookings;

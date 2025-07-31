@@ -4,7 +4,6 @@ import {
   useGetFavouritesByUserIdQuery,
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
-  type FavouriteItem,
 } from './favouritesService';
 
 // Import and re-export from favouritesSlice.ts
@@ -46,6 +45,3 @@ export {
   selectIsItemFavourited,
   selectFavouritesByCity,
 };
-
-// Export types
-export type { FavouriteItem };

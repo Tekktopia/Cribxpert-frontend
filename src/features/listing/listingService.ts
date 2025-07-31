@@ -60,6 +60,16 @@ export interface CreateListingRequest {
   files?: File[]; // For file uploads
 }
 
+// Interface for unavailable dates response
+export interface UnavailableDate {
+  date: string; // ISO date string
+  reason: 'booking' | 'cleanup'; // reason for unavailability
+}
+
+export interface UnavailableDatesResponse {
+  unavailableDates: UnavailableDate[];
+}
+
 // Create the listing service
 export const listingApi = createApi({
   reducerPath: 'listingApi',
@@ -196,6 +206,14 @@ export const listingApi = createApi({
         { type: 'Listing', id: listingId },
       ],
     }),
+
+    // GET /listing/{listingId}/unavailable-dates - Get unavailable dates for a listing
+    getListingUnavailableDates: builder.query<UnavailableDatesResponse, string>({
+      query: (listingId) => `/listings/${listingId}/unavailable-dates`,
+      providesTags: (_result, _error, listingId) => [
+        { type: 'Listing', id: `${listingId}-unavailable-dates` },
+      ],
+    }),
   }),
 });
 
@@ -208,4 +226,5 @@ export const {
   useGetUserListingsQuery,
   useGetUncompletedListingsQuery,
   useDeleteListingImageMutation,
+  useGetListingUnavailableDatesQuery,
 } = listingApi;

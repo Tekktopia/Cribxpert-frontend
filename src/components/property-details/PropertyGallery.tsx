@@ -115,9 +115,9 @@ const PropertyGallery: React.FC<PropertyGalleryProps> = ({
             <OptimizedImage
               src={allImages[mobileImageIndex]}
               alt={`${propertyName} ${mobileImageIndex + 1}`}
-              className="w-full h-[250px] sm:h-[350px] object-cover rounded-lg"
+              className="w-full h-[250px] sm:h-[350px] object-cover "
             />
-            <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+            <div className="absolute inset-0 bg-black bg-opacity-10 "></div>
           </div>
 
           {/* Navigation Arrows */}
@@ -173,110 +173,148 @@ const PropertyGallery: React.FC<PropertyGalleryProps> = ({
             case 1:
               // Single image layout - full width
               return (
-                <div
-                  className="relative w-full cursor-pointer"
-                  onClick={() => openCarousel(0)}
-                >
-                  <OptimizedImage
-                    src={allImages[0]}
-                    alt={propertyName}
-                    className="w-full h-[350px] md:h-[500px] object-cover rounded-lg"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
+                <div className="relative">
+                  <div
+                    className="relative w-full cursor-pointer"
+                    onClick={() => openCarousel(0)}
+                  >
+                    <OptimizedImage
+                      src={allImages[0]}
+                      alt={propertyName}
+                      className="w-full h-[350px] md:h-[500px] object-cover "
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-10 "></div>
+                  </div>
+                  {/* Show all photos button for single image */}
+                  <button
+                    className="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-md text-sm font-medium shadow-md hover:bg-gray-100 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openCarousel(0);
+                    }}
+                  >
+                    Show all photos
+                  </button>
                 </div>
               );
 
             case 2:
               // Two images layout - side by side
               return (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                  {allImages.map((src, index) => (
-                    <div
-                      key={index}
-                      className="relative cursor-pointer"
-                      onClick={() => openCarousel(index)}
-                    >
-                      <OptimizedImage
-                        src={src}
-                        alt={`${propertyName} ${index + 1}`}
-                        className="w-full h-64 md:h-[350px] object-cover rounded-lg"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                    </div>
-                  ))}
+                <div className="relative">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                    {allImages.map((src, index) => (
+                      <div
+                        key={index}
+                        className="relative cursor-pointer"
+                        onClick={() => openCarousel(index)}
+                      >
+                        <OptimizedImage
+                          src={src}
+                          alt={`${propertyName} ${index + 1}`}
+                          className="w-full h-64 md:h-[350px] object-cover "
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-10 "></div>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Show all photos button for two images */}
+                  <button
+                    className="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-md text-sm font-medium shadow-md hover:bg-gray-100 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openCarousel(0);
+                    }}
+                  >
+                    Show all photos
+                  </button>
                 </div>
               );
 
             case 3:
               // Three images layout - one large, two small
               return (
-                <div className="flex flex-col md:flex-row w-full gap-4">
-                  {/* Primary image */}
-                  <div
-                    className="relative md:w-1/2 cursor-pointer"
-                    onClick={() => openCarousel(0)}
-                  >
-                    <OptimizedImage
-                      src={allImages[0]}
-                      alt={propertyName}
-                      className="w-full h-64 md:h-[350px] object-cover rounded-lg"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                  </div>
+                <div className="relative">
+                  <div className="flex flex-col md:flex-row w-full gap-4">
+                    {/* Primary image */}
+                    <div
+                      className="relative md:w-1/2 cursor-pointer"
+                      onClick={() => openCarousel(0)}
+                    >
+                      <OptimizedImage
+                        src={allImages[0]}
+                        alt={propertyName}
+                        className="w-full h-64 md:h-[350px] object-cover "
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-10 "></div>
+                    </div>
 
-                  {/* Two smaller images stacked */}
-                  <div className="flex flex-col md:w-1/2 gap-4">
-                    {allImages.slice(1, 3).map((src, index) => (
-                      <div
-                        key={index}
-                        className="relative cursor-pointer"
-                        onClick={() => openCarousel(index + 1)}
-                      >
-                        <OptimizedImage
-                          src={src}
-                          alt={`${propertyName} ${index + 2}`}
-                          className="w-full h-32 md:h-[168px] object-cover rounded-lg"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                      </div>
-                    ))}
+                    {/* Two smaller images stacked */}
+                    <div className="flex flex-col md:w-1/2 gap-4">
+                      {allImages.slice(1, 3).map((src, index) => (
+                        <div
+                          key={index}
+                          className="relative cursor-pointer"
+                          onClick={() => openCarousel(index + 1)}
+                        >
+                          <OptimizedImage
+                            src={src}
+                            alt={`${propertyName} ${index + 2}`}
+                            className="w-full h-32 md:h-[168px] object-cover "
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-10 "></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                  {/* Show all photos button for three images */}
+                  <button
+                    className="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-md text-sm font-medium shadow-md hover:bg-gray-100 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openCarousel(0);
+                    }}
+                  >
+                    Show all photos
+                  </button>
                 </div>
               );
 
             default:
               // 4+ images layout - one large, four smaller in grid
               return (
-                <div className="flex gap-4 w-full relative">
-                  {/* Primary image */}
-                  <div
-                    className="relative md:w-1/2 cursor-pointer"
-                    onClick={() => openCarousel(0)}
-                  >
-                    <OptimizedImage
-                      src={allImages[0]}
-                      alt={propertyName}
-                      className="w-full h-64 md:h-[350px] object-cover rounded-lg"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                  </div>
+                <div className="relative">
+                  <div className="flex gap-4 w-full">
+                    {/* Primary image */}
+                    <div
+                      className="relative md:w-1/2 cursor-pointer"
+                      onClick={() => openCarousel(0)}
+                    >
+                      <OptimizedImage
+                        src={allImages[0]}
+                        alt={propertyName}
+                        className="w-full h-64 md:h-[350px] object-cover "
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-10 "></div>
+                    </div>
 
-                  {/* Grid for Small Images */}
-                  <div className="grid grid-cols-2 gap-4 md:w-1/2">
-                    {allImages.slice(1, 5).map((src, index) => (
-                      <div
-                        key={index}
-                        className="relative cursor-pointer"
-                        onClick={() => openCarousel(index + 1)}
-                      >
-                        <OptimizedImage
-                          src={src}
-                          alt={`${propertyName} ${index + 2}`}
-                          className="w-full h-32 md:h-[168px] object-cover rounded-lg"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-10 rounded-lg"></div>
-                      </div>
-                    ))}
+                    {/* Grid for Small Images */}
+                    <div className="grid grid-cols-2 gap-4 md:w-1/2">
+                      {allImages.slice(1, 5).map((src, index) => (
+                        <div
+                          key={index}
+                          className="relative cursor-pointer"
+                          onClick={() => openCarousel(index + 1)}
+                        >
+                          <OptimizedImage
+                            src={src}
+                            alt={`${propertyName} ${index + 2}`}
+                            className="w-full h-32 md:h-[168px] object-cover "
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-10 "></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Show "View all photos" button if there are more than 5 images */}
@@ -289,6 +327,19 @@ const PropertyGallery: React.FC<PropertyGalleryProps> = ({
                       }}
                     >
                       View all {allImages.length} photos
+                    </button>
+                  )}
+                  
+                  {/* Show "Show all photos" button for 4-5 images */}
+                  {allImages.length <= 5 && (
+                    <button
+                      className="absolute bottom-4 right-4 bg-white text-black px-4 py-2 rounded-md text-sm font-medium shadow-md hover:bg-gray-100 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openCarousel(0);
+                      }}
+                    >
+                      Show all photos
                     </button>
                   )}
                 </div>
@@ -368,7 +419,7 @@ const PropertyGallery: React.FC<PropertyGalleryProps> = ({
 
           {/* Thumbnail Navigation */}
           {allImages.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black bg-opacity-50 p-2 rounded-lg max-w-full overflow-x-auto">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 bg-black bg-opacity-50 p-2  max-w-full overflow-x-auto">
               {allImages.map((src, index) => (
                 <button
                   key={index}

@@ -96,7 +96,7 @@ const Support = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 mb-8">        {header.map((item: SupportType, index: number) => (
           <div key={index} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 md:p-4">
             <div className="flex items-center gap-3">
-              <div className="bg-[#F1E6F1] rounded-full p-2 md:p-3">{item.icon}</div>
+              <div className="bg-[#e6ecf1] rounded-full p-2 md:p-3">{item.icon}</div>
               <h1 className="text-sm md:text-base text-[#070707] font-bold">
                 {item.title}
               </h1>
@@ -147,13 +147,13 @@ const Support = () => {
             </div>
           </div>
           <div className="justify-self-end p-4 flex gap-4">
-            <div className=" items-center justify-center flex bg-[#AE6BAD] rounded-full w-8 p-2">
+            <div className=" items-center justify-center flex bg-[#1F7384] rounded-full w-8 p-2">
               <img src={facebook} alt="" className="" />
             </div>
-            <div className=" items-center justify-center flex bg-[#AE6BAD] rounded-full w-8 p-2">
+            <div className=" items-center justify-center flex bg-[#1F7384] rounded-full w-8 p-2">
               <img src={instagram} alt="" />
             </div>
-            <div className=" items-center justify-center flex bg-[#AE6BAD] rounded-full w-8 p-2">
+            <div className=" items-center justify-center flex bg-[#1F7384] rounded-full w-8 p-2">
               <img
                 src={x}
                 alt=""

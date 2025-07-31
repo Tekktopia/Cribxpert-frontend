@@ -1,5 +1,4 @@
 import { ActiveBooking } from '@/types';
-import React from 'react';
 import { Link } from 'react-router';
 
 type Props = {

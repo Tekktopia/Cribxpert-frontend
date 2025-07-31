@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Header from '@/components/layout/Header';
 import ProfileNav from '@/components/layout/profile/ProfileNav';
 import Profile from '@/components/profileComponents/Profile';
 import Preference from '@/components/profileComponents/Preference';
@@ -11,8 +10,6 @@ const ProfilePage = () => {
   const [active, setActive] = useState<ActiveProfile>(ActiveProfile.Profile);
   return (
     <div>
-      {' '}
-      <Header />
       <div className=" px-[30px] lg:px-[80px] mt-32 container mx-auto">
         <ProfileNav active={active} setActive={setActive} />
         {active === ActiveProfile.Profile && (
