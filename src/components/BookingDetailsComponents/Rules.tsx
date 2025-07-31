@@ -1,5 +1,3 @@
-import React from 'react';
-
 // Smoking Allowed:
 
 const Rules = () => {

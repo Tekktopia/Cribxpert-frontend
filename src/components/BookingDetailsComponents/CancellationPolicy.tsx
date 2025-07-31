@@ -1,5 +1,3 @@
-import React from 'react';
-
 const CancellationPolicy = () => {
   return (
     <div className="p-4 text-[#6F6F6F]">

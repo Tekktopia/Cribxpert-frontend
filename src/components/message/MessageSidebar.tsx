@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MessageListItem from './MessageListItem';
+import MessageItem from './MessageItem';
 
 interface Message {
   id: string;
@@ -65,7 +65,7 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
       </div>
       <div className="overflow-y-scroll max-h-screen flex-1">
         {messages.map((msg, idx) => (
-          <MessageListItem
+          <MessageItem
             key={msg.id || idx}
             avatarUrl={msg.avatarUrl}
             name={msg.name}

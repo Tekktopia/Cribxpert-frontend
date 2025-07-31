@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Host = () => {
   return (
     <div className="text-[#6F6F6F] p-4">

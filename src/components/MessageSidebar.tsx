@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MessageListItem from './MessageListItem';
+import MessageListItem from './message/MessageListItem';
 
 const messages = [
   {
