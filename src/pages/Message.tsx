@@ -4,8 +4,9 @@ import ChatWindow from '../components/message/ChatWindow';
 import messages from '@/utils/messagesData';
 
 const Message: React.FC = () => {
-  const [selectedIdx, setSelectedIdx] = useState<number>(0);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
+  const selectedChat = selectedIdx !== null ? messages[selectedIdx] : null;
   return (
     <div className="flex flex-col min-h-screen bg-white px-4 lg:px-8">
       <div className="flex sticky top-[50px] h-[calc(100vh-50px)] overflow-hidden">
@@ -14,7 +15,7 @@ const Message: React.FC = () => {
           selectedIdx={selectedIdx}
           setSelectedIdx={setSelectedIdx}
         />
-        <ChatWindow selectedChat={messages[selectedIdx]} />
+        <ChatWindow selectedChat={selectedChat} />
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ interface ChatWindowProps {
       time: string;
       isMe?: boolean;
     }>;
-  };
+  } | null;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {

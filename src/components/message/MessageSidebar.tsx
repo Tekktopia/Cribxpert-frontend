@@ -17,7 +17,7 @@ interface Message {
 
 interface MessageSidebarProps {
   messages: Message[];
-  selectedIdx: number;
+  selectedIdx: number | null;
   setSelectedIdx: (idx: number) => void;
 }
 
