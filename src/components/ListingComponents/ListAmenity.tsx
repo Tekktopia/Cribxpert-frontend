@@ -1,32 +1,30 @@
-import { useState } from "react";
+import React from "react";
 
 export interface Amenity {
   input: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'checked' | 'onChange'>;
   icon: string;
   description: string;
- 
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ListAmenity = ({ input, icon, description }: Amenity) => {
-  const [isChecked, setIsChecked] = useState(input.checked);
-
-  const handleChange = () => {
-       setIsChecked((prevState: boolean ) => !prevState); //
-  };
-  console.log('Checked:', isChecked);
-
+const ListAmenity = ({ input, icon, description, onChange }: Amenity) => {
   return (
-    <div className="flex justify-center">
-      <div className="flex items-center mb-4">
-        {/* No need to spread 'input' here, just manage 'checked' */}
-        <input 
-          {...input} 
-          checked={isChecked} 
-          onChange={handleChange} 
-          type="checkbox" 
-          className="mr-2 w-4 h-4" 
-        />
-        <img src={icon} alt={description} className="w-6 h-6 mr-2" />
+    <div className="flex items-center space-x-4">
+      {/* Checkbox */}
+      <input
+        {...input}  // Spread remaining input attributes like id, name, etc.
+        type="checkbox"
+        checked={input.checked}  // Ensure checkbox reflects the current checked state
+        onChange={onChange}  // Handle change externally via prop
+        className="w-5 h-5"
+      />
+      
+      {/* Icon and description */}
+      <div className="flex items-center space-x-2">
+        {/* Icon */}
+        <img src={icon} alt={description} className="w-6 h-6" />
+        
+        {/* Description */}
         <span>{description}</span>
       </div>
     </div>

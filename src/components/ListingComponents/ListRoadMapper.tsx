@@ -11,6 +11,8 @@ import { AmenityData } from './ListAmenityData';
 import ListingPropertyPage from './ListingPropertyPage';
 import PropertyPage from './PropertyPage';
 import PricingPage from './Pricing&Availbility';
+import HouseRulesPage from './HouseRulesPage';
+
 const RoadmapStepper: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -20,6 +22,12 @@ const RoadmapStepper: React.FC = () => {
 
   const prevStep = () => {
     if (activeStep > 0) setActiveStep((prev) => prev - 1);
+  };
+
+  // Handle the checkbox change logic
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+    console.log(`Checkbox for ${id} changed: ${e.target.checked}`);
+    // Implement your state logic for handling the checkbox changes here
   };
 
   return (
@@ -49,15 +57,15 @@ const RoadmapStepper: React.FC = () => {
       )}
 
       {/* Step Content */}
-    {activeStep !== 4 && (
-  <div className="flex justify-center text-center mb-8">
-    <ListingCardSteps
-      title={stepData[activeStep].title}
-      description={stepData[activeStep].description}
-      image={stepData[activeStep].image}
-    />
-  </div>
-)}
+      {activeStep !== 4 && (
+        <div className="flex justify-center text-center mb-8">
+          <ListingCardSteps
+            title={stepData[activeStep].title}
+            description={stepData[activeStep].description}
+            image={stepData[activeStep].image}
+          />
+        </div>
+      )}
 
       {activeStep === 0 && (
         <div className="max-w-[760px] max-h-[560px] mx-auto">
@@ -95,16 +103,19 @@ const RoadmapStepper: React.FC = () => {
       )}
 
       {activeStep === 3 && (
-        <div className="grid grid-cols-2 mx-auto mt-20 max-w-5xl">
+        <div className=' ml-[13rem]'>
+        <div className="grid grid-cols-2 mx-auto mt-15 max-w-5xl gap-y-3">
           {AmenityData.map((item) => (
             <ListAmenity
-              key={item.input.id}
-              input={item.input}
-              icon={item.icon}
-              description={item.description}
+            key={item.input.id}
+            input={item.input}
+            icon={item.icon}
+            description={item.description}
+            onChange={(e) => handleCheckboxChange(e, item.input.id )} 
             />
           ))}
         </div>
+          </div>
       )}
 
       {activeStep === 4 && (
@@ -122,9 +133,13 @@ const RoadmapStepper: React.FC = () => {
         <div className="w-[700px] h-[630px] justify-center mx-auto">
           <PricingPage />
         </div>
-      )
+      )}
 
-      }
+      {activeStep === 7 && (
+        <div className="w-[700px] h-[330px] justify-center mx-auto">
+          <HouseRulesPage />
+        </div>
+      )}
 
       {/* Navigation for steps 0-3 only (hide on step 5) */}
       {activeStep !== 4 && (
