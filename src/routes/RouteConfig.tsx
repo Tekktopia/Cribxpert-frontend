@@ -29,6 +29,8 @@ import PaymentHistory from '@/pages/PaymentHistory';
 import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
 // import ListingMgmtPage from '@/pages/ListingManagementPage';
 import PaymentDetailsDownload from '@/pages/PaymentDetailsDownload';
+import MyListing from '@/pages/MyListing'; // Adjust the path if needed
+
 
 export interface RouteConfig {
   path: string;

@@ -90,7 +90,7 @@ const steps = [
 const MyListing: React.FC = () => {
   const [activeTab, setActiveTab] = useState('All Listings');
   const [userSteps, setUserSteps] = useState(0);
-  const initialListingsLoaded = true; {/*useSelector(selectInitialListingsLoaded)*/};
+  const initialListingsLoaded = false; {/*useSelector(selectInitialListingsLoaded)*/};
   
   const filteredListings =
     activeTab === "All Listings"
