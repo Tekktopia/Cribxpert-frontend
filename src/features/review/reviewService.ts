@@ -41,12 +41,12 @@ export const reviewApi = createApi({
     }),
 
     // GET /reviews/listing/{listingId} - Get all reviews for a specific listing
-    getReviewsByListingId: builder.query<Review[], string>({
+    getReviewsByListingId: builder.query<{reviews: Review[]}, string>({
       query: (listingId) => `/reviews/listing/${listingId}`,
       providesTags: (result, _error, listingId) =>
         result
           ? [
-              ...result.map(({ _id }) => ({
+              ...result.reviews.map(({ _id }) => ({
                 type: 'Review' as const,
                 id: _id,
               })),

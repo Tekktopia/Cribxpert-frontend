@@ -1,11 +1,9 @@
-import bell from '@/assets/icons/bell.svg';
-
 const NoNotification = () => {
   return (
     <div className="flex items-center justify-center mt-[50px]">
       <div className="flex flex-col items-center justify-center gap-4 w-[500px]">
         <img
-          src={bell}
+          src={'/images/No-Notification.png'}
           alt="No notification"
           className="sm:w-[250px] w-[200px]"
         />
@@ -19,7 +17,7 @@ const NoNotification = () => {
         </div>
         <button
           type="submit"
-          className=" bg-[#1D5C5C] items-center justify-center text-white p-[10px] rounded-[5px] hover:bg-[#3f013e] flex  text-[12px]  sm:text-[16px] lg:text-[18px]"
+          className=" bg-[#1D5C5C] items-center justify-center text-white p-[10px] rounded-[5px] hover:bg-[#01363f] flex  text-[12px]  sm:text-[16px] lg:text-[18px]"
         >
           Refresh
         </button>

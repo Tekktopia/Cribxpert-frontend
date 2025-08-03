@@ -6,7 +6,7 @@ import {
 } from '@/features/auth/authSlice';
 import Spinner from './Spinner';
 import { JSX, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { easeInOut, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 interface ProtectedRouteProps {
@@ -31,8 +31,8 @@ const ProtectedRoute = ({
   };
   
   const pageTransition = {
-    type: "tween",
-    ease: "anticipate",
+    type: "tween" as const,
+    ease: easeInOut,
     duration: 1
   };
 

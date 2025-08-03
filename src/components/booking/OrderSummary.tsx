@@ -4,6 +4,7 @@ import ImageCarousel from './ImageCarousel';
 import PropertyDetails from './PropertyDetails';
 import BookingDetails from './BookingDetails';
 import PriceBreakdown from './PriceBreakdown';
+import AvailabilityDatePicker from '@/components/common/AvailabilityDatePicker';
 import type { BookingData } from '@/types';
 
 interface OrderSummaryProps {
@@ -200,6 +201,15 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     );
   };
 
+  // Handler for date range selection from AvailabilityDatePicker
+  const handleDateRangeChange = (
+    checkIn: Date | null,
+    checkOut: Date | null
+  ) => {
+    setStartDate(checkIn);
+    setEndDate(checkOut);
+  };
+
   return (
     <div className="border border-[#E6E6E6] p-4 rounded-lg">
       {/* Property Image Carousel */}
@@ -283,6 +293,15 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       />
 
       {/* Booking Details - Always Editable */}
+      <div className="mb-4">
+        <AvailabilityDatePicker
+          listingId={bookingData?.propertyId || ''}
+          onDateSelect={handleDateRangeChange}
+          selectedCheckIn={startDate}
+          selectedCheckOut={endDate}
+          className="flex items-start rounded-md bg-white border border-[#E6E6E6] px-4 py-2 w-full"
+        />
+      </div>
       <BookingDetails
         startDate={startDate}
         endDate={endDate}

@@ -74,8 +74,8 @@ export const reviewSlice = createSlice({
         reviewApi.endpoints.getReviewsByListingId.matchFulfilled,
         (state, { payload }) => {
           state.isLoading = false;
-          state.reviews = payload;
-          state.averageRating = calculateAverageRating(payload);
+          state.reviews = [...payload.reviews];
+          state.averageRating = calculateAverageRating(payload.reviews);
           state.error = null;
         }
       )

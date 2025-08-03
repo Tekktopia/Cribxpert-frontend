@@ -5,6 +5,7 @@ import AuthGuard from '@/components/common/AuthGuard';
 import FooterWrapper from '@/components/layout/FooterWrapper';
 import routeConfig from '@/routes/RouteConfig';
 import { JSX } from 'react';
+import PageLayout from '@/pages/PageLayout';
 
 /**
  * Component responsible for rendering all application routes
@@ -21,16 +22,20 @@ const AppRoutes: React.FC = () => {
             element={
               route.protected ? (
                 route.element ? (
-                  <ProtectedRoute>
-                    {route.element as JSX.Element}
-                  </ProtectedRoute>
+                  <PageLayout header={route.header}>
+                    <ProtectedRoute>
+                      {route.element as JSX.Element}
+                    </ProtectedRoute>
+                  </PageLayout>
                 ) : null
               ) : route.authRoute ? (
                 route.element ? (
                   <AuthGuard>{route.element as JSX.Element}</AuthGuard>
                 ) : null
               ) : (
-                route.element
+                <PageLayout header={route.header}>
+                  {route.element as JSX.Element}
+                </PageLayout>
               )
             }
           />

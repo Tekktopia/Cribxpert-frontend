@@ -6,6 +6,7 @@ import authReducer from '@/features/auth';
 import { bookingReducer } from '@/features/booking';
 import { propertyTypeReducer, propertyTypeApi } from '@/features/propertyType';
 import reviewReducer, { reviewApi } from '@/features/review';
+import notificationReducer, { notificationApi } from '@/features/notification';
 
 // Import API services
 import { authApi } from '@/features/auth/authService';
@@ -24,6 +25,7 @@ export const store = configureStore({
     listing: listingReducer,
     propertyType: propertyTypeReducer,
     review: reviewReducer,
+    notification: notificationReducer,
 
     // API reducers
     [authApi.reducerPath]: authApi.reducer,
@@ -33,6 +35,7 @@ export const store = configureStore({
     [listingApi.reducerPath]: listingApi.reducer,
     [propertyTypeApi.reducerPath]: propertyTypeApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -42,7 +45,8 @@ export const store = configureStore({
       favouritesApi.middleware,
       amenitiesApi.middleware,
       propertyTypeApi.middleware,
-      reviewApi.middleware
+      reviewApi.middleware,
+      notificationApi.middleware
     ),
 });
 
