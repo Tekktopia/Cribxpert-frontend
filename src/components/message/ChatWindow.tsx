@@ -1,17 +1,8 @@
 import React from 'react';
+import { Message } from '@/utils/messagesData.tsx';
 
 interface ChatWindowProps {
-  selectedChat?: {
-    avatarUrl: string;
-    name: string;
-    subject: string;
-    messages: Array<{
-      sender: string;
-      text: string;
-      time: string;
-      isMe?: boolean;
-    }>;
-  } | null;
+  selectedChat?: Message | null;
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
@@ -41,7 +32,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
         </div>
       </div>
       <div
-        className="flex-1 px-8 py-6 overflow-y-auto"
+        className="flex-1 px-4 py-6 overflow-y-auto bg-white"
         style={{ minHeight: '400px' }}
       >
         {selectedChat.messages.map((msg, idx) => (
@@ -50,33 +41,40 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
             className={`flex mb-6 ${msg.isMe ? 'justify-end' : 'justify-start'}`}
           >
             {!msg.isMe && (
-              <img
-                src={selectedChat.avatarUrl}
-                alt={selectedChat.name}
-                className="w-6 h-6 rounded-full mr-2 self-end"
-              />
-            )}
-            <div
-              className={`max-w-lg px-5 py-3 rounded-lg text-sm ${msg.isMe ? 'bg-[#96BEC6] text-black' : 'bg-[#E6EFF1] text-black'}`}
-            >
-              {msg.text}
-              <div className="text-xs text-gray-400 mt-2 flex justify-between">
-                <span>{msg.sender}</span>
-                <span>
-                  {msg.time}
-                  {msg.isMe ? ' • You' : ''}
-                </span>
+              <div className="flex flex-col items-start">
+                <div className="flex items-center mb-1">
+                  <span className="text-xs text-gray-500">
+                    {msg.sender} - {msg.time}
+                  </span>
+                </div>
+                <div className="bg-[#E8F1F3] text-gray-800 px-4 py-3 rounded-lg max-w-md">
+                  {msg.text}
+                </div>
               </div>
-            </div>
+            )}
+            {msg.isMe && (
+              <div className="flex flex-col items-end">
+                <div className="bg-[#ACD3DC] text-gray-800 px-4 py-3 rounded-lg max-w-md">
+                  {msg.text}
+                </div>
+                <div className="flex items-center mt-1">
+                  <span className="text-xs text-gray-500">
+                    {msg.time} - {msg.isMe ? 'You' : msg.sender}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
       <div className="border-t p-4">
-        <input
-          type="text"
-          placeholder="Type a message..."
-          className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          />
+        </div>
       </div>
     </div>
   );
