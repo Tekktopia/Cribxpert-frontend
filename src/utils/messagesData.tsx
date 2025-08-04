@@ -4,6 +4,7 @@ export interface Message {
   name: string;
   subject: string;
   date: string;
+  unread?: boolean;
   messages: Array<{
     sender: string;
     text: string;
@@ -20,6 +21,7 @@ const messages: Message[] = [
     name: 'James Mordi',
     subject: "Makinwa's Cottage Inquiry",
     date: 'Jan 20, 2025',
+    unread: true,
     messages: [
       {
         sender: 'James',
@@ -47,6 +49,7 @@ const messages: Message[] = [
     name: 'James Mordi',
     subject: "Makinwa's Cottage Inquiry",
     date: 'Jan 20, 2025',
+    unread: false,
     messages: [
       {
         sender: 'James',
@@ -62,6 +65,7 @@ const messages: Message[] = [
     name: 'James Mordi',
     subject: "Makinwa's Cottage Inquiry",
     date: 'Jan 20, 2025',
+    unread: false,
     messages: [
       {
         sender: 'James',
@@ -77,6 +81,7 @@ const messages: Message[] = [
     name: 'James Mordi',
     subject: "Makinwa's Cottage Inquiry",
     date: 'Jan 20, 2025',
+    unread: false,
     messages: [
       {
         sender: 'James',
@@ -92,6 +97,7 @@ const messages: Message[] = [
     name: 'James Mordi',
     subject: "Makinwa's Cottage Inquiry",
     date: 'Jan 20, 2025',
+    unread: false,
     messages: [
       {
         sender: 'James',
@@ -107,6 +113,7 @@ const messages: Message[] = [
     name: 'James Mordi',
     subject: "Makinwa's Cottage Inquiry",
     date: 'Jan 20, 2025',
+    unread: false,
     messages: [
       {
         sender: 'James',
@@ -122,6 +129,7 @@ const messages: Message[] = [
     name: 'James Mordi',
     subject: "Makinwa's Cottage Inquiry",
     date: 'Jan 20, 2025',
+    unread: false,
     messages: [
       {
         sender: 'James',

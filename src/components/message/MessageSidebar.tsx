@@ -15,6 +15,10 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
 }) => {
   const [selectedTab, setSelectedTab] = useState('All');
 
+  // Filter messages based on selected tab
+  const filteredMessages =
+    selectedTab === 'Unread' ? messages.filter((msg) => msg.unread) : messages;
+
   return (
     <div className="min-w-80 border-r h-full flex flex-col bg-white">
       <div className="flex items-center justify-between p-4">
@@ -63,7 +67,7 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
         </button>
       </div>
       <div className="overflow-y-auto flex-1">
-        {messages.map((msg, idx) => (
+        {filteredMessages.map((msg, idx) => (
           <MessageItem
             key={msg.id || idx}
             avatarUrl={msg.avatarUrl}

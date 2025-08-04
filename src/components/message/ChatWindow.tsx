@@ -3,9 +3,40 @@ import { Message } from '@/utils/messagesData.tsx';
 
 interface ChatWindowProps {
   selectedChat?: Message | null;
+  selectedTab?: string;
+  hasUnread?: boolean;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({
+  selectedChat,
+  selectedTab,
+  hasUnread,
+}) => {
+  // Show empty state if Unread tab is selected and no unread messages
+  if (selectedTab === 'Unread' && !hasUnread) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center bg-white">
+        <img
+          src="/images/No-Notification.png"
+          alt="No Unread"
+          className="w-60 mb-6"
+        />
+        <h2 className="text-2xl font-semibold mb-2 text-center">
+          No Unread Messages yet!
+        </h2>
+        <p className="text-gray-500 mb-4 text-center">
+          Clear Filter To View Unread Messages
+        </p>
+        <button
+          className="px-4 py-2 rounded bg-gray-100 border border-gray-300 text-gray-700 shadow-sm hover:bg-gray-200 transition"
+          onClick={() => window.location.reload()} // You may want to lift state up and clear filter instead
+        >
+          Clear filters
+        </button>
+      </div>
+    );
+  }
+
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center bg-white">
@@ -79,5 +110,4 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
     </div>
   );
 };
-
 export default ChatWindow;
