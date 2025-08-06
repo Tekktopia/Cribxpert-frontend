@@ -95,9 +95,16 @@ const Booking: React.FC<BookingProps> = ({ bookingData }) => {
         endDate: bookingData.endDate.toISOString(),
         travelersNo: bookingData.guests,
         totalPrice: bookingData.totalPrice,
-        userId: currentUser?._id || '',
         listing: bookingData.propertyId,
-        specialRequests: message || undefined,
+        userId: currentUser?._id || '',
+        firstName,
+        lastName,
+        email,
+        phoneNo: phone,
+        sex,
+        age: age ? Number(age) : 0,
+        location,
+        message,
       };
 
       const result = await createBooking(bookingRequest).unwrap();
@@ -109,7 +116,7 @@ const Booking: React.FC<BookingProps> = ({ bookingData }) => {
       });
 
       // Navigate to payment page with booking ID
-      navigate('/payments', {
+      navigate('/pay', {
         state: {
           bookingId: result.booking._id,
           totalPrice: bookingData.totalPrice,

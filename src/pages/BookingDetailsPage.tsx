@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useSelector } from 'react-redux';
 import { selectBookingHistory } from '@/features/booking/bookingSlice';
+import { useGetBookingByIdQuery } from '@/features/booking/bookingService';
 import leftArrow from '../assets/icons/arrow-left-01.svg';
 import printer from '../assets/icons/printer.svg';
 import edit from '../assets/icons/edit-2.svg';
@@ -19,9 +20,53 @@ const BookingDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const bookingsHistory = useSelector(selectBookingHistory);
-  const booking = bookingsHistory.find((b) => b._id === id);
+  const bookingFromStore = bookingsHistory.find((b) => b._id === id);
+  const [booking, setBooking] = useState(bookingFromStore);
+  const {
+    data: apiBookingData,
+    isLoading: isApiLoading,
+    error: apiError,
+  } = useGetBookingByIdQuery(id!, { skip: !!bookingFromStore });
 
-  if (!booking) {
+  useEffect(() => {
+    if (apiBookingData && apiBookingData.booking) {
+      setBooking(apiBookingData.booking);
+    }
+  }, [apiBookingData]);
+
+  // Show loading spinner if API is loading
+  if (isApiLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center max-w-md mx-auto">
+          <div className="mb-6">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
+              <svg
+                className="w-8 h-8 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="10" strokeWidth="4" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Loading Booking...
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Please wait while we fetch your booking details.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show not found only if API is done loading, error, or empty response
+  if (
+    !isApiLoading &&
+    (apiError || (apiBookingData && !apiBookingData.booking))
+  ) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center max-w-md mx-auto">
@@ -49,7 +94,6 @@ const BookingDetailsPage: React.FC = () => {
               removed or the link might be incorrect.
             </p>
           </div>
-
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => window.location.reload()}
@@ -68,6 +112,9 @@ const BookingDetailsPage: React.FC = () => {
       </div>
     );
   }
+
+  // Only render booking details if booking is set
+  if (!booking) return null;
 
   return (
     <div className="h-full">

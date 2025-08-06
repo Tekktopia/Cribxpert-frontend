@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  useGetListingUnavailableDatesQuery,
-  UnavailableDate,
-} from '@/features/listing';
-import { format, isBefore, isEqual } from 'date-fns';
+import { useGetListingUnavailableDatesQuery } from '@/features/listing';
+import { isBefore, isEqual } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -37,11 +34,16 @@ const AvailabilityDatePicker: React.FC<AvailabilityDatePickerProps> = ({
     skip: !listingId,
   });
 
-  const unavailableDates = unavailableDatesData?.unavailableDates || [];
+  // Ensure unavailableDates is always an array of strings
+  const unavailableDates: string[] = Array.isArray(
+    unavailableDatesData?.unavailableDates
+  )
+    ? unavailableDatesData.unavailableDates.map(String)
+    : [];
 
-  // Convert unavailable dates to Date objects for easier comparison
+  // Convert unavailable dates (array of strings) to Date objects for easier comparison
   const unavailableDateObjects = unavailableDates.map(
-    (dateObj: UnavailableDate) => new Date(dateObj.date)
+    (dateStr) => new Date(dateStr)
   );
 
   const isDateUnavailable = (date: Date): boolean => {
@@ -167,49 +169,6 @@ const AvailabilityDatePicker: React.FC<AvailabilityDatePickerProps> = ({
           />
         </div>
       </div>
-
-      {/* Unavailable dates info */}
-      {unavailableDates.length > 0 && (
-        <div className="text-xs text-gray-600">
-          <p className="font-medium mb-1">Unavailable dates:</p>
-          <div className="flex flex-wrap gap-1">
-            {unavailableDates
-              .slice(0, 5)
-              .map((dateObj: UnavailableDate, index: number) => (
-                <span
-                  key={index}
-                  className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs"
-                >
-                  {format(new Date(dateObj.date), 'MMM dd')}
-                </span>
-              ))}
-            {unavailableDates.length > 5 && (
-              <span className="text-gray-500">
-                +{unavailableDates.length - 5} more
-              </span>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Selected dates display */}
-      {checkInDate && checkOutDate && (
-        <div className="bg-green-50 border border-green-200 rounded-md p-3">
-          <p className="text-sm text-green-800">
-            <span className="font-medium">Selected dates:</span>{' '}
-            {format(checkInDate, 'MMM dd, yyyy')} -{' '}
-            {format(checkOutDate, 'MMM dd, yyyy')}
-            <span className="ml-2 text-xs">
-              (
-              {Math.ceil(
-                (checkOutDate.getTime() - checkInDate.getTime()) /
-                  (1000 * 60 * 60 * 24)
-              )}{' '}
-              nights)
-            </span>
-          </p>
-        </div>
-      )}
     </div>
   );
 };
