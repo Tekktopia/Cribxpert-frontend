@@ -15,22 +15,22 @@ const notificationSlice = createSlice({
   reducers: {
     setNotifications: (state, action: PayloadAction<Notification[]>) => {
       state.notifications = action.payload;
-      state.unreadCount = action.payload.filter((n) => !n.isRead).length;
+      state.unreadCount = action.payload.filter((n) => n.status === "unread").length;
     },
 
     markAsRead: (state, action: PayloadAction<string>) => {
       const notification = state.notifications.find(
         (n) => n._id === action.payload
       );
-      if (notification && !notification.isRead) {
-        notification.isRead = true;
+      if (notification && notification.status === "unread") {
+        notification.status = "read";
         state.unreadCount = Math.max(0, state.unreadCount - 1);
       }
     },
 
     addNotification: (state, action: PayloadAction<Notification>) => {
       state.notifications.unshift(action.payload);
-      if (!action.payload.isRead) {
+      if (action.payload.status === "unread") {
         state.unreadCount += 1;
       }
     },
@@ -68,7 +68,7 @@ const notificationSlice = createSlice({
           state.isLoading = false;
           state.notifications = payload.notifications;
           state.unreadCount = payload.notifications.filter(
-            (n) => !n.isRead
+            (n) => !n.status || n.status === 'unread'
           ).length;
           state.error = null;
         }
@@ -97,8 +97,8 @@ const notificationSlice = createSlice({
           const notification = state.notifications.find(
             (n) => n._id === payload.notification._id
           );
-          if (notification && !notification.isRead) {
-            notification.isRead = true;
+          if (notification && notification.status === "unread") {
+            notification.status = "read";
             state.unreadCount = Math.max(0, state.unreadCount - 1);
           }
           state.error = null;

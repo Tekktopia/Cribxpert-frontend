@@ -3,12 +3,10 @@ import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
-import Header from '@/components/layout/Header';
 import { PropertyListing } from '@/types';
 import { selectAllListings } from '@/features/listing/listingSlice';
 import { useDispatch } from 'react-redux';
 import { setCurrentListing } from '@/features/listing';
-import { useCreateBookingMutation } from '@/features/booking/bookingService';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import {
   useCreateReviewMutation,
@@ -69,10 +67,6 @@ const PropertyDetail = () => {
   // Get current user for booking
   const currentUser = useSelector(selectCurrentUser);
 
-  // Add booking mutation
-  const [createBooking, { isLoading: isCreatingBooking }] =
-    useCreateBookingMutation();
-
   // Add review mutations and queries
   const [createReview, { isLoading: isCreatingReview }] =
     useCreateReviewMutation();
@@ -91,49 +85,37 @@ const PropertyDetail = () => {
     })) || [];
 
   // Handle booking submission
-  const handleBookingSubmit = async (formData: {
-    checkInDate: Date;
-    checkOutDate: Date;
-    guests: number;
-  }) => {
-    if (!property || !currentUser) {
-      console.error('Property or user not found');
-      return;
-    }
+  const handleBookingSubmit = (formData: {
+  checkInDate: Date;
+  checkOutDate: Date;
+  guests: number;
+}) => {
+  if (!property || !currentUser) {
+    console.error('Property or user not found');
+    return;
+  }
 
-    try {
-      // Calculate total price
-      const numberOfNights = Math.ceil(
-        (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
-          (1000 * 60 * 60 * 24)
-      );
-      const totalPrice = numberOfNights * property.basePrice;
+  // Calculate total price
+  const numberOfNights = Math.ceil(
+    (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
+  const totalPrice = numberOfNights * property.basePrice;
 
-      const bookingData = {
-        startDate: formData.checkInDate.toISOString(),
-        endDate: formData.checkOutDate.toISOString(),
-        travelersNo: formData.guests,
-        totalPrice: totalPrice,
-        userId: currentUser._id,
-        listing: property._id,
-        specialRequests: '', // Optional field
-      };
-
-      await createBooking(bookingData).unwrap();
-      console.log('Booking created successfully!');
-      showAlert({
-        title: 'Booking created successfully!',
-        icon: 'success'
-      });
-      navigate('/bookings');
-    } catch (error) {
-      console.error('Booking failed:', error);
-      showAlert({
-        title: 'Failed to create booking. Please try again.',
-        icon: 'error'
-      });
-    }
+  // Prepare booking data for BookNowPage
+  const bookingData = {
+    propertyId: property._id,
+    propertyName: property.name,
+    startDate: formData.checkInDate,
+    endDate: formData.checkOutDate,
+    guests: formData.guests,
+    totalPrice: totalPrice,
+    userId: currentUser._id,
   };
+
+  // Navigate to BookNowPage with booking data
+  navigate('/book-now', { state: bookingData });
+};
 
   // Handle review submission
   const handleReviewSubmit = async (reviewData: {
@@ -189,7 +171,6 @@ const PropertyDetail = () => {
   if (!property) {
     return (
       <section className="max-w-screen-xl mx-auto overflow-hidden">
-        <Header />
         <div className="flex justify-center items-center h-[60vh] mt-[130px]">
           <p className="text-xl text-gray-500">Property not found</p>
         </div>
@@ -241,7 +222,7 @@ const PropertyDetail = () => {
               <BookingForm
                 property={property}
                 onBookingSubmit={handleBookingSubmit}
-                isSubmitting={isCreatingBooking}
+                isLoggedIn={currentUser !== null}
               />
             </div>
           </div>

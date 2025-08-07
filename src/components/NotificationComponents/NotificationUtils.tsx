@@ -17,30 +17,30 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
 }) => {
   return (
     <div
-      className={`w-full flex gap-3 sm:gap-[19px] ${!notification.isRead ? 'opacity-100' : 'opacity-70'}`}
-      onClick={() => !notification.isRead && onMarkAsRead(notification._id)}
+      className={`w-full flex gap-3 sm:gap-[19px]`}
+      onClick={() => notification.status === 'unread' && onMarkAsRead(notification._id)}
     >
       <div className="flex-shrink-0 h-[40px] sm:h-[50px] w-[40px] sm:w-[50px] py-[5px] px-[15px] justify-center items-center rounded-lg bg-[#F1E6F1]">
         <p className="text-[24px] sm:text-[31px] font-semibold text-[#6F6F6F]">
-          {getNotificationIcon(notification.type)}
+          {getNotificationIcon(notification.category || '')}
         </p>
       </div>
       <div className="flex-1 flex items-start justify-center gap-2 sm:gap-[15px] flex-col">
         <p
-          className={`text-[14px] sm:text-[16px] font-semibold line-clamp-2 ${!notification.isRead ? 'text-[#313131]' : 'text-[#6F6F6F]'}`}
+          className={`text-[14px] sm:text-[16px] font-semibold line-clamp-2 ${notification.status === 'unread' ? 'text-[#313131]' : 'text-[#6F6F6F]'}`}
         >
           {notification.title}
         </p>
         <p className="text-[#999] text-[12px] sm:text-[14px] mb-2">
-          {notification.message}
+          {notification.description}
         </p>
         <div className="text-[#999] text-[12px] sm:text-[14px] font-normal flex flex-wrap gap-2">
           <p>{formatTimeAgo(notification.createdAt)}</p>
           <img src={eclipse} alt="circle" className="hidden sm:inline" />
           <span className="inline sm:hidden">•</span>
-          <p className="capitalize">{notification.type}</p>
+          <p className="capitalize">{notification.category}</p>
         </div>
-        {!notification.isRead && (
+        {notification.status !== 'read' && (
           <div className="flex w-2 h-2 bg-[#1D5C5C] rounded-full"></div>
         )}
       </div>

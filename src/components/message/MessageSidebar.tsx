@@ -1,19 +1,6 @@
 import React, { useState } from 'react';
 import MessageItem from './MessageItem';
-
-interface Message {
-  id: string;
-  avatarUrl: string;
-  name: string;
-  subject: string;
-  date: string;
-  messages: Array<{
-    sender: string;
-    text: string;
-    time: string;
-    isMe?: boolean;
-  }>;
-}
+import { Message } from '@/utils/messagesData.tsx';
 
 interface MessageSidebarProps {
   messages: Message[];
@@ -28,26 +15,42 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
 }) => {
   const [selectedTab, setSelectedTab] = useState('All');
 
+  // Filter messages based on selected tab
+  const filteredMessages =
+    selectedTab === 'Unread' ? messages.filter((msg) => msg.unread) : messages;
+
   return (
     <div className="min-w-80 border-r h-full flex flex-col bg-white">
       <div className="flex items-center justify-between p-4">
         <h2 className="text-lg font-semibold">Messages</h2>
-        <button className="p-2">
-          {/* Search icon */}
-          <svg
-            className="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
-            />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          <button className="p-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition">
+            <svg
+              className="w-5 h-5 text-gray-700"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
+          <button className="p-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition">
+            <svg
+              className="w-5 h-5 text-gray-700"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <line x1="4" y1="8" x2="20" y2="8" />
+              <circle cx="8" cy="8" r="2" />
+              <line x1="4" y1="16" x2="20" y2="16" />
+              <circle cx="16" cy="16" r="2" />
+            </svg>
+          </button>
+        </div>
       </div>
       <div className="flex space-x-2 px-4 mb-2">
         <button
@@ -63,8 +66,8 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
           Unread
         </button>
       </div>
-      <div className="overflow-y-scroll max-h-screen flex-1">
-        {messages.map((msg, idx) => (
+      <div className="overflow-y-auto flex-1">
+        {filteredMessages.map((msg, idx) => (
           <MessageItem
             key={msg.id || idx}
             avatarUrl={msg.avatarUrl}
@@ -73,6 +76,7 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
             date={`${msg.date}`}
             selected={selectedIdx === idx}
             onClick={() => setSelectedIdx(idx)}
+            isRecent={idx < 1} // Make the first message appear as recent
           />
         ))}
       </div>

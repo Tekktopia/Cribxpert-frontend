@@ -8,7 +8,7 @@ interface StatusButtonProps {
   type?: ButtonType;
 }
 
-const StatusButton: React.FC<StatusButtonProps> = ({ status, type }) => {
+const StatusButton: React.FC<StatusButtonProps> = ({ status = "", type }) => {
   const statusStyles: Record<StatusType, string> = {
     confirmed: 'bg-[#E7F4EE] text-[#09974C]',
     pending: 'bg-[#FDF1E8] text-[#FFAD09]',

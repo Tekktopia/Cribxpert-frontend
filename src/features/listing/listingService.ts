@@ -209,7 +209,7 @@ export const listingApi = createApi({
 
     // GET /listing/{listingId}/unavailable-dates - Get unavailable dates for a listing
     getListingUnavailableDates: builder.query<UnavailableDatesResponse, string>({
-      query: (listingId) => `/listings/${listingId}/unavailable-dates`,
+      query: (listingId) => `/listing/unavailable-dates/${listingId}`,
       providesTags: (_result, _error, listingId) => [
         { type: 'Listing', id: `${listingId}-unavailable-dates` },
       ],

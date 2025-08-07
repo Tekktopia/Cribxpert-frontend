@@ -1,20 +1,42 @@
 import React from 'react';
+import { Message } from '@/utils/messagesData.tsx';
 
 interface ChatWindowProps {
-  selectedChat?: {
-    avatarUrl: string;
-    name: string;
-    subject: string;
-    messages: Array<{
-      sender: string;
-      text: string;
-      time: string;
-      isMe?: boolean;
-    }>;
-  } | null;
+  selectedChat?: Message | null;
+  selectedTab?: string;
+  hasUnread?: boolean;
 }
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({
+  selectedChat,
+  selectedTab,
+  hasUnread,
+}) => {
+  // Show empty state if Unread tab is selected and no unread messages
+  if (selectedTab === 'Unread' && !hasUnread) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center bg-white">
+        <img
+          src="/images/No-Notification.png"
+          alt="No Unread"
+          className="w-60 mb-6"
+        />
+        <h2 className="text-2xl font-semibold mb-2 text-center">
+          No Unread Messages yet!
+        </h2>
+        <p className="text-gray-500 mb-4 text-center">
+          Clear Filter To View Unread Messages
+        </p>
+        <button
+          className="px-4 py-2 rounded bg-gray-100 border border-gray-300 text-gray-700 shadow-sm hover:bg-gray-200 transition"
+          onClick={() => window.location.reload()} // You may want to lift state up and clear filter instead
+        >
+          Clear filters
+        </button>
+      </div>
+    );
+  }
+
   if (!selectedChat) {
     return (
       <div className="flex-1 flex items-center justify-center bg-white">
@@ -41,7 +63,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
         </div>
       </div>
       <div
-        className="flex-1 px-8 py-6 overflow-y-auto"
+        className="flex-1 px-4 py-6 overflow-y-auto bg-white"
         style={{ minHeight: '400px' }}
       >
         {selectedChat.messages.map((msg, idx) => (
@@ -50,36 +72,42 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat }) => {
             className={`flex mb-6 ${msg.isMe ? 'justify-end' : 'justify-start'}`}
           >
             {!msg.isMe && (
-              <img
-                src={selectedChat.avatarUrl}
-                alt={selectedChat.name}
-                className="w-6 h-6 rounded-full mr-2 self-end"
-              />
-            )}
-            <div
-              className={`max-w-lg px-5 py-3 rounded-lg text-sm ${msg.isMe ? 'bg-[#96BEC6] text-black' : 'bg-[#E6EFF1] text-black'}`}
-            >
-              {msg.text}
-              <div className="text-xs text-gray-400 mt-2 flex justify-between">
-                <span>{msg.sender}</span>
-                <span>
-                  {msg.time}
-                  {msg.isMe ? ' • You' : ''}
-                </span>
+              <div className="flex flex-col items-start">
+                <div className="flex items-center mb-1">
+                  <span className="text-xs text-gray-500">
+                    {msg.sender} - {msg.time}
+                  </span>
+                </div>
+                <div className="bg-[#E8F1F3] text-gray-800 px-4 py-3 rounded-lg max-w-md">
+                  {msg.text}
+                </div>
               </div>
-            </div>
+            )}
+            {msg.isMe && (
+              <div className="flex flex-col items-end">
+                <div className="bg-[#ACD3DC] text-gray-800 px-4 py-3 rounded-lg max-w-md">
+                  {msg.text}
+                </div>
+                <div className="flex items-center mt-1">
+                  <span className="text-xs text-gray-500">
+                    {msg.time} - {msg.isMe ? 'You' : msg.sender}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
       <div className="border-t p-4">
-        <input
-          type="text"
-          placeholder="Type a message..."
-          className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Type a message..."
+            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-1 focus:ring-teal-500"
+          />
+        </div>
       </div>
     </div>
   );
 };
-
 export default ChatWindow;
