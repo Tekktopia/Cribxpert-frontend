@@ -6,17 +6,9 @@ export interface Notification {
   _id: string;
   userId: string;
   title: string;
-  message: string;
-  type:
-    | 'info'
-    | 'success'
-    | 'warning'
-    | 'error'
-    | 'booking'
-    | 'payment'
-    | 'review';
-  category?: 'booking' | 'payment' | 'review' | 'general';
-  isRead: boolean;
+  description: string;
+  category: 'booking' | 'payment' | 'review' | 'general';
+  status: 'read' | 'unread';
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -24,7 +16,6 @@ export interface Notification {
 
 // API response types
 export interface GetNotificationsResponse {
-  message: string;
   notifications: Notification[];
 }
 
