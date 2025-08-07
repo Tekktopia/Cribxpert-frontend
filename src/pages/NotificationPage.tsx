@@ -39,18 +39,15 @@ const NotificationPage = () => {
 
   // Filter notifications by type
   const bookingNotifications = notifications.filter(
-    (notification) =>
-      notification.type === 'booking' || notification.category === 'booking'
+    (notification) => notification.category === 'booking'
   );
 
   const paymentNotifications = notifications.filter(
-    (notification) =>
-      notification.type === 'payment' || notification.category === 'payment'
+    (notification) => notification.category === 'payment'
   );
 
   const reviewNotifications = notifications.filter(
-    (notification) =>
-      notification.type === 'review' || notification.category === 'review'
+    (notification) => notification.category === 'review'
   );
 
   return (

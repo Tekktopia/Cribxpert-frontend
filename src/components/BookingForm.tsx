@@ -16,16 +16,23 @@ export interface BookingFormProps {
     guests: number;
   }) => void;
   isSubmitting?: boolean;
+  isLoggedIn: boolean;
 }
 
-const BookingForm: React.FC<BookingFormProps> = ({ 
-  property, 
+const BookingForm: React.FC<BookingFormProps> = ({
+  property,
   onBookingSubmit,
-  isSubmitting = false 
+  isSubmitting = false,
+  isLoggedIn,
 }) => {
-  const { formData, setGuests: setFormGuests, setDateRange, isFormValid, numberOfNights } =
-    useBookingForm();
-  
+  const {
+    formData,
+    setGuests: setFormGuests,
+    setDateRange,
+    isFormValid,
+    numberOfNights,
+  } = useBookingForm();
+
   const [showBreakdown, setShowBreakdown] = useState(false);
 
   // Maximum guests is the number of guests
@@ -39,7 +46,12 @@ const BookingForm: React.FC<BookingFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isFormValid && formData.checkInDate && formData.checkOutDate && onBookingSubmit) {
+    if (
+      isFormValid &&
+      formData.checkInDate &&
+      formData.checkOutDate &&
+      onBookingSubmit
+    ) {
       onBookingSubmit({
         checkInDate: formData.checkInDate,
         checkOutDate: formData.checkOutDate,
@@ -57,8 +69,12 @@ const BookingForm: React.FC<BookingFormProps> = ({
   const tax = (property.basePrice * 0.1).toFixed(2);
 
   // Calculate total price based on selected nights
-  const baseTotal = numberOfNights > 0 ? numberOfNights * property.basePrice : property.basePrice;
-  const totalPrice = baseTotal + cleaningFee + securityDepositFee + parseFloat(tax);
+  const baseTotal =
+    numberOfNights > 0
+      ? numberOfNights * property.basePrice
+      : property.basePrice;
+  const totalPrice =
+    baseTotal + cleaningFee + securityDepositFee + parseFloat(tax);
 
   return (
     <>
@@ -138,7 +154,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
           <div className="flex items-start mt-3 gap-2">
             <CiCircleCheck size={20} color="#09974C" />
             <p className="text-[#999999] text-[14px]">
-              {isFormValid ? 'Your dates are available' : 'Please select dates to check availability'}
+              {isFormValid
+                ? 'Your dates are available'
+                : 'Please select dates to check availability'}
             </p>
           </div>
 
@@ -186,40 +204,50 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
           {/* Price & Breakdown */}
           <div className="flex items-center justify-between mt-4">
-            <p className="text-[#313131] text-[16px] font-medium">Total Price</p>
+            <p className="text-[#313131] text-[16px] font-medium">
+              Total Price
+            </p>
             <h3 className="text-[#070707] text-[16px] font-semibold">
               NGN {totalPrice.toLocaleString()}
             </h3>
           </div>
 
-          {/* CTA Button - Use form submission if onBookingSubmit is provided, otherwise Link */}
+          {/* CTA Button - Only allow logged in users to book */}
           {onBookingSubmit ? (
             <button
               type="submit"
-              disabled={!isFormValid || isSubmitting}
+              disabled={!isFormValid || isSubmitting || !isLoggedIn}
               className="bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Processing...' : 'Book Now'}
+              {isLoggedIn
+                ? isSubmitting
+                  ? 'Processing...'
+                  : 'Book Now'
+                : 'Login to Book'}
             </button>
           ) : (
             <Link
-              to="/book-now"
-              state={{
-                propertyId: property._id,
-                startDate: formData.checkInDate,
-                endDate: formData.checkOutDate,
-                guests: formData.guests,
-                totalPrice,
-                propertyName: property.name,
-                propertyImages,
-              }}
+              to={isLoggedIn ? '/book-now' : '/login'}
+              state={
+                isLoggedIn
+                  ? {
+                      propertyId: property._id,
+                      startDate: formData.checkInDate,
+                      endDate: formData.checkOutDate,
+                      guests: formData.guests,
+                      totalPrice,
+                      propertyName: property.name,
+                      propertyImages,
+                    }
+                  : undefined
+              }
             >
-              <button 
+              <button
                 type="button"
-                disabled={!isFormValid}
+                disabled={!isFormValid || !isLoggedIn}
                 className="bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
-                Book Now
+                {isLoggedIn ? 'Book Now' : 'Login to Book'}
               </button>
             </Link>
           )}
@@ -241,7 +269,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
           <p>Book with confidence guarantee</p>
         </div>
       </div>
-      
+
       <div className="py-8 text-center">
         <p className="text-[#313131] text-[14px]">
           Property ID <strong>{property._id}</strong>

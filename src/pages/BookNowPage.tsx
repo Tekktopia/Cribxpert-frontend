@@ -46,7 +46,7 @@ const BookNowPage: React.FC = () => {
         <h2 className="md:text-2xl container mx-auto text-xl text-[#040404] mb-6">
           Begin your booking
         </h2>
-        <div className="p-2 container mx-auto max-w-[1280px] h-auto border border-[#cccccc] bg-[#f1e6f1]/60 rounded-md flex items-center gap-2">
+        <div className="p-2 container mx-auto max-w-[1280px] h-auto border border-[#cccccc] bg-[#3c899977] rounded-md flex items-center gap-2">
           <img src={danger} alt="Danger Icon" className="w-[20px] h-[20px]" />
           <p className="text-[#6F6F6F] md:text-md text-sm">
             Booking for {bookingData.propertyName} •{' '}

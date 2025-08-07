@@ -8,9 +8,16 @@ export interface BookingRequest {
   endDate: string;
   travelersNo: number;
   totalPrice: number;
+  listing: string;
   userId: string;
-  listing: string; // This is the property/listing ID
-  specialRequests?: string; // Optional field you may want to keep
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNo: string;
+  sex: string;
+  age: number;
+  location: string;
+  message: string;
 }
 
 export interface Booking {
@@ -19,13 +26,21 @@ export interface Booking {
   endDate: string;
   travelersNo: number;
   totalPrice: number;
+  listing: PropertyListing;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNo: string;
+  sex: string;
+  age: number;
+  location: string;
+  message: string;
   status: string;
   refundStatus: string;
   cancellationDate: string | null;
   cancellationReason: string | null;
   cancellationBy: string | null;
   totalRefund: number;
-  listing: PropertyListing; // Changed from string to PropertyListing
   _id: string;
   createdAt: string;
   updatedAt: string;
@@ -35,9 +50,14 @@ interface CreateBookingResponse {
   message: string;
   booking: Booking;
 }
-export interface BookingResponse {
+export interface BookingByUserIdResponse {
   message: string;
   bookings: Booking[];
+}
+
+export interface BookingResponse {
+  message: string;
+  booking: Booking;
 }
 
 export const bookingApi = createApi({
@@ -57,7 +77,7 @@ export const bookingApi = createApi({
       query: (id) => `/booking/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Booking', id }],
     }),
-    getBookingsByUserId: builder.query<BookingResponse, string>({
+    getBookingsByUserId: builder.query<BookingByUserIdResponse, string>({
       query: (userId) => `/booking/user/${userId}`,
       providesTags: (result) =>
         result && result.bookings
