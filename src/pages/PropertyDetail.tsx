@@ -3,7 +3,6 @@ import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import AmenitiesSection from '@/components/AmenitiesSection';
 import BookingForm from '@/components/BookingForm';
-import Header from '@/components/layout/Header';
 import { PropertyListing } from '@/types';
 import { selectAllListings } from '@/features/listing/listingSlice';
 import { useDispatch } from 'react-redux';
@@ -172,7 +171,6 @@ const PropertyDetail = () => {
   if (!property) {
     return (
       <section className="max-w-screen-xl mx-auto overflow-hidden">
-        <Header />
         <div className="flex justify-center items-center h-[60vh] mt-[130px]">
           <p className="text-xl text-gray-500">Property not found</p>
         </div>
@@ -224,6 +222,7 @@ const PropertyDetail = () => {
               <BookingForm
                 property={property}
                 onBookingSubmit={handleBookingSubmit}
+                isLoggedIn={currentUser !== null}
               />
             </div>
           </div>
