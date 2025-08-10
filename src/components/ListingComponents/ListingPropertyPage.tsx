@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
 interface ListingPropertyPageProps {
-  nextStep: () => void;
+    nextStep: () => void;
   prevStep: () => void;
-  onUploadComplete?: () => void; // Optional prop in case you want it later
+  isUploading: boolean;
+  setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
+  uploadCompleted: boolean;
+  setUploadCompleted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, prevStep }) => {
+const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
+  nextStep,
+  prevStep,
+  isUploading,
+  setIsUploading,
+  uploadCompleted,
+  setUploadCompleted,
+}) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [showUploadBox, setShowUploadBox] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadCompleted, setUploadCompleted] = useState(false);
   const [uploadedIndexes, setUploadedIndexes] = useState<number[]>([]);
   const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
 
@@ -52,15 +60,15 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
   return (
     <div className="flex flex-col items-center justify-center w-full">
       {/* Instruction text moved to the top */}
-      {!uploadCompleted && (
-        <div className="w-[644px] mb-6 text-center">
-          <h2 className="text-xl font-semibold mb-1">Property Photos</h2>
-          <p>
-            Upload at least 5 high quality photos of your property, include images of all major areas such as
-            living room, bedrooms, bathrooms, kitchen and exterior.
-          </p>
-        </div>
-      )}
+      {/* {!uploadCompleted && (
+        // <div className="w-[644px] mb-6 text-center">
+        //   <h2 className="text-xl font-semibold mb-1">Property Photos</h2>
+        //   <p>
+        //     Upload at least 5 high quality photos of your property, include images of all major areas such as
+        //     living room, bedrooms, bathrooms, kitchen and exterior.
+        //   </p>
+        // </div>
+      )} */}
 
       {/* Upload Box */}
       {showUploadBox && (
@@ -154,14 +162,31 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
       {/* Navigation Buttons */}
       {(!isUploading || uploadCompleted) && (
         <div className="flex justify-between w-full max-w-[644px] mt-6">
-          <button
-            onClick={prevStep}
-            className="bg-gray-300 text-black px-4 py-2 rounded"
-            disabled={isUploading}
-          >
-            Previous
-          </button>
 
+
+          <button
+  id="upload-start"
+  className="hidden"
+  onClick={() => {
+    if (!uploadCompleted) {
+      setIsUploading(true);
+      setShowUploadBox(false);
+      selectedFiles.forEach((_, index) => {
+        setTimeout(() => {
+          setUploadedIndexes((prev) => [...prev, index]);
+          if (index === selectedFiles.length - 1) {
+            setTimeout(() => {
+              setIsUploading(false);
+              setUploadCompleted(true);
+            }, 1000);
+          }
+        }, 1000 + index * 600);
+      });
+    }
+  }}
+/>
+         
+{/* 
           <button
             onClick={() => {
               if (!uploadCompleted) {
@@ -204,7 +229,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({ nextStep, pre
               </svg>
             )}
             {uploadCompleted ? 'Next' : 'Upload'}
-          </button>
+          </button> */}
         </div>
       )}
 

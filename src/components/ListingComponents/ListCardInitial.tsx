@@ -1,4 +1,5 @@
 /* component card for 1st time users*/
+
 interface ListCardInitialProps {
     title: string
     description: string
@@ -12,14 +13,14 @@ interface ListCardInitialProps {
       <img
         src={image}
         alt={title}
-        className="w-16 h-16 object-cover flex-shrink-0"
+        className="w-25 h-25 object-cover flex-shrink-0"
       />
       <div className="">
-        <h2 className="text-2xl font-semibold mb-2">
+        <h2 className="text-3xl font-semibold mb-2">
           <span className="font-bold mr-2">{index + 1}.</span>
           {title}
         </h2>
-        <p className="text-gray-600 max-w-xs">{description}</p>
+        <p className=" max-w-sm text-xl mt-6">{description}</p>
       </div>
     </div>
   );

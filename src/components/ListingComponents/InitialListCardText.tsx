@@ -8,8 +8,8 @@
   return (
     
       <div className="">
-        <h2 className="text-2xl font-bold mb-2 max-w-md">{title}</h2>
-        <p className="text-gray-600 text-md max-w-md">{description}</p>
+        <h2 className="text-5xl font-bold mb-2 max-w-2xl">{title}</h2>
+        <p className="text-gray-600 text-3xl max-w-3xl mt-6">{description}</p>
       </div>
   );
 };
