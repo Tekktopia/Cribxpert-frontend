@@ -288,22 +288,22 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
         </div>
       )}
 
-      {activeStep === 3 && (
-        <div className="ml-[13rem]">
-          <div className="grid grid-cols-2 mx-auto mt-15 max-w-5xl gap-y-3">
-            {AmenityData.map((item) => (
-              <ListAmenity
-                key={item.inputProps.id}
-                inputProps={item.inputProps}
-                icon={item.icon}
-                description={item.description}
-                checked={checkedAmenities[item.inputProps.id] ?? false}
-                onChange={(e) => handleCheckboxChange(e, item.inputProps.id)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+     {activeStep === 3 && (
+  <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+      {AmenityData.map((item) => (
+        <ListAmenity
+          key={item.inputProps.id}
+          inputProps={item.inputProps}
+          icon={item.icon}
+          description={item.description}
+          checked={checkedAmenities[item.inputProps.id] ?? false}
+          onChange={(e) => handleCheckboxChange(e, item.inputProps.id)}
+        />
+      ))}
+    </div>
+  </div>
+)}
 
       {activeStep === 4 && (
         <div className="flex justify-center mx-auto">
@@ -321,7 +321,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
       )}
 
       {activeStep === 5 && (
-        <div className="w-[700px] h-[450px] justify-center mx-auto space-y-4">
+        <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
           <PropertyPage
             title={title}
             setTitle={setTitle}
@@ -332,28 +332,27 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
       )}
 
       {activeStep === 6 && (
-        <div className="w-[700px] h-[630px] justify-center mx-auto space-y-4">
-          <PricingPage
-            basePrice={basePrice}
-            setBasePrice={setBasePrice}
-            securityDeposit={securityDeposit}
-            setSecurityDeposit={setSecurityDeposit}
-            cleaningFee={cleaningFee}
-            setCleaningFee={setCleaningFee}
-            availableFrom={availableFrom}
-            setAvailableFrom={setAvailableFrom}
-            availableUntil={availableUntil}
-            setAvailableUntil={setAvailableUntil}
-          />
-        </div>
-      )}
+  <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+    <PricingPage
+      basePrice={basePrice}
+      setBasePrice={setBasePrice}
+      securityDeposit={securityDeposit}
+      setSecurityDeposit={setSecurityDeposit}
+      cleaningFee={cleaningFee}
+      setCleaningFee={setCleaningFee}
+      availableFrom={availableFrom}
+      setAvailableFrom={setAvailableFrom}
+      availableUntil={availableUntil}
+      setAvailableUntil={setAvailableUntil}
+    />
+      </div>
+    )}
 
-      {activeStep === 7 && (
-        <div className="w-[700px] h-[330px] justify-center mx-auto">
-          <HouseRulesPage selectedRules={houseRules} onChange={handleHouseRulesChange} />
-        </div>
-      )}
-
+  {activeStep === 7 && (
+    <div className="max-w-full sm:max-w-xl md:max-w-2xl mx-auto px-4 sm:px-6 py-4">
+      <HouseRulesPage selectedRules={houseRules} onChange={handleHouseRulesChange} />
+    </div>
+  )}
       {/* Navigation Buttons */}
       <div className="flex justify-between items-center mt-[3rem] max-w-[70rem] mx-auto w-full">
         <button

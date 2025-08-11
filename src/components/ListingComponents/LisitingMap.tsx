@@ -125,67 +125,68 @@ const ListingMap: React.FC<ListingMapProps> = ({ onLocationUpdate }) => {
 
   return (
     <form action="#">
-      <div className="flex flex-col">
-        <label htmlFor="home-address" className="mb-2 font-medium">
-          Home Address
-        </label>
-        <div className="relative">
-          <input
-            onChange={showInput}
-            value={inputValue}
-            id="home-address"
-            placeholder="Enter full address (e.g., 123 Main St, New York, NY 10001)"
-            type="text"
-            className="border p-2 rounded w-full"
-          />
-          {isGeocoding && (
-            <div className="absolute right-2 top-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#1D5C5C]"></div>
-            </div>
-          )}
+  <div className="flex flex-col">
+    <label htmlFor="home-address" className="mb-2 font-medium text-sm sm:text-base">
+      Home Address
+    </label>
+    <div className="relative">
+      <input
+        onChange={showInput}
+        value={inputValue}
+        id="home-address"
+        placeholder="Enter full address (e.g., 123 Main St, New York, NY 10001)"
+        type="text"
+        className="border p-2 rounded w-full text-sm sm:text-base"
+      />
+      {isGeocoding && (
+        <div className="absolute right-2 top-2">
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#1D5C5C]"></div>
         </div>
-        
-        <div className="flex items-center mb-4 mt-4">
-          <input
-            type="checkbox"
-            id="hide-address"
-            checked={checked}
-            onChange={handleCheckboxChange}
-            className="mr-2"
-          />
-          <label htmlFor="hide-address" className="text-sm">
-            Hide exact address until booking confirmation (only neighborhood will be shown)
-          </label>
-        </div>
-        
-        <div className="relative">
-          <img
-            className="w-[700px] h-[200px] rounded"
-            src="/images/Map_Lagos.png"
-            alt="map"
-          />
-          {isGeocoding && (
-            <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center rounded">
-              <div className="bg-white px-4 py-2 rounded shadow">
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1D5C5C] mr-2"></div>
-                  <span>Locating address...</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+      )}
+    </div>
 
-        {inputValue && (
-          <div className="mt-4 p-3 bg-gray-50 rounded text-sm">
-            <p><strong>Address entered:</strong> {inputValue}</p>
-            <p className="text-gray-600 mt-1">
-              Location data will be parsed and sent to the listing form.
-            </p>
+    <div className="flex items-start mb-4 mt-4 gap-2">
+      <input
+        type="checkbox"
+        id="hide-address"
+        checked={checked}
+        onChange={handleCheckboxChange}
+        className="mt-1"
+      />
+      <label htmlFor="hide-address" className="text-sm sm:text-base leading-snug">
+        Hide exact address until booking confirmation (only neighborhood will be shown)
+      </label>
+    </div>
+
+    <div className="relative">
+      <img
+        className="w-full max-w-full h-40 sm:h-52 md:h-64 rounded object-cover"
+        src="/images/Map_Lagos.png"
+        alt="map"
+      />
+      {isGeocoding && (
+        <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center rounded">
+          <div className="bg-white px-4 py-2 rounded shadow">
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1D5C5C] mr-2"></div>
+              <span>Locating address...</span>
+            </div>
           </div>
-        )}
+        </div>
+      )}
+    </div>
+
+    {inputValue && (
+      <div className="mt-4 p-3 bg-gray-50 rounded text-sm sm:text-base">
+        <p><strong>Address entered:</strong> {inputValue}</p>
+        <p className="text-gray-600 mt-1">
+          Location data will be parsed and sent to the listing form.
+        </p>
       </div>
-    </form>
+    )}
+  </div>
+</form>
+
   );
 };
 
