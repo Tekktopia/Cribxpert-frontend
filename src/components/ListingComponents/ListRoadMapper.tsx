@@ -48,6 +48,11 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
   const [bathroomNo, setBathroomNo] = useState(0);
   const [bedroomNo, setBedroomNo] = useState(0);
 
+  // Helper function to validate ObjectId format
+  const isValidObjectId = (id: string): boolean => {
+    return typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/) !== null;
+  };
+
   const nextStep = () => {
     if (activeStep < stepData.length - 1) setActiveStep((prev) => prev + 1);
   };
@@ -82,42 +87,116 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
     setHouseRules(selectedRules);
   };
 
+  // New callback for ListingMap to update location data
+  const handleLocationUpdate = (locationData: {
+    street?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+    longitude?: number;
+    latitude?: number;
+  }) => {
+    if (locationData.street) setStreet(locationData.street);
+    if (locationData.city) setCity(locationData.city);
+    if (locationData.state) setStateAddr(locationData.state);
+    if (locationData.postalCode) setPostalCode(locationData.postalCode);
+    if (locationData.country) setCountry(locationData.country);
+    if (typeof locationData.longitude === 'number') setLongitude(locationData.longitude);
+    if (typeof locationData.latitude === 'number') setLatitude(locationData.latitude);
+  };
+
   const [createOrUpdateListing] = useCreateOrUpdateListingMutation();
 
   const handleCreateListing = async () => {
     try {
-      const listingData = {
-        userId: '64a1b2c3d4e5f6789abcdef0',
+      // Add validation before sending
+      if (!title.trim()) {
+        console.error('Title is required');
+        alert('Please enter a title for your listing');
+        return;
+      }
+      
+      if (!selectedPropertyType) {
+        console.error('Property type is required');
+        alert('Please select a property type');
+        return;
+      }
+
+      // Validate propertyType is a valid ObjectId
+      if (!isValidObjectId(selectedPropertyType)) {
+        console.error('Invalid property type ID:', selectedPropertyType);
+        alert('Invalid property type selected. Please go back and select a valid property type.');
+        return;
+      }
+
+      const actualUserId = '64a1b2c3d4e5f6789abcdef0'; 
+      
+      // Get selected amenities and validate they are ObjectIds
+      const selectedAmenityIds = Object.keys(checkedAmenities).filter(key => checkedAmenities[key]);
+      const validAmenities = selectedAmenityIds.filter(id => isValidObjectId(id));
+      
+      if (selectedAmenityIds.length > 0 && validAmenities.length === 0) {
+        console.error('No valid amenity IDs found');
+        alert('Invalid amenities selected. Please go back and select amenities again.');
+        return;
+      }
+      
+      // Build the listing data object
+      const listingData: any = {
+        userId: actualUserId,
         name: title,
-        description,
-        amenities: Object.keys(checkedAmenities).filter((key) => checkedAmenities[key]),
+        description: description || '',
+        amenities: validAmenities,
         propertyType: selectedPropertyType,
-        street,
-        city,
-        state: stateAddr,
-        postalCode,
-        country,
-        longitude,
-        latitude,
-        basePrice: Number(basePrice),
-        securityDeposit: Number(securityDeposit),
-        cleaningFee: Number(cleaningFee),
-        availableFrom,  // fixed typo here
-        availableUntil, // fixed typo here
-        houseRules,     // array of house rule IDs
-        guestNo,
-        size,
-        bathroomNo,
-        bedroomNo,
-        files: selectedFiles.map((file) => file.name).slice(0, 5),
+        street: street || '',
+        city: city || '',
+        state: stateAddr || '',
+        postalCode: postalCode || '',
+        country: country || '',
+        longitude: longitude || 0,
+        latitude: latitude || 0,
+        basePrice: Number(basePrice) || 0,
+        securityDeposit: Number(securityDeposit) || 0,
+        cleaningFee: Number(cleaningFee) || 0,
+        avaliableFrom: availableFrom || '', // Note: typo matches backend
+        avaliableUntil: availableUntil || '', // Note: typo matches backend
+        guestNo: guestNo || 1,
+        size: size || 0,
+        bathroomNo: bathroomNo || 0,
+        bedroomNo: bedroomNo || 0,
       };
+
+      // Only include houseRules if there are valid ObjectIds
+      if (houseRules && houseRules.length > 0) {
+        const validHouseRules = houseRules.filter(rule => isValidObjectId(rule));
+        if (validHouseRules.length > 0) {
+          listingData.houseRules = validHouseRules;
+        }
+      }
+
+      // Only include files if there are any
+      if (selectedFiles && selectedFiles.length > 0) {
+        listingData.files = selectedFiles.map((file) => file.name).slice(0, 5);
+      }
+
+      console.log('Sending listing data:', listingData);
 
       const response = await createOrUpdateListing(listingData).unwrap();
       console.log('Listing created successfully:', response);
       setUploadCompleted(true);
       nextStep();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating listing:', error);
+      
+      if (error?.data) {
+        console.error('Server error details:', error.data);
+      }
+      if (error?.status) {
+        console.error('HTTP status:', error.status);
+      }
+      
+      alert('Failed to create listing. Please check the console for details and try again.');
     }
   };
 
@@ -181,7 +260,20 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
                 title={item.title}
                 number={item.number}
                 image={item.image}
-                onChange={(newCount) => console.log(`${item.title} count changed to:`, newCount)}
+                onChange={(newCount) => {
+                  // Update the appropriate state based on the title
+                  const titleLower = item.title.toLowerCase();
+                  if (titleLower.includes('guest')) {
+                    setGuestNo(newCount);
+                  } else if (titleLower.includes('bedroom')) {
+                    setBedroomNo(newCount);
+                  } else if (titleLower.includes('bathroom')) {
+                    setBathroomNo(newCount);
+                  } else if (titleLower.includes('size') || titleLower.includes('sqft')) {
+                    setSize(newCount);
+                  }
+                  console.log(`${item.title} count changed to:`, newCount);
+                }}
               />
             ))}
           </div>
@@ -191,7 +283,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
       {activeStep === 2 && (
         <div className="max-w-[760px] max-h-[560px] mx-auto">
           <ListingMap
-            // Optional: pass handlers here if needed to update longitude & latitude
+            onLocationUpdate={handleLocationUpdate}
           />
         </div>
       )}
