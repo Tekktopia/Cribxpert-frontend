@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
 interface ListingPropertyPageProps {
-    nextStep: () => void;
+  nextStep: () => void;
   prevStep: () => void;
   isUploading: boolean;
   setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
   uploadCompleted: boolean;
   setUploadCompleted: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedFiles: File[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
@@ -16,8 +18,9 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
   setIsUploading,
   uploadCompleted,
   setUploadCompleted,
+  selectedFiles,
+  setSelectedFiles,
 }) => {
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [showUploadBox, setShowUploadBox] = useState(true);
   const [uploadedIndexes, setUploadedIndexes] = useState<number[]>([]);
@@ -59,17 +62,6 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      {/* Instruction text moved to the top */}
-      {/* {!uploadCompleted && (
-        // <div className="w-[644px] mb-6 text-center">
-        //   <h2 className="text-xl font-semibold mb-1">Property Photos</h2>
-        //   <p>
-        //     Upload at least 5 high quality photos of your property, include images of all major areas such as
-        //     living room, bedrooms, bathrooms, kitchen and exterior.
-        //   </p>
-        // </div>
-      )} */}
-
       {/* Upload Box */}
       {showUploadBox && (
         <div
@@ -131,7 +123,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                   disabled={isUploading}
                   className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-100 z-20"
                 >
-                  <img src="../../../public/icons/delete-icon-green.png" alt="" />
+                  <img src="/icons/delete-icon-green.png" alt="Delete" />
                 </button>
 
                 <div className="relative w-full h-32 mb-2">
@@ -146,7 +138,9 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                     </div>
                   )}
                   {!isUploading && uploadedIndexes.includes(index) && (
-                    <div className="absolute top-2 left-2 text-green-500 text-xl z-10"><img src="../../../public/icons/green-tick.png" alt="" /></div>
+                    <div className="absolute top-2 left-2 text-green-500 text-xl z-10">
+                      <img src="/icons/green-tick.png" alt="Uploaded" />
+                    </div>
                   )}
                 </div>
 
@@ -162,32 +156,30 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       {/* Navigation Buttons */}
       {(!isUploading || uploadCompleted) && (
         <div className="flex justify-between w-full max-w-[644px] mt-6">
-
-
           <button
-  id="upload-start"
-  className="hidden"
-  onClick={() => {
-    if (!uploadCompleted) {
-      setIsUploading(true);
-      setShowUploadBox(false);
-      selectedFiles.forEach((_, index) => {
-        setTimeout(() => {
-          setUploadedIndexes((prev) => [...prev, index]);
-          if (index === selectedFiles.length - 1) {
-            setTimeout(() => {
-              setIsUploading(false);
-              setUploadCompleted(true);
-            }, 1000);
-          }
-        }, 1000 + index * 600);
-      });
-    }
-  }}
-/>
-         
-{/* 
-          <button
+            id="upload-start"
+            className="hidden"
+            onClick={() => {
+              if (!uploadCompleted) {
+                setIsUploading(true);
+                setShowUploadBox(false);
+                selectedFiles.forEach((_, index) => {
+                  setTimeout(() => {
+                    setUploadedIndexes((prev) => [...prev, index]);
+                    if (index === selectedFiles.length - 1) {
+                      setTimeout(() => {
+                        setIsUploading(false);
+                        setUploadCompleted(true);
+                      }, 1000);
+                    }
+                  }, 1000 + index * 600);
+                });
+              }
+            }}
+          />
+
+          {/* Uncomment this button if you want visible upload button instead of hidden */}
+          {/* <button
             onClick={() => {
               if (!uploadCompleted) {
                 setIsUploading(true);

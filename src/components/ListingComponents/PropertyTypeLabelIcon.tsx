@@ -1,15 +1,32 @@
-import React from 'react';
-
-export interface PropertyTypeLabelIconProps {
+ 
+ // PropertyTypeData.ts
+export interface PropertyTypeItem {
+  type: string;
   description: string;
   image: string;
 }
 
-const PropertyTypeLabelIcon: React.FC<PropertyTypeLabelIconProps> = ({ description, image }) => {
+ 
+ interface PropertyTypeLabelIconProps {
+  selectedType: string;
+  onSelect: (type: string) => void;
+  type: string;
+  image: string;
+  description: string;
+}
+
+const PropertyTypeLabelIcon: React.FC<PropertyTypeLabelIconProps> = ({
+  selectedType, onSelect, type, image, description
+}) => {
+  const isSelected = selectedType === type;
+
   return (
-    <div className="flex flex-col items-center justify-center border border-gray-300 p-2 w-full h-[160px] rounded-md">
-      <img src={image} alt={description} className="w-10 h-10 object-cover" />
-      <h2 className="text-center text-sm font-medium">{description}</h2>
+    <div
+      onClick={() => onSelect(type)}
+      className={`p-4 border rounded cursor-pointer text-center ${isSelected ? 'bg-[#1D5C5C]/10 border-[#1D5C5C]' : 'border-gray-300'}`}
+    >
+      <img src={image} alt={type} className="mx-auto mb-2" />
+      <p>{description}</p>
     </div>
   );
 };

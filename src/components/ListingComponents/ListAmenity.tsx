@@ -1,30 +1,28 @@
 import React from "react";
 
 export interface Amenity {
-  input: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'checked' | 'onChange'>;
+  inputProps: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'checked' | 'onChange' | 'type'> & {
+    id: string;  // make sure id is mandatory
+  };
   icon: string;
   description: string;
+  checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ListAmenity = ({ input, icon, description, onChange }: Amenity) => {
+
+const ListAmenity = ({ inputProps, icon, description, checked, onChange }: Amenity) => {
   return (
     <div className="flex items-center space-x-4">
-      {/* Checkbox */}
       <input
-        {...input}  // Spread remaining input attributes like id, name, etc.
+        {...inputProps}
         type="checkbox"
-        checked={input.checked}  // Ensure checkbox reflects the current checked state
-        onChange={onChange}  // Handle change externally via prop
+        checked={checked}
+        onChange={onChange}
         className="w-5 h-5"
       />
-      
-      {/* Icon and description */}
       <div className="flex items-center space-x-2">
-        {/* Icon */}
         <img src={icon} alt={description} className="w-6 h-6" />
-        
-        {/* Description */}
         <span>{description}</span>
       </div>
     </div>

@@ -1,0 +1,20 @@
+components/
+│   ├── RoadmapStepper.tsx         # Main multi-step wrapper
+│   ├── steps/
+│   │   ├── StepPropertyType.tsx
+│   │   ├── StepPropertyDetails.tsx
+│   │   ├── StepLocation.tsx
+│   │   ├── StepAmenities.tsx
+│   │   ├── StepPhotos.tsx
+│   │   ├── StepPropertyInfo.tsx
+│   │   ├── StepPricingAvailability.tsx
+│   │   └── StepHouseRules.tsx
+│   └── shared/
+│       ├── PropertyTypeLabelIcon.tsx
+│       ├── ListingCardSteps.tsx
+│       └── ListingMap.tsx
+├── data/
+│   ├── propertyTypeData.ts
+│   ├── amenitiesData.ts
+│   └── houseRulesData.ts
+make this structure more modular and maintainable.

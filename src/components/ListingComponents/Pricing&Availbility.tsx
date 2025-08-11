@@ -1,13 +1,30 @@
-import { useState } from "react";
+import React from 'react';
 
-const PricingPage = () => {
-  const [basePrice, setBasePrice] = useState("");
-  const [securityDeposit, setSecurityDeposit] = useState("");
-  const [cleaningFee, setCleaningFee] = useState("");
+interface PricingPageProps {
+  basePrice: string;
+  setBasePrice: React.Dispatch<React.SetStateAction<string>>;
+  securityDeposit: string;
+  setSecurityDeposit: React.Dispatch<React.SetStateAction<string>>;
+  cleaningFee: string;
+  setCleaningFee: React.Dispatch<React.SetStateAction<string>>;
+  availableFrom: string;
+  setAvailableFrom: React.Dispatch<React.SetStateAction<string>>;
+  availableUntil: string;
+  setAvailableUntil: React.Dispatch<React.SetStateAction<string>>;
+}
 
-  const [availableFrom, setAvailableFrom] = useState("");
-  const [availableUntil, setAvailableUntil] = useState("");
-
+const PricingPage: React.FC<PricingPageProps> = ({
+  basePrice,
+  setBasePrice,
+  securityDeposit,
+  setSecurityDeposit,
+  cleaningFee,
+  setCleaningFee,
+  availableFrom,
+  setAvailableFrom,
+  availableUntil,
+  setAvailableUntil,
+}) => {
   return (
     <>
       <h3 className="text-xl font-semibold mb-4">Pricing</h3>
@@ -75,7 +92,9 @@ const PricingPage = () => {
           onChange={(e) => setAvailableUntil(e.target.value)}
         />
       </section>
-      <p className="mt-4 p-1 text-sm text-center">You’II be able to block specific dates or adjust pricing for certain periods after creating your listing</p>
+      <p className="mt-4 p-1 text-sm text-center">
+        You’ll be able to block specific dates or adjust pricing for certain periods after creating your listing
+      </p>
     </>
   );
 };

@@ -1,85 +1,84 @@
-import {Amenity} from './ListAmenity'
+import { Amenity } from './ListAmenity'
 
- export  const  AmenityData: Amenity[] = [
+export const AmenityData: Omit<Amenity, 'checked' | 'onChange'>[] = [
   {
-    input: { id: 'wifi', name: 'wifi', checked: false },
+    inputProps: { id: 'wifi', name: 'wifi' },
     icon: '/icons/wifi.png',
     description: 'Wi-Fi',
   },
   {
-    input: { id: 'kitchen', name: 'kitchen', checked: false },
+    inputProps: { id: 'kitchen', name: 'kitchen' },
     icon: '/icons/kitchen.png',
     description: 'Kitchen',
   },
   {
-    input: { id: 'airConditioning', name: 'airConditioning', checked: false },
+    inputProps: { id: 'airConditioning', name: 'airConditioning' },
     icon: '/icons/airConditioning.png',
     description: 'Air-Conditioning',
   },
   {
-    input: { id: 'washer', name: 'washer', checked: false },
+    inputProps: { id: 'washer', name: 'washer' },
     icon: '/icons/washer.png',
     description: 'Washer',
   },
   {
-    input: { id: 'gym', name: 'gym', checked: false },
+    inputProps: { id: 'gym', name: 'gym' },
     icon: '/icons/gym.png',
     description: 'Gym',
   },
   {
-    input: { id: 'workspace', name: 'workspace', checked: false },
+    inputProps: { id: 'workspace', name: 'workspace' },
     icon: '/icons/workspace.png',
     description: 'Workspace',
   },
   {
-    input: { id: 'firstAidKit', name: 'firstAidKit', checked: false },
+    inputProps: { id: 'firstAidKit', name: 'firstAidKit' },
     icon: '/icons/firstAidKit.png',
     description: 'First Aid Kit',
   },
   {
-    input: { id: 'parking', name: 'parking', checked: false },
+    inputProps: { id: 'parking', name: 'parking' },
     icon: '/icons/parking.png',
     description: 'Parking',
   },
   {
-    input: { id: 'tv', name: 'tv', checked: false },
+    inputProps: { id: 'tv', name: 'tv' },
     icon: '/icons/tv.png',
     description: 'TV',
   },
   {
-    input: { id: 'heating', name: 'heating', checked: false },
+    inputProps: { id: 'heating', name: 'heating' },
     icon: '/icons/heating.png',
     description: 'Heating',
   },
   {
-    input: { id: 'dryer', name: 'dryer', checked: false },
+    inputProps: { id: 'dryer', name: 'dryer' },
     icon: '/icons/dryer.png',
     description: 'Dryer',
   },
   {
-    input: { id: 'hotTub', name: 'hotTub', checked: false },
+    inputProps: { id: 'hotTub', name: 'hotTub' },
     icon: '/icons/hotTub.png',
     description: 'Hot-Tub',
   },
   {
-    input: { id: 'breakfast', name: 'breakfast', checked: false },
+    inputProps: { id: 'breakfast', name: 'breakfast' },
     icon: '/icons/breakfast.png',
     description: 'Breakfast',
   },
   {
-    input: { id: 'fireExtinguisher', name: 'fireExtinguisher', checked: false },
+    inputProps: { id: 'fireExtinguisher', name: 'fireExtinguisher' },
     icon: '/icons/fireExtinguisher.png',
     description: 'Fire-Extinguisher',
   },
   {
-    input: { id: 'smokeAlarm', name: 'smokeAlarm', checked: false },
+    inputProps: { id: 'smokeAlarm', name: 'smokeAlarm' },
     icon: '/icons/smokeAlarm.png',
     description: 'Smoke Alarm',
   },
   {
-    input: { id: 'pool', name: 'pool', checked: false },
+    inputProps: { id: 'pool', name: 'pool' },
     icon: '/icons/pool.png',
     description: 'Pool',
   },
 ];
-

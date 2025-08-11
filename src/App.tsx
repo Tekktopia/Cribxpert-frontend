@@ -1,6 +1,7 @@
 // Core styles
 import './index.css';
 
+
 // Routing related imports
 import { BrowserRouter as Router } from 'react-router-dom';
 import ScrollToTop from './components/common/ScrollToTop';
