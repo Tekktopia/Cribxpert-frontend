@@ -37,20 +37,37 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
 
   // Helper to map Booking to UI fields
   const mapBookingToUI = (booking: Booking) => {
-    let image = '';
-    if (booking.listing.listingImg && booking.listing.listingImg.length > 0) {
+    let image = '/images/property-image.jpeg'; // Default fallback image
+    if (booking.listing?.listingImg && booking.listing.listingImg.length > 0) {
       // Use fileUrl if present, otherwise fallback to the value itself (for legacy data)
-      const firstImg = booking.listing.listingImg[0];
-      image = typeof firstImg === 'string' ? firstImg : firstImg.fileUrl || '';
+      const firstImg = booking.listing?.listingImg[0];
+      const imgUrl =
+        typeof firstImg === 'string' ? firstImg : firstImg?.fileUrl || '';
+      if (imgUrl) {
+        image = imgUrl;
+      }
     }
+
+    // Safe date parsing with fallbacks
+    const formatDate = (dateString: string) => {
+      try {
+        const date = new Date(dateString);
+        return isNaN(date.getTime())
+          ? 'Invalid Date'
+          : date.toLocaleDateString();
+      } catch {
+        return 'Invalid Date';
+      }
+    };
+
     return {
-      id: booking._id,
+      id: booking._id || 'Unknown ID',
       image,
-      name: booking.listing.name,
-      checkin: new Date(booking.startDate).toLocaleDateString(),
-      checkout: new Date(booking.endDate).toLocaleDateString(),
-      status: booking.status,
-      description: booking.listing.description,
+      name: booking.listing?.name || 'Unknown Property',
+      checkin: formatDate(booking.startDate),
+      checkout: formatDate(booking.endDate),
+      status: booking.status || 'Unknown',
+      description: booking.listing?.description || 'No description available',
     };
   };
 

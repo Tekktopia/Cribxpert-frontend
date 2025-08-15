@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Copy, CreditCard, Banknote, Link, Smartphone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentMethod: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState('Bank Transfer');
+  const navigate = useNavigate();
 
   const paymentMethods = [
     { name: 'USSD', icon: Smartphone },
@@ -98,7 +100,10 @@ const PaymentMethod: React.FC = () => {
                     </CopyToClipboard>
                   </div>
                 </div>
-                <button className="bg-[#006073] w-full py-3 mt-4 rounded-lg text-white font-medium hover:bg-[#00425a] transition">
+                <button
+                  onClick={() => navigate('/payments')}
+                  className="bg-[#006073] w-full py-3 mt-4 rounded-lg text-white font-medium hover:bg-[#00425a] transition"
+                >
                   Click Here After Transfer
                 </button>
                 <p className="text-center text-gray-600 mt-3">
