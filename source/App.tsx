@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import ScrollToTop from './shared/components/ScrollToTop';
 
 // App components
-import LoadingManager from './app/LoadingManager';
+import LoadingManager from './shared/components/LoadingManager';
 import AppRoutes from './routes/AppRoutes';
 
 /**
