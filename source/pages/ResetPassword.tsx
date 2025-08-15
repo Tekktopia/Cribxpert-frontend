@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import StepOne from '@/components/reset-password/StepOne';
-import StepTwo from '@/components/reset-password/StepTwo';
+import StepOne from '@/features/auth/components/reset-password/StepOne';
+import StepTwo from '@/features/auth/components/reset-password/StepTwo';
 import { useNavigate } from 'react-router-dom';
-import AuthLeftSide from '@/components/common/AuthLeftSide';
+import AuthLeftSide from '@/features/auth/components/AuthLeftSide';
 import { useSearchParams } from 'react-router-dom';
 import { useResetPasswordMutation } from '@/features/auth/authService';
 

@@ -1,8 +1,8 @@
-import CustomDropdown from '@/components/sign-up/CustomDropdown';
+import CustomDropdown from '@/features/auth/components/signup/CustomDropdown';
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
-import GoogleSignIn from '@/components/login/GoogleSignIn';
+import GoogleSignIn from '@/features/auth/components/login/GoogleSignIn';
 import { useDispatch } from 'react-redux';
 import {
   clearError,
@@ -11,7 +11,7 @@ import {
   useLoginMutation,
 } from '@/features/auth';
 import { isValidEmail } from '@/utils/utils';
-import AuthLeftSide from '@/components/common/AuthLeftSide';
+import AuthLeftSide from '@/features/auth/components/AuthLeftSide';
 
 const Login: React.FC = () => {
   const [login, { isLoading, error: loginError }] = useLoginMutation();

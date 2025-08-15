@@ -1,7 +1,66 @@
 // Centralized asset exports for better import management
 // This file consolidates all asset imports for easy maintenance
 
-// Icons
+// Import only the assets used in collections
+import airConditioningIcon from './icons/air-conditioning.png';
+import bathroomIcon from './icons/bathroom.png';
+import bedroomIcon from './icons/bedroom.png';
+import kitchenIcon from './icons/kitchen.png';
+import parkingIcon from './icons/parking.png';
+import wifiIcon from './icons/wifi.png';
+import washerIcon from './icons/washer.png';
+import dryerIcon from './icons/dryer.png';
+
+import arrowLeftIcon from './icons/arrow-left-01.svg';
+import arrowRightIcon from './icons/arrow-right.png';
+import arrowDownIcon from './icons/arrow-down.png';
+import chevronLeftIcon from './icons/chevron-left.svg';
+import chevronRightIcon from './icons/chevron-right.svg';
+import hamburgerIcon from './icons/hamburger.png';
+
+import profileIcon from './icons/Profile.png';
+import heartIcon from './icons/heart.png';
+import heartBlackIcon from './icons/heart-black.png';
+import likeIcon from './icons/like.png';
+import notificationsIcon from './icons/notifications.png';
+import messagePngIcon from './icons/message.png';
+import messageSvgIcon from './icons/message.svg';
+
+import houseIcon from './icons/house.png';
+import locationIcon from './icons/location.png';
+import guestIcon from './icons/guest.png';
+import calendarIcon from './icons/calendar.png';
+import shareIcon from './icons/share.png';
+import certifiedIcon from './icons/certified.png';
+
+import starPngIcon from './icons/star.png';
+import starSvgIcon from './icons/star.svg';
+import starRateIcon from './icons/star-rate.svg';
+import blankStarIcon from './icons/blank-star.svg';
+import iconStarLightIcon from './icons/Icon-star-light.png';
+
+import bankCardIcon from './icons/Bank-Card.png';
+import bankTransferIcon from './icons/Bank-Transfer.png';
+import paymentLinkIcon from './icons/Payment-Link.png';
+import ussdIcon from './icons/USSD.png';
+
+import progressFirstIcon from './icons/progressFirsr.png';
+import progressSecondIcon from './icons/progressTwo.png';
+import progressThirdIcon from './icons/progressThree.png';
+import progressFourthIcon from './icons/progressFour.png';
+import progressFifthIcon from './icons/progressFive.png';
+
+import facebookIcon from './socialIcons/facebook.svg';
+import instagramIcon from './socialIcons/instagram.svg';
+import xIcon from './socialIcons/x.svg';
+
+import galleryOneImage from './images/galleryOne.jpeg';
+import galleryTwoImage from './images/GallerTwo.jpeg';
+import galleryThreeImage from './images/GalleryThree.jpeg';
+import galleryFourImage from './images/GalleryFour.jpeg';
+import galleryFiveImage from './images/GalleryFive.png';
+
+// Export individual assets with clean names
 export { default as airConditioning } from './icons/air-conditioning.png';
 export { default as airportStation } from './icons/airport-station.png';
 export { default as allShortlet } from './icons/all-shorlet.png';
@@ -98,57 +157,6 @@ export { default as instagram } from './socialIcons/instagram.svg';
 export { default as x } from './socialIcons/x.svg';
 
 // Asset collections for easier management
-// Import the assets first to use in collections
-import airConditioningIcon from './icons/air-conditioning.png';
-import bathroomIcon from './icons/bathroom.png';
-import bedroomIcon from './icons/bedroom.png';
-import kitchenIcon from './icons/kitchen.png';
-import parkingIcon from './icons/parking.png';
-import wifiIcon from './icons/wifi.png';
-import washerIcon from './icons/washer.png';
-import dryerIcon from './icons/dryer.png';
-import arrowLeftIcon from './icons/arrow-left-01.svg';
-import arrowRightIcon from './icons/arrow-right.png';
-import arrowDownIcon from './icons/arrow-down.png';
-import chevronLeftIcon from './icons/chevron-left.svg';
-import chevronRightIcon from './icons/chevron-right.svg';
-import hamburgerIcon from './icons/hamburger.png';
-import profileIcon from './icons/Profile.png';
-import heartIcon from './icons/heart.png';
-import heartBlackIcon from './icons/heart-black.png';
-import likeIcon from './icons/like.png';
-import notificationsIcon from './icons/notifications.png';
-import messagePngIcon from './icons/message.png';
-import messageSvgIcon from './icons/message.svg';
-import houseIcon from './icons/house.png';
-import locationIcon from './icons/location.png';
-import guestIcon from './icons/guest.png';
-import calendarIcon from './icons/calendar.png';
-import shareIcon from './icons/share.png';
-import certifiedIcon from './icons/certified.png';
-import starPngIcon from './icons/star.png';
-import starSvgIcon from './icons/star.svg';
-import starRateIcon from './icons/star-rate.svg';
-import blankStarIcon from './icons/blank-star.svg';
-import iconStarLightIcon from './icons/Icon-star-light.png';
-import bankCardIcon from './icons/Bank-Card.png';
-import bankTransferIcon from './icons/Bank-Transfer.png';
-import paymentLinkIcon from './icons/Payment-Link.png';
-import ussdIcon from './icons/USSD.png';
-import progressFirstIcon from './icons/progressFirsr.png';
-import progressSecondIcon from './icons/progressTwo.png';
-import progressThirdIcon from './icons/progressThree.png';
-import progressFourthIcon from './icons/progressFour.png';
-import progressFifthIcon from './icons/progressFive.png';
-import facebookIcon from './socialIcons/facebook.svg';
-import instagramIcon from './socialIcons/instagram.svg';
-import xIcon from './socialIcons/x.svg';
-import galleryOneIcon from './images/galleryOne.jpeg';
-import galleryTwoIcon from './images/GallerTwo.jpeg';
-import galleryThreeIcon from './images/GalleryThree.jpeg';
-import galleryFourIcon from './images/GalleryFour.jpeg';
-import galleryFiveIcon from './images/GalleryFive.png';
-
 export const amenityIcons = {
   airConditioning: airConditioningIcon,
   bathroom: bathroomIcon,
@@ -218,9 +226,9 @@ export const socialIcons = {
 };
 
 export const galleryImages = {
-  galleryOne: galleryOneIcon,
-  galleryTwo: galleryTwoIcon,
-  galleryThree: galleryThreeIcon,
-  galleryFour: galleryFourIcon,
-  galleryFive: galleryFiveIcon,
+  galleryOne: galleryOneImage,
+  galleryTwo: galleryTwoImage,
+  galleryThree: galleryThreeImage,
+  galleryFour: galleryFourImage,
+  galleryFive: galleryFiveImage,
 };

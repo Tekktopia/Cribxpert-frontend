@@ -5,12 +5,12 @@ import { selectCurrentUser } from '@/features/auth/authSlice';
 import {
   useGetUserNotificationsQuery,
   useMarkNotificationAsReadMutation,
-} from '@/features/notification';
-import All from '@/components/NotificationComponents/All';
-import NotificationNav from '@/components/layout/notification/NotificationNav';
-import Bookings from '@/components/NotificationComponents/Bookings';
-import Payments from '@/components/NotificationComponents/Payments';
-import Reviews from '@/components/NotificationComponents/Reviews';
+} from '@/features/notifications';
+import All from '@/features/notifications/components/All';
+import NotificationNav from '@/shared/components/layout/notification/NotificationNav';
+import Bookings from '@/features/notifications/components/Bookings';
+import Payments from '@/features/notifications/components/Payments';
+import Reviews from '@/features/notifications/components/Reviews';
 
 const NotificationPage = () => {
   const [active, setActive] = useState<ActiveNotification>(

@@ -3,17 +3,17 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 
 // Import slices from features
 import authReducer from '@/features/auth';
-import { bookingReducer } from '@/features/booking';
+import { bookingReducer } from '@/features/bookings';
 import { propertyTypeReducer, propertyTypeApi } from '@/features/propertyType';
 import reviewReducer, { reviewApi } from '@/features/review';
-import notificationReducer, { notificationApi } from '@/features/notification';
+import notificationReducer, { notificationApi } from '@/features/notifications';
 
 // Import API services
 import { authApi } from '@/features/auth/authService';
-import { bookingApi } from '@/features/booking/bookingService';
+import { bookingApi } from '@/features/bookings/bookingService';
 import favouritesReducer, { favouritesApi } from '@/features/favourites';
 import amenitiesReducer, { amenitiesApi } from '@/features/amenities';
-import listingReducer, { listingApi } from '@/features/listing';
+import listingReducer, { listingApi } from '@/features/properties';
 
 export const store = configureStore({
   reducer: {

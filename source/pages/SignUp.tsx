@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import StepOne from '@/components/sign-up/StepOne.tsx';
-import StepTwoMain from '@/components/sign-up/StepTwoMain';
-import AuthLeftSide from '@/components/common/AuthLeftSide';
+import StepOne from '@/features/auth/components/signup/StepOne.tsx';
+import StepTwoMain from '@/features/auth/components/signup/StepTwoMain';
+import AuthLeftSide from '@/features/auth/components/AuthLeftSide';
 
 const SignUp: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -20,7 +20,7 @@ const SignUp: React.FC = () => {
   return (
     <div className="flex h-screen">
       {/* Left Side - Image Section */}
-      <AuthLeftSide/>
+      <AuthLeftSide />
 
       {/* Right Side - Signup Section */}
       {step === 1 && (

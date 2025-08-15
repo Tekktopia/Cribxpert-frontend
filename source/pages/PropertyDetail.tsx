@@ -1,12 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import AmenitiesSection from '@/components/AmenitiesSection';
-import BookingForm from '@/components/BookingForm';
+import AmenitiesSection from '@/features/properties/components/AmenitiesSection';
+import BookingForm from '@/features/bookings/components/BookingForm';
 import { PropertyListing } from '@/types';
-import { selectAllListings } from '@/features/listing/listingSlice';
+import { selectAllListings } from '@/features/properties/listingSlice';
 import { useDispatch } from 'react-redux';
-import { setCurrentListing } from '@/features/listing';
+import { setCurrentListing } from '@/features/properties';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import {
   useCreateReviewMutation,
@@ -14,18 +14,18 @@ import {
 } from '@/features/review/reviewService';
 
 // Import our new components
-import PropertyGallery from '@/components/property-details/PropertyGallery';
-import PropertyHeader from '@/components/property-details/PropertyHeader';
-import PropertyOverview from '@/components/property-details/PropertyOverview';
-import PropertyLocation from '@/components/property-details/PropertyLocation';
-import PropertyBedrooms from '@/components/property-details/PropertyBedrooms';
-import PropertyDescription from '@/components/property-details/PropertyDescription';
-import PropertyRules from '@/components/property-details/PropertyRules';
-import PropertyPolicies from '@/components/property-details/PropertyPolicies';
-import PropertyRatings from '@/components/property-details/PropertyRatings';
-import CustomerReviews from '@/components/property-details/CustomerReviews';
-import LeaveReviewForm from '@/components/property-details/LeaveReviewForm';
-import SimilarProperties from '@/components/property-details/SimilarProperties';
+import PropertyGallery from '@/features/properties/components/PropertyGallery';
+import PropertyHeader from '@/features/properties/components/PropertyHeader';
+import PropertyOverview from '@/features/properties/components/PropertyOverview';
+import PropertyLocation from '@/features/properties/components/PropertyLocation';
+import PropertyBedrooms from '@/features/properties/components/PropertyBedrooms';
+import PropertyDescription from '@/features/properties/components/PropertyDescription';
+import PropertyRules from '@/features/properties/components/PropertyRules';
+import PropertyPolicies from '@/features/properties/components/PropertyPolicies';
+import PropertyRatings from '@/features/properties/components/PropertyRatings';
+import CustomerReviews from '@/features/properties/components/CustomerReviews';
+import LeaveReviewForm from '@/features/properties/components/LeaveReviewForm';
+import SimilarProperties from '@/features/properties/components/SimilarProperties';
 import useAlert from '@/hooks/useAlert';
 
 // Import mock data from utility files
@@ -70,10 +70,12 @@ const PropertyDetail = () => {
   // Add review mutations and queries
   const [createReview, { isLoading: isCreatingReview }] =
     useCreateReviewMutation();
-  const { data: apiReviews } =
-    useGetReviewsByListingIdQuery(property?._id || '', {
+  const { data: apiReviews } = useGetReviewsByListingIdQuery(
+    property?._id || '',
+    {
       skip: !property?._id,
-    });
+    }
+  );
 
   // Transform API reviews to match CustomerReviews component format
   const transformedReviews =
@@ -86,36 +88,36 @@ const PropertyDetail = () => {
 
   // Handle booking submission
   const handleBookingSubmit = (formData: {
-  checkInDate: Date;
-  checkOutDate: Date;
-  guests: number;
-}) => {
-  if (!property || !currentUser) {
-    console.error('Property or user not found');
-    return;
-  }
+    checkInDate: Date;
+    checkOutDate: Date;
+    guests: number;
+  }) => {
+    if (!property || !currentUser) {
+      console.error('Property or user not found');
+      return;
+    }
 
-  // Calculate total price
-  const numberOfNights = Math.ceil(
-    (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
-      (1000 * 60 * 60 * 24)
-  );
-  const totalPrice = numberOfNights * property.basePrice;
+    // Calculate total price
+    const numberOfNights = Math.ceil(
+      (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+    const totalPrice = numberOfNights * property.basePrice;
 
-  // Prepare booking data for BookNowPage
-  const bookingData = {
-    propertyId: property._id,
-    propertyName: property.name,
-    startDate: formData.checkInDate,
-    endDate: formData.checkOutDate,
-    guests: formData.guests,
-    totalPrice: totalPrice,
-    userId: currentUser._id,
+    // Prepare booking data for BookNowPage
+    const bookingData = {
+      propertyId: property._id,
+      propertyName: property.name,
+      startDate: formData.checkInDate,
+      endDate: formData.checkOutDate,
+      guests: formData.guests,
+      totalPrice: totalPrice,
+      userId: currentUser._id,
+    };
+
+    // Navigate to BookNowPage with booking data
+    navigate('/book-now', { state: bookingData });
   };
-
-  // Navigate to BookNowPage with booking data
-  navigate('/book-now', { state: bookingData });
-};
 
   // Handle review submission
   const handleReviewSubmit = async (reviewData: {

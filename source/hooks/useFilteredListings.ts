@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectActiveFilters, setCurrentListings } from '@/features/listing';
-import { useGetListingsQuery } from '@/features/listing';
+import { selectActiveFilters, setCurrentListings } from '@/features/properties';
+import { useGetListingsQuery } from '@/features/properties';
 
 // Helper function to clean state/province names
 const formatStateName = (stateName: string): string => {
   if (!stateName) return '';
-  
+
   // Remove common suffixes with case insensitivity
   const cleanedName = stateName
     .replace(/\s+(state|province|district|region)$/i, '')
     .replace(/\s+(autonomous region|special administrative region|sar)$/i, '')
     .trim();
-    
+
   return cleanedName;
 };
 
@@ -33,12 +33,12 @@ export function useFilteredListings() {
     const formattedFilters = {
       // Map location filter to state parameter for API
       // Handle all location filters properly
-    ...(activeFilters.country && { country: activeFilters.country }),
-    // Format state name to remove "State", "Province", etc.
-      ...(activeFilters.stateProvince && { 
-        state: formatStateName(activeFilters.stateProvince) 
+      ...(activeFilters.country && { country: activeFilters.country }),
+      // Format state name to remove "State", "Province", etc.
+      ...(activeFilters.stateProvince && {
+        state: formatStateName(activeFilters.stateProvince),
       }),
-    ...(activeFilters.city && { city: activeFilters.city }),
+      ...(activeFilters.city && { city: activeFilters.city }),
 
       // Map property type filter
       ...(activeFilters.propertyType && {

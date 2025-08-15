@@ -1,12 +1,12 @@
-import AllBookings from '@/components/BookingComponents/AllBookings';
-import BookingsNav from '@/components/BookingComponents/BookingsNav';
-import CancelledBookings from '@/components/BookingComponents/CancelledBookings';
-import PastBookings from '@/components/BookingComponents/PastBookings';
-import UpcomingBookings from '@/components/BookingComponents/UpcomingBookings';
-import Spinner from '@/components/common/Spinner';
+import AllBookings from '@/features/bookings/components/AllBookings';
+import BookingsNav from '@/features/bookings/components/BookingsNav';
+import CancelledBookings from '@/features/bookings/components/CancelledBookings';
+import PastBookings from '@/features/bookings/components/PastBookings';
+import UpcomingBookings from '@/features/bookings/components/UpcomingBookings';
+import Spinner from '@/shared/components/Spinner';
 import { ActiveBooking } from '@/types';
 import { useState } from 'react';
-import { useGetBookingsByUserIdQuery } from '@/features/booking/bookingService';
+import { useGetBookingsByUserIdQuery } from '@/features/bookings/bookingService';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 

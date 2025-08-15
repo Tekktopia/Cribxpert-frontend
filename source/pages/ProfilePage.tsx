@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import ProfileNav from '@/components/layout/profile/ProfileNav';
-import Profile from '@/components/profileComponents/Profile';
-import Preference from '@/components/profileComponents/Preference';
-import Payment from '@/components/profileComponents/Payment';
-import Password from '@/components/profileComponents/Password';
+import ProfileNav from '@/shared/components/layout/profile/ProfileNav';
+import Profile from '@/features/profile/components/Profile';
+import Preference from '@/features/profile/components/Preference';
+import Payment from '@/features/profile/components/Payment';
+import Password from '@/features/profile/components/Password';
 import { ActiveProfile } from '@/types';
 
 const ProfilePage = () => {

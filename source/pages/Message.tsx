@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import MessageSidebar from '../components/message/MessageSidebar';
-import ChatWindow from '../components/message/ChatWindow';
+import MessageSidebar from '@/features/messages/components/MessageSidebar';
+import ChatWindow from '@/features/messages/components/ChatWindow';
 import messages from '@/utils/messagesData';
 
 const Message: React.FC = () => {

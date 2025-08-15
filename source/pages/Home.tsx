@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectInitialListingsLoaded } from '@/features/listing';
-import HeroSection from '@/components/home/HeroSection';
-import FilterSection from '@/components/home/FilterSection';
-import ListingsSection from '@/components/home/ListingsSection';
+import { selectInitialListingsLoaded } from '@/features/properties';
+import HeroSection from '@/features/home/components/HeroSection';
+import FilterSection from '@/features/home/components/FilterSection';
+import ListingsSection from '@/features/home/components/ListingsSection';
 
 const Home: React.FC = () => {
   const initialListingsLoaded = useSelector(selectInitialListingsLoaded);

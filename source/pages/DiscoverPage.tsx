@@ -1,9 +1,9 @@
-import DiscoverResults from '@/components/discover-components/DiscoverResults';
-import FilterPanel from '@/components/discover-components/FilterPanel';
+import DiscoverResults from '@/features/search/components/DiscoverResults';
+import FilterPanel from '@/features/home/components/FilterPanel';
 import { Settings2Icon } from 'lucide-react';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import FilterCategories from '@/components/home/FilterCategories';
+import FilterCategories from '@/features/home/components/FilterCategories';
 
 export default function DiscoverPage() {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);

@@ -1,6 +1,6 @@
-import { HeaderSpacer } from '@/components/layout/Header';
-import Support from '@/components/support/Support';
-import SupportHeader from '@/components/support/SupportHeader';
+import { HeaderSpacer } from '@/shared/components/layout/Header';
+import Support from '@/features/support/components/Support';
+import SupportHeader from '@/features/support/components/SupportHeader';
 
 const SupportPage = () => {
   return (

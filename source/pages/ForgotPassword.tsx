@@ -1,8 +1,11 @@
-import StepOne from '@/components/forgot-password/StepOne';
-import StepTwo from '@/components/forgot-password/StepTwo';
+import StepOne from '@/features/auth/components/forgot-password/StepOne';
+import StepTwo from '@/features/auth/components/forgot-password/StepTwo';
 import React, { useState } from 'react';
-import { useForgotPasswordMutation, useVerifyOtpMutation } from '@/features/auth/authService';
-import AuthLeftSide from '@/components/common/AuthLeftSide';
+import {
+  useForgotPasswordMutation,
+  useVerifyOtpMutation,
+} from '@/features/auth/authService';
+import AuthLeftSide from '@/features/auth/components/AuthLeftSide';
 
 const ForgotPassword: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -15,7 +18,8 @@ const ForgotPassword: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
 
   // Use our custom auth service hooks
-  const [forgotPassword, { isLoading: isRequestingReset }] = useForgotPasswordMutation();
+  const [forgotPassword, { isLoading: isRequestingReset }] =
+    useForgotPasswordMutation();
   const [verifyOtp, { isLoading: isVerifyingOtp }] = useVerifyOtpMutation();
 
   const requestReset = async (e: React.FormEvent) => {
@@ -23,21 +27,22 @@ const ForgotPassword: React.FC = () => {
     setError(''); // Clear previous errors
 
     try {
-      const identifier = methodSelected === 'Email Address' ? email : phoneNumber;
+      const identifier =
+        methodSelected === 'Email Address' ? email : phoneNumber;
       // const method = methodSelected === 'Email Address' ? 'email' : 'phone';
-      
+
       const response = await forgotPassword({
-        email: identifier
+        email: identifier,
       }).unwrap();
 
       // console.log(response)
 
-      if (response.message === "password reset link sent") {
+      if (response.message === 'password reset link sent') {
         setStep(2); // Move to Step Two
       } else {
         throw new Error(response.data.message || 'Failed to send reset code');
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       // console.error('Error requesting password reset: ', err.data.message);
       setError(err.data.message || 'An error occurred during the request');
@@ -59,7 +64,7 @@ const ForgotPassword: React.FC = () => {
       } else {
         throw new Error(response.message || 'Invalid verification code');
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       // console.error('Error verifying OTP: ', err);
       setError(err.message || 'Failed to verify code');

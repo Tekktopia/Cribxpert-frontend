@@ -1,4 +1,4 @@
-import SupportHeader from '../components/support/SupportHeader';
+import SupportHeader from '@/features/support/components/SupportHeader';
 import {
   HandThumbUpIcon,
   HandThumbDownIcon,

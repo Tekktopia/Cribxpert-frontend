@@ -3,11 +3,11 @@ import './index.css';
 
 // Routing related imports
 import { BrowserRouter as Router } from 'react-router-dom';
-import ScrollToTop from './components/common/ScrollToTop';
+import ScrollToTop from './shared/components/ScrollToTop';
 
 // App components
-import LoadingManager from './components/app/LoadingManager';
-import AppRoutes from './components/app/AppRoutes';
+import LoadingManager from './app/LoadingManager';
+import AppRoutes from './routes/AppRoutes';
 
 /**
  * Main app content component that orchestrates all the pieces

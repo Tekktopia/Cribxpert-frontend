@@ -12,7 +12,7 @@ import ProfilePage from '@/pages/ProfilePage';
 import Home from '@/pages/Home';
 import DiscoverPage from '@/pages/DiscoverPage';
 import PropertyDetail from '@/pages/PropertyDetail';
-import SavedListing from '@/pages/SavedListing/SavedListing';
+import SavedListing from '@/pages/SavedListing';
 import BookingsPage from '@/pages/BookingsPage';
 import BookNowPage from '@/pages/BookNowPage';
 import BookingDetailsPage from '@/pages/BookingDetailsPage';
@@ -139,7 +139,7 @@ const routeConfig: RouteConfig[] = [
     element: <PaymentMethod />,
     protected: true,
     title: 'Payment Methods',
-    header: false
+    header: false,
   },
   {
     path: '/profile',

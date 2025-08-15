@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import danger from '@/assets/icons/danger.png';
-import OrderSummary from '@/components/booking/OrderSummary';
-import Booking from '@/components/booking/Booking';
+import { danger } from '@/assets';
+import OrderSummary from '@/features/bookings/components/OrderSummary';
+import Booking from '@/features/bookings/components/Booking';
 import type { BookingData } from '@/types';
 
 const BookNowPage: React.FC = () => {

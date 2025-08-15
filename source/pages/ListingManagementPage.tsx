@@ -6,7 +6,7 @@ import {
   useCreateOrUpdateListingMutation,
   useDeleteListingMutation,
   useGetUserListingsQuery,
-} from '@/features/listing';
+} from '@/features/properties';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import { PropertyListing } from '@/types';
 import useAlert from '@/hooks/useAlert';

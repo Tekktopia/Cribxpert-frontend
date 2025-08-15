@@ -4,7 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import { Provider } from 'react-redux';
 import { store } from '@/store/store.ts';
-import { initializeListings } from '@/features/listing/listingInitializer';
+import { initializeListings } from '@/features/properties/listingInitializer';
 
 // Initialize listings when the application starts
 initializeListings();

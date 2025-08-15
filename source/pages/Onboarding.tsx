@@ -1,5 +1,5 @@
-import AuthLeftSide from '@/components/common/AuthLeftSide';
-import StepFour from '@/components/sign-up/StepFour';
+import AuthLeftSide from '@/features/auth/components/AuthLeftSide';
+import StepFour from '@/features/auth/components/signup/StepFour';
 import React from 'react';
 import {  useLocation } from 'react-router-dom';
 

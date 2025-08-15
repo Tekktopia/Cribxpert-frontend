@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useSelector } from 'react-redux';
-import { selectBookingHistory } from '@/features/booking/bookingSlice';
-import { useGetBookingByIdQuery } from '@/features/booking/bookingService';
-import leftArrow from '../assets/icons/arrow-left-01.svg';
-import StatusButton from '@/components/BookingComponents/StatusButton';
-import Payment from '@/components/BookingDetailsComponents/Payment';
+import { selectBookingHistory } from '@/features/bookings/bookingSlice';
+import { useGetBookingByIdQuery } from '@/features/bookings/bookingService';
+import { arrowLeft } from '@/assets';
+import StatusButton from '@/features/bookings/components/StatusButton';
+import Payment from '@/features/bookings/components/Payment';
 
 const BookingDetailsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -139,7 +139,7 @@ const BookingDetailsPage: React.FC = () => {
           onClick={() => navigate(-1)}
           className="flex items-center text-[#313131] hover:text-[#006073] transition-colors text-sm"
         >
-          <img src={leftArrow} alt="Back" className="mr-2 w-4 h-4" />
+          <img src={arrowLeft} alt="Back" className="mr-2 w-4 h-4" />
           Back to bookings
         </button>
       </div>
