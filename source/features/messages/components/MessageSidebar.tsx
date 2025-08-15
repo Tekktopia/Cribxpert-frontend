@@ -6,12 +6,14 @@ interface MessageSidebarProps {
   messages: Message[];
   selectedIdx: number | null;
   setSelectedIdx: (idx: number) => void;
+  isMobile?: boolean;
 }
 
 const MessageSidebar: React.FC<MessageSidebarProps> = ({
   messages,
   selectedIdx,
   setSelectedIdx,
+  isMobile = false,
 }) => {
   const [selectedTab, setSelectedTab] = useState('All');
 
@@ -20,7 +22,9 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
     selectedTab === 'Unread' ? messages.filter((msg) => msg.unread) : messages;
 
   return (
-    <div className="min-w-80 border-r h-full flex flex-col bg-white">
+    <div
+      className={`${isMobile ? 'w-full' : 'min-w-80'} border-r h-full flex flex-col bg-white`}
+    >
       <div className="flex items-center justify-between p-4">
         <h2 className="text-lg font-semibold">Messages</h2>
         <div className="flex items-center gap-2">
@@ -66,7 +70,7 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
           Unread
         </button>
       </div>
-      <div className="overflow-y-auto flex-1">
+      <div className="overflow-y-auto scrollbar-hide flex-1">
         {filteredMessages.map((msg, idx) => (
           <MessageItem
             key={msg.id || idx}
@@ -77,6 +81,7 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
             selected={selectedIdx === idx}
             onClick={() => setSelectedIdx(idx)}
             isRecent={idx < 1} // Make the first message appear as recent
+            isMobile={isMobile}
           />
         ))}
       </div>
