@@ -8,13 +8,15 @@ components/
 │   │   ├── StepPhotos.tsx
 │   │   ├── StepPropertyInfo.tsx
 │   │   ├── StepPricingAvailability.tsx
-│   │   └── StepHouseRules.tsx
+│   │   ── StepHouseRules.tsx
+         - ListingMap.tsx
 │   └── shared/
 │       ├── PropertyTypeLabelIcon.tsx
 │       ├── ListingCardSteps.tsx
-│       └── ListingMap.tsx
 ├── data/
 │   ├── propertyTypeData.ts
 │   ├── amenitiesData.ts
 │   └── houseRulesData.ts
 make this structure more modular and maintainable.
+
+//next start at the top
