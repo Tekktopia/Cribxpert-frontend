@@ -29,7 +29,7 @@ import PaymentHistory from '@/pages/PaymentHistory';
 import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
 // import ListingMgmtPage from '@/pages/ListingManagementPage';
 import PaymentDetailsDownload from '@/pages/PaymentDetailsDownload';
-import MyListing from '@/pages/MyListing'; // Adjust the path if needed
+// import MyListing from '@/pages/MyListing'; // Adjust the path if needed
 
 
 export interface RouteConfig {
@@ -61,12 +61,13 @@ const routeConfig: RouteConfig[] = [
     element: <DiscoverPage />,
     protected: false,
     title: 'Discover Properties',
-  },{
-    path: '/my-listing',
-    element: <MyListing />,
-    protected: false,
-    title: 'My Listing',
-  },
+   },
+   ///{
+  //   path: '/my-listing',
+  //   element: <MyListing />,
+  //   protected: false,
+  //   title: 'My Listing',
+  // },
 
   // Auth routes
   {

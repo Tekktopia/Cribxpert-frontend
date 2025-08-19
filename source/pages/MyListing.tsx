@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useGetListingsQuery } from '@features/listings/listingsApiSlice';
-import ListingHeader from '@/components/ListingComponents/ListingHeader';
-import ListingTabs from '@/components/ListingComponents/ListingTabs';
-import ListingCard from '@/components/ListingComponents/ListingCard';
-import InitialListCardText from '@/components/ListingComponents/InitialListCardText';
-import ListCardInitial from '@/components/ListingComponents/ListCardInitial';
-import RoadmapStepper from '@/components/ListingComponents/ListRoadMapper';
-import {InitialSteps} from '@/components/ListingComponents/data/onboardingSteps';
+import { useGetListingsQuery } from '@/features/listing/listingService';
+import ListingHeader from '@/features/listing/components/ListingHeader';
+import ListingTabs from '@/features/listing/components/ListingTabs';
+import ListingCard from '@/features/listing/components/ListingCard';
+import InitialListCardText from '@/features/listing/components/InitialListCardText';
+import ListCardInitial from '@/features/listing/components/ListCardInitial';
+import RoadmapStepper from '@/features/listing/components/ListRoadMapper';
+import {InitialSteps} from '@/features/listing/components/data/onboardingSteps';
+
+
 
 
 const MyListing: React.FC = () => {

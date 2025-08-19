@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ListingCardSteps from '../ListingComponents/ListingCardSteps';
+import ListingCardSteps from '../components/ListingCardSteps';
 import { stepData } from './data/Listingsteps';
-import PropertyTypeLabelIcon from '../ListingComponents/PropertyTypeLabelIcon';
+import PropertyTypeLabelIcon from '../components/PropertyTypeLabelIcon';
 import { propertyTypeData } from './data/PropertyTypeData';
 import { ListingCardStepTwoData } from './data/ListingCardTwoData';
 import ListingCardStepTwo from './ListingCardStepTwo';
