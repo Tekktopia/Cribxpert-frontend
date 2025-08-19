@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ListingCardSteps from '../ListingComponents/ListingCardSteps';
-import { stepData } from '../ListingComponents/Listingsteps';
+import { stepData } from './data/Listingsteps';
 import PropertyTypeLabelIcon from '../ListingComponents/PropertyTypeLabelIcon';
-import { propertyTypeData } from '../ListingComponents/PropertyTypeData';
-import { ListingCardStepTwoData } from './ListingCardTwoData';
+import { propertyTypeData } from './data/PropertyTypeData';
+import { ListingCardStepTwoData } from './data/ListingCardTwoData';
 import ListingCardStepTwo from './ListingCardStepTwo';
 import ListingMap from './LisitingMap';
 import ListAmenity from './ListAmenity';
@@ -19,12 +19,17 @@ interface RoadmapStepperProps {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrentStep }) => {
+const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
+  currentStep,
+  setCurrentStep,
+}) => {
   const [activeStep, setActiveStep] = useState(0);
   const [uploadCompleted, setUploadCompleted] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedPropertyType, setSelectedPropertyType] = useState<string>('');
-  const [checkedAmenities, setCheckedAmenities] = useState<Record<string, boolean>>({});
+  const [checkedAmenities, setCheckedAmenities] = useState<
+    Record<string, boolean>
+  >({});
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -66,7 +71,10 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
     console.log('Selected property type:', type);
   };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
+  const handleCheckboxChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
     setCheckedAmenities((prev) => ({
       ...prev,
       [id]: e.target.checked,
@@ -102,8 +110,10 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
     if (locationData.state) setStateAddr(locationData.state);
     if (locationData.postalCode) setPostalCode(locationData.postalCode);
     if (locationData.country) setCountry(locationData.country);
-    if (typeof locationData.longitude === 'number') setLongitude(locationData.longitude);
-    if (typeof locationData.latitude === 'number') setLatitude(locationData.latitude);
+    if (typeof locationData.longitude === 'number')
+      setLongitude(locationData.longitude);
+    if (typeof locationData.latitude === 'number')
+      setLatitude(locationData.latitude);
   };
 
   const [createOrUpdateListing] = useCreateOrUpdateListingMutation();
@@ -116,7 +126,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
         alert('Please enter a title for your listing');
         return;
       }
-      
+
       if (!selectedPropertyType) {
         console.error('Property type is required');
         alert('Please select a property type');
@@ -126,22 +136,30 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
       // Validate propertyType is a valid ObjectId
       if (!isValidObjectId(selectedPropertyType)) {
         console.error('Invalid property type ID:', selectedPropertyType);
-        alert('Invalid property type selected. Please go back and select a valid property type.');
+        alert(
+          'Invalid property type selected. Please go back and select a valid property type.'
+        );
         return;
       }
 
-      const actualUserId = '64a1b2c3d4e5f6789abcdef0'; 
-      
+      const actualUserId = '64a1b2c3d4e5f6789abcdef0';
+
       // Get selected amenities and validate they are ObjectIds
-      const selectedAmenityIds = Object.keys(checkedAmenities).filter(key => checkedAmenities[key]);
-      const validAmenities = selectedAmenityIds.filter(id => isValidObjectId(id));
-      
+      const selectedAmenityIds = Object.keys(checkedAmenities).filter(
+        (key) => checkedAmenities[key]
+      );
+      const validAmenities = selectedAmenityIds.filter((id) =>
+        isValidObjectId(id)
+      );
+
       if (selectedAmenityIds.length > 0 && validAmenities.length === 0) {
         console.error('No valid amenity IDs found');
-        alert('Invalid amenities selected. Please go back and select amenities again.');
+        alert(
+          'Invalid amenities selected. Please go back and select amenities again.'
+        );
         return;
       }
-      
+
       // Build the listing data object
       const listingData: any = {
         userId: actualUserId,
@@ -169,7 +187,9 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
 
       // Only include houseRules if there are valid ObjectIds
       if (houseRules && houseRules.length > 0) {
-        const validHouseRules = houseRules.filter(rule => isValidObjectId(rule));
+        const validHouseRules = houseRules.filter((rule) =>
+          isValidObjectId(rule)
+        );
         if (validHouseRules.length > 0) {
           listingData.houseRules = validHouseRules;
         }
@@ -188,15 +208,17 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
       nextStep();
     } catch (error: any) {
       console.error('Error creating listing:', error);
-      
+
       if (error?.data) {
         console.error('Server error details:', error.data);
       }
       if (error?.status) {
         console.error('HTTP status:', error.status);
       }
-      
-      alert('Failed to create listing. Please check the console for details and try again.');
+
+      alert(
+        'Failed to create listing. Please check the console for details and try again.'
+      );
     }
   };
 
@@ -269,7 +291,10 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
                     setBedroomNo(newCount);
                   } else if (titleLower.includes('bathroom')) {
                     setBathroomNo(newCount);
-                  } else if (titleLower.includes('size') || titleLower.includes('sqft')) {
+                  } else if (
+                    titleLower.includes('size') ||
+                    titleLower.includes('sqft')
+                  ) {
                     setSize(newCount);
                   }
                   console.log(`${item.title} count changed to:`, newCount);
@@ -282,28 +307,26 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
 
       {activeStep === 2 && (
         <div className="max-w-[760px] max-h-[560px] mx-auto">
-          <ListingMap
-            onLocationUpdate={handleLocationUpdate}
-          />
+          <ListingMap onLocationUpdate={handleLocationUpdate} />
         </div>
       )}
 
-     {activeStep === 3 && (
-  <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
-      {AmenityData.map((item) => (
-        <ListAmenity
-          key={item.inputProps.id}
-          inputProps={item.inputProps}
-          icon={item.icon}
-          description={item.description}
-          checked={checkedAmenities[item.inputProps.id] ?? false}
-          onChange={(e) => handleCheckboxChange(e, item.inputProps.id)}
-        />
-      ))}
-    </div>
-  </div>
-)}
+      {activeStep === 3 && (
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+            {AmenityData.map((item) => (
+              <ListAmenity
+                key={item.inputProps.id}
+                inputProps={item.inputProps}
+                icon={item.icon}
+                description={item.description}
+                checked={checkedAmenities[item.inputProps.id] ?? false}
+                onChange={(e) => handleCheckboxChange(e, item.inputProps.id)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {activeStep === 4 && (
         <div className="flex justify-center mx-auto">
@@ -332,27 +355,30 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({ currentStep, setCurrent
       )}
 
       {activeStep === 6 && (
-  <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
-    <PricingPage
-      basePrice={basePrice}
-      setBasePrice={setBasePrice}
-      securityDeposit={securityDeposit}
-      setSecurityDeposit={setSecurityDeposit}
-      cleaningFee={cleaningFee}
-      setCleaningFee={setCleaningFee}
-      availableFrom={availableFrom}
-      setAvailableFrom={setAvailableFrom}
-      availableUntil={availableUntil}
-      setAvailableUntil={setAvailableUntil}
-    />
-      </div>
-    )}
+        <div className="max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+          <PricingPage
+            basePrice={basePrice}
+            setBasePrice={setBasePrice}
+            securityDeposit={securityDeposit}
+            setSecurityDeposit={setSecurityDeposit}
+            cleaningFee={cleaningFee}
+            setCleaningFee={setCleaningFee}
+            availableFrom={availableFrom}
+            setAvailableFrom={setAvailableFrom}
+            availableUntil={availableUntil}
+            setAvailableUntil={setAvailableUntil}
+          />
+        </div>
+      )}
 
-  {activeStep === 7 && (
-    <div className="max-w-full sm:max-w-xl md:max-w-2xl mx-auto px-4 sm:px-6 py-4">
-      <HouseRulesPage selectedRules={houseRules} onChange={handleHouseRulesChange} />
-    </div>
-  )}
+      {activeStep === 7 && (
+        <div className="max-w-full sm:max-w-xl md:max-w-2xl mx-auto px-4 sm:px-6 py-4">
+          <HouseRulesPage
+            selectedRules={houseRules}
+            onChange={handleHouseRulesChange}
+          />
+        </div>
+      )}
       {/* Navigation Buttons */}
       <div className="flex justify-between items-center mt-[3rem] max-w-[70rem] mx-auto w-full">
         <button

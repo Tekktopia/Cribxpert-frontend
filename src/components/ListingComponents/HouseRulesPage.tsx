@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListingHouseRulesData, HouseRule } from './ListingHouseRulesData';
+import { ListingHouseRulesData, HouseRule } from './data/ListingHouseRulesData';
 import ListAmenity from './ListAmenity';
 
 interface HouseRulesPageProps {

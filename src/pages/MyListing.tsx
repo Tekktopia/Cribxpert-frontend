@@ -6,7 +6,7 @@ import ListingCard from '@/components/ListingComponents/ListingCard';
 import InitialListCardText from '@/components/ListingComponents/InitialListCardText';
 import ListCardInitial from '@/components/ListingComponents/ListCardInitial';
 import RoadmapStepper from '@/components/ListingComponents/ListRoadMapper';
-import {InitialSteps} from '@/components/ListingComponents/onboardingSteps';
+import {InitialSteps} from '@/components/ListingComponents/data/onboardingSteps';
 
 
 const MyListing: React.FC = () => {
