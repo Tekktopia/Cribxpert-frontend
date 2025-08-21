@@ -3,8 +3,13 @@ import { NotificationComponentProps } from '@/features/notification';
 import NoNotification from './NoNotification';
 import ListingNotificationItem from './ListingNotificationItem';
 
-const Listings: React.FC = () => {
-  // Hardcoded test data
+type ListingsProps = {
+  isLoading: boolean;
+  error: string | null;
+};
+
+const Listings: React.FC<ListingsProps> = ({ isLoading, error }) => {
+  // Hardcoded test data for demonstration
   const testNotifications = [
     {
       _id: '1',
@@ -26,13 +31,37 @@ const Listings: React.FC = () => {
     },
   ];
 
-  // Utility to calculate days ago
+  // Calculate "days ago" string
   const getDaysAgo = (createdAt: string) => {
     const created = new Date(createdAt);
     const now = new Date();
     const diff = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
     return diff === 0 ? 'Today' : `${diff} day${diff > 1 ? 's' : ''} ago`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex justify-center items-center my-6 sm:my-9">
+        <p className="text-[#999] text-[14px] sm:text-[16px]">Loading notifications...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full flex justify-center items-center my-6 sm:my-9">
+        <p className="text-red-500 text-[14px] sm:text-[16px]">Failed to load notifications</p>
+      </div>
+    );
+  }
+
+  if (testNotifications.length === 0) {
+    return (
+      <div className="w-full flex flex-col gap-6 my-9">
+        <NoNotification />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4 my-6">
@@ -42,9 +71,7 @@ const Listings: React.FC = () => {
           username={notification.username}
           description={notification.description}
           daysAgo={getDaysAgo(notification.createdAt)}
-          onViewListing={() => {
-            console.log('View listing clicked:', notification._id);
-          }}
+          onViewListing={() => console.log('View listing clicked:', notification._id)}
         />
       ))}
     </div>
