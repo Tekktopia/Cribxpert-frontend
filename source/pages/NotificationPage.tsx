@@ -11,11 +11,10 @@ import NotificationNav from '@/shared/components/layout/notification/Notificatio
 import Bookings from '@/features/notifications/components/Bookings';
 import Payments from '@/features/notifications/components/Payments';
 import Reviews from '@/features/notifications/components/Reviews';
-
+import Listings from '@/features/notifications/components/Listings';
+import Financials from '@/features/notifications/components/Financials';
 const NotificationPage = () => {
-  const [active, setActive] = useState<ActiveNotification>(
-    ActiveNotification.All
-  );
+  const [active, setActive] = useState<ActiveNotification>(ActiveNotification.All);
 
   const currentUser = useSelector(selectCurrentUser);
   const {
@@ -50,12 +49,21 @@ const NotificationPage = () => {
     (notification) => notification.category === 'review'
   );
 
+  // Add filters for listings and financials
+  const listingNotifications = notifications.filter(
+    (notification) => notification.category === 'listing'
+  );
+
+  const financialNotifications = notifications.filter(
+    (notification) => notification.category === 'financial'
+  );
+
   return (
     <div>
-      {' '}
-      <div className=" px-[30px] lg:px-[80px] container mx-auto">
+      <div className="px-[30px] lg:px-[80px] container mx-auto">
         <h1 className="pt-[43px] text-[20px] text-[#040404]">Notifications</h1>
         <NotificationNav active={active} setActive={setActive} />
+
         {active === ActiveNotification.All && (
           <All
             notifications={notifications}
@@ -64,6 +72,7 @@ const NotificationPage = () => {
             onMarkAsRead={handleMarkAsRead}
           />
         )}
+
         {active === ActiveNotification.Bookings && (
           <Bookings
             notifications={bookingNotifications}
@@ -72,6 +81,7 @@ const NotificationPage = () => {
             onMarkAsRead={handleMarkAsRead}
           />
         )}
+
         {active === ActiveNotification.Payments && (
           <Payments
             notifications={paymentNotifications}
@@ -80,9 +90,30 @@ const NotificationPage = () => {
             onMarkAsRead={handleMarkAsRead}
           />
         )}
+
         {active === ActiveNotification.Reviews && (
           <Reviews
             notifications={reviewNotifications}
+            isLoading={isLoading}
+            error={error}
+            onMarkAsRead={handleMarkAsRead}
+          />
+        )}
+
+        {/* New tabs for Listings and Financials */}
+
+        {active === ActiveNotification.Listings && (
+          <Listings
+            notifications={listingNotifications}
+            isLoading={isLoading}
+            error={error}
+            onMarkAsRead={handleMarkAsRead}
+          />
+        )}
+
+        {active === ActiveNotification.Financials && (
+          <Financials
+            notifications={financialNotifications}
             isLoading={isLoading}
             error={error}
             onMarkAsRead={handleMarkAsRead}

@@ -169,7 +169,7 @@ const routeConfig: RouteConfig[] = [
   {
     path: '/notification',
     element: <NotificationPage />,
-    protected: true,
+    protected: false,
     title: 'Notifications',
   },
 

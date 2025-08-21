@@ -7,7 +7,7 @@ export interface Notification {
   userId: string;
   title: string;
   description: string;
-  category: 'booking' | 'payment' | 'review' | 'general';
+  category: 'booking' | 'payment' | 'review' | 'general'| 'financial' | 'listing';
   status: 'read' | 'unread';
   createdAt: string;
   updatedAt: string;

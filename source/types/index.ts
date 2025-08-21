@@ -70,6 +70,8 @@ export enum ActiveNotification {
   Bookings = 'bookings',
   Payments = 'payments',
   Reviews = 'reviews',
+  Listings = 'listings',
+  Financials = 'financials',
 }
 
 export type ProfileFormProps = {
