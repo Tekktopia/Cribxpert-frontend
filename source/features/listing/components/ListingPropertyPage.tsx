@@ -112,11 +112,11 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             </p>
           )}
 
-          <div className="grid grid-cols-2 gap-4 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 max-w-[644px]">
             {previews.map((src, index) => (
               <div
                 key={index}
-                className="relative border-2 border-gray-200 p-4 w-[300px] h-[250px] shadow-sm rounded"
+                className="relative border-2 border-gray-200 p-4 w-full h-[220px] shadow-sm rounded"
               >
                 <button
                   onClick={() => setConfirmDeleteIndex(index)}
@@ -126,20 +126,22 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                   <img src="/icons/delete-icon-green.png" alt="Delete" />
                 </button>
 
-                <div className="relative w-full h-32 mb-2">
+                <div className="relative w-full h-[130px] mb-2">
                   <img
                     src={src}
                     alt={`Uploaded ${index}`}
                     className="w-full h-full object-cover rounded-md"
                   />
+
                   {isUploading && !uploadedIndexes.includes(index) && (
                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-md z-10">
                       <div className="loader border-white h-6 w-6 animate-spin rounded-full border-4 border-t-transparent" />
                     </div>
                   )}
+
                   {!isUploading && uploadedIndexes.includes(index) && (
-                    <div className="absolute top-2 left-2 text-green-500 text-xl z-10">
-                      <img src="/icons/green-tick.png" alt="Uploaded" />
+                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                      <img src="/icons/green-tick.png" alt="Uploaded" className="h-8 w-8" />
                     </div>
                   )}
                 </div>
@@ -177,51 +179,6 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
               }
             }}
           />
-
-          {/* Uncomment this button if you want visible upload button instead of hidden */}
-          {/* <button
-            onClick={() => {
-              if (!uploadCompleted) {
-                setIsUploading(true);
-                setShowUploadBox(false);
-                selectedFiles.forEach((_, index) => {
-                  setTimeout(() => {
-                    setUploadedIndexes((prev) => [...prev, index]);
-                    if (index === selectedFiles.length - 1) {
-                      setTimeout(() => {
-                        setIsUploading(false);
-                        setUploadCompleted(true);
-                      }, 1000);
-                    }
-                  }, 1000 + index * 600);
-                });
-              } else {
-                nextStep();
-              }
-            }}
-            disabled={selectedFiles.length === 0 || isUploading}
-            className="bg-[#1D5C5C] text-white px-4 py-2 rounded flex items-center"
-          >
-            {isUploading && (
-              <svg
-                className="animate-spin h-5 w-5 mr-2 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-              </svg>
-            )}
-            {uploadCompleted ? 'Next' : 'Upload'}
-          </button> */}
         </div>
       )}
 

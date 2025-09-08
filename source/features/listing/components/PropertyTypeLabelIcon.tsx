@@ -22,16 +22,16 @@ const PropertyTypeLabelIcon: React.FC<PropertyTypeLabelIconProps> = ({
   return (
     <div
       onClick={() => onSelect(type)}
-      className={`p-3 sm:p-4 border rounded cursor-pointer text-center transition-colors duration-200 
+      className={`flex flex-col items-center justify-center p-2 sm:p-4 border rounded cursor-pointer text-center transition-colors duration-200
         ${isSelected ? 'bg-[#1D5C5C]/10 border-[#1D5C5C]' : 'border-gray-300'}
-        w-full sm:w-auto`}
+        w-full sm:w-auto min-w-[80px]`}
     >
       <img
         src={image}
         alt={type}
-        className="mx-auto mb-2 w-16 h-16 sm:w-20 sm:h-20 object-contain"
+        className="mb-1 sm:mb-2 w-12 h-12 sm:w-16 sm:h-16 object-contain"
       />
-      <p className="text-xs sm:text-sm md:text-base">{description}</p>
+      <p className="text-[10px] sm:text-sm md:text-base leading-tight">{description}</p>
     </div>
   );
 };

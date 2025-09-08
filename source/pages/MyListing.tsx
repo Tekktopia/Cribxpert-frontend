@@ -6,105 +6,113 @@ import ListingCard from '@/features/listing/components/ListingCard';
 import InitialListCardText from '@/features/listing/components/InitialListCardText';
 import ListCardInitial from '@/features/listing/components/ListCardInitial';
 import RoadmapStepper from '@/features/listing/components/ListRoadMapper';
-import {InitialSteps} from '@/features/listing/components/data/onboardingSteps';
-
-
-
+import { InitialSteps } from '@/features/listing/components/data/onboardingSteps';
 
 const MyListing: React.FC = () => {
   const [activeTab, setActiveTab] = useState('All Listings');
   const [userSteps, setUserSteps] = useState(0);
   const [initialListingsLoaded, setInitialListingsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showListings, setShowListings] = useState(false); // NEW STATE
 
-  const { data, error, isLoading,refetch } = useGetListingsQuery();
+  const { data, error, isLoading, refetch } = useGetListingsQuery();
 
   useEffect(() => {
-    setInitialListingsLoaded( false)//!!data?.listings);
+    setInitialListingsLoaded(true); // Temporarily disabled
   }, [data]);
+
 
   const filteredListings = (data?.listings || [])
     .filter((listing) => activeTab === 'All Listings' || listing.category === activeTab)
     .filter((listing) => listing.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div>
-      <div className="px-10 py-4">
-       {userSteps === 0 && !initialListingsLoaded ? (
-  <div className="flex flex-col md:flex-row gap-12 mt-20">
-    {/* Left: Text Section */}
-    <div className="flex-1 flex pl-16 justify-start items-center ">
-      <InitialListCardText />
-    </div>
+    <div className="px-4 sm:px-6 md:px-10 py-4">
+      {userSteps === 0 && !initialListingsLoaded ? (
+        <div className="flex flex-col md:flex-row gap-12 mt-20">
+          <div className="flex-1 flex pl-4 sm:pl-10 justify-start items-center">
+            <InitialListCardText />
+          </div>
 
-    {/* Right: Steps + Button */}
-    <div className="flex-1 flex flex-col items-center py-8 gap-10 ">
-      {InitialSteps.map((step, index) => (
-        <ListCardInitial
-          key={index}
-          index={index}
-          title={step.title}
-          description={step.description}
-          image={step.image}
+          <div className="flex-1 flex flex-col items-center py-8 gap-10">
+            {InitialSteps.map((step, index) => (
+              <ListCardInitial
+                key={index}
+                index={index}
+                title={step.title}
+                description={step.description}
+                image={step.image}
+              />
+            ))}
+
+            <div className="mt-8 justify-end items-end flex w-full pr-0 sm:pr-16">
+              <button
+                onClick={() => setUserSteps(1)}
+                className="bg-[#1D5C5C] px-10 py-3 rounded-lg text-white text-md hover:opacity-90 transition hover:bg-[#C18B3F]"
+              >
+                Get started
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <RoadmapStepper currentStep={userSteps} setCurrentStep={setUserSteps} />
+
+          {isLoading ? (
+            <div className="text-center mt-10 text-gray-500">Loading listings...</div>
+          ) : error ? (
+            <div className="text-red-500 mt-10">
+              Error loading listings: {error?.message || 'Unknown error'}
+            </div>
+          ) : (
+  showListings && (
+    <div className="container mx-auto p-4 md:p-8">
+      <ListingHeader />
+      <ListingTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      <div className="mt-4">
+        <input
+          type="text"
+          placeholder="Search listings..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full sm:w-[300px] px-4 py-2 border border-gray-300 rounded"
         />
-      ))}
-
-      {/* Get Started Button */}
-      <div className="mt-8 justify-end items-end flex w-full pr-[17rem]">
-        <button
-          onClick={() => setUserSteps(1)}
-          className="bg-[#1D5C5C] px-16 py-4 rounded-lg text-white text-md hover:opacity-90 transition  hover:bg-[#C18B3F]"
-        >
-          Get started
-        </button>
       </div>
+
+      {filteredListings.length === 0 ? (
+        <div className="text-gray-600 mt-6">No listings found for the selected filter.</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+          {filteredListings.map((listing: any) => {
+            const { _id, name, basePrice, listingImg, rating, country } = listing;
+            const imageUrl = listingImg?.[0]?.fileUrl || '/default-image.jpg';
+
+            return (
+              <ListingCard
+                key={_id}
+                id={_id}
+                title={name}
+                price={`$${basePrice}`}
+                image={imageUrl}
+                rating={rating || 3.5}
+                category={country}
+                className="w-full"
+                onDelete={(deletedId) => {
+                  refetch();
+                  console.log(`Listing ${deletedId} deleted successfully`);
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
-  </div>
-        ) : (
-          <>
-            <RoadmapStepper currentStep={userSteps} setCurrentStep={setUserSteps} />
-
-            {isLoading ? (
-              <div>Loading...</div>
-            ) : error ? (
-              <div>Error loading listings: {error?.message || 'Unknown error'}</div>
-            ) : (
-              <div className="container mx-auto p-4 md:p-8">
-                <ListingHeader />
-                <ListingTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
-                {filteredListings.length === 0 ? (
-                  <div className="text-gray-600 mt-6">No listings found for the selected filter.</div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-                    {filteredListings.map((listing: any) => {
-                      const { _id, name, basePrice, listingImg, rating, country } = listing;
-                      const imageUrl = listingImg?.[0]?.fileUrl || '/default-image.jpg';
-                      return (
-                        <ListingCard
-                          key={_id}
-                          id={_id}
-                          title={name}
-                          price={`$${basePrice}`}
-                          image={imageUrl}
-                          rating={rating || 3.5}
-                          category={country}
-                          className="w-full"
-                          onDelete={(deletedId) => {
-                            // Manually refetch the listings after deletion
-                            refetch();
-                            console.log(`Listing ${deletedId} deleted successfully`);
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-          </>
-        )}
-      </div>
+  )
+)}
+        </>
+      )}
     </div>
   );
 };
