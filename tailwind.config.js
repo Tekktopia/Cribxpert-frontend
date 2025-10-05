@@ -9,7 +9,7 @@ export default {
         neutral: '#6F6F6F',
         neutralLight: '#999999',
         neutralDark: '#070707',
-        hoverColor: '#C18B3F', // Your color code
+        hoverColor: '#C18B3F',
       },
     },
   },
