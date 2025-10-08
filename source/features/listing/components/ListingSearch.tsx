@@ -1,4 +1,4 @@
-import normal from '../../../../public/icons/search-normal.png';
+import normal from '../../../../public/other-icons/search-normal.png';
 
 interface ListingSearchProps {
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;

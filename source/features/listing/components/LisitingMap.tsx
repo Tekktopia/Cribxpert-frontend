@@ -121,7 +121,7 @@ const ListingMap: React.FC<ListingMapProps> = ({ onLocationUpdate }) => {
   return (
     <form action="#">
       <div className="flex flex-col relative">
-        <label htmlFor="home-address" className="mb-2 font-medium text-sm sm:text-base">
+        <label htmlFor="home-address" className="mb-2 font-medium text-sm sm:text-base ">
           Home Address
         </label>
 
