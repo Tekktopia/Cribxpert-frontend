@@ -23,7 +23,7 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
           id="property-title"
           type="text"
           placeholder="Name of your property"
-          className="w-full border border-gray-300 p-2 rounded"
+          className="w-full border border-neutralLight p-2 rounded"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -37,18 +37,18 @@ const PropertyPage: React.FC<PropertyPageProps> = ({
           id="property-description"
           placeholder="Describe your property"
           maxLength={2500}
-          className="w-full border border-gray-300 p-2 rounded h-40 resize-none"
+          className="w-full border border-neutralLight p-2 rounded h-40 resize-none"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-neutral mt-1">
           {description.length}/2500 characters
         </p>
       </section>
 
       <section className="mt-2 bg-[#E6EFF1] rounded-sm p-1">
         <p className="font-medium mb-2">Tips For A Great Description</p>
-        <ul className="list-disc pl-6 text-sm text-gray-700 space-y-1">
+        <ul className="list-disc pl-6 text-sm text-neutral space-y-1">
           <li>Highlight unique features of your property</li>
           <li>Mention nearby attractions, restaurants, or points of interest</li>
           <li>Describe the atmosphere and style of your place</li>

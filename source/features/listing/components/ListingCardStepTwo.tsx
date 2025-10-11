@@ -20,7 +20,7 @@ const ListingCardStepTwo = ({ title, number, image, onChange }: ListingCardStepT
   const handleDecrement = () => setCount(prev => Math.max(0, prev - 1));
 
   return (
-    <div className="flex flex-wrap items-center justify-between border border-gray-300 p-2 sm:p-3 rounded-lg gap-y-2">
+    <div className="flex flex-wrap items-center justify-between border border-neutralLight p-2 sm:p-3 rounded-lg gap-y-2">
       {/* Left Section */}
       <div className="pl-2 sm:pl-4 flex items-center gap-x-2 min-w-0">
         <img
@@ -40,12 +40,12 @@ const ListingCardStepTwo = ({ title, number, image, onChange }: ListingCardStepT
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 sm:w-7 sm:h-7 border border-gray-300 p-1.5 rounded-md hover:bg-gray-100"
+            className="w-6 h-6 sm:w-7 sm:h-7 border border-neutralLight p-1.5 rounded-md hover:bg-neutralLight"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12h15" />
           </svg>
         </button>
-        <p className="text-gray-600 text-sm sm:text-base">{count}</p>
+        <p className="text-neutral text-sm sm:text-base">{count}</p>
         <button onClick={handleIncrement}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@ const ListingCardStepTwo = ({ title, number, image, onChange }: ListingCardStepT
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-6 h-6 sm:w-7 sm:h-7 border border-gray-300 p-1.5 rounded-md hover:bg-gray-100"
+            className="w-6 h-6 sm:w-7 sm:h-7 border border-neutralLight p-1.5 rounded-md hover:bg-neutralLight"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m-7.5-7.5h15" />
           </svg>

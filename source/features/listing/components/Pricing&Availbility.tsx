@@ -37,7 +37,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
           id="base-price"
           type="number"
           placeholder="₦0.00"
-          className="w-full border border-gray-300 p-2 pl-4 rounded"
+          className="w-full border border-neutralLight p-2 pl-4 rounded"
           value={basePrice}
           onChange={(e) => setBasePrice(e.target.value)}
         />
@@ -49,7 +49,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
           id="security-deposit"
           type="number"
           placeholder="₦0.00"
-          className="w-full border border-gray-300 p-2 pl-4 rounded"
+          className="w-full border border-neutralLight p-2 pl-4 rounded"
           value={securityDeposit}
           onChange={(e) => setSecurityDeposit(e.target.value)}
         />
@@ -61,7 +61,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
           id="cleaning-fee"
           type="number"
           placeholder="₦0.00"
-          className="w-full border border-gray-300 p-2 pl-4 rounded"
+          className="w-full border border-neutralLight p-2 pl-4 rounded"
           value={cleaningFee}
           onChange={(e) => setCleaningFee(e.target.value)}
         />
@@ -76,7 +76,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
         <input
           id="available-from"
           type="date"
-          className="w-full border border-gray-300 p-2 pl-4 rounded"
+          className="w-full border border-neutralLight p-2 pl-4 rounded"
           value={availableFrom}
           onChange={(e) => setAvailableFrom(e.target.value)}
         />
@@ -87,7 +87,7 @@ const PricingPage: React.FC<PricingPageProps> = ({
         <input
           id="available-until"
           type="date"
-          className="w-full border border-gray-300 p-2 pl-4 rounded"
+          className="w-full border border-neutralLight p-2 pl-4 rounded"
           value={availableUntil}
           onChange={(e) => setAvailableUntil(e.target.value)}
         />

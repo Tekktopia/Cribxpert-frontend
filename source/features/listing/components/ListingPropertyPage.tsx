@@ -66,7 +66,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       {showUploadBox && (
         <div
           id="upload-box"
-          className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-4 w-[644px] h-[316px]"
+          className="flex flex-col items-center justify-center border-2 border-dashed border-neutralLight p-4 w-[644px] h-[316px]"
         >
           <input
             type="file"
@@ -78,12 +78,12 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
           />
           <img src="/icons/camera-icon.png" alt="Upload Icon" className="mb-4" />
           <p>Click to upload or drag and drop</p>
-          <p className="text-sm text-gray-500 mb-2">PNG, JPG, GIF up to 10MB each</p>
+          <p className="text-sm text-netraulLight0 mb-2">PNG, JPG, GIF up to 10MB each</p>
           <button
             disabled={selectedFiles.length >= 6}
             type="button"
             onClick={handleFileClick}
-            className="mt-4 px-4 py-2 bg-[#1D5C5C] text-white rounded"
+            className="mt-4 px-4 py-2 bg-primary text-white rounded"
           >
             Select Photos
           </button>
@@ -102,7 +102,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       {selectedFiles.length > 0 && (
         <>
           {!isUploading && !uploadCompleted && (
-            <p className="text-sm text-gray-700 mt-4 font-bold text-center">
+            <p className="text-sm text-neutral mt-4 font-bold text-center">
               Selected Photos: ({selectedFiles.length}/6)
             </p>
           )}
@@ -116,7 +116,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             {previews.map((src, index) => (
               <div
                 key={index}
-                className="relative border-2 border-gray-200 p-4 w-full h-[220px] shadow-sm rounded"
+                className="relative border-2 border-neutralLight p-4 w-full h-[220px] shadow-sm rounded"
               >
                 <button
                   onClick={() => setConfirmDeleteIndex(index)}
@@ -146,7 +146,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                   )}
                 </div>
 
-                <p className="text-sm text-gray-700 text-center truncate w-full">
+                <p className="text-sm text-neutral text-center truncate w-full">
                   {selectedFiles[index]?.name}
                 </p>
               </div>
@@ -191,7 +191,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setConfirmDeleteIndex(null)}
-                className="px-4 py-2 bg-gray-300 rounded"
+                className="px-4 py-2 bg-neutralLight rounded"
               >
                 Cancel
               </button>

@@ -13,7 +13,7 @@ const MyListing: React.FC = () => {
   const [userSteps, setUserSteps] = useState(0);
   const [initialListingsLoaded, setInitialListingsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showListings, setShowListings] = useState(false); // NEW STATE
+  const [showListings, setShowListings] = useState(true); // NEW STATE
 
   const { data, error, isLoading, refetch } = useGetListingsQuery();
 
@@ -48,7 +48,7 @@ const MyListing: React.FC = () => {
             <div className="mt-8 justify-end items-end flex w-full pr-0 sm:pr-16">
               <button
                 onClick={() => setUserSteps(1)}
-                className="bg-[#1D5C5C] px-10 py-3 rounded-lg text-white text-md hover:opacity-90 transition hover:bg-[#C18B3F]"
+                className="bg-primary px-10 py-3 rounded-lg text-white text-md hover:opacity-90 transition hover:bg-hoverColor flex items-center gap-2"
               >
                 Get started
               </button>
@@ -60,7 +60,7 @@ const MyListing: React.FC = () => {
           <RoadmapStepper currentStep={userSteps} setCurrentStep={setUserSteps} />
 
           {isLoading ? (
-            <div className="text-center mt-10 text-gray-500">Loading listings...</div>
+            <div className="text-center mt-10 text-neutral">Loading listings...</div>
           ) : error ? (
             <div className="text-red-500 mt-10">
               Error loading listings: {error?.message || 'Unknown error'}
@@ -77,12 +77,12 @@ const MyListing: React.FC = () => {
           placeholder="Search listings..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full sm:w-[300px] px-4 py-2 border border-gray-300 rounded"
+          className="w-full sm:w-[300px] px-4 py-2 border border-neutralLight rounded"
         />
       </div>
 
       {filteredListings.length === 0 ? (
-        <div className="text-gray-600 mt-6">No listings found for the selected filter.</div>
+        <div className="text-neutral mt-6">No listings found for the selected filter.</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
           {filteredListings.map((listing: any) => {

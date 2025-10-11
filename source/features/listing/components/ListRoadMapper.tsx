@@ -226,9 +226,9 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
     <div className="w-full p-6">
       {/* Step Indicators */}
       <div className="relative flex items-center justify-between mb-10">
-        <div className="absolute left-0 right-0 top-5 h-1 bg-gray-300 z-0" />
+        <div className="absolute left-0 right-0 top-5 h-1 bg-neutralLight z-0" />
         <div
-          className="absolute top-5 h-1 bg-[#1D5C5C] z-10 transition-all duration-300"
+          className="absolute top-5 h-1 bg-primary z-10 transition-all duration-300"
           style={{ width: `${(activeStep / (stepData.length - 1)) * 100}%` }}
         />
         {stepData.map((_, index) => (
@@ -236,8 +236,8 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center ${
                 index <= activeStep
-                  ? 'bg-[#1D5C5C] text-white'
-                  : 'bg-gray-300 text-gray-700'
+                  ? 'bg-primary text-white'
+                  : 'bg-neutralLight text-neutral'
               }`}
             >
               {index + 1}
@@ -384,7 +384,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         <button
           onClick={prevStep}
           disabled={activeStep === 0}
-          className="bg-gray-300 px-8 py-2 rounded disabled:opacity-50"
+          className="bg-neutralLight px-8 py-2 rounded disabled:opacity-50"
         >
           Previous
         </button>
@@ -398,7 +398,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
                 handleUploadTrigger();
               }
             }}
-            className="bg-[#1D5C5C] hover:bg-[#C18B3F] text-white px-12 py-2 rounded transition"
+            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition"
             disabled={isUploading}
           >
             {uploadCompleted ? 'Next' : isUploading ? 'Uploading...' : 'Upload'}
@@ -406,14 +406,14 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         ) : activeStep === 7 ? (
           <button
             onClick={handleCreateListing}
-            className="bg-[#1D5C5C] hover:bg-[#C18B3F] text-white px-8 py-4 rounded transition"
+            className="bg-primary hover:bg-hoverColor text-white px-8 py-4 rounded transition"
           >
             Create Listing
           </button>
         ) : (
           <button
             onClick={nextStep}
-            className="bg-[#1D5C5C] hover:bg-[#C18B3F] text-white px-12 py-2 rounded transition"
+            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition"
           >
             Next
           </button>

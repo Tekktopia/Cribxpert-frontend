@@ -8,8 +8,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      manifestFilename: 'site.webmanifest',
       devOptions: {
-    enabled: true, // 👈 forces PWA to run during `npm run dev`
+    enabled: true,
   },
       manifest: {
         name: 'Cribxpert',
@@ -34,6 +35,10 @@ export default defineConfig({
           }
         ]
       },
+      workbox: {
+      navigateFallback: '/index.html', // ✅ this is the key
+      navigateFallbackDenylist: [/^\/api\//], // optionally exclude API calls
+    },
       includeAssets: [
         'favicon.svg',
         'robots.txt',

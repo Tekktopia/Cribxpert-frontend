@@ -21,7 +21,7 @@ const ListingCardSteps: React.FC<ListingCardStepsProps> = ({ title, description,
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         </div>
       <div>
-        <p className="text-gray-600 max-w-2xl">{description}</p>
+        <p className="text-neutral max-w-2xl">{description}</p>
       </div>
     </div>
   );

@@ -137,7 +137,7 @@ const ListingMap: React.FC<ListingMapProps> = ({ onLocationUpdate }) => {
           />
           {isGeocoding && (
             <div className="absolute right-2 top-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[#1D5C5C]"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
             </div>
           )}
 
@@ -147,7 +147,7 @@ const ListingMap: React.FC<ListingMapProps> = ({ onLocationUpdate }) => {
               {suggestions.map((sugg, index) => (
                 <li
                   key={index}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  className="p-2 hover:bg-neutralLight cursor-pointer"
                   onClick={() => handleSelectSuggestion(sugg)}
                 >
                   {sugg.display_name}
@@ -189,7 +189,7 @@ const ListingMap: React.FC<ListingMapProps> = ({ onLocationUpdate }) => {
             <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center rounded">
               <div className="bg-white px-4 py-2 rounded shadow">
                 <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1D5C5C] mr-2"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
                   <span>Locating address...</span>
                 </div>
               </div>

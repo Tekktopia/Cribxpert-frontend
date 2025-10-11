@@ -12,7 +12,7 @@ export interface Amenity {
 
 const ListAmenity = ({ inputProps, icon, description, checked, onChange }: Amenity) => {
   return (
-    <div className="flex items-center justify-center sm:justify-start sm:space-x-4 p-2 hover:bg-gray-50 transition w-full max-w-[300px] mx-auto">
+    <div className="flex items-center justify-center sm:justify-start sm:space-x-4 p-2 hover:bg-neutralLight transition w-full max-w-[300px] mx-auto">
       <input
         {...inputProps}
         type="checkbox"

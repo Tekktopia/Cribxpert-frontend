@@ -19,18 +19,18 @@ const ReviewNotificationItem: React.FC<ReviewNotificationItemProps> = ({
   return (
     <div className="flex gap-4 p-4 border-b rounded-md w-full max-w-full">
       {/* Avatar */}
-      <div className="flex items-center justify-center w-12 h-12 rounded-md bg-[#F1E6F1] text-gray-700 text-xl font-bold">
+      <div className="flex items-center justify-center w-12 h-12 rounded-md bg-[#F1E6F1] text-neutral text-xl font-bold">
         {firstLetter}
       </div>
 
       {/* Content */}
       <div className="flex flex-col">
-        <p className="text-[#333] text-base">{description}</p>
-        <span className="text-[#999] text-sm mt-1">{daysAgo}</span>
+        <p className="text-neutral text-base">{description}</p>
+        <span className="text-neutralLight text-sm mt-1">{daysAgo}</span>
         <div className="max-w-md">
           <button
             onClick={onViewListing}
-            className="mt-3 px-4 py-2 text-sm text-[#1D5C5C] border border-[#1D5C5C] rounded-md hover:bg-[#1D5C5C] hover:text-white transition w-max"
+            className="mt-3 px-4 py-2 text-sm text-primary border border-primary rounded-md hover:bg-primary hover:text-white transition w-max"
           >
             {buttonLabel}
           </button>

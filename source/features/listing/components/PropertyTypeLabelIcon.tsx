@@ -23,7 +23,7 @@ const PropertyTypeLabelIcon: React.FC<PropertyTypeLabelIconProps> = ({
     <div
       onClick={() => onSelect(type)}
       className={`flex flex-col items-center justify-center p-2 sm:p-4 border rounded cursor-pointer text-center transition-colors duration-200
-        ${isSelected ? 'bg-[#1D5C5C]/10 border-[#1D5C5C]' : 'border-gray-300'}
+        ${isSelected ? 'bg-primary/10 border-primary' : 'border-neutralLight'}
         w-full sm:w-auto min-w-[80px]`}
     >
       <img
