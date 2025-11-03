@@ -81,6 +81,17 @@ export default function DiscoverResults({
       const query = searchQuery.toLowerCase().trim();
 
       filtered = filtered.filter((listing) => {
+        // Skip if listing doesn't have required properties
+        if (
+          !listing ||
+          !listing.name ||
+          !listing.city ||
+          !listing.state ||
+          !listing.country
+        ) {
+          return false;
+        }
+
         // Search in property name
         if (listing.name.toLowerCase().includes(query)) {
           return true;
@@ -97,14 +108,17 @@ export default function DiscoverResults({
 
         // Search in property type name
         const propertyTypeName = getPropertyTypeNameById(listing.propertyType);
-        if (propertyTypeName.toLowerCase().includes(query)) {
+        if (
+          propertyTypeName &&
+          propertyTypeName.toLowerCase().includes(query)
+        ) {
           return true;
         }
 
         // Search in amenity names
         const hasMatchingAmenity = listing.amenities?.some((amenityId) => {
           const amenityName = getAmenityNameById(amenityId);
-          return amenityName.toLowerCase().includes(query);
+          return amenityName && amenityName.toLowerCase().includes(query);
         });
 
         if (hasMatchingAmenity) {
@@ -112,7 +126,10 @@ export default function DiscoverResults({
         }
 
         // Search in description
-        if (listing.description.toLowerCase().includes(query)) {
+        if (
+          listing.description &&
+          listing.description.toLowerCase().includes(query)
+        ) {
           return true;
         }
 

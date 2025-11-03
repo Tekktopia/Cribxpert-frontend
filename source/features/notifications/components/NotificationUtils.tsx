@@ -1,6 +1,6 @@
 import React from 'react';
 import { ellipseGray } from '@/assets';
-import { Notification } from '@/features/notification';
+import { Notification } from '@/features/notifications';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { getNotificationIcon, formatTimeAgo } from './notificationHelpers';

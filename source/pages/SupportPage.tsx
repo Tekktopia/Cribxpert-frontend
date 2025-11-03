@@ -1,14 +1,12 @@
-import { HeaderSpacer } from '@/shared/components/layout/Header';
 import Support from '@/features/support/components/Support';
 import SupportHeader from '@/features/support/components/SupportHeader';
 
 const SupportPage = () => {
   return (
     <div>
-      <HeaderSpacer />
-      <div className="container mx-auto">
+      <div className="">
         <SupportHeader />
-        <div className="lg:p-8">
+        <div className="lg:p-8 container mx-auto">
           <Support />
         </div>
       </div>

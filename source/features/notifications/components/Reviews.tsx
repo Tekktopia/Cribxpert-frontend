@@ -1,4 +1,6 @@
 import React from 'react';
+import { NotificationComponentProps } from '@/features/notification';
+import { NotificationList } from './NotificationUtils';
 import NoNotification from './NoNotification';
 import ReviewNotificationItem from './ReviewNotificationItem';
 

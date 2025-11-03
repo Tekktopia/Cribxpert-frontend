@@ -84,6 +84,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
     const suggestionMap = new Map<string, SearchSuggestion>();
 
     allListings.forEach((listing) => {
+      // Skip if listing doesn't have required properties
+      if (!listing || !listing.name || !listing.city || !listing.state) {
+        return;
+      }
+
       // Property name suggestions
       if (listing.name.toLowerCase().includes(query)) {
         const id = `property-${listing._id}`;
@@ -126,7 +131,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
       // Property type suggestions - resolve ID to name
       const propertyTypeName = getPropertyTypeNameById(listing.propertyType);
-      if (propertyTypeName.toLowerCase().includes(query)) {
+      if (propertyTypeName && propertyTypeName.toLowerCase().includes(query)) {
         const id = `type-${listing.propertyType}`;
         if (!suggestionMap.has(id)) {
           suggestionMap.set(id, {
@@ -141,7 +146,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       // Amenity suggestions - resolve IDs to names
       listing.amenities?.forEach((amenityId) => {
         const amenityName = getAmenityNameById(amenityId);
-        if (amenityName.toLowerCase().includes(query)) {
+        if (amenityName && amenityName.toLowerCase().includes(query)) {
           const id = `amenity-${amenityId}`;
           if (!suggestionMap.has(id)) {
             suggestionMap.set(id, {
