@@ -101,6 +101,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   );
   // Helper function to convert property name to URL slug
   const createSlug = (name: string): string => {
+    if (!name) return 'property';
     return name
       .toLowerCase()
       .replace(/[^\w\s]/g, '')
