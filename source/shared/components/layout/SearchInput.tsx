@@ -84,6 +84,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
     const suggestionMap = new Map<string, SearchSuggestion>();
 
     allListings.forEach((listing) => {
+      // Skip if listing doesn't have required properties
+      if (!listing || !listing.name || !listing.city || !listing.state) {
+        return;
+      }
+
       // Property name suggestions
       if (listing.name.toLowerCase().includes(query)) {
         const id = `property-${listing._id}`;
