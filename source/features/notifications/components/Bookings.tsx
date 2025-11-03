@@ -1,5 +1,5 @@
 import React from 'react';
-import { NotificationComponentProps } from '@/features/notification';
+import { NotificationComponentProps } from '@/features/notifications';
 import { NotificationList } from './NotificationUtils';
 import NoNotification from './NoNotification';
 
