@@ -7,11 +7,14 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       manifestFilename: 'site.webmanifest',
+      injectRegister: null, // Don't auto-register service worker
       devOptions: {
-    enabled: true,
-  },
+        enabled: false, // Disable in development to avoid blank screen issues
+        type: 'module',
+        disableDevLogs: true, // Disable workbox logs in dev
+      },
       manifest: {
         name: 'Cribxpert',
         short_name: 'Cribxpert',
@@ -36,9 +39,58 @@ export default defineConfig({
         ]
       },
       workbox: {
-      navigateFallback: '/index.html', // ✅ this is the key
-      navigateFallbackDenylist: [/^\/api\//], // optionally exclude API calls
-    },
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'gstatic-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
+            urlPattern: /\/api\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 5 // 5 minutes
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          }
+        ],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
+        cleanupOutdatedCaches: true,
+        skipWaiting: false, // Don't skip waiting to avoid blank screens
+        clientsClaim: false, // Don't claim clients immediately
+      },
       includeAssets: [
         'favicon.svg',
         'robots.txt',

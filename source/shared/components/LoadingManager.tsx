@@ -169,6 +169,19 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
     setTimeoutExceeded(false);
   }, [user?._id]);
 
+  // Add a safety timeout to prevent infinite loading (5 seconds max)
+  useEffect(() => {
+    const safetyTimeout = setTimeout(() => {
+      if (!initialLoadComplete) {
+        console.warn('Loading timeout exceeded, forcing render');
+        setInitialLoadComplete(true);
+        setTimeoutExceeded(true);
+      }
+    }, 5000); // 5 seconds max loading time
+
+    return () => clearTimeout(safetyTimeout);
+  }, []);
+
   const isLoading =
     (!initialLoadComplete || userLoading || isDataLoading || listingsLoading) &&
     !timeoutExceeded;
@@ -183,9 +196,18 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
     }
   }, [userLoading, listingsLoading, favouritesLoading, isAuthenticated]);
 
+  // If there's an error, still render the app (don't block on errors)
   if (listingsError) {
-    // console.error('Error fetching listings:', listingsError);
-    // Optionally, you could show an error state here
+    console.error('Error fetching listings:', listingsError);
+    // Still allow the app to render even if listings fail to load
+    if (!initialLoadComplete) {
+      setInitialLoadComplete(true);
+    }
+  }
+
+  // If timeout exceeded, force render
+  if (timeoutExceeded) {
+    return <>{children}</>;
   }
 
   if (isLoading) {

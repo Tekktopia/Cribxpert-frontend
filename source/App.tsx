@@ -9,10 +9,13 @@ import ScrollToTop from './shared/components/ScrollToTop';
 import LoadingManager from './shared/components/LoadingManager';
 import AppRoutes from './routes/AppRoutes';
 
+console.log('🔧 App component loaded');
+
 /**
  * Main app content component that orchestrates all the pieces
  */
 const AppContent = () => {
+  console.log('📄 AppContent rendering...');
   return (
     <LoadingManager>
       <AppRoutes />
@@ -21,6 +24,7 @@ const AppContent = () => {
 };
 
 function App() {
+  console.log('🌐 App component rendering with Router...');
   return (
     <Router>
       <ScrollToTop />
