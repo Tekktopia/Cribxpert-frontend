@@ -19,11 +19,40 @@ interface RoadmapStepperProps {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
+
+interface ListingData {
+  userId: string;
+  name: string;
+  description: string;
+  amenities?: string[];
+  propertyType: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  longitude: number;
+  latitude: number;
+  basePrice: number;
+  securityDeposit: number;
+  cleaningFee: number;
+  avaliableFrom: string;
+  avaliableUntil: string;
+  guestNo: number;
+  size: number;
+  bathroomNo: number;
+  bedroomNo: number;
+  houseRules?: string[];
+  files?: string[];
+}
+
+
 const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   currentStep,
   setCurrentStep,
 }) => {
-  const [activeStep, setActiveStep] = useState(0);
+  
+  const activeStep = currentStep;
   const [uploadCompleted, setUploadCompleted] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedPropertyType, setSelectedPropertyType] = useState<string>('');
@@ -59,12 +88,12 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   };
 
   const nextStep = () => {
-    if (activeStep < stepData.length - 1) setActiveStep((prev) => prev + 1);
-  };
+  if (currentStep < stepData.length - 1) setCurrentStep((prev) => prev + 1);
+};
 
-  const prevStep = () => {
-    if (activeStep > 0) setActiveStep((prev) => prev - 1);
-  };
+const prevStep = () => {
+  if (currentStep > 0) setCurrentStep((prev) => prev - 1);
+};
 
   const handlePropertyTypeSelect = (type: string) => {
     setSelectedPropertyType(type);
@@ -161,7 +190,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       }
 
       // Build the listing data object
-      const listingData: any = {
+      const listingData:ListingData  = {
         userId: actualUserId,
         name: title,
         description: description || '',
@@ -206,33 +235,22 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       console.log('Listing created successfully:', response);
       setUploadCompleted(true);
       nextStep();
-    } catch (error: any) {
-      console.error('Error creating listing:', error);
-
-      if (error?.data) {
-        console.error('Server error details:', error.data);
-      }
-      if (error?.status) {
-        console.error('HTTP status:', error.status);
-      }
-
-      alert(
-        'Failed to create listing. Please check the console for details and try again.'
-      );
-    }
+    } catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error('Error:', error.message);  
+  } else {
+    console.error('An unknown error occurred');
+  }
+}
   };
 
   const {
     data: propertyTypeData,
-    isLoading,
+    isLoading:isLoadingPropertyTypes,
     error,
   } = useGetPropertyTypesQuery();
   
-  const{
-    data:amenitiesData,
-    isLoading:amenitiesLoading,
-    error:amenitiesError,
-  } = useGetAmenitiesQuery();
+ const { data: amenitiesData, isLoading:isLoadingAmenities , error: amenitiesError } = useGetAmenitiesQuery();
 console.log(amenitiesData)
   return (
     <div className="w-full p-6">
@@ -270,7 +288,7 @@ console.log(amenitiesData)
       {/* Step Content */}
       {activeStep === 0 && (
         <div className="max-w-[760px] max-h-[560px] mx-auto">
-          {isLoading ? (
+          {isLoadingPropertyTypes ? (
             <div>Loading...</div>
           ) : error ? (
             <div>Error</div>
@@ -330,21 +348,28 @@ console.log(amenitiesData)
       )}
 
       {activeStep === 3 && (
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
-            {amenitiesData?.map((item,index) => (
-              <ListAmenity
-                key={index}
-                inputProps={item._id}
-                icon={item.icon.fileUrl}
-                description={item.name}
-                checked={checkedAmenities[item._id] ?? false}
-                onChange={(e) => handleCheckboxChange(e, item._id)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+  <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    {isLoadingAmenities ? (
+      <div>Loading...</div>
+    ) : amenitiesError ? (
+      <div>Error</div>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+        {amenitiesData?.map((item, index) => (
+          <ListAmenity
+            key={index}
+            inputProps={{ id: item._id }}  
+            icon={item.icon?.fileUrl ?? '/path/to/default-icon.png'}  
+            description={item.name}
+            checked={checkedAmenities[item._id] ?? false}
+            onChange={(e) => handleCheckboxChange(e, item._id)}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
 
       {activeStep === 4 && (
         <div className="flex justify-center mx-auto">
