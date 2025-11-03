@@ -13,7 +13,7 @@ const MyListing: React.FC = () => {
   const [userSteps, setUserSteps] = useState(0);
   const [initialListingsLoaded, setInitialListingsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showListings, setShowListings] = useState(true); // NEW STATE
+  const [showListings] = useState(true); // NEW STATE
 
   const { data, error, isLoading, refetch } = useGetListingsQuery();
 
@@ -23,8 +23,12 @@ const MyListing: React.FC = () => {
 
 
   const filteredListings = (data?.listings || [])
-    .filter((listing) => activeTab === 'All Listings' || listing.category === activeTab)
-    .filter((listing) => listing.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  .filter((listing) => activeTab === 'All Listings' || listing?.country === activeTab)
+  .filter((listing) => {
+    const name = listing?.name?.toLowerCase() || '';
+    const term = searchTerm?.toLowerCase() || '';
+    return name.includes(term);
+  });
 
   return (
     <div className="px-4 sm:px-6 md:px-10 py-4">
@@ -60,12 +64,31 @@ const MyListing: React.FC = () => {
           <RoadmapStepper currentStep={userSteps} setCurrentStep={setUserSteps} />
 
           {isLoading ? (
-            <div className="text-center mt-10 text-neutral">Loading listings...</div>
-          ) : error ? (
-            <div className="text-red-500 mt-10">
-              Error loading listings: {error?.message || 'Unknown error'}
-            </div>
-          ) : (
+  <div className="text-center mt-10 text-neutral">Loading listings...</div>
+) : error ? (
+  <div className="text-red-500 mt-10">
+    {(() => {
+      if (!error) return 'Unknown error';
+
+      // Check if it's a FetchBaseQueryError
+      if ('status' in error) {
+        // If error.data is string, show it; if object, try to get message
+        const errMsg =
+          typeof error.data === 'string'
+            ? error.data
+            : (error.data as { message?: string })?.message;
+        return `Error loading listings: ${errMsg || error.status}`;
+      }
+
+      // Otherwise, it might be a SerializedError
+      if ('message' in error) {
+        return `Error loading listings: ${error.message}`;
+      }
+
+      return 'Unknown error';
+    })()}
+  </div>
+) : (
   showListings && (
     <div className="container mx-auto p-4 md:p-8">
       <ListingHeader />
@@ -85,7 +108,7 @@ const MyListing: React.FC = () => {
         <div className="text-neutral mt-6">No listings found for the selected filter.</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-          {filteredListings.map((listing: any) => {
+          {filteredListings.map((listing) => {
             const { _id, name, basePrice, listingImg, rating, country } = listing;
             const imageUrl = listingImg?.[0]?.fileUrl || '/default-image.jpg';
 

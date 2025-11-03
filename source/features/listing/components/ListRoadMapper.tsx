@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import ListingCardSteps from '../components/ListingCardSteps';
 import { stepData } from './data/Listingsteps';
 import PropertyTypeLabelIcon from '../components/PropertyTypeLabelIcon';
-import { propertyTypeData } from './data/PropertyTypeData';
 import { ListingCardStepTwoData } from './data/ListingCardTwoData';
 import ListingCardStepTwo from './ListingCardStepTwo';
 import ListingMap from './LisitingMap';
 import ListAmenity from './ListAmenity';
-import { AmenityData } from './data/ListAmenityData';
 import ListingPropertyPage from './ListingPropertyPage';
 import PropertyPage from './PropertyPage';
 import PricingPage from './Pricing&Availbility';
 import HouseRulesPage from './HouseRulesPage';
 import { useCreateOrUpdateListingMutation } from '@/features/listing/listingService';
+import { useGetPropertyTypesQuery } from '@/features/propertyType/propertyTypeService';
+import { useGetAmenitiesQuery } from '@/features/amenities/amenitiesService';
 
 interface RoadmapStepperProps {
   currentStep: number;
@@ -222,6 +222,18 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
     }
   };
 
+  const {
+    data: propertyTypeData,
+    isLoading,
+    error,
+  } = useGetPropertyTypesQuery();
+  
+  const{
+    data:amenitiesData,
+    isLoading:amenitiesLoading,
+    error:amenitiesError,
+  } = useGetAmenitiesQuery();
+console.log(amenitiesData)
   return (
     <div className="w-full p-6">
       {/* Step Indicators */}
@@ -258,18 +270,24 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       {/* Step Content */}
       {activeStep === 0 && (
         <div className="max-w-[760px] max-h-[560px] mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6">
-            {propertyTypeData.map((item) => (
-              <PropertyTypeLabelIcon
-                key={item.type}
-                selectedType={selectedPropertyType}
-                onSelect={handlePropertyTypeSelect}
-                type={item.type}
-                description={item.description}
-                image={item.image}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : error ? (
+            <div>Error</div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6">
+              {propertyTypeData?.data.map((item, index) => (
+                <PropertyTypeLabelIcon
+                  key={index}
+                  selectedType={selectedPropertyType}
+                  onSelect={handlePropertyTypeSelect}
+                  type={item.name}
+                  description={item.name}
+                  image={item.icon.fileUrl}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -314,14 +332,14 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       {activeStep === 3 && (
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
-            {AmenityData.map((item) => (
+            {amenitiesData?.map((item,index) => (
               <ListAmenity
-                key={item.inputProps.id}
-                inputProps={item.inputProps}
-                icon={item.icon}
-                description={item.description}
-                checked={checkedAmenities[item.inputProps.id] ?? false}
-                onChange={(e) => handleCheckboxChange(e, item.inputProps.id)}
+                key={index}
+                inputProps={item._id}
+                icon={item.icon.fileUrl}
+                description={item.name}
+                checked={checkedAmenities[item._id] ?? false}
+                onChange={(e) => handleCheckboxChange(e, item._id)}
               />
             ))}
           </div>

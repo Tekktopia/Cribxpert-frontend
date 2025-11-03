@@ -1,5 +1,6 @@
  
  // PropertyTypeData.ts
+
 export interface PropertyTypeItem {
   type: string;
   description: string;
@@ -18,7 +19,7 @@ const PropertyTypeLabelIcon: React.FC<PropertyTypeLabelIconProps> = ({
   selectedType, onSelect, type, image, description
 }) => {
   const isSelected = selectedType === type;
-
+  
   return (
     <div
       onClick={() => onSelect(type)}
