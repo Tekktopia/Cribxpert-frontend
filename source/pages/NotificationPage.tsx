@@ -10,11 +10,13 @@ import All from '@/features/notifications/components/All';
 import NotificationNav from '@/shared/components/layout/notification/NotificationNav';
 import Bookings from '@/features/notifications/components/Bookings';
 import Payments from '@/features/notifications/components/Payments';
-import Reviews from '@/features/notifications/components/Reviews';
+import Reviews from '@/features/review/components/Reviews';
 import Listings from '@/features/notifications/components/Listings';
 import Financials from '@/features/notifications/components/Financials';
 const NotificationPage = () => {
-  const [active, setActive] = useState<ActiveNotification>(ActiveNotification.All);
+  const [active, setActive] = useState<ActiveNotification>(
+    ActiveNotification.All
+  );
 
   const currentUser = useSelector(selectCurrentUser);
   const {

@@ -1,55 +1,58 @@
 import React from 'react';
-import { ListingHouseRulesData} from './data/ListingHouseRulesData';
+import { useGetHouseRulesQuery } from '@/features/houseRule/houseRuleService';
 import ListAmenity from './ListAmenity';
 
+// Define a type for a single house rule
+interface HouseRule {
+  _id: string;
+  name: string;
+  icon?: {
+    fileUrl: string;
+  };
+}
+
 interface HouseRulesPageProps {
-  selectedRules: string[];                // array of selected rule IDs
+  selectedRules: string[];
   onChange: (selectedRules: string[]) => void;
 }
 
-const HouseRulesPage: React.FC<HouseRulesPageProps> = ({ selectedRules, onChange }) => {
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, id: string) => {
-    if (e.target.checked) {
+const HouseRulesPage: React.FC<HouseRulesPageProps> = ({
+  selectedRules,
+  onChange,
+}) => {
+  // Type the query data as an array of HouseRule
+  const { data, isLoading, isError } = useGetHouseRulesQuery() as {
+    data?: HouseRule[];
+    isLoading: boolean;
+    isError: boolean;
+  };
+
+  const handleCheckboxChange = (id: string, checked: boolean) => {
+    if (checked) {
       onChange([...selectedRules, id]);
     } else {
-      onChange(selectedRules.filter(ruleId => ruleId !== id));
+      onChange(selectedRules.filter((ruleId) => ruleId !== id));
     }
   };
 
-  const firstColumn = ListingHouseRulesData.slice(0, 4);
-  const secondColumn = ListingHouseRulesData.slice(4);
+  if (isLoading) return <div>Loading house rules...</div>;
+  if (isError) return <div>Error loading house rules.</div>;
+
+  const rules: HouseRule[] = data ?? [];
+  console.log('House Rules:', rules);
 
   return (
-    <div className="mx-4 sm:mx-0">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-x-8 max-w-[700px] mx-auto">
-        {/* First Column */}
-        <div className="flex flex-col gap-y-3">
-          {firstColumn.map((item) => (
-            <ListAmenity
-              key={item.inputProps.id}
-              inputProps={item.inputProps}
-              icon={item.icon}
-              description={item.description}
-              checked={selectedRules.includes(item.inputProps.id)}
-              onChange={(e) => handleCheckboxChange(e, item.inputProps.id)}
-            />
-          ))}
-        </div>
-
-        {/* Second Column */}
-        <div className="flex flex-col gap-y-3">
-          {secondColumn.map((item) => (
-            <ListAmenity
-              key={item.inputProps.id}
-              inputProps={item.inputProps}
-              icon={item.icon}
-              description={item.description}
-              checked={selectedRules.includes(item.inputProps.id)}
-              onChange={(e) => handleCheckboxChange(e, item.inputProps.id)}
-            />
-          ))}
-        </div>
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {rules.map((rule) => (
+        <ListAmenity
+          key={rule._id}
+          inputProps={{ id: rule._id }}
+          icon={rule.icon?.fileUrl ?? '/path/to/default-icon.png'}
+          description={rule.name}
+          checked={selectedRules.includes(rule._id)}
+          onChange={(e) => handleCheckboxChange(rule._id, e.target.checked)}
+        />
+      ))}
     </div>
   );
 };

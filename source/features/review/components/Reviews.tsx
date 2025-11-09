@@ -1,10 +1,8 @@
 import React from 'react';
-import { NotificationComponentProps } from '@/features/notification';
-import { NotificationList } from './NotificationUtils';
-import NoNotification from './NoNotification';
 import ReviewNotificationItem from './ReviewNotificationItem';
+import NoNotification from '../../notifications/components/NoNotification';
 
-const Reviews: React.FC = () => {
+const ReviewsTest: React.FC = () => {
   // Simulated loading and error states
   const isLoading = false;
   const error = null;
@@ -35,7 +33,9 @@ const Reviews: React.FC = () => {
   const getDaysAgo = (createdAt: string) => {
     const created = new Date(createdAt);
     const now = new Date();
-    const diff = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+    const diff = Math.floor(
+      (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
+    );
     return diff === 0 ? 'Today' : `${diff} day${diff > 1 ? 's' : ''} ago`;
   };
 
@@ -72,13 +72,11 @@ const Reviews: React.FC = () => {
           description={notification.description}
           daysAgo={getDaysAgo(notification.createdAt)}
           buttonLabel="View Review"
-          onViewListing={() => {
-            console.log('View review clicked:', notification._id);
-          }}
+          onViewListing={() => console.log('View review clicked:', notification._id)}
         />
       ))}
     </div>
   );
 };
 
-export default Reviews;
+export default ReviewsTest;

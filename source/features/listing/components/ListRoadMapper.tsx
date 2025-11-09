@@ -95,9 +95,9 @@ const prevStep = () => {
   if (currentStep > 0) setCurrentStep((prev) => prev - 1);
 };
 
-  const handlePropertyTypeSelect = (type: string) => {
-    setSelectedPropertyType(type);
-    console.log('Selected property type:', type);
+  const handlePropertyTypeSelect = (id: string) => {
+    setSelectedPropertyType(id);
+    console.log('Selected property type:', id);
   };
 
   const handleCheckboxChange = (
@@ -251,7 +251,7 @@ const prevStep = () => {
   } = useGetPropertyTypesQuery();
   
  const { data: amenitiesData, isLoading:isLoadingAmenities , error: amenitiesError } = useGetAmenitiesQuery();
-console.log(amenitiesData)
+ 
   return (
     <div className="w-full p-6">
       {/* Step Indicators */}
@@ -299,7 +299,7 @@ console.log(amenitiesData)
                   key={index}
                   selectedType={selectedPropertyType}
                   onSelect={handlePropertyTypeSelect}
-                  type={item.name}
+                  type={item._id}
                   description={item.name}
                   image={item.icon.fileUrl}
                 />

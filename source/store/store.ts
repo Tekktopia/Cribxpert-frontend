@@ -14,10 +14,13 @@ import { bookingApi } from '@/features/bookings/bookingService';
 import favouritesReducer, { favouritesApi } from '@/features/favourites';
 import amenitiesReducer, { amenitiesApi } from '@/features/amenities';
 import listingReducer, { listingApi } from '@/features/properties';
+import { houseRuleApi } from '@/features/houseRule/houseRuleService';
+import houseRuleReducer from '@/features/houseRule/houseRuleSlice';
 
 export const store = configureStore({
   reducer: {
     // Feature slices
+    houseRule: houseRuleReducer,
     auth: authReducer,
     booking: bookingReducer,
     favourites: favouritesReducer,
@@ -36,6 +39,7 @@ export const store = configureStore({
     [propertyTypeApi.reducerPath]: propertyTypeApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
+    [houseRuleApi.reducerPath]: houseRuleApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -46,7 +50,8 @@ export const store = configureStore({
       amenitiesApi.middleware,
       propertyTypeApi.middleware,
       reviewApi.middleware,
-      notificationApi.middleware
+      notificationApi.middleware,
+      houseRuleApi.middleware 
     ),
 });
 
