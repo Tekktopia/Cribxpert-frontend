@@ -25,6 +25,9 @@ export interface ListingFilter {
 }
 
 export interface CreateListingRequest {
+  // Ownership
+  userId: string;
+
   // Basic info
   name: string;
   description: string;
@@ -42,7 +45,7 @@ export interface CreateListingRequest {
   bedroomNo: number;
   bathroomNo: number;
   guestNo: number;
-  amenities: string[];
+  amenities?: string[];
 
   // Pricing information
   basePrice: number;
@@ -54,7 +57,8 @@ export interface CreateListingRequest {
   avaliableUntil: string;
 
   // Rules and settings
-  houseRules: string;
+  houseRules?: string[];
+  additionalRules?: string;
 
   // Images
   files?: File[]; // For file uploads
@@ -113,27 +117,25 @@ export const listingApi = createApi({
           const formData = new FormData();
 
           // Append all non-file fields to the form data
-          Object.keys(data).forEach((key) => {
-            if (key !== 'files') {
-              // Handle arrays (like amenities) by stringifying them
-              if (Array.isArray(data[key as keyof typeof data])) {
-                formData.append(
-                  key,
-                  JSON.stringify(data[key as keyof typeof data])
-                );
-              } else {
-                const value = data[key as keyof typeof data];
-                formData.append(
-                  key,
-                  value !== undefined && value !== null ? value.toString() : ''
-                );
-              }
+          Object.entries(data).forEach(([key, value]) => {
+            if (key === 'files' || value === undefined || value === null) {
+              return;
+            }
+
+            if (Array.isArray(value)) {
+              value.forEach((item) => {
+                if (item !== undefined && item !== null) {
+                  formData.append(key, item.toString());
+                }
+              });
+            } else {
+              formData.append(key, value.toString());
             }
           });
 
-          // Append files
+          // Append files using backend field name
           data.files.forEach((file) => {
-            formData.append('files', file);
+            formData.append('listingImg', file);
           });
 
           return {
@@ -146,10 +148,11 @@ export const listingApi = createApi({
         }
 
         // Standard JSON request if no files
+        const { files, ...jsonPayload } = data;
         return {
           url: '/listing',
           method: 'PATCH',
-          body: data,
+          body: jsonPayload,
         };
       },
       invalidatesTags: (_result, _error, { id }) =>

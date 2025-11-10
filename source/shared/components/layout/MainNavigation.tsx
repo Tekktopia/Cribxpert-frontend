@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectIsAuthenticated } from '@/features/auth/authSlice';
 
 interface MainNavigationProps {
   isMobile?: boolean;
@@ -10,14 +12,23 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
   isMobile = false,
   onLinkClick,
 }) => {
-  const navLinks = [
-    { label: 'Dashboard', route: '/' },
-    { label: 'Discover', route: '/discover' },
-    { label: 'My Bookings', route: '/my-bookings' },
-    { label: 'Saved Listings', route: '/saved-listings' },
-    { label: 'Payments', route: '/payments' },
-    { label: 'My Listing', route: '/my-listing' },
-  ];
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  const navLinks = useMemo(() => {
+    const baseLinks = [
+      { label: 'Dashboard', route: '/' },
+      { label: 'Discover', route: '/discover' },
+      { label: 'My Bookings', route: '/my-bookings' },
+      { label: 'Saved Listings', route: '/saved-listings' },
+      { label: 'Payments', route: '/payments' },
+    ];
+
+    if (isAuthenticated) {
+      baseLinks.push({ label: 'My Listing', route: '/my-listing' });
+    }
+
+    return baseLinks;
+  }, [isAuthenticated]);
 
   if (isMobile) {
     return (

@@ -6,6 +6,7 @@ import {
   useCreateOrUpdateListingMutation,
   useDeleteListingMutation,
   useGetUserListingsQuery,
+  type CreateListingRequest,
 } from '@/features/properties';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import { PropertyListing } from '@/types';
@@ -109,9 +110,23 @@ const ListingMgmtPage = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
+    if (!e.target.files) {
+      return;
     }
+    const incomingFiles = Array.from(e.target.files);
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const filteredFiles = incomingFiles.filter((file) =>
+      allowedTypes.includes(file.type)
+    );
+
+    if (filteredFiles.length !== incomingFiles.length) {
+      showAlert({
+        icon: 'warning',
+        title: 'Only JPEG, PNG, or WEBP images are allowed.',
+      });
+    }
+
+    setSelectedFiles(filteredFiles.slice(0, 5));
   };
 
   const resetForm = () => {
@@ -144,13 +159,45 @@ const ListingMgmtPage = () => {
     e.preventDefault();
 
     try {
-      const submitData = {
-        ...formData,
+      if (!currentUser?._id) {
+        showAlert({
+          icon: 'error',
+          title: 'Please sign in to manage listings.',
+        });
+        return;
+      }
+
+      const trimmedHouseRules = formData.houseRules
+        .split(',')
+        .map((rule) => rule.trim())
+        .filter(Boolean);
+
+      const payload: Partial<CreateListingRequest> & { id?: string } = {
+        name: formData.name,
+        description: formData.description,
+        propertyType: formData.propertyType,
+        street: formData.street,
+        city: formData.city,
+        state: formData.state,
+        postalCode: formData.postalCode,
+        country: formData.country,
+        size: formData.size,
+        bedroomNo: formData.bedroomNo,
+        bathroomNo: formData.bathroomNo,
+        guestNo: formData.guestNo,
+        amenities: formData.amenities,
+        basePrice: formData.basePrice,
+        securityDeposit: formData.securityDeposit,
+        cleaningFee: formData.cleaningFee,
+        avaliableFrom: formData.avaliableFrom,
+        avaliableUntil: formData.avaliableUntil,
+        userId: currentUser._id,
+        ...(trimmedHouseRules.length > 0 && { houseRules: trimmedHouseRules }),
         ...(editingListing && { id: editingListing._id }),
-        ...(selectedFiles.length > 0 && { files: selectedFiles }),
+        ...(selectedFiles.length > 0 && { files: selectedFiles.slice(0, 5) }),
       };
 
-      await createOrUpdateListing(submitData).unwrap();
+      await createOrUpdateListing(payload).unwrap();
 
       showAlert({
         icon: 'success',
@@ -189,7 +236,7 @@ const ListingMgmtPage = () => {
       cleaningFee: listing.cleaningFee,
       avaliableFrom: listing.avaliableFrom,
       avaliableUntil: listing.avaliableUntil,
-      houseRules: listing.houseRules.join(', '),
+      houseRules: listing.houseRules?.join(', ') || '',
     });
   };
 
@@ -560,7 +607,7 @@ const ListingMgmtPage = () => {
                   <input
                     type="file"
                     multiple
-                    accept="image/*"
+                    accept="image/png, image/jpeg, image/webp"
                     onChange={handleFileChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1d5c5c]"
                   />

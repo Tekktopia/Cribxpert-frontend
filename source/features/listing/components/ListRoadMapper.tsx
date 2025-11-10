@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import ListingCardSteps from '../components/ListingCardSteps';
 import { stepData } from './data/Listingsteps';
 import PropertyTypeLabelIcon from '../components/PropertyTypeLabelIcon';
@@ -13,6 +14,7 @@ import HouseRulesPage from './HouseRulesPage';
 import { useCreateOrUpdateListingMutation } from '@/features/listing/listingService';
 import { useGetPropertyTypesQuery } from '@/features/propertyType/propertyTypeService';
 import { useGetAmenitiesQuery } from '@/features/amenities/amenitiesService';
+import { selectCurrentUser } from '@/features/auth/authSlice';
 
 interface RoadmapStepperProps {
   currentStep: number;
@@ -43,7 +45,7 @@ interface ListingData {
   bathroomNo: number;
   bedroomNo: number;
   houseRules?: string[];
-  files?: string[];
+  files?: File[];
 }
 
 
@@ -51,7 +53,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   currentStep,
   setCurrentStep,
 }) => {
-  
+  const currentUser = useSelector(selectCurrentUser);
   const activeStep = currentStep;
   const [uploadCompleted, setUploadCompleted] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -88,12 +90,12 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   };
 
   const nextStep = () => {
-  if (currentStep < stepData.length - 1) setCurrentStep((prev) => prev + 1);
-};
+    if (currentStep < stepData.length - 1) setCurrentStep((prev) => prev + 1);
+  };
 
-const prevStep = () => {
-  if (currentStep > 0) setCurrentStep((prev) => prev - 1);
-};
+  const prevStep = () => {
+    if (currentStep > 0) setCurrentStep((prev) => prev - 1);
+  };
 
   const handlePropertyTypeSelect = (id: string) => {
     setSelectedPropertyType(id);
@@ -145,7 +147,8 @@ const prevStep = () => {
       setLatitude(locationData.latitude);
   };
 
-  const [createOrUpdateListing] = useCreateOrUpdateListingMutation();
+  const [createOrUpdateListing, { isLoading: isSaving }] =
+    useCreateOrUpdateListingMutation();
 
   const handleCreateListing = async () => {
     try {
@@ -171,7 +174,10 @@ const prevStep = () => {
         return;
       }
 
-      const actualUserId = '64a1b2c3d4e5f6789abcdef0';
+      if (!currentUser?._id) {
+        alert('Please sign in before creating a listing.');
+        return;
+      }
 
       // Get selected amenities and validate they are ObjectIds
       const selectedAmenityIds = Object.keys(checkedAmenities).filter(
@@ -190,8 +196,8 @@ const prevStep = () => {
       }
 
       // Build the listing data object
-      const listingData:ListingData  = {
-        userId: actualUserId,
+      const listingData: ListingData = {
+        userId: currentUser._id,
         name: title,
         description: description || '',
         amenities: validAmenities,
@@ -226,7 +232,7 @@ const prevStep = () => {
 
       // Only include files if there are any
       if (selectedFiles && selectedFiles.length > 0) {
-        listingData.files = selectedFiles.map((file) => file.name).slice(0, 5);
+        listingData.files = selectedFiles.slice(0, 5);
       }
 
       console.log('Sending listing data:', listingData);
@@ -236,12 +242,14 @@ const prevStep = () => {
       setUploadCompleted(true);
       nextStep();
     } catch (error: unknown) {
-  if (error instanceof Error) {
-    console.error('Error:', error.message);  
-  } else {
-    console.error('An unknown error occurred');
-  }
-}
+      if (error instanceof Error) {
+        console.error('Error:', error.message);
+        alert(error.message || 'Failed to create listing');
+      } else {
+        console.error('An unknown error occurred');
+        alert('An unknown error occurred while creating the listing.');
+      }
+    }
   };
 
   const {
@@ -449,9 +457,10 @@ const prevStep = () => {
         ) : activeStep === 7 ? (
           <button
             onClick={handleCreateListing}
-            className="bg-primary hover:bg-hoverColor text-white px-8 py-4 rounded transition"
+            className="bg-primary hover:bg-hoverColor text-white px-8 py-4 rounded transition disabled:opacity-60"
+            disabled={isSaving}
           >
-            Create Listing
+            {isSaving ? 'Creating...' : 'Create Listing'}
           </button>
         ) : (
           <button

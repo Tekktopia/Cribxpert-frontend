@@ -34,9 +34,14 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
     const files = e.target.files;
     if (!files) return;
 
-    const newFiles = Array.from(files);
+    const newFiles = Array.from(files).filter((file) =>
+      ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)
+    );
+    if (newFiles.length !== Array.from(files).length) {
+      alert('Only JPEG, PNG, or WEBP images are allowed.');
+    }
     setSelectedFiles((prev) => {
-      const combined = [...prev, ...newFiles].slice(0, 6);
+      const combined = [...prev, ...newFiles].slice(0, 5);
       return combined;
     });
   };
@@ -72,15 +77,17 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             type="file"
             id="file-upload"
             onChange={handleFileChange}
-            accept="image/png, image/jpeg, image/gif"
+            accept="image/png, image/jpeg, image/webp"
             hidden
             multiple
           />
           <img src="/icons/camera-icon.png" alt="Upload Icon" className="mb-4" />
           <p>Click to upload or drag and drop</p>
-          <p className="text-sm text-netraulLight0 mb-2">PNG, JPG, GIF up to 10MB each</p>
+          <p className="text-sm text-netraulLight0 mb-2">
+            JPEG, PNG, or WEBP up to 10MB each (max 5 files)
+          </p>
           <button
-            disabled={selectedFiles.length >= 6}
+            disabled={selectedFiles.length >= 5}
             type="button"
             onClick={handleFileClick}
             className="mt-4 px-4 py-2 bg-primary text-white rounded"
@@ -103,7 +110,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
         <>
           {!isUploading && !uploadCompleted && (
             <p className="text-sm text-neutral mt-4 font-bold text-center">
-              Selected Photos: ({selectedFiles.length}/6)
+              Selected Photos: ({selectedFiles.length}/5)
             </p>
           )}
           {isUploading && (
