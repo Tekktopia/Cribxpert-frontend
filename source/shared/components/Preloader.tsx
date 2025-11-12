@@ -9,7 +9,7 @@ interface PreloaderProps {
 
 const Preloader: React.FC<PreloaderProps> = ({
   isLoading = true,
-  minDisplayTime = 1000,
+  minDisplayTime = 0,
   onFinished,
 }) => {
   const [shouldDisplay, setShouldDisplay] = useState(true);
@@ -38,7 +38,7 @@ const Preloader: React.FC<PreloaderProps> = ({
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.2 }}
           className="fixed inset-0 flex flex-col items-center justify-center bg-white z-50"
         >
           <div className="relative w-24 h-24 mb-4">

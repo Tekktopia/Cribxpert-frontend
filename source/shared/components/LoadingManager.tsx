@@ -126,9 +126,8 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
   ]);
 
   // Check if current route requires favourites to be loaded
+  // Only block on saved-listings page, let home/discover load favourites in background
   const requiresFavourites =
-    location.pathname === '/' ||
-    location.pathname === '/discover' ||
     location.pathname === '/saved-listings';
 
   const shouldWaitForFavourites =
@@ -140,14 +139,14 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
 
   const isDataLoading = Boolean(shouldWaitForFavourites);
 
-  // Safety timeout to prevent infinite loading (10 seconds)
+  // Safety timeout to prevent infinite loading (3 seconds - reduced for faster loading)
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
     if (shouldWaitForFavourites && !timeoutExceeded) {
       timeoutId = setTimeout(() => {
         setTimeoutExceeded(true);
-      }, 10000); // 10 seconds
+      }, 3000); // 3 seconds - reduced from 10
     }
 
     return () => {
@@ -169,19 +168,22 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
     setTimeoutExceeded(false);
   }, [user?._id]);
 
+  // Only wait for critical data: user auth and listings
+  // Favourites can load in the background
   const isLoading =
-    (!initialLoadComplete || userLoading || isDataLoading || listingsLoading) &&
+    (!initialLoadComplete || userLoading || isDataLoading) &&
     !timeoutExceeded;
 
   useEffect(() => {
+    // Mark as complete once user and listings are done
+    // Don't wait for favourites unless on saved-listings page
     if (
       !userLoading &&
-      !listingsLoading &&
-      (!isAuthenticated || !favouritesLoading)
+      !listingsLoading
     ) {
       setInitialLoadComplete(true);
     }
-  }, [userLoading, listingsLoading, favouritesLoading, isAuthenticated]);
+  }, [userLoading, listingsLoading]);
 
   if (listingsError) {
     // console.error('Error fetching listings:', listingsError);
