@@ -16,6 +16,10 @@ export const favouritesApi = createApi({
   reducerPath: 'favouritesApi',
   baseQuery,
   tagTypes: ['Favourite'],
+  keepUnusedDataFor: 300, // Cache favourites for 5 minutes
+  refetchOnMountOrArgChange: 60, // Only refetch if data is older than 60 seconds
+  refetchOnReconnect: true,
+  refetchOnFocus: false,
   endpoints: (builder) => ({
     // GET /favourites/{userId} - Get a user's favourites
     getFavouritesByUserId: builder.query<PropertyListing[], string>({

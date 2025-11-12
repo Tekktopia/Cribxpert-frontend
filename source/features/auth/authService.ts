@@ -20,6 +20,9 @@ import {
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery,
+  keepUnusedDataFor: 600, // Cache auth data for 10 minutes
+  refetchOnMountOrArgChange: 300, // Only refetch if data is older than 5 minutes
+  refetchOnReconnect: true,
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({

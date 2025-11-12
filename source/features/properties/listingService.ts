@@ -79,6 +79,10 @@ export const listingApi = createApi({
   reducerPath: 'listingApi',
   baseQuery,
   tagTypes: ['Listing'],
+  keepUnusedDataFor: 300, // Cache data for 5 minutes
+  refetchOnMountOrArgChange: 60, // Only refetch if data is older than 60 seconds
+  refetchOnReconnect: true,
+  refetchOnFocus: false, // Disable refetch on window focus for better performance
   endpoints: (builder) => ({
     // GET /listing - Get all listings with optional filters
     getListings: builder.query<{ listings: PropertyListing[] }, ListingFilter | void>({

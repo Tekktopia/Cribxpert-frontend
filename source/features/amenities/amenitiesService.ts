@@ -19,6 +19,10 @@ export const amenitiesApi = createApi({
   reducerPath: 'amenitiesApi',
   baseQuery,
   tagTypes: ['Amenity'],
+  keepUnusedDataFor: 3600, // Cache amenities for 1 hour (rarely changes)
+  refetchOnMountOrArgChange: 1800, // Only refetch if data is older than 30 minutes
+  refetchOnReconnect: false, // Don't refetch amenities on reconnect
+  refetchOnFocus: false,
   endpoints: (builder) => ({
     // GET /amenities - Retrieve all amenities
     getAmenities: builder.query<Amenity[], void>({
