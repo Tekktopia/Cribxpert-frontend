@@ -42,7 +42,7 @@ export const messageApi = createApi({
         params: { limit, before },
       }),
       transformResponse: (response: GetMessagesResponse) => response.messages,
-      providesTags: (result, error, arg) => [
+      providesTags: (_result, _error, arg) => [
         { type: 'Message', id: arg.conversationId },
       ],
     }),
@@ -85,7 +85,7 @@ export const messageApi = createApi({
           patchResult.undo();
         }
       },
-      invalidatesTags: (result, error, arg) => [
+      invalidatesTags: (_result, _error, arg) => [
         { type: 'Message', id: arg.conversationId },
         'Conversation',
       ],

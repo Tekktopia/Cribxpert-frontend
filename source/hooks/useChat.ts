@@ -19,7 +19,7 @@ interface UseChatOptions {
 
 export const useChat = ({ conversationId }: UseChatOptions) => {
   const dispatch = useDispatch();
-  const { socket, isConnected } = useSocket();
+  const { isConnected } = useSocket();
   const [isTyping, setIsTyping] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
 
