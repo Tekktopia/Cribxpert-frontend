@@ -83,6 +83,8 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const [size, setSize] = useState(0);
   const [bathroomNo, setBathroomNo] = useState(0);
   const [bedroomNo, setBedroomNo] = useState(0);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
 
   // Helper function to validate ObjectId format
   const isValidObjectId = (id: string): boolean => {
@@ -239,8 +241,11 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
 
       const response = await createOrUpdateListing(listingData).unwrap();
       console.log('Listing created successfully:', response);
-      setUploadCompleted(true);
-      nextStep();
+      if (activeStep === 7) {
+  setShowSuccessModal(true); // Show modal only at the last step
+} else {
+  nextStep();
+}
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('Error:', error.message);
@@ -286,12 +291,31 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
 
       {/* Step Card Content */}
       <div className="flex justify-center text-center mb-8">
-        <ListingCardSteps
-          title={stepData[activeStep].title}
-          description={stepData[activeStep].description}
-          image={stepData[activeStep].image}
+  {activeStep === 4 && uploadCompleted ? (
+    <div className="text-center flex flex-col items-center">
+      <div className='flex justify-center items-end gap-1'>
+      <img
+        src="/other-icons/review-icon.svg"
+        alt="Review photos icon"
+        className=" w-8 h-8"
         />
-      </div>
+      <h2 className="text-xl font-semibold mb-1">Review Your Photos</h2>
+        </div>
+      <p className="text-neutral text-sm max-w-md">
+        Click to select a cover photo. By default, the first image will be used as the cover.
+      </p>
+    </div>
+  ) : (
+    <ListingCardSteps
+      title={stepData[activeStep].title}
+      description={stepData[activeStep].description}
+      image={stepData[activeStep].image}
+    />
+  )}
+</div>
+
+
+
 
       {/* Step Content */}
       {activeStep === 0 && (
@@ -471,6 +495,47 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
           </button>
         )}
       </div>
+      {showSuccessModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white rounded-sm w-[717px] p-6 h-[546px] text-center relative">
+      {/* Close icon */}
+      <img
+        src="/other-icons/x_icon.svg"
+        alt="Close"
+        className="absolute top-4 right-4 w-6 h-6 cursor-pointer"
+        onClick={() => setShowSuccessModal(false)}
+      />
+        
+      <h2 className="text-[25px] font-bold mb-4">Listing Created Successfully</h2>
+      <p className="mb-6 text-[16px]">
+        It has been listed! You can now view it on your dashboard or share it with potential renters.
+      </p>
+
+      <div className="flex justify-center gap-4 mt-6">
+        <button
+          onClick={() => setShowSuccessModal(false)}
+          className="bg-primary text-white px-6 py-2 rounded hover:bg-hoverColor transition"
+        >
+          View Listing
+        </button>
+
+        <button
+          onClick={() => {
+            setShowSuccessModal(false);
+            // Redirect to dashboard
+            window.location.href = '/dashboard'; // or use router.push if using Next.js
+          }}
+          className="bg-neutralLight text-black px-6 py-2 rounded hover:bg-gray-300 transition"
+          >
+          Go to Dashboard
+        </button>
+      </div>
+          
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };

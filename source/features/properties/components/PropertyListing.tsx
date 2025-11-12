@@ -36,7 +36,7 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
         ) => {
           const images = listingImg.map((img) => img.fileUrl) || [];
           const location = `${city}, ${state}, ${country}`;
-          const propertyTypeName = propertyTypeNames[propertyType];
+          const propertyTypeName = propertyTypeNames[propertyType] ?? '';
 
           return (
             <div key={key} className="w-full flex justify-center">

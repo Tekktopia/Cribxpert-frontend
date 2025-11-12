@@ -26,7 +26,7 @@ const ListingCardStepTwo = ({ title, number, image, onChange }: ListingCardStepT
         <img
           src={image}
           alt={title}
-          className="w-6 h-6 sm:w-8 sm:h-8 object-contain flex-shrink-0"
+          className=" sm:w-4 sm:h-4 object-contain flex-shrink-0"
         />
         <h2 className="text-xs sm:text-sm truncate">{title}</h2>
       </div>

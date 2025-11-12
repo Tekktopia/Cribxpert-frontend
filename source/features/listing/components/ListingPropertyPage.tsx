@@ -12,8 +12,6 @@ interface ListingPropertyPageProps {
 }
 
 const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
-  nextStep,
-  prevStep,
   isUploading,
   setIsUploading,
   uploadCompleted,
@@ -81,7 +79,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             hidden
             multiple
           />
-          <img src="/icons/camera-icon.png" alt="Upload Icon" className="mb-4" />
+          <img src="/other-icons/photo-icon.svg" alt="Upload Icon" className="mb-4" />
           <p>Click to upload or drag and drop</p>
           <p className="text-sm text-netraulLight0 mb-2">
             JPEG, PNG, or WEBP up to 10MB each (max 5 files)
@@ -98,12 +96,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       )}
 
       {/* Review instructions after upload is complete */}
-      {uploadCompleted && (
-        <div className="w-[644px] mt-6 text-center">
-          <h2 className="text-xl font-semibold mb-1">Review Your Photos</h2>
-          <p>Click to select a cover photo. By default, the first image will be used as the cover.</p>
-        </div>
-      )}
+      
 
       {/* Preview Section */}
       {selectedFiles.length > 0 && (
@@ -130,7 +123,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                   disabled={isUploading}
                   className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-100 z-20"
                 >
-                  <img src="/icons/delete-icon-green.png" alt="Delete" />
+                  <img src="/other-icons/delete-icon-green.png" alt="Delete" />
                 </button>
 
                 <div className="relative w-full h-[130px] mb-2">

@@ -13,12 +13,12 @@ const MyListing: React.FC = () => {
   const [userSteps, setUserSteps] = useState(0);
   const [initialListingsLoaded, setInitialListingsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showListings] = useState(true); // NEW STATE
+  const [showListings] = useState(false); // NEW STATE
 
   const { data, error, isLoading, refetch } = useGetListingsQuery();
 
   useEffect(() => {
-    setInitialListingsLoaded(true); // Temporarily disabled
+    setInitialListingsLoaded(false); // Temporarily disabled
   }, [data]);
 
 
@@ -51,7 +51,7 @@ const MyListing: React.FC = () => {
 
             <div className="mt-8 justify-end items-end flex w-full pr-0 sm:pr-16">
               <button
-                onClick={() => setUserSteps(1)}
+                onClick={() => setInitialListingsLoaded(true)}
                 className="bg-primary px-10 py-3 rounded-lg text-white text-md hover:opacity-90 transition hover:bg-hoverColor flex items-center gap-2"
               >
                 Get started
