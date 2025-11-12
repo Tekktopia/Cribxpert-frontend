@@ -9,10 +9,14 @@ import { useState } from 'react';
 import { useGetBookingsByUserIdQuery } from '@/features/bookings/bookingService';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '@/features/auth/authSlice';
+import { useBookingUpdates } from '@/hooks/useBookingUpdates';
 
 function BookingsPage() {
   const [active, setActive] = useState<ActiveBooking>(ActiveBooking.All);
   const currentUser = useSelector(selectCurrentUser);
+  
+  // Enable real-time booking updates
+  useBookingUpdates();
   // TODO: Replace with real user ID from auth context or redux
   const userId = currentUser?._id;
   const {

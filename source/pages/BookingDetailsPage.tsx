@@ -6,6 +6,7 @@ import { useGetBookingByIdQuery } from '@/features/bookings/bookingService';
 import { arrowLeft } from '@/assets';
 import StatusButton from '@/features/bookings/components/StatusButton';
 import Payment from '@/features/bookings/components/Payment';
+import { useBookingUpdates } from '@/hooks/useBookingUpdates';
 
 const BookingDetailsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,6 +14,9 @@ const BookingDetailsPage: React.FC = () => {
   const bookingsHistory = useSelector(selectBookingHistory);
   const bookingFromStore = bookingsHistory.find((b) => b._id === id);
   const [booking, setBooking] = useState(bookingFromStore);
+  
+  // Enable real-time booking updates
+  useBookingUpdates();
   const {
     data: apiBookingData,
     isLoading: isApiLoading,

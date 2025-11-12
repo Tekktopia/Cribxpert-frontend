@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
+import { format } from 'date-fns';
 import MessageItem from './MessageItem';
-import { Message } from '@/utils/messagesData.tsx';
+import { Conversation } from '@/features/messages/messageTypes';
 
 interface MessageSidebarProps {
-  messages: Message[];
-  selectedIdx: number | null;
-  setSelectedIdx: (idx: number) => void;
+  conversations: Conversation[];
+  selectedConversationId: string | null;
+  onSelectConversation: (conversationId: string) => void;
   isMobile?: boolean;
 }
 
 const MessageSidebar: React.FC<MessageSidebarProps> = ({
-  messages,
-  selectedIdx,
-  setSelectedIdx,
+  conversations,
+  selectedConversationId,
+  onSelectConversation,
   isMobile = false,
 }) => {
   const [selectedTab, setSelectedTab] = useState('All');
 
-  // Filter messages based on selected tab
-  const filteredMessages =
-    selectedTab === 'Unread' ? messages.filter((msg) => msg.unread) : messages;
+  // Filter conversations based on selected tab
+  const filteredConversations =
+    selectedTab === 'Unread'
+      ? conversations.filter((conv) => (conv.unreadCount || 0) > 0)
+      : conversations;
+
+  // Helper to get other user in conversation
+  const getOtherUser = (conversation: Conversation) => {
+    // Assuming current user is not in the members list or we filter them out
+    return conversation.members[0]; // Simplified - you may need to filter current user
+  };
 
   return (
     <div
@@ -71,19 +80,38 @@ const MessageSidebar: React.FC<MessageSidebarProps> = ({
         </button>
       </div>
       <div className="overflow-y-auto scrollbar-hide flex-1">
-        {filteredMessages.map((msg, idx) => (
-          <MessageItem
-            key={msg.id || idx}
-            avatarUrl={msg.avatarUrl}
-            name={msg.name}
-            subject={msg.subject}
-            date={`${msg.date}`}
-            selected={selectedIdx === idx}
-            onClick={() => setSelectedIdx(idx)}
-            isRecent={idx < 1} // Make the first message appear as recent
-            isMobile={isMobile}
-          />
-        ))}
+        {filteredConversations.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-64 text-center px-4">
+            <img
+              src="/images/NoMessageIllustration.png"
+              alt="No messages"
+              className="w-32 mb-4"
+            />
+            <p className="text-gray-500">
+              {selectedTab === 'Unread' ? 'No unread messages' : 'No conversations yet'}
+            </p>
+          </div>
+        ) : (
+          filteredConversations.map((conversation) => {
+            const otherUser = getOtherUser(conversation);
+            const lastMessagePreview = conversation.lastMessage?.body || 'No messages yet';
+            const formattedDate = format(new Date(conversation.lastMessageAt), 'MMM dd, yyyy');
+
+            return (
+              <MessageItem
+                key={conversation._id}
+                avatarUrl={otherUser.profilePicture || '/images/Makinwaa.png'}
+                name={`${otherUser.firstName} ${otherUser.lastName}`}
+                subject={lastMessagePreview}
+                date={formattedDate}
+                selected={selectedConversationId === conversation._id}
+                onClick={() => onSelectConversation(conversation._id)}
+                isRecent={(conversation.unreadCount || 0) > 0}
+                isMobile={isMobile}
+              />
+            );
+          })
+        )}
       </div>
     </div>
   );

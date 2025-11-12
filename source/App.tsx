@@ -8,15 +8,18 @@ import ScrollToTop from './shared/components/ScrollToTop';
 // App components
 import LoadingManager from './shared/components/LoadingManager';
 import AppRoutes from './routes/AppRoutes';
+import { SocketProvider } from './shared/context/SocketContext';
 
 /**
  * Main app content component that orchestrates all the pieces
  */
 const AppContent = () => {
   return (
-    <LoadingManager>
-      <AppRoutes />
-    </LoadingManager>
+    <SocketProvider>
+      <LoadingManager>
+        <AppRoutes />
+      </LoadingManager>
+    </SocketProvider>
   );
 };
 
