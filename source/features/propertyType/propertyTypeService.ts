@@ -21,6 +21,10 @@ export const propertyTypeApi = createApi({
   reducerPath: 'propertyTypeApi',
   baseQuery,
   tagTypes: ['PropertyType'],
+  keepUnusedDataFor: 3600, // Cache property types for 1 hour (rarely changes)
+  refetchOnMountOrArgChange: 1800, // Only refetch if data is older than 30 minutes
+  refetchOnReconnect: false,
+  refetchOnFocus: false,
   endpoints: (builder) => ({
     // GET /property-types - Get all property types
     getPropertyTypes: builder.query<{ data: PropertyType[] }, void>({
