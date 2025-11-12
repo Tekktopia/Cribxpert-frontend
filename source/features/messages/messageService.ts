@@ -80,7 +80,7 @@ export const messageApi = createApi({
 
         try {
           await queryFulfilled;
-        } catch {
+        } catch (_error) {
           // Rollback on error
           patchResult.undo();
         }

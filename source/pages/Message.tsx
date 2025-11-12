@@ -21,10 +21,10 @@ const Message: React.FC = () => {
     { skip: !selectedConversationId }
   );
 
-  // Get active conversation from Redux
-  const activeConversationId = useSelector(
-    (state: RootState) => state.messages.activeConversationId
-  );
+  // Get active conversation from Redux (for future use)
+  // const activeConversationId = useSelector(
+  //   (state: RootState) => state.messages.activeConversationId
+  // );
 
   // Initialize chat hook
   const { sendMessage, sendTypingIndicator, markAsRead, isConnected } = useChat({

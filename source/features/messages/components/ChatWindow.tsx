@@ -35,14 +35,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const currentUserId = useSelector((state: RootState) => state.auth.user?._id);
 
   // Get typing users for this conversation
-  const typingUsers = useSelector((state: RootState) => 
-    conversation ? state.messages.typingUsers[conversation._id] || [] : []
-  );
+  const typingUsers = useSelector((state: RootState) => {
+    const messageState = state.messages as any;
+    return conversation ? messageState.typingUsers?.[conversation._id] || [] : [];
+  });
 
   // Get optimistic messages
-  const optimisticMessages = useSelector((state: RootState) =>
-    conversation ? state.messages.optimisticMessages[conversation._id] || [] : []
-  );
+  const optimisticMessages = useSelector((state: RootState) => {
+    const messageState = state.messages as any;
+    return conversation ? messageState.optimisticMessages?.[conversation._id] || [] : [];
+  });
 
   // Combine real and optimistic messages
   const allMessages = [...messages, ...optimisticMessages];

@@ -7,7 +7,7 @@ import { bookingReducer } from '@/features/bookings';
 import { propertyTypeReducer, propertyTypeApi } from '@/features/propertyType';
 import reviewReducer, { reviewApi } from '@/features/review';
 import notificationReducer, { notificationApi } from '@/features/notifications';
-import messageReducer, { messageApi } from '@/features/messages';
+import { messageReducer, messageApi } from '@/features/messages';
 
 // Import API services
 import { authApi } from '@/features/auth/authService';

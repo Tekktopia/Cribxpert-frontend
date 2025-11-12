@@ -4,6 +4,7 @@ import { User, AuthState } from './authTypes';
 
 const initialState: AuthState = {
   user: null,
+  token: sessionStorage.getItem('token'),
   isAuthenticated: false,
   isLoading: false,
   error: null,
@@ -28,6 +29,7 @@ export const authSlice = createSlice({
 
     clearUser: (state) => {
       state.user = null;
+      state.token = null;
       state.isAuthenticated = false;
       sessionStorage.removeItem('token');
     },
@@ -80,6 +82,7 @@ export const authSlice = createSlice({
           state.isLoading = false;
           state.isAuthenticated = true;
           state.user = payload.user;
+          state.token = payload.accessToken || sessionStorage.getItem('token');
           state.error = null;
         }
       )

@@ -75,11 +75,11 @@ export const useChat = ({ conversationId }: UseChatOptions) => {
               draft.push(data.message);
             }
           }
-        )
+        ) as any
       );
 
       // Invalidate conversations to update last message
-      dispatch(messageApi.util.invalidateTags(['Conversation']));
+      dispatch(messageApi.util.invalidateTags(['Conversation']) as any);
 
       // Increment unread count if not in active conversation
       if (conversationId !== data.conversationId) {
