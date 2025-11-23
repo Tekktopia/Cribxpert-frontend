@@ -13,7 +13,7 @@ const MyListing: React.FC = () => {
   const [userSteps, setUserSteps] = useState(0);
   const [initialListingsLoaded, setInitialListingsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showListings] = useState(false); // NEW STATE
+  const [showListings] = useState(true); // NEW STATE
 
   const { data, error, isLoading, refetch } = useGetListingsQuery();
 

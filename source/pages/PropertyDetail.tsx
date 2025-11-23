@@ -20,7 +20,7 @@ import PropertyOverview from '@/features/properties/components/PropertyOverview'
 import PropertyLocation from '@/features/properties/components/PropertyLocation';
 import PropertyBedrooms from '@/features/properties/components/PropertyBedrooms';
 import PropertyDescription from '@/features/properties/components/PropertyDescription';
-import PropertyRules from '@/features/properties/components/PropertyRules';
+import PropertyRules, { Rule } from '@/features/properties/components/PropertyRules';
 import PropertyPolicies from '@/features/properties/components/PropertyPolicies';
 import PropertyRatings from '@/features/properties/components/PropertyRatings';
 import CustomerReviews from '@/features/properties/components/CustomerReviews';
@@ -182,11 +182,24 @@ const PropertyDetail = () => {
   // Prepare data for our components
   const propertyImages = property.listingImg.map((img) => img.fileUrl);
 
-  const mappedRules = (property.houseRules || []).map((rule) => ({
-    icon: '/icons/bell.svg', // Assuming a default icon, replace with actual icon if available
-    title: rule,
-    description: '',
-  }));
+  type HouseRule = 
+  | string
+  | { name: string; icon?: string; description?: string };
+
+const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) => {
+  if (typeof rule === 'string') {
+    return {
+      icon: '/icons/bell.svg', // fallback icon
+      title: rule,             // string rule
+      description: '',         // optional
+    };
+  } else {
+    return {
+      icon: rule.icon || '/icons/bell.svg',
+      title: rule.name,
+      description: rule.description || '',
+    };
+  }});
 
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">

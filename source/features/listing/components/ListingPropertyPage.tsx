@@ -39,7 +39,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       alert('Only JPEG, PNG, or WEBP images are allowed.');
     }
     setSelectedFiles((prev) => {
-      const combined = [...prev, ...newFiles].slice(0, 5);
+      const combined = [...prev, ...newFiles].slice(0, 6);
       return combined;
     });
   };
@@ -82,10 +82,10 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
           <img src="/other-icons/photo-icon.svg" alt="Upload Icon" className="mb-4" />
           <p>Click to upload or drag and drop</p>
           <p className="text-sm text-netraulLight0 mb-2">
-            JPEG, PNG, or WEBP up to 10MB each (max 5 files)
+            JPEG, PNG, or WEBP up to 10MB each 
           </p>
           <button
-            disabled={selectedFiles.length >= 5}
+            disabled={selectedFiles.length >= 6}
             type="button"
             onClick={handleFileClick}
             className="mt-4 px-4 py-2 bg-primary text-white rounded"
@@ -103,7 +103,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
         <>
           {!isUploading && !uploadCompleted && (
             <p className="text-sm text-neutral mt-4 font-bold text-center">
-              Selected Photos: ({selectedFiles.length}/5)
+              Selected Photos: ({selectedFiles.length}/6)
             </p>
           )}
           {isUploading && (

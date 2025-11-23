@@ -15,6 +15,8 @@ import { useCreateOrUpdateListingMutation } from '@/features/listing/listingServ
 import { useGetPropertyTypesQuery } from '@/features/propertyType/propertyTypeService';
 import { useGetAmenitiesQuery } from '@/features/amenities/amenitiesService';
 import { selectCurrentUser } from '@/features/auth/authSlice';
+import { useNavigate } from "react-router-dom";
+
 
 interface RoadmapStepperProps {
   currentStep: number;
@@ -85,11 +87,17 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const [bedroomNo, setBedroomNo] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  // New state to hold created listing ID
+  const [listingId, setListingId] = useState<string | null>(null);
+
+
 
   // Helper function to validate ObjectId format
   const isValidObjectId = (id: string): boolean => {
     return typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/) !== null;
   };
+
+const navigate = useNavigate();
 
   const nextStep = () => {
     if (currentStep < stepData.length - 1) setCurrentStep((prev) => prev + 1);
@@ -241,6 +249,10 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
 
       const response = await createOrUpdateListing(listingData).unwrap();
       console.log('Listing created successfully:', response);
+      // Save the listing ID
+      if (response?.listing?._id) {
+        setListingId(response?.listing?._id);
+      }
       if (activeStep === 7) {
   setShowSuccessModal(true); // Show modal only at the last step
 } else {
@@ -497,41 +509,57 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       </div>
       {showSuccessModal && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white rounded-sm w-[717px] p-6 h-[546px] text-center relative">
-      {/* Close icon */}
-      <img
-        src="/other-icons/x_icon.svg"
-        alt="Close"
-        className="absolute top-4 right-4 w-6 h-6 cursor-pointer"
-        onClick={() => setShowSuccessModal(false)}
-      />
-        
-      <h2 className="text-[25px] font-bold mb-4">Listing Created Successfully</h2>
-      <p className="mb-6 text-[16px]">
-        It has been listed! You can now view it on your dashboard or share it with potential renters.
-      </p>
+    <div className="bg-white rounded-sm w-[717px] max-w-full p-6 h-[546px] text-center relative">
+      
 
-      <div className="flex justify-center gap-4 mt-6">
-        <button
-          onClick={() => setShowSuccessModal(false)}
-          className="bg-primary text-white px-6 py-2 rounded hover:bg-hoverColor transition"
-        >
-          View Listing
-        </button>
+  {/* Close icon */}
+  <img
+    src="/other-icons/x_icon.svg"
+    alt="Close modal"
+    className="absolute top-4 right-4 w-6 h-6 cursor-pointer"
+    onClick={() => setShowSuccessModal(false)}
+  />
 
-        <button
-          onClick={() => {
-            setShowSuccessModal(false);
-            // Redirect to dashboard
-            window.location.href = '/dashboard'; // or use router.push if using Next.js
-          }}
-          className="bg-neutralLight text-black px-6 py-2 rounded hover:bg-gray-300 transition"
-          >
-          Go to Dashboard
-        </button>
-      </div>
-          
-    </div>
+  <div className="flex flex-col items-center justify-center h-[80%] px-4">
+    <h2 className="text-[25px] font-bold mb-4">
+      Listing Created Successfully
+    </h2>
+
+    <p className="text-[16px] max-w-[430px] text-neutral">
+      It has been listed! You can now view it on your dashboard or share it with potential renters.
+    </p>
+  </div>
+
+  <div className="flex justify-center gap-4">
+    {/* View Listing button */}
+    <button
+      onClick={() => {
+        setShowSuccessModal(false);
+        if (listingId) {
+          navigate(`/listing/${listingId}`); // React Router
+        } else {
+          console.warn("No listingId available for navigation.");
+        }
+      }}
+      className="bg-primary text-white px-6 py-2 rounded hover:bg-hoverColor transition"
+    >
+      View Listing
+    </button>
+
+    {/* Dashboard button */}
+    <button
+      onClick={() => {
+        setShowSuccessModal(false);
+        navigate('/'); // 
+      }}
+      className="bg-neutralLight text-black px-6 py-2 rounded hover:bg-gray-300 transition"
+    >
+      Go to Dashboard
+    </button>
+  </div>
+
+</div>
+
   </div>
 )}
 

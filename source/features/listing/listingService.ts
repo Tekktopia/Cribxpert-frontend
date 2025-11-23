@@ -24,6 +24,12 @@ export interface ListingFilter {
   endDate?: string; // for availability check
 }
 
+export interface CreateOrUpdateListingResponse {
+  message: string;
+  listing: PropertyListing;
+}
+
+
 export interface CreateListingRequest {
   // Ownership
   userId: string;
@@ -108,7 +114,7 @@ export const listingApi = createApi({
 
     // PATCH /listing - Create or update a listing
     createOrUpdateListing: builder.mutation<
-      PropertyListing,
+      CreateOrUpdateListingResponse,
       Partial<CreateListingRequest> & { id?: string }
     >({
       query: (data) => {

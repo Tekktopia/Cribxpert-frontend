@@ -41,6 +41,7 @@ export const store = configureStore({
     [propertyTypeApi.reducerPath]: propertyTypeApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
+    [houseRuleApi.reducerPath]: houseRuleApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -51,7 +52,8 @@ export const store = configureStore({
       amenitiesApi.middleware,
       propertyTypeApi.middleware,
       reviewApi.middleware,
-      notificationApi.middleware
+      notificationApi.middleware,
+      houseRuleApi.middleware,
     ),
 });
 

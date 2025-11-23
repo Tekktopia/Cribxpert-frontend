@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface Rule {
+export interface Rule {
   icon: string;
   title: string;
   description: string;
