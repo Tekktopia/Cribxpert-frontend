@@ -1,14 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from './authService';
-import { User, AuthState } from './authTypes';
+import type { User } from './authTypes';
 
-const initialState = {
+// Define AuthState inline to avoid language server cache issues
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: AuthState = {
   user: null,
   token: sessionStorage.getItem('token'),
   isAuthenticated: false,
   isLoading: false,
   error: null,
-} as AuthState;
+};
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -29,7 +38,7 @@ export const authSlice = createSlice({
 
     clearUser: (state) => {
       state.user = null;
-      (state as AuthState & { token: string | null }).token = null;
+      state.token = null;
       state.isAuthenticated = false;
       sessionStorage.removeItem('token');
     },
@@ -82,7 +91,7 @@ export const authSlice = createSlice({
           state.isLoading = false;
           state.isAuthenticated = true;
           state.user = payload.user;
-          (state as AuthState & { token: string | null }).token = payload.accessToken || sessionStorage.getItem('token');
+          state.token = payload.accessToken || sessionStorage.getItem('token');
           state.error = null;
         }
       )
