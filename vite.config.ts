@@ -39,6 +39,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
+        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10 MB - allows large images like GalleryFive.png (5.09 MB) and supportbanner.png (2.72 MB)
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
