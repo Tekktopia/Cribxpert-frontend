@@ -1,9 +1,7 @@
 import React from 'react';
 import { NotificationComponentProps } from '@/features/notifications';
-import { NotificationList } from './NotificationUtils';
 import NoNotification from './NoNotification';
 import BookingNotificationItem from './BookingNotificationItem';  // Assuming this is a component
-import { al } from 'node_modules/react-router/dist/development/context-DohQKLID.d.mts';
 
 // Hardcoded test data for bookings
 const testBookingNotifications = [

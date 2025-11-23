@@ -41,7 +41,7 @@ export const houseRuleApi = createApi({
         url: `/house-rules/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, id) => [{ type: 'HouseRule', id }],
+      invalidatesTags: (_result, _error, id) => [{ type: 'HouseRule', id }],
     }),
   }),
 });

@@ -13,7 +13,6 @@ export default defineConfig({
       devOptions: {
         enabled: false, // Disable in development to avoid blank screen issues
         type: 'module',
-        disableDevLogs: true, // Disable workbox logs in dev
       },
       manifest: {
         name: 'Cribxpert',
