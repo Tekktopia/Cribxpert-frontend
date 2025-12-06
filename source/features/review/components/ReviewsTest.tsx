@@ -4,31 +4,32 @@ import ReviewNotificationItem from "./ReviewNotificationItem";
 import NoNotification from "../../notifications/components/NoNotification";
 
 interface ReviewsTestProps {
-  listingId: string;
+  listingId?: string; // make optional to avoid crashes
 }
-console.log("ReviewsTest component rendered");
 
 const ReviewsTest: React.FC<ReviewsTestProps> = ({ listingId }) => {
-  // Fetch actual reviews for a listing
-  const { data, isLoading, error } = useGetReviewsByListingIdQuery(listingId);
+  // If no listingId, skip the query
+  const { data, isLoading, error } = useGetReviewsByListingIdQuery(listingId || "", {
+    skip: !listingId,
+  });
+
+  console.log("ReviewsTest - listingId:", listingId);
   console.log("Reviews API response:", data);
 
-  // Utility: Calculate "days ago"
+  const reviews = Array.isArray(data) ? data : data?.reviews ?? [];
+
   const getDaysAgo = (createdAt: string) => {
+    if (!createdAt) return "";
     const created = new Date(createdAt);
     const now = new Date();
-    const diff = Math.floor(
-      (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24)
-    );
+    const diff = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
     return diff === 0 ? "Today" : `${diff} day${diff > 1 ? "s" : ""} ago`;
   };
 
   if (isLoading) {
     return (
       <div className="w-full flex justify-center items-center my-6 sm:my-9">
-        <p className="text-[#999] text-[14px] sm:text-[16px]">
-          Loading reviews...
-        </p>
+        <p className="text-[#999] text-[14px] sm:text-[16px]">Loading reviews...</p>
       </div>
     );
   }
@@ -36,21 +37,13 @@ const ReviewsTest: React.FC<ReviewsTestProps> = ({ listingId }) => {
   if (error) {
     return (
       <div className="w-full flex justify-center items-center my-6 sm:my-9">
-        <p className="text-red-500 text-[14px] sm:text-[16px]">
-          Failed to load reviews
-        </p>
+        <p className="text-red-500 text-[14px] sm:text-[16px]">Failed to load reviews</p>
       </div>
     );
   }
 
-  const reviews = data?.reviews || [];
-
-  if (reviews.length === 0) {
-    return (
-      <div className="w-full flex flex-col gap-6 my-9">
-        <NoNotification message="No reviews found" />
-      </div>
-    );
+  if (!reviews || reviews.length === 0) {
+    return <NoNotification />;
   }
 
   return (
@@ -62,9 +55,7 @@ const ReviewsTest: React.FC<ReviewsTestProps> = ({ listingId }) => {
           description={review.review}
           daysAgo={getDaysAgo(review.createdAt || "")}
           buttonLabel="View Review"
-          onViewListing={() =>
-            console.log("View review clicked:", review._id)
-          }
+          onViewListing={() => console.log("View review clicked:", review._id)}
         />
       ))}
     </div>
