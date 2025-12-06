@@ -1,3 +1,5 @@
+console.log("🔥 NotificationPage MOUNTED");
+
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ActiveNotification } from '@/types';
@@ -10,13 +12,16 @@ import All from '@/features/notifications/components/All';
 import NotificationNav from '@/shared/components/layout/notification/NotificationNav';
 import Bookings from '@/features/notifications/components/Bookings';
 import Payments from '@/features/notifications/components/Payments';
-import Reviews from '@/features/review/components/Reviews';
+// import Reviews from '@/features/review/components/Reviews';
+import ReviewsTest from '@/features/review/components/ReviewsTest';
 import Listings from '@/features/notifications/components/Listings';
 import Financials from '@/features/notifications/components/Financials';
 const NotificationPage = () => {
   const [active, setActive] = useState<ActiveNotification>(
     ActiveNotification.All
   );
+  console.log("ACTIVE TAB IS:", active);
+  console.log("NotificationPage component rendered");
 
   const currentUser = useSelector(selectCurrentUser);
   const {
@@ -66,6 +71,7 @@ const NotificationPage = () => {
         <h1 className="pt-[43px] text-[20px] text-[#040404]">Notifications</h1>
         <NotificationNav active={active} setActive={setActive} />
 
+
         {active === ActiveNotification.All && (
           <All
             notifications={notifications}
@@ -73,8 +79,8 @@ const NotificationPage = () => {
             error={error}
             onMarkAsRead={handleMarkAsRead}
           />
-        )}
 
+        )}
         {active === ActiveNotification.Bookings && (
           <Bookings
             notifications={bookingNotifications}
@@ -94,12 +100,13 @@ const NotificationPage = () => {
         )}
 
         {active === ActiveNotification.Reviews && (
-          <Reviews
-            notifications={reviewNotifications}
-            isLoading={isLoading}
-            error={error}
-            onMarkAsRead={handleMarkAsRead}
-          />
+          // <Reviews
+          //   notifications={reviewNotifications}
+          //   isLoading={isLoading}
+          //   error={error}
+          //   onMarkAsRead={handleMarkAsRead}
+          // />
+          <ReviewsTest listingId="69286a3c24ce67e4bd255984" />
         )}
 
         {/* New tabs for Listings and Financials */}

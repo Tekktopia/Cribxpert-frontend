@@ -91,13 +91,12 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const [listingId, setListingId] = useState<string | null>(null);
 
 
-
   // Helper function to validate ObjectId format
   const isValidObjectId = (id: string): boolean => {
     return typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/) !== null;
   };
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const nextStep = () => {
     if (currentStep < stepData.length - 1) setCurrentStep((prev) => prev + 1);
@@ -128,6 +127,7 @@ const navigate = useNavigate();
     if (uploadBox) {
       uploadBox.scrollIntoView({ behavior: 'smooth' });
     }
+    // Triggers the hidden button in ListingPropertyPage
     document.getElementById('upload-start')?.click();
   };
 
@@ -160,9 +160,88 @@ const navigate = useNavigate();
   const [createOrUpdateListing, { isLoading: isSaving }] =
     useCreateOrUpdateListingMutation();
 
+  /**
+   * Validates the required fields for the current step.
+   * @returns {boolean} True if validation passes, false otherwise.
+   */
+  const validateCurrentStep = (): boolean => {
+    switch (activeStep) {
+      case 0: // Property Type Selection
+        if (!selectedPropertyType || !isValidObjectId(selectedPropertyType)) {
+          alert('Please select a valid Property Type before proceeding.');
+          return false;
+        }
+        return true;
+
+      case 1: // Guest/Bed/Bath/Size Counts
+        // Assuming guestNo must be > 0.
+        if (guestNo < 1) {
+          alert('The number of guests must be at least 1.');
+          return false;
+        }
+        return true;
+
+      case 2: // Location (ListingMap)
+        // Check for required location fields and map coordinates.
+        if (!street.trim() || !city.trim() || !country.trim() || latitude === 0 || longitude === 0) {
+          alert('Please provide a valid street, city, country, and ensure the location is set on the map.');
+          return false;
+        }
+        return true;
+
+      case 3: // Amenities (Optional)
+        return true;
+
+      case 4: // Photos (Requires uploadCompleted state to be true)
+        if (!uploadCompleted) {
+          alert('Please upload photos before proceeding.');
+          return false;
+        }
+        return true;
+
+      case 5: { // Property Title & Description
+        // Check if title is sufficiently filled
+        if (!title.trim() || title.trim().length < 5) {
+          alert('Please enter a descriptive Title (at least 5 characters).');
+          return false;
+        }
+        return true;
+      }
+      
+      case 6: { // Pricing & Availability
+        const price = Number(basePrice); 
+        if (isNaN(price) || price <= 0) {
+          alert('Please enter a valid Base Price greater than zero.');
+          return false;
+        }
+        if (!availableFrom || !availableUntil) {
+          alert('Please select both "Available From" and "Available Until" dates.');
+          return false;
+        }
+        // Check date order
+        if (new Date(availableFrom) > new Date(availableUntil)) {
+          alert('Available From date must be before Available Until date.');
+          return false;
+        }
+        return true;
+      } 
+
+      case 7: // House Rules (Optional for navigation)
+        return true;
+
+      default:
+        return true;
+    }
+  };
+
   const handleCreateListing = async () => {
     try {
-      // Add validation before sending
+      // Run final validation check before submission, using the same logic
+      if (!validateCurrentStep()) {
+        return;
+      }
+
+      // Existing validation checks (for good measure before API call)
       if (!title.trim()) {
         console.error('Title is required');
         alert('Please enter a title for your listing');
@@ -254,10 +333,10 @@ const navigate = useNavigate();
         setListingId(response?.listing?._id);
       }
       if (activeStep === 7) {
-  setShowSuccessModal(true); // Show modal only at the last step
-} else {
-  nextStep();
-}
+        setShowSuccessModal(true); // Show modal only at the last step
+      } else {
+        nextStep();
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('Error:', error.message);
@@ -271,12 +350,13 @@ const navigate = useNavigate();
 
   const {
     data: propertyTypeData,
-    isLoading:isLoadingPropertyTypes,
+    isLoading: isLoadingPropertyTypes,
     error,
   } = useGetPropertyTypesQuery();
-  
- const { data: amenitiesData, isLoading:isLoadingAmenities , error: amenitiesError } = useGetAmenitiesQuery();
- 
+
+  const { data: amenitiesData, isLoading: isLoadingAmenities, error: amenitiesError } = useGetAmenitiesQuery();
+
+
   return (
     <div className="w-full p-6">
       {/* Step Indicators */}
@@ -303,30 +383,28 @@ const navigate = useNavigate();
 
       {/* Step Card Content */}
       <div className="flex justify-center text-center mb-8">
-  {activeStep === 4 && uploadCompleted ? (
-    <div className="text-center flex flex-col items-center">
-      <div className='flex justify-center items-end gap-1'>
-      <img
-        src="/other-icons/review-icon.svg"
-        alt="Review photos icon"
-        className=" w-8 h-8"
-        />
-      <h2 className="text-xl font-semibold mb-1">Review Your Photos</h2>
-        </div>
-      <p className="text-neutral text-sm max-w-md">
-        Click to select a cover photo. By default, the first image will be used as the cover.
-      </p>
-    </div>
-  ) : (
-    <ListingCardSteps
-      title={stepData[activeStep].title}
-      description={stepData[activeStep].description}
-      image={stepData[activeStep].image}
-    />
-  )}
-</div>
-
-
+        {activeStep === 4 && uploadCompleted ? (
+          <div className="text-center flex flex-col items-center">
+            <div className='flex justify-center items-end gap-1'>
+              <img
+                src="/other-icons/review-icon.svg"
+                alt="Review photos icon"
+                className=" w-8 h-8"
+              />
+              <h2 className="text-xl font-semibold mb-1">Review Your Photos</h2>
+            </div>
+            <p className="text-neutral text-sm max-w-md">
+              Click to select a cover photo. By default, the first image will be used as the cover.
+            </p>
+          </div>
+        ) : (
+          <ListingCardSteps
+            title={stepData[activeStep].title}
+            description={stepData[activeStep].description}
+            image={stepData[activeStep].image}
+          />
+        )}
+      </div>
 
 
       {/* Step Content */}
@@ -392,27 +470,27 @@ const navigate = useNavigate();
       )}
 
       {activeStep === 3 && (
-  <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    {isLoadingAmenities ? (
-      <div>Loading...</div>
-    ) : amenitiesError ? (
-      <div>Error</div>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
-        {amenitiesData?.map((item, index) => (
-          <ListAmenity
-            key={index}
-            inputProps={{ id: item._id }}  
-            icon={item.icon?.fileUrl ?? '/path/to/default-icon.png'}  
-            description={item.name}
-            checked={checkedAmenities[item._id] ?? false}
-            onChange={(e) => handleCheckboxChange(e, item._id)}
-          />
-        ))}
-      </div>
-    )}
-  </div>
-)}
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          {isLoadingAmenities ? (
+            <div>Loading...</div>
+          ) : amenitiesError ? (
+            <div>Error</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+              {amenitiesData?.map((item, index) => (
+                <ListAmenity
+                  key={index}
+                  inputProps={{ id: item._id }}
+                  icon={item.icon?.fileUrl ?? '/path/to/default-icon.png'}
+                  description={item.name}
+                  checked={checkedAmenities[item._id] ?? false}
+                  onChange={(e) => handleCheckboxChange(e, item._id)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
 
       {activeStep === 4 && (
@@ -479,20 +557,38 @@ const navigate = useNavigate();
         {activeStep === 4 ? (
           <button
             onClick={() => {
-              if (uploadCompleted) {
-                nextStep();
-              } else {
-                handleUploadTrigger();
-              }
+                // LOCK 1: Hard check for empty files when upload is pending
+                if (!uploadCompleted && selectedFiles.length === 0) {
+                    alert('Please select at least one photo to upload.');
+                    return;
+                }
+                
+                if (uploadCompleted) {
+                    // Button says "Next"
+                    if (validateCurrentStep()) {
+                        nextStep();
+                    }
+                } else if (selectedFiles.length > 0) {
+                    // Button says "Upload" and files are present
+                    handleUploadTrigger();
+                }
             }}
-            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition"
-            disabled={isUploading}
+            // LOCK 2: Visual disable state
+            disabled={
+                isUploading || 
+                (!uploadCompleted && selectedFiles.length === 0) 
+            }
+            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition disabled:opacity-50"
           >
             {uploadCompleted ? 'Next' : isUploading ? 'Uploading...' : 'Upload'}
           </button>
         ) : activeStep === 7 ? (
           <button
-            onClick={handleCreateListing}
+            onClick={() => {
+              if (validateCurrentStep()) {
+                handleCreateListing();
+              }
+            }}
             className="bg-primary hover:bg-hoverColor text-white px-8 py-4 rounded transition disabled:opacity-60"
             disabled={isSaving}
           >
@@ -500,7 +596,12 @@ const navigate = useNavigate();
           </button>
         ) : (
           <button
-            onClick={nextStep}
+            onClick={() => {
+              // Ensure validation passes before moving to the next step
+              if (validateCurrentStep()) {
+                nextStep();
+              }
+            }}
             className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition"
           >
             Next
@@ -508,60 +609,60 @@ const navigate = useNavigate();
         )}
       </div>
       {showSuccessModal && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white rounded-sm w-[717px] max-w-full p-6 h-[546px] text-center relative">
-      
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-sm w-[717px] max-w-full p-6 h-[546px] text-center relative">
 
-  {/* Close icon */}
-  <img
-    src="/other-icons/x_icon.svg"
-    alt="Close modal"
-    className="absolute top-4 right-4 w-6 h-6 cursor-pointer"
-    onClick={() => setShowSuccessModal(false)}
-  />
 
-  <div className="flex flex-col items-center justify-center h-[80%] px-4">
-    <h2 className="text-[25px] font-bold mb-4">
-      Listing Created Successfully
-    </h2>
+            {/* Close icon */}
+            <img
+              src="/other-icons/x_icon.svg"
+              alt="Close modal"
+              className="absolute top-4 right-4 w-6 h-6 cursor-pointer"
+              onClick={() => setShowSuccessModal(false)}
+            />
 
-    <p className="text-[16px] max-w-[430px] text-neutral">
-      It has been listed! You can now view it on your dashboard or share it with potential renters.
-    </p>
-  </div>
+            <div className="flex flex-col items-center justify-center h-[80%] px-4">
+              <h2 className="text-[25px] font-bold mb-4">
+                Listing Created Successfully
+              </h2>
 
-  <div className="flex justify-center gap-4">
-    {/* View Listing button */}
-    <button
-      onClick={() => {
-        setShowSuccessModal(false);
-        if (listingId) {
-          navigate(`/listing/${listingId}`); // React Router
-        } else {
-          console.warn("No listingId available for navigation.");
-        }
-      }}
-      className="bg-primary text-white px-6 py-2 rounded hover:bg-hoverColor transition"
-    >
-      View Listing
-    </button>
+              <p className="text-[16px] max-w-[430px] text-neutral">
+                It has been listed! You can now view it on your dashboard or share it with potential renters.
+              </p>
+            </div>
 
-    {/* Dashboard button */}
-    <button
-      onClick={() => {
-        setShowSuccessModal(false);
-        navigate('/'); // 
-      }}
-      className="bg-neutralLight text-black px-6 py-2 rounded hover:bg-gray-300 transition"
-    >
-      Go to Dashboard
-    </button>
-  </div>
+            <div className="flex justify-center gap-4">
+              {/* View Listing button */}
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  if (listingId) {
+                    navigate(`/listing/${listingId}`); // React Router
+                  } else {
+                    console.warn("No listingId available for navigation.");
+                  }
+                }}
+                className="bg-primary text-white px-6 py-2 rounded hover:bg-hoverColor transition"
+              >
+                View Listing
+              </button>
 
-</div>
+              {/* Dashboard button */}
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  navigate('/'); // 
+                }}
+                className="bg-neutralLight text-black px-6 py-2 rounded hover:bg-gray-300 transition"
+              >
+                Go to Dashboard
+              </button>
+            </div>
 
-  </div>
-)}
+          </div>
+
+        </div>
+      )}
 
 
     </div>
