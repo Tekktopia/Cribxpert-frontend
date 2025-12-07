@@ -217,10 +217,24 @@ const ListingMgmtPage = () => {
 
   const handleEdit = (listing: PropertyListing) => {
     setEditingListing(listing);
+    // Extract property type ID
+    const propertyTypeId = typeof listing.propertyType === 'string' 
+      ? listing.propertyType 
+      : (typeof listing.propertyType === 'object' && listing.propertyType !== null && '_id' in listing.propertyType
+        ? (listing.propertyType as { _id: string })._id
+        : '');
+    // Extract amenity IDs
+    const amenityIds = listing.amenities.map((amenity) => 
+      typeof amenity === 'string' 
+        ? amenity 
+        : (typeof amenity === 'object' && amenity !== null && '_id' in amenity
+          ? (amenity as { _id: string })._id
+          : '')
+    );
     setFormData({
       name: listing.name,
       description: listing.description,
-      propertyType: listing.propertyType,
+      propertyType: propertyTypeId,
       street: listing.street,
       city: listing.city,
       state: listing.state,
@@ -230,7 +244,7 @@ const ListingMgmtPage = () => {
       bedroomNo: listing.bedroomNo,
       bathroomNo: listing.bathroomNo,
       guestNo: listing.guestNo,
-      amenities: listing.amenities,
+      amenities: amenityIds,
       basePrice: listing.basePrice,
       securityDeposit: listing.securityDeposit,
       cleaningFee: listing.cleaningFee,

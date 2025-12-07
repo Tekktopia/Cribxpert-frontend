@@ -108,8 +108,15 @@ export const filterListings = (
   return listings.filter((listing) => {
     // Filter by amenities
     if (filters.amenities && filters.amenities.length > 0) {
+      const listingAmenityIds = listing.amenities.map((amenity) => 
+        typeof amenity === 'string' 
+          ? amenity 
+          : (typeof amenity === 'object' && amenity !== null && '_id' in amenity
+            ? (amenity as { _id: string })._id
+            : '')
+      );
       const hasAllAmenities = filters.amenities.every((amenityId) =>
-        listing.amenities.includes(amenityId)
+        listingAmenityIds.includes(amenityId)
       );
       if (!hasAllAmenities) return false;
     }

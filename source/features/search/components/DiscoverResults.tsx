@@ -107,7 +107,12 @@ export default function DiscoverResults({
         }
 
         // Search in property type name
-        const propertyTypeName = getPropertyTypeNameById(listing.propertyType);
+        const propertyTypeId = typeof listing.propertyType === 'string' 
+          ? listing.propertyType 
+          : (typeof listing.propertyType === 'object' && listing.propertyType !== null && '_id' in listing.propertyType
+            ? (listing.propertyType as { _id: string })._id
+            : '');
+        const propertyTypeName = getPropertyTypeNameById(propertyTypeId);
         if (
           propertyTypeName &&
           propertyTypeName.toLowerCase().includes(query)
@@ -116,7 +121,12 @@ export default function DiscoverResults({
         }
 
         // Search in amenity names
-        const hasMatchingAmenity = listing.amenities?.some((amenityId) => {
+        const hasMatchingAmenity = listing.amenities?.some((amenity) => {
+          const amenityId = typeof amenity === 'string' 
+            ? amenity 
+            : (typeof amenity === 'object' && amenity !== null && '_id' in amenity
+              ? (amenity as { _id: string })._id
+              : '');
           const amenityName = getAmenityNameById(amenityId);
           return amenityName && amenityName.toLowerCase().includes(query);
         });

@@ -11,6 +11,8 @@ export interface PropertyListing {
   state: string;
   postalCode: string;
   country: string;
+  longitude?: number;
+  latitude?: number;
   hideStatus: boolean;
   basePrice: number;
   securityDeposit: number;
@@ -26,6 +28,7 @@ export interface PropertyListing {
   listingImg: {
     _id: string;
     fileUrl: string;
+    fileName?: string;
   }[];
   rating: number;
   createdAt: string; // ISO date string

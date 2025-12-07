@@ -125,9 +125,14 @@ const SearchInput: React.FC<SearchInputProps> = ({
       }
 
       // Property type
-      const propertyTypeName = getPropertyTypeNameById(listing.propertyType);
+      const propertyTypeId = typeof listing.propertyType === 'string' 
+        ? listing.propertyType 
+        : (typeof listing.propertyType === 'object' && listing.propertyType !== null && '_id' in listing.propertyType
+          ? (listing.propertyType as { _id: string })._id
+          : '');
+      const propertyTypeName = getPropertyTypeNameById(propertyTypeId);
       if (propertyTypeName.toLowerCase().includes(query)) {
-        const id = `type-${listing.propertyType}`;
+        const id = `type-${propertyTypeId}`;
         if (!suggestionMap.has(id)) {
           suggestionMap.set(id, {
             id,
@@ -139,7 +144,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
       }
 
       // Amenities
-      listing.amenities?.forEach((amenityId) => {
+      listing.amenities?.forEach((amenity) => {
+        const amenityId = typeof amenity === 'string' 
+          ? amenity 
+          : (typeof amenity === 'object' && amenity !== null && '_id' in amenity
+            ? (amenity as { _id: string })._id
+            : '');
         const amenityName = getAmenityNameById(amenityId);
         if (amenityName.toLowerCase().includes(query)) {
           const id = `amenity-${amenityId}`;

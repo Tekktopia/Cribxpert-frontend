@@ -23,7 +23,7 @@ const AmenitiesSection = () => {
     } else {
       // Amenities are IDs, filter from allAmenities
       return allAmenities.filter((amenity: Amenity) =>
-        currentListing.amenities.includes(amenity._id)
+        (currentListing.amenities as string[]).includes(amenity._id)
       );
     }
   }, [currentListing, allAmenities]);

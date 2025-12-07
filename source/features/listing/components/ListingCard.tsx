@@ -30,9 +30,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
   id,
   title,
   price,
-  tags,
+  tags: _tags, // Unused but kept for API compatibility
   image,
-  category,
+  category: _category, // Unused but kept for API compatibility
   rating,
   className = '',
   onDelete,
