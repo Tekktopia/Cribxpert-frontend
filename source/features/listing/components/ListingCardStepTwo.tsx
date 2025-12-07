@@ -10,6 +10,11 @@ export interface ListingCardStepTwoProps {
 const ListingCardStepTwo = ({ title, number, image, onChange }: ListingCardStepTwoProps) => {
   const [count, setCount] = useState(number);
 
+  // Update count when number prop changes (for editing existing listings)
+  useEffect(() => {
+    setCount(number);
+  }, [number]);
+
   useEffect(() => {
     if (onChange) {
       onChange(count);

@@ -26,7 +26,36 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   bedrooms = 3, // Default value if not provided
   propertyType = 'Apartment', // Default value if not provided
   minWidth = 'min-w-[350px]',
+  createdAt,
 }) => {
+  // Format the createdAt date
+  const formatDate = (dateString?: string): string => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffTime = Math.abs(now.getTime() - date.getTime());
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) {
+        return 'Today';
+      } else if (diffDays === 1) {
+        return 'Yesterday';
+      } else if (diffDays < 7) {
+        return `${diffDays} days ago`;
+      } else if (diffDays < 30) {
+        const weeks = Math.floor(diffDays / 7);
+        return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+      } else if (diffDays < 365) {
+        const months = Math.floor(diffDays / 30);
+        return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+      } else {
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+    } catch {
+      return '';
+    }
+  };
   const navigate = useNavigate();
   // Use the provided image as fallback if no images array is provided
   const allImages = React.useMemo(
@@ -111,9 +140,9 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   const propertySlug = React.useMemo(() => createSlug(name), [name]);
 
   return (
-    <Link to={`/propertydetail/${propertySlug}`} className="block">
+    <Link to={`/propertydetail/${propertySlug}`} className="block w-full">
       <div
-        className={`w-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm`}
+        className={`w-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 max-w-full`}
       >
         {/* Image Carousel */}
         <div className="relative overflow-hidden">
@@ -127,36 +156,33 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
               loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
               priority={currentImageIndex === 0} // First image is priority
               className="w-full h-full object-cover rounded-t-lg transition-opacity duration-300"
-              // onError={() => {
-              //   // console.error(`Failed to load image for ${name}`);
-              // }}
             />
             {/* Navigation Arrows - Only show when more than one image */}
             {allImages.length > 1 && (
               <>
                 <button
                   onClick={prevImage}
-                  className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center"
+                  className="absolute top-1/2 left-2 sm:left-3 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center transition-all"
                   aria-label="Previous image"
                 >
-                  <FaChevronLeft size={14} />
+                  <FaChevronLeft size={12} className="sm:w-3.5 sm:h-3.5" />
                 </button>
                 <button
                   onClick={nextImage}
-                  className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full flex items-center justify-center"
+                  className="absolute top-1/2 right-2 sm:right-3 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center transition-all"
                   aria-label="Next image"
                 >
-                  <FaChevronRight size={14} className="text-white" />
+                  <FaChevronRight size={12} className="sm:w-3.5 sm:h-3.5 text-white" />
                 </button>
 
                 {/* Carousel Indicators */}
-                <div className="absolute bottom-3 left-3 flex space-x-1">
+                <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 flex space-x-1 sm:space-x-1.5">
                   {allImages.length <= 5 ? (
                     // Show all dots when few images
                     allImages.map((_, index) => (
                       <span
                         key={index}
-                        className={`block h-1.5 w-1.5 rounded-full ${
+                        className={`block h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full transition-all ${
                           index === currentImageIndex
                             ? 'bg-white'
                             : 'bg-white/50'
@@ -169,7 +195,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
                       {[0, 1, 2].map((index) => (
                         <span
                           key={index}
-                          className={`block h-1.5 w-1.5 rounded-full ${
+                          className={`block h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full transition-all ${
                             currentImageIndex === index
                               ? 'bg-white'
                               : 'bg-white/50'
@@ -178,10 +204,10 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
                       ))}
                       {currentImageIndex > 2 &&
                         currentImageIndex < allImages.length - 1 && (
-                          <span className="text-xs text-white">...</span>
+                          <span className="text-[10px] sm:text-xs text-white">...</span>
                         )}
                       {currentImageIndex >= 3 && (
-                        <span className="block h-1.5 w-1.5 rounded-full bg-white" />
+                        <span className="block h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full bg-white" />
                       )}
                     </>
                   )}
@@ -206,51 +232,84 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
           </div>
 
           {/* Photo Count Badge */}
-          <div className="absolute bottom-3 right-3 flex items-center gap-2">
-            <span className="bg-white text-black text-xs py-1 px-2 rounded-md">
+          <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 flex items-center gap-1.5 sm:gap-2">
+            <span className="bg-white text-black text-xs py-0.5 sm:py-1 px-1.5 sm:px-2 rounded-md font-medium">
               +{allImages.length - 1}
             </span>
-            <span className="bg-white p-1 rounded-md">
-              <HiOutlineCamera className="w-4 h-4" />
+            <span className="bg-white p-0.5 sm:p-1 rounded-md">
+              <HiOutlineCamera className="w-3 h-3 sm:w-4 sm:h-4" />
             </span>
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="p-3">
+        <div className="p-3 sm:p-4">
           {/* Property Name */}
-          <div className="mb-2">
-            <h3 className="font-medium text-lg leading-tight">{name}</h3>
-            <p className="text-sm text-gray-600">{description}</p>
+          <div className="mb-2 sm:mb-3">
+            <h3 className="font-medium text-base sm:text-lg leading-tight mb-1">{name}</h3>
+            <p className="text-xs sm:text-sm text-gray-600 line-clamp-3">{description}</p>
           </div>
 
           {/* Property Tags Row */}
-          <div className="flex items-center gap-4 mb-2">
+          <div className="flex items-center flex-wrap gap-2 sm:gap-4 mb-2 sm:mb-3">
+            {/* Property Type Tag */}
+            {propertyType && (
+              <span className="bg-[#1D5C5C] text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                {propertyType}
+              </span>
+            )}
+            
             {/* Bedroom Tag */}
-            <span className="bg-[#1D5C5C] text-white text-xs px-2 py-1 rounded">
-              {bedrooms} Bedroom {propertyType}
+            <span className="bg-[#1D5C5C] text-white text-xs sm:text-xs px-2 py-1 rounded whitespace-nowrap">
+              {bedrooms} Bedroom{bedrooms !== 1 ? 's' : ''}
             </span>
 
-            {/* Rating */}
-            <div className="flex items-center">
-              <span className="bg-[#A58207] text-white text-xs px-1 py-0.5 rounded  gap-1 flex">
-                <FaStar className="text-yellow-500 text-xs" /> {rating}
-              </span>
-            </div>
+            {/* Rating - Only show if rating exists and is greater than 0 */}
+            {rating && rating > 0 ? (
+              <div className="flex items-center">
+                <span className="bg-[#A58207] text-white text-xs px-1.5 sm:px-2 py-0.5 rounded gap-1 flex items-center">
+                  <FaStar className="text-yellow-500 text-xs" /> 
+                  <span className="text-xs">{rating}</span>
+                </span>
+              </div>
+            ) : null}
           </div>
 
-          {/* Location */}
-          <div className="flex items-center mb-2 text-gray-600">
-            <IoLocationOutline className="mr-1" />
-            <p className="text-sm">{location}</p>
+          {/* Location and Date Row */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 mb-2">
+            {/* Location */}
+            <div className="flex items-center text-gray-600">
+              <IoLocationOutline className="mr-1 text-sm sm:text-base" />
+              <p className="text-xs sm:text-sm truncate">{location}</p>
+            </div>
+
+            {/* Created Date */}
+            {createdAt && (
+              <div className="flex items-center text-gray-500">
+                <svg
+                  className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <p className="text-xs sm:text-sm whitespace-nowrap">{formatDate(createdAt)}</p>
+              </div>
+            )}
           </div>
 
           {/* Price */}
           <div className="mt-2">
-            <span className="text-[#1D5C5C] font-bold text-lg">
+            <span className="text-[#1D5C5C] font-bold text-base sm:text-lg">
               ₦{Number(price).toLocaleString()}
             </span>
-            <span className="text-gray-500 text-sm">/per night</span>
+            <span className="text-gray-500 text-xs sm:text-sm">/per night</span>
           </div>
         </div>
       </div>

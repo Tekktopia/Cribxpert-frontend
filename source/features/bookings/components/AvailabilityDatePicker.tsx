@@ -10,6 +10,8 @@ interface AvailabilityDatePickerProps {
   selectedCheckIn?: Date | null;
   selectedCheckOut?: Date | null;
   className?: string;
+  minDate?: Date | null;
+  maxDate?: Date | null;
 }
 
 const AvailabilityDatePicker: React.FC<AvailabilityDatePickerProps> = ({
@@ -18,6 +20,8 @@ const AvailabilityDatePicker: React.FC<AvailabilityDatePickerProps> = ({
   selectedCheckIn,
   selectedCheckOut,
   className = '',
+  minDate = null,
+  maxDate = null,
 }) => {
   const [checkInDate, setCheckInDate] = useState<Date | null>(
     selectedCheckIn || null
@@ -137,7 +141,8 @@ const AvailabilityDatePicker: React.FC<AvailabilityDatePickerProps> = ({
           <DatePicker
             selected={checkInDate}
             onChange={handleCheckInChange}
-            minDate={new Date()}
+            minDate={minDate || new Date()}
+            maxDate={maxDate || undefined}
             filterDate={(date: Date) => !isDateUnavailable(date)}
             placeholderText="Select check-in date"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -156,8 +161,9 @@ const AvailabilityDatePicker: React.FC<AvailabilityDatePickerProps> = ({
             minDate={
               checkInDate
                 ? new Date(checkInDate.getTime() + 86400000)
-                : new Date()
+                : (minDate || new Date())
             }
+            maxDate={maxDate || undefined}
             filterDate={(date: Date) =>
               !isDateUnavailable(date) &&
               (checkInDate ? date > checkInDate : true)

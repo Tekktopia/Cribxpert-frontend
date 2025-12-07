@@ -1,15 +1,14 @@
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import useAlert from '@/hooks/useAlert';
 
 interface LeaveReviewFormProps {
   onSubmit?: (review: {
     rating: number;
-    name: string;
-    email: string;
     review: string;
-  }) => void;
+  }) => Promise<void> | void;
   isSubmitting?: boolean;
 }
 
@@ -18,13 +17,22 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
   isSubmitting = false,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
+  const navigate = useNavigate();
   const [rating, setRating] = useState(0);
-  const [name, setName] = useState(currentUser?.fullName || '');
-  const [email, setEmail] = useState(currentUser?.email || '');
   const [review, setReview] = useState('');
   const showAlert = useAlert();
-  const handleSubmit = (e: React.FormEvent) => {
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!currentUser) {
+      showAlert({
+        title: 'Please log in to leave a review',
+        icon: 'error',
+      });
+      return;
+    }
+    
     if (rating === 0) {
       showAlert({
         title: 'Please select a rating',
@@ -33,21 +41,72 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
       return;
     }
 
-    onSubmit?.({
-      rating,
-      name,
-      email,
-      review,
-    });
+    if (!review.trim()) {
+      showAlert({
+        title: 'Please write a review',
+        icon: 'error',
+      });
+      return;
+    }
+
+    try {
+      await onSubmit?.({
+        rating,
+        review,
+      });
+      // Reset form after successful submission
+      setRating(0);
+      setReview('');
+    } catch (error) {
+      // Error handling is done in the parent component
+    }
   };
 
+  // If user is not logged in, show login prompt
+  if (!currentUser) {
+    return (
+      <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white border border-[#E6E6E6] rounded-lg shadow-sm">
+        <h3 className="text-base sm:text-lg font-medium text-[#040404] mb-4 sm:mb-6">
+          Leave a Review
+        </h3>
+        <div className="text-center py-6 sm:py-8">
+          <svg
+            className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-[#006073] mb-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+          <h4 className="text-base sm:text-lg font-medium text-[#040404] mb-2">
+            Please log in to leave a review
+          </h4>
+          <p className="text-sm text-[#6F6F6F] mb-6">
+            You need to be logged in to share your experience with this property.
+          </p>
+          <button
+            onClick={() => navigate('/login')}
+            className="w-full sm:w-auto bg-[#006073] text-white py-3 px-6 rounded-md hover:bg-[#004d5a] transition-colors font-medium"
+          >
+            Log In to Leave a Review
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="mt-8 p-6 bg-white border border-[#E6E6E6] rounded-lg shadow-sm">
-      <h3 className="text-lg font-medium text-[#040404] mb-6">
+    <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white border border-[#E6E6E6] rounded-lg shadow-sm">
+      <h3 className="text-base sm:text-lg font-medium text-[#040404] mb-4 sm:mb-6">
         Leave a Review
       </h3>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         {/* Rating Section */}
         <div>
           <label className="block text-sm font-medium text-[#040404] mb-3">
@@ -83,34 +142,6 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
           </div>
         </div>
 
-        {/* Name and Email Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-[#040404] mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-[#E6E6E6] rounded-md focus:outline-none focus:ring-2 focus:ring-[#006073] focus:border-transparent"
-              placeholder="Enter your name"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-[#040404] mb-2">
-              Email address
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-[#E6E6E6] rounded-md focus:outline-none focus:ring-2 focus:ring-[#006073] focus:border-transparent"
-              placeholder="Enter your email"
-            />
-          </div>
-        </div>
-
         {/* Review Text Area */}
         <div>
           <label className="block text-sm font-medium text-[#040404] mb-2">
@@ -128,7 +159,7 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || rating === 0 || !review.trim()}
           className="w-full bg-[#006073] text-white py-3 px-6 rounded-md hover:bg-[#004d5a] transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Submitting...' : 'Submit Your Review'}

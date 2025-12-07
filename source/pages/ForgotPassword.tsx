@@ -29,23 +29,53 @@ const ForgotPassword: React.FC = () => {
     try {
       const identifier =
         methodSelected === 'Email Address' ? email : phoneNumber;
-      // const method = methodSelected === 'Email Address' ? 'email' : 'phone';
+      
+      if (!identifier) {
+        setError('Please enter your email address');
+        return;
+      }
 
+      console.log('Sending forgot password request for:', identifier);
+      
       const response = await forgotPassword({
         email: identifier,
       }).unwrap();
 
-      // console.log(response)
+      console.log('Forgot password response:', response);
 
       if (response.message === 'password reset link sent') {
         setStep(2); // Move to Step Two
       } else {
-        throw new Error(response.data.message || 'Failed to send reset code');
+        throw new Error(response.message || 'Failed to send reset code');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      // console.error('Error requesting password reset: ', err.data.message);
-      setError(err.data.message || 'An error occurred during the request');
+      console.error('Error requesting password reset - Full error:', err);
+      console.error('Error status:', err?.status);
+      console.error('Error data:', err?.data);
+      console.error('Error message:', err?.message);
+      
+      // Handle RTK Query error structure
+      let errorMessage = 'An error occurred while sending the reset link. Please try again.';
+      
+      // Check for network errors or timeouts
+      if (err?.error === 'FETCH_ERROR' || err?.status === 'FETCH_ERROR') {
+        errorMessage = 'Network error. Please check your internet connection and try again.';
+      } else if (err?.error === 'TIMEOUT_ERROR' || err?.status === 'TIMEOUT_ERROR' || err?.message?.includes('timeout')) {
+        errorMessage = 'Request timed out. The server may be slow or unavailable. Please try again.';
+      } else if (err?.data?.message) {
+        errorMessage = err.data.message;
+      } else if (err?.data?.error) {
+        errorMessage = err.data.error;
+      } else if (err?.message) {
+        errorMessage = err.message;
+      } else if (err?.status === 404 || err?.data?.status === 404) {
+        errorMessage = 'User not found. Please check your email address.';
+      } else if (err?.status === 500 || err?.data?.status === 500) {
+        errorMessage = 'Server error. Please try again later or contact support.';
+      }
+      
+      setError(errorMessage);
     }
   };
 

@@ -1,4 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useDeleteListingImageMutation } from '@/features/listing/listingService';
+
+interface ExistingImage {
+  _id: string;
+  fileUrl: string;
+  fileName?: string;
+}
 
 interface ListingPropertyPageProps {
   nextStep: () => void;
@@ -9,6 +16,9 @@ interface ListingPropertyPageProps {
   setUploadCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   selectedFiles: File[];
   setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  existingImages?: ExistingImage[];
+  listingId?: string;
+  onImageDeleted?: () => void;
 }
 
 const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
@@ -18,11 +28,18 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
   setUploadCompleted,
   selectedFiles,
   setSelectedFiles,
+  existingImages = [],
+  listingId,
+  onImageDeleted,
 }) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [showUploadBox, setShowUploadBox] = useState(true);
   const [uploadedIndexes, setUploadedIndexes] = useState<number[]>([]);
   const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
+  const [confirmDeleteImageId, setConfirmDeleteImageId] = useState<string | null>(null);
+  const [deletingImageId, setDeletingImageId] = useState<string | null>(null);
+  
+  const [deleteListingImage, { isLoading: isDeletingImage }] = useDeleteListingImageMutation();
 
   const handleFileClick = () => {
     document.getElementById('file-upload')?.click();
@@ -39,8 +56,13 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       alert('Only JPEG, PNG, or WEBP images are allowed.');
     }
     setSelectedFiles((prev) => {
-      const combined = [...prev, ...newFiles].slice(0, 6);
-      return combined;
+      const currentTotal = existingImages.length + prev.length;
+      const maxNewFiles = 8 - currentTotal;
+      const filesToAdd = newFiles.slice(0, Math.max(0, maxNewFiles));
+      if (filesToAdd.length < newFiles.length) {
+        alert(`Maximum of 8 images allowed. You can add ${maxNewFiles} more.`);
+      }
+      return [...prev, ...filesToAdd];
     });
   };
 
@@ -54,6 +76,24 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
     setUploadedIndexes((prev) => prev.filter((i) => i !== index));
   };
 
+  const handleDeleteExistingImage = async (imageId: string) => {
+    if (!listingId) return;
+    
+    try {
+      setDeletingImageId(imageId);
+      await deleteListingImage({ listingId, imageId }).unwrap();
+      if (onImageDeleted) {
+        onImageDeleted();
+      }
+      setConfirmDeleteImageId(null);
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Failed to delete image. Please try again.');
+    } finally {
+      setDeletingImageId(null);
+    }
+  };
+
   useEffect(() => {
     const objectUrls = selectedFiles.map((file) => URL.createObjectURL(file));
     setPreviews(objectUrls);
@@ -63,10 +103,13 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
     };
   }, [selectedFiles]);
 
+  const totalImages = existingImages.length + selectedFiles.length;
+  const canAddMore = totalImages < 8;
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
       {/* Upload Box */}
-      {showUploadBox && (
+      {showUploadBox && canAddMore && (
         <div
           id="upload-box"
           className="flex flex-col items-center justify-center border-2 border-dashed border-neutralLight p-4 w-[644px] h-[316px]"
@@ -85,12 +128,12 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             JPEG, PNG, or WEBP up to 10MB each 
           </p>
           <button
-            disabled={selectedFiles.length >= 6}
+            disabled={!canAddMore}
             type="button"
             onClick={handleFileClick}
-            className="mt-4 px-4 py-2 bg-primary text-white rounded"
+            className="mt-4 px-4 py-2 bg-primary text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Select Photos
+            Select Photos ({totalImages}/8)
           </button>
         </div>
       )}
@@ -99,11 +142,11 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       
 
       {/* Preview Section */}
-      {selectedFiles.length > 0 && (
+      {(existingImages.length > 0 || selectedFiles.length > 0) && (
         <>
           {!isUploading && !uploadCompleted && (
             <p className="text-sm text-neutral mt-4 font-bold text-center">
-              Selected Photos: ({selectedFiles.length}/6)
+              Photos: ({totalImages}/8)
             </p>
           )}
           {isUploading && (
@@ -113,9 +156,45 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 max-w-[644px]">
+            {/* Existing Images */}
+            {existingImages.map((image, index) => (
+              <div
+                key={image._id}
+                className="relative border-2 border-neutralLight p-4 w-full h-[220px] shadow-sm rounded"
+              >
+                <button
+                  onClick={() => setConfirmDeleteImageId(image._id)}
+                  disabled={isDeletingImage && deletingImageId === image._id}
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-100 z-20 disabled:opacity-50"
+                >
+                  <img src="/other-icons/delete-icon-green.png" alt="Delete" />
+                </button>
+
+                <div className="relative w-full h-[130px] mb-2">
+                  <img
+                    src={image.fileUrl}
+                    alt={`Existing ${index + 1}`}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+
+                  {isDeletingImage && deletingImageId === image._id && (
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-md z-10">
+                      <div className="loader border-white h-6 w-6 animate-spin rounded-full border-4 border-t-transparent" />
+                    </div>
+                  )}
+                </div>
+
+                <p className="text-sm text-neutral text-center truncate w-full">
+                  {image.fileName || `Image ${index + 1}`}
+                </p>
+                <p className="text-xs text-gray-500 text-center mt-1">Existing</p>
+              </div>
+            ))}
+
+            {/* New Files */}
             {previews.map((src, index) => (
               <div
-                key={index}
+                key={`new-${index}`}
                 className="relative border-2 border-neutralLight p-4 w-full h-[220px] shadow-sm rounded"
               >
                 <button
@@ -149,6 +228,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                 <p className="text-sm text-neutral text-center truncate w-full">
                   {selectedFiles[index]?.name}
                 </p>
+                <p className="text-xs text-blue-500 text-center mt-1">New</p>
               </div>
             ))}
           </div>
@@ -182,7 +262,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal for New Files */}
       {confirmDeleteIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded shadow-lg p-6 max-w-sm w-full">
@@ -203,6 +283,32 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                 className="px-4 py-2 bg-red-500 text-white rounded"
               >
                 Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal for Existing Images */}
+      {confirmDeleteImageId !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <div className="bg-white rounded shadow-lg p-6 max-w-sm w-full">
+            <h2 className="text-lg font-semibold mb-4">Delete Photo</h2>
+            <p className="mb-6">Are you sure you want to delete this photo? This action cannot be undone.</p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setConfirmDeleteImageId(null)}
+                disabled={isDeletingImage}
+                className="px-4 py-2 bg-neutralLight rounded disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteExistingImage(confirmDeleteImageId!)}
+                disabled={isDeletingImage}
+                className="px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50"
+              >
+                {isDeletingImage ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>

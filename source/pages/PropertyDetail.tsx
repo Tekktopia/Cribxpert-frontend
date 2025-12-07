@@ -17,8 +17,6 @@ import {
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
 import PropertyHeader from '@/features/properties/components/PropertyHeader';
 import PropertyOverview from '@/features/properties/components/PropertyOverview';
-import PropertyLocation from '@/features/properties/components/PropertyLocation';
-import PropertyBedrooms from '@/features/properties/components/PropertyBedrooms';
 import PropertyDescription from '@/features/properties/components/PropertyDescription';
 import PropertyRules, { Rule } from '@/features/properties/components/PropertyRules';
 import PropertyPolicies from '@/features/properties/components/PropertyPolicies';
@@ -30,12 +28,7 @@ import useAlert from '@/hooks/useAlert';
 
 // Import mock data from utility files
 import {
-  IMAGES,
-  BEDROOMS,
-  NEARBY_LOCATIONS,
   CANCELLATION_PERIODS,
-  RATING_DISTRIBUTION,
-  CUSTOMER_REVIEWS,
   DAMAGE_POLICY,
   IMPORTANT_INFO,
 } from '@/utils/mockData';
@@ -70,21 +63,52 @@ const PropertyDetail = () => {
   // Add review mutations and queries
   const [createReview, { isLoading: isCreatingReview }] =
     useCreateReviewMutation();
-  const { data: apiReviews } = useGetReviewsByListingIdQuery(
+  const { data: apiReviews, refetch: refetchReviews } = useGetReviewsByListingIdQuery(
     property?._id || '',
     {
       skip: !property?._id,
+      // Ensure the query refetches when tags are invalidated
+      refetchOnMountOrArgChange: true,
     }
   );
 
   // Transform API reviews to match CustomerReviews component format
-  const transformedReviews =
-    apiReviews?.reviews.map((review) => ({
-      text: review.review,
-      author: review.name,
-      rating: review.rating,
-      image: undefined, // API doesn't provide images yet
-    })) || [];
+  const transformedReviews = useMemo(() => {
+    // Only use API reviews, never fall back to dummy data
+    if (!apiReviews?.reviews || !Array.isArray(apiReviews.reviews)) {
+      return [];
+    }
+    
+    return apiReviews.reviews.map((review) => {
+      // Extract user info from populated userId
+      let authorName = 'Anonymous';
+      let authorEmail = '';
+      let userIdString = '';
+      
+      if (review.userId) {
+        if (typeof review.userId === 'object' && review.userId !== null) {
+          // userId is populated (object with fullName and email)
+          authorName = (review.userId as { fullName?: string }).fullName || 'Anonymous';
+          authorEmail = (review.userId as { email?: string }).email || '';
+          userIdString = (review.userId as { _id?: string })._id || '';
+        } else if (typeof review.userId === 'string') {
+          // userId is just an ID string
+          userIdString = review.userId;
+        }
+      }
+      
+      return {
+        _id: review._id,
+        text: review.review,
+        author: authorName,
+        email: authorEmail,
+        rating: review.rating,
+        userId: userIdString || review.userId,
+        listingId: property?._id,
+        image: undefined, // API doesn't provide images yet
+      };
+    });
+  }, [apiReviews, property?._id]);
 
   // Handle booking submission
   const handleBookingSubmit = (formData: {
@@ -122,18 +146,20 @@ const PropertyDetail = () => {
   // Handle review submission
   const handleReviewSubmit = async (reviewData: {
     rating: number;
-    name: string;
-    email: string;
     review: string;
   }) => {
     if (!property || !currentUser) {
-      console.error('Property or user not found');
+      showAlert({
+        title: 'Please log in to leave a review',
+        icon: 'error',
+      });
       return;
     }
 
     try {
       const reviewPayload = {
-        ...reviewData,
+        rating: reviewData.rating,
+        review: reviewData.review,
         listing: property._id,
       };
 
@@ -151,6 +177,36 @@ const PropertyDetail = () => {
     }
   };
 
+  // Calculate ratings from reviews
+  const calculateRatings = useMemo(() => {
+    if (!apiReviews?.reviews || apiReviews.reviews.length === 0) {
+      return {
+        averageRating: 0,
+        totalRatings: 0,
+        distribution: [0, 0, 0, 0, 0],
+      };
+    }
+
+    const reviews = apiReviews.reviews;
+    const totalRatings = reviews.length;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    const averageRating = parseFloat((sum / totalRatings).toFixed(1));
+
+    // Calculate distribution
+    const distribution = [0, 0, 0, 0, 0]; // 5, 4, 3, 2, 1 stars
+    reviews.forEach((review) => {
+      if (review.rating >= 1 && review.rating <= 5) {
+        distribution[5 - review.rating]++;
+      }
+    });
+
+    return {
+      averageRating,
+      totalRatings,
+      distribution,
+    };
+  }, [apiReviews]);
+
   // Log the selected property to the console
   useEffect(() => {
     if (listings.length === 0) return; // Wait for listings to load
@@ -162,12 +218,33 @@ const PropertyDetail = () => {
     }
   }, [dispatch, navigate, property, listings]);
 
-  // Get similar properties (excluding current one)
-  const similarProperties = property
-    ? listings
-        .filter((item: PropertyListing) => item._id !== property._id)
-        .slice(0, 3)
-    : listings.slice(0, 3);
+  // Get similar properties (same category, excluding current one)
+  const similarProperties = useMemo(() => {
+    if (!property) return listings.slice(0, 3);
+    
+    // Get current property's type ID for comparison
+    const currentPropertyTypeId = typeof property.propertyType === 'object' && 'name' in property.propertyType
+      ? (property.propertyType as { _id: string })._id
+      : (typeof property.propertyType === 'string' ? property.propertyType : '');
+    
+    // Filter listings by same property type, excluding current property
+    const sameCategoryProperties = listings.filter((item: PropertyListing) => {
+      if (item._id === property._id) return false; // Exclude current property
+      
+      // Get item's property type ID
+      const itemPropertyTypeId = typeof item.propertyType === 'object' && 'name' in item.propertyType
+        ? (item.propertyType as { _id: string })._id
+        : (typeof item.propertyType === 'string' ? item.propertyType : '');
+      
+      // Compare property type IDs
+      return itemPropertyTypeId === currentPropertyTypeId && itemPropertyTypeId !== '';
+    });
+    
+    // Return up to 3 similar properties, or fallback to any properties if none match
+    return sameCategoryProperties.length > 0 
+      ? sameCategoryProperties.slice(0, 3)
+      : listings.filter((item: PropertyListing) => item._id !== property._id).slice(0, 3);
+  }, [property, listings]);
 
   // Show loading or not found message if no property
   if (!property) {
@@ -184,7 +261,12 @@ const PropertyDetail = () => {
 
   type HouseRule = 
   | string
-  | { name: string; icon?: string; description?: string };
+  | { 
+      _id?: string;
+      name: string; 
+      icon?: string | { fileUrl: string; [key: string]: unknown }; 
+      description?: string;
+    };
 
 const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) => {
   if (typeof rule === 'string') {
@@ -194,8 +276,13 @@ const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) =>
       description: '',         // optional
     };
   } else {
+    // Handle icon as object with fileUrl or as string
+    const iconUrl = typeof rule.icon === 'object' && rule.icon?.fileUrl
+      ? rule.icon.fileUrl
+      : (typeof rule.icon === 'string' ? rule.icon : '/icons/bell.svg');
+    
     return {
-      icon: rule.icon || '/icons/bell.svg',
+      icon: iconUrl,
       title: rule.name,
       description: rule.description || '',
     };
@@ -212,24 +299,16 @@ const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) =>
       <section className="py-4 sm:py-6 px-4 sm:px-10">
         <div className="flex flex-col lg:flex-row justify-around gap-6 lg:gap-8">
           <div className="w-full lg:w-1/2">
-            {/* Amenities Section */}
-            <AmenitiesSection />
-
-            {/* Location Component */}
-            <PropertyLocation
-              mapImage={IMAGES.map}
-              address="Federal Capital Territory Gombe"
-              nearbyLocations={NEARBY_LOCATIONS}
-              icons={{
-                location: IMAGES.location,
-                transport: IMAGES.airportStation,
-                arrowRight: IMAGES.arrowright,
-              }}
-            />
-
-            <PropertyBedrooms bedrooms={BEDROOMS} />
             {/* Description Component */}
             <PropertyDescription description={property.description} />
+            
+            {/* Amenities Available Section */}
+            <div className="mt-2 sm:mt-4">
+              <h3 className="text-[#050505] font-[500] text-lg sm:text-xl mb-4 sm:mb-5">
+                Amenities Available
+              </h3>
+              <AmenitiesSection />
+            </div>
           </div>
 
           <div className="w-full lg:w-1/2">
@@ -250,34 +329,38 @@ const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) =>
           importantInfo={IMPORTANT_INFO}
         />
         {/* Ratings and Reviews Section */}
-        <div className="flex flex-col md:flex-row gap-6 justify-between py-6 sm:py-8 px-4 md:px-10">
-          <div className="w-full lg:w-1/2">
-            <h2 className="text-lg sm:text-[20px] text-[#040404] font-[500] mb-4 lg:mb-0">
-              Verified Ratings (1394)
-            </h2>
+        <div className="py-6 sm:py-8 px-4 md:px-10">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            <div className="w-full lg:w-1/2">
+              <h2 className="text-lg sm:text-[20px] text-[#040404] font-[500] mb-4 sm:mb-6">
+                Verified Ratings {calculateRatings.totalRatings > 0 && `(${calculateRatings.totalRatings})`}
+              </h2>
+              {/* Ratings Component */}
+              <PropertyRatings
+                rating={calculateRatings.averageRating}
+                totalRatings={calculateRatings.totalRatings}
+                ratingDistribution={calculateRatings.distribution}
+              />
+            </div>
+
+            <div className="w-full lg:w-1/2">
+              {/* Leave a Review Form */}
+              <LeaveReviewForm
+                onSubmit={handleReviewSubmit}
+                isSubmitting={isCreatingReview}
+              />
+            </div>
           </div>
 
-          <div>
-            {/* Ratings Component */}
-            <PropertyRatings
-              rating={4}
-              totalRatings={1394}
-              ratingDistribution={RATING_DISTRIBUTION}
-            />
-
-            {/* Leave a Review Form */}
-            <LeaveReviewForm
-              onSubmit={handleReviewSubmit}
-              isSubmitting={isCreatingReview}
-            />
-
-            {/* Customer Reviews Component */}
+          {/* Customer Reviews Component */}
+          <div className="mt-6 sm:mt-8">
             <CustomerReviews
-              reviews={
-                transformedReviews.length > 0
-                  ? transformedReviews
-                  : CUSTOMER_REVIEWS
-              }
+              reviews={transformedReviews}
+              listingId={property._id}
+              onReviewDeleted={async () => {
+                // Force refetch the reviews query
+                await refetchReviews();
+              }}
             />
           </div>
         </div>

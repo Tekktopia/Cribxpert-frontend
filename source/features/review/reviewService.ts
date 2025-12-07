@@ -4,19 +4,18 @@ import { baseQuery } from '@/features/api';
 // Define the review interface
 export interface Review {
   _id: string;
-  name: string;
-  email: string;
+  name?: string; // Optional, may come from populated userId
+  email?: string; // Optional, may come from populated userId
   review: string;
   listing: string;
   rating: number;
+  userId?: string | { _id: string; fullName: string; email: string }; // Can be ID or populated object
   createdAt?: string;
   updatedAt?: string;
 }
 
 // Request body for creating a review
 export interface CreateReviewRequest {
-  name: string;
-  email: string;
   review: string;
   listing: string;
   rating: number;
@@ -64,10 +63,14 @@ export const reviewApi = createApi({
         url: `/reviews/${reviewId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_result, _error, { reviewId, listingId }) => [
-        { type: 'Review', id: reviewId },
-        { type: 'Review', id: `LIST_${listingId}` },
-      ],
+      invalidatesTags: (_result, _error, { reviewId, listingId }) => {
+        // Invalidate both the specific review and the list query
+        const tags = [
+          { type: 'Review' as const, id: reviewId },
+          { type: 'Review' as const, id: `LIST_${listingId}` },
+        ];
+        return tags;
+      },
     }),
   }),
 });

@@ -31,12 +31,30 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
             description,
             bedroomNo,
             propertyType,
+            createdAt,
           },
           key
         ) => {
           const images = listingImg.map((img) => img.fileUrl) || [];
-          const location = `${city}, ${state}, ${country}`;
-          const propertyTypeName = propertyTypeNames[propertyType] ?? '';
+          // Map location, filtering out empty/null values
+          const locationParts = [city, state, country].filter(
+            (part) => part && part.trim() !== ''
+          );
+          const location = locationParts.length > 0 
+            ? locationParts.join(', ') 
+            : 'Location not specified';
+          
+          // Get property type name - handle both object and ID formats
+          let propertyTypeName = '';
+          if (propertyType) {
+            if (typeof propertyType === 'object' && 'name' in propertyType) {
+              // Property type is an object with name property
+              propertyTypeName = (propertyType as { name: string }).name;
+            } else if (typeof propertyType === 'string') {
+              // Property type is an ID string, look it up
+              propertyTypeName = propertyTypeNames[propertyType] ?? '';
+            }
+          }
 
           return (
             <div key={key} className="w-full flex justify-center">
@@ -51,6 +69,7 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
                 images={images}
                 bedrooms={bedroomNo}
                 propertyType={propertyTypeName}
+                createdAt={createdAt}
               />
             </div>
           );

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { PropertyListing } from '@/types';
 import ListingCardSteps from '../components/ListingCardSteps';
 import { stepData } from './data/Listingsteps';
 import PropertyTypeLabelIcon from '../components/PropertyTypeLabelIcon';
@@ -11,9 +12,10 @@ import ListingPropertyPage from './ListingPropertyPage';
 import PropertyPage from './PropertyPage';
 import PricingPage from './Pricing&Availbility';
 import HouseRulesPage from './HouseRulesPage';
-import { useCreateOrUpdateListingMutation } from '@/features/listing/listingService';
+import { useCreateOrUpdateListingMutation, useGetListingByIdQuery } from '@/features/listing/listingService';
 import { useGetPropertyTypesQuery } from '@/features/propertyType/propertyTypeService';
 import { useGetAmenitiesQuery } from '@/features/amenities/amenitiesService';
+import { useGetHouseRulesQuery } from '@/features/houseRule/houseRuleService';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import { useNavigate } from "react-router-dom";
 
@@ -21,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 interface RoadmapStepperProps {
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  editingListing?: PropertyListing | null;
+  onListingSaved?: () => void;
 }
 
 
@@ -54,6 +58,8 @@ interface ListingData {
 const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   currentStep,
   setCurrentStep,
+  editingListing,
+  onListingSaved,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
   const activeStep = currentStep;
@@ -80,17 +86,83 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const [country, setCountry] = useState('');
   const [longitude, setLongitude] = useState(0);
   const [latitude, setLatitude] = useState(0);
+  const [addressInput, setAddressInput] = useState('');
   const [houseRules, setHouseRules] = useState<string[]>([]);
   const [guestNo, setGuestNo] = useState(1);
   const [size, setSize] = useState(0);
   const [bathroomNo, setBathroomNo] = useState(0);
   const [bedroomNo, setBedroomNo] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [hideStatus, setHideStatus] = useState(false); // false = published, true = draft
 
   // New state to hold created listing ID
   const [listingId, setListingId] = useState<string | null>(null);
 
-
+  // Populate form when editing a listing
+  useEffect(() => {
+    if (editingListing) {
+      // Set property type
+      const propertyTypeId = typeof editingListing.propertyType === 'object' && 'name' in editingListing.propertyType
+        ? (editingListing.propertyType as { _id: string })._id
+        : (typeof editingListing.propertyType === 'string' ? editingListing.propertyType : '');
+      setSelectedPropertyType(propertyTypeId);
+      
+      // Set basic info
+      setTitle(editingListing.name || '');
+      setDescription(editingListing.description || '');
+      
+      // Set property details
+      setBedroomNo(editingListing.bedroomNo || 0);
+      setBathroomNo(editingListing.bathroomNo || 0);
+      setGuestNo(editingListing.guestNo || 1);
+      setSize(editingListing.size || 0);
+      
+      // Set location
+      setStreet(editingListing.street || '');
+      setCity(editingListing.city || '');
+      setStateAddr(editingListing.state || '');
+      setPostalCode(editingListing.postalCode || '');
+      setCountry(editingListing.country || '');
+      setLongitude(editingListing.longitude || 0);
+      setLatitude(editingListing.latitude || 0);
+      
+      // Build address input from location fields
+      const addressParts = [
+        editingListing.street,
+        editingListing.city,
+        editingListing.state,
+        editingListing.country
+      ].filter(part => part && part.trim() !== '');
+      setAddressInput(addressParts.join(', '));
+      
+      // Set pricing
+      setBasePrice(editingListing.basePrice?.toString() || '');
+      setSecurityDeposit(editingListing.securityDeposit?.toString() || '');
+      setCleaningFee(editingListing.cleaningFee?.toString() || '');
+      
+      // Set availability dates
+      if (editingListing.avaliableFrom) {
+        const fromDate = new Date(editingListing.avaliableFrom);
+        setAvailableFrom(fromDate.toISOString().split('T')[0]);
+      }
+      if (editingListing.avaliableUntil) {
+        const untilDate = new Date(editingListing.avaliableUntil);
+        setAvailableUntil(untilDate.toISOString().split('T')[0]);
+      }
+      
+      // Set house rules - will be handled when house rules data loads in separate useEffect
+      // This ensures house rules are properly mapped when houseRulesData is available
+      
+      // Set amenities - will be handled when amenities data loads in separate useEffect
+      // This ensures amenities are properly mapped when amenitiesData is available
+      
+      // Set listing ID for update
+      setListingId(editingListing._id);
+      
+      // Set hideStatus (draft status)
+      setHideStatus(editingListing.hideStatus || false);
+    }
+  }, [editingListing]);
 
   // Helper function to validate ObjectId format
   const isValidObjectId = (id: string): boolean => {
@@ -98,6 +170,48 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   };
 
 const navigate = useNavigate();
+
+  // Validation function to check if current step is valid (returns boolean)
+  const isCurrentStepValid = (): boolean => {
+    switch (activeStep) {
+      case 0: // Property Type
+        return !!selectedPropertyType;
+
+      case 1: // Property Details (guests, bedrooms, bathrooms, size)
+        return guestNo > 0 && (bedroomNo > 0 || bathroomNo > 0 || size > 0);
+
+      case 2: // Location
+        // Check if address input has text OR if coordinates are set OR if at least one address field is filled
+        const hasAddressInput = addressInput.trim().length > 0;
+        const hasCoordinates = longitude !== 0 && latitude !== 0;
+        const hasAddressFields = city || street || stateAddr || postalCode || country;
+        return hasAddressInput || hasCoordinates || hasAddressFields;
+
+      case 3: // Amenities - must select at least one
+        return Object.values(checkedAmenities).some(checked => checked === true);
+
+      case 4: // Photos - minimum 5 photos required (existing + new)
+        const existingCount = (refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).length;
+        return (existingCount + selectedFiles.length) >= 5;
+
+      case 5: // Property Page (title and description) - both required
+        return title.trim().length > 0 && description.trim().length > 0;
+
+      case 6: // Pricing & Availability
+        return (
+          !!basePrice &&
+          Number(basePrice) > 0 &&
+          !!availableFrom &&
+          !!availableUntil
+        );
+
+      case 7: // House Rules - optional, no validation needed
+        return true;
+
+      default:
+        return true;
+    }
+  };
 
   const nextStep = () => {
     if (currentStep < stepData.length - 1) setCurrentStep((prev) => prev + 1);
@@ -157,10 +271,15 @@ const navigate = useNavigate();
       setLatitude(locationData.latitude);
   };
 
+  // Callback for ListingMap to update address input value
+  const handleAddressInputChange = (value: string) => {
+    setAddressInput(value);
+  };
+
   const [createOrUpdateListing, { isLoading: isSaving }] =
     useCreateOrUpdateListingMutation();
 
-  const handleCreateListing = async () => {
+  const handleCreateListing = async (saveAsDraft: boolean = false) => {
     try {
       // Add validation before sending
       if (!title.trim()) {
@@ -206,7 +325,7 @@ const navigate = useNavigate();
       }
 
       // Build the listing data object
-      const listingData: ListingData = {
+      const listingData: ListingData & { id?: string; hideStatus?: boolean } = {
         userId: currentUser._id,
         name: title,
         description: description || '',
@@ -228,7 +347,13 @@ const navigate = useNavigate();
         size: size || 0,
         bathroomNo: bathroomNo || 0,
         bedroomNo: bedroomNo || 0,
+        hideStatus: saveAsDraft, // Use parameter instead of state
       };
+
+      // Include listing ID if editing
+      if (listingId) {
+        listingData.id = listingId;
+      }
 
       // Only include houseRules if there are valid ObjectIds
       if (houseRules && houseRules.length > 0) {
@@ -242,22 +367,27 @@ const navigate = useNavigate();
 
       // Only include files if there are any
       if (selectedFiles && selectedFiles.length > 0) {
-        listingData.files = selectedFiles.slice(0, 5);
+        listingData.files = selectedFiles.slice(0, 8);
       }
 
       console.log('Sending listing data:', listingData);
 
       const response = await createOrUpdateListing(listingData).unwrap();
-      console.log('Listing created successfully:', response);
-      // Save the listing ID
-      if (response?.listing?._id) {
+      console.log('Listing saved successfully:', response);
+      // Save the listing ID if creating new
+      if (!listingId && response?.listing?._id) {
         setListingId(response?.listing?._id);
       }
       if (activeStep === 7) {
-  setShowSuccessModal(true); // Show modal only at the last step
-} else {
-  nextStep();
-}
+        setShowSuccessModal(true); // Show modal only at the last step
+        // Call callback immediately to refresh listings (cache invalidation will also trigger refetch)
+        if (onListingSaved) {
+          // Call immediately to ensure listings are refreshed
+          onListingSaved();
+        }
+      } else {
+        nextStep();
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('Error:', error.message);
@@ -275,7 +405,44 @@ const navigate = useNavigate();
     error,
   } = useGetPropertyTypesQuery();
   
- const { data: amenitiesData, isLoading:isLoadingAmenities , error: amenitiesError } = useGetAmenitiesQuery();
+  const { data: amenitiesData, isLoading:isLoadingAmenities , error: amenitiesError } = useGetAmenitiesQuery();
+  const { data: houseRulesData } = useGetHouseRulesQuery();
+
+  // Refetch listing when editing to get updated images
+  const { data: refetchedListing, refetch: refetchListing } = useGetListingByIdQuery(
+    listingId || '',
+    { skip: !listingId || !editingListing }
+  );
+
+  // Update amenities when they load and we're editing
+  useEffect(() => {
+    if (editingListing && amenitiesData && Array.isArray(amenitiesData) && Array.isArray(editingListing.amenities)) {
+      const amenitiesMap: Record<string, boolean> = {};
+      editingListing.amenities.forEach((amenityId) => {
+        if (typeof amenityId === 'string') {
+          amenitiesMap[amenityId] = true;
+        } else if (typeof amenityId === 'object' && amenityId !== null && '_id' in amenityId) {
+          amenitiesMap[(amenityId as { _id: string })._id] = true;
+        }
+      });
+      setCheckedAmenities(amenitiesMap);
+    }
+  }, [editingListing, amenitiesData]);
+
+  // Update house rules when they load and we're editing (similar to amenities)
+  useEffect(() => {
+    if (editingListing && houseRulesData?.data && Array.isArray(houseRulesData.data) && Array.isArray(editingListing.houseRules)) {
+      const houseRuleIds = editingListing.houseRules.map((rule) => {
+        if (typeof rule === 'string') {
+          return rule;
+        } else if (typeof rule === 'object' && rule !== null && '_id' in rule) {
+          return (rule as { _id: string })._id;
+        }
+        return '';
+      }).filter((id) => id !== '');
+      setHouseRules(houseRuleIds);
+    }
+  }, [editingListing, houseRulesData]);
  
   return (
     <div className="w-full p-6">
@@ -356,38 +523,66 @@ const navigate = useNavigate();
       {activeStep === 1 && (
         <div className="max-w-xl max-h-[560px] mx-auto">
           <div className="grid grid-cols-1 gap-y-4">
-            {ListingCardStepTwoData.map((item, index) => (
-              <ListingCardStepTwo
-                key={index}
-                title={item.title}
-                number={item.number}
-                image={item.image}
-                onChange={(newCount) => {
-                  // Update the appropriate state based on the title
-                  const titleLower = item.title.toLowerCase();
-                  if (titleLower.includes('guest')) {
-                    setGuestNo(newCount);
-                  } else if (titleLower.includes('bedroom')) {
-                    setBedroomNo(newCount);
-                  } else if (titleLower.includes('bathroom')) {
-                    setBathroomNo(newCount);
-                  } else if (
-                    titleLower.includes('size') ||
-                    titleLower.includes('sqft')
-                  ) {
-                    setSize(newCount);
-                  }
-                  console.log(`${item.title} count changed to:`, newCount);
-                }}
-              />
-            ))}
+            {ListingCardStepTwoData.map((item, index) => {
+              // Determine which value to use based on the title
+              const titleLower = item.title.toLowerCase();
+              let currentValue = item.number; // Default to data value
+              
+              if (titleLower.includes('guest')) {
+                currentValue = guestNo;
+              } else if (titleLower.includes('bedroom')) {
+                currentValue = bedroomNo;
+              } else if (titleLower.includes('bathroom') || titleLower.includes('toilet')) {
+                // Toilet is treated as bathroom
+                currentValue = bathroomNo;
+              } else if (titleLower.includes('size') || titleLower.includes('sqft')) {
+                currentValue = size;
+              }
+              
+              return (
+                <ListingCardStepTwo
+                  key={index}
+                  title={item.title}
+                  number={currentValue}
+                  image={item.image}
+                  onChange={(newCount) => {
+                    // Update the appropriate state based on the title
+                    if (titleLower.includes('guest')) {
+                      setGuestNo(newCount);
+                    } else if (titleLower.includes('bedroom')) {
+                      setBedroomNo(newCount);
+                    } else if (titleLower.includes('bathroom') || titleLower.includes('toilet')) {
+                      // Toilet updates bathroom count
+                      setBathroomNo(newCount);
+                    } else if (
+                      titleLower.includes('size') ||
+                      titleLower.includes('sqft')
+                    ) {
+                      setSize(newCount);
+                    }
+                    console.log(`${item.title} count changed to:`, newCount);
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       )}
 
       {activeStep === 2 && (
-        <div className="max-w-[760px] max-h-[560px] mx-auto">
-          <ListingMap onLocationUpdate={handleLocationUpdate} />
+        <div className="max-w-[760px] mx-auto overflow-visible">
+          <ListingMap 
+            onLocationUpdate={handleLocationUpdate}
+            onInputChange={handleAddressInputChange}
+            initialStreet={street}
+            initialCity={city}
+            initialState={stateAddr}
+            initialPostalCode={postalCode}
+            initialCountry={country}
+            initialLongitude={longitude}
+            initialLatitude={latitude}
+            initialAddressInput={addressInput}
+          />
         </div>
       )}
 
@@ -426,6 +621,18 @@ const navigate = useNavigate();
             setUploadCompleted={setUploadCompleted}
             selectedFiles={selectedFiles}
             setSelectedFiles={setSelectedFiles}
+            existingImages={(refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).map((img) => ({
+              _id: typeof img === 'object' && '_id' in img ? img._id : img.toString(),
+              fileUrl: typeof img === 'object' && 'fileUrl' in img ? img.fileUrl : '',
+              fileName: typeof img === 'object' && 'fileName' in img ? img.fileName : undefined,
+            }))}
+            listingId={listingId || undefined}
+            onImageDeleted={() => {
+              // Refetch the listing to get updated images
+              if (listingId) {
+                refetchListing();
+              }
+            }}
           />
         </div>
       )}
@@ -485,23 +692,33 @@ const navigate = useNavigate();
                 handleUploadTrigger();
               }
             }}
-            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition"
-            disabled={isUploading}
+            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isUploading || (!uploadCompleted && ((refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).length + selectedFiles.length) < 5)}
           >
             {uploadCompleted ? 'Next' : isUploading ? 'Uploading...' : 'Upload'}
           </button>
         ) : activeStep === 7 ? (
-          <button
-            onClick={handleCreateListing}
-            className="bg-primary hover:bg-hoverColor text-white px-8 py-4 rounded transition disabled:opacity-60"
-            disabled={isSaving}
-          >
-            {isSaving ? 'Creating...' : 'Create Listing'}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => handleCreateListing(true)}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed"
+              disabled={isSaving}
+            >
+              {isSaving ? 'Saving...' : 'Save as Draft'}
+            </button>
+            <button
+              onClick={() => handleCreateListing(false)}
+              className="bg-primary hover:bg-hoverColor text-white px-8 py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed"
+              disabled={isSaving}
+            >
+              {isSaving ? 'Publishing...' : editingListing ? 'Update & Publish' : 'Publish Listing'}
+            </button>
+          </div>
         ) : (
           <button
             onClick={nextStep}
-            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition"
+            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!isCurrentStepValid()}
           >
             Next
           </button>

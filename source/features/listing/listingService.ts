@@ -68,6 +68,9 @@ export interface CreateListingRequest {
 
   // Images
   files?: File[]; // For file uploads
+
+  // Draft status
+  hideStatus?: boolean; // true = draft, false = published
 }
 
 // Interface for unavailable dates response
@@ -154,20 +157,31 @@ export const listingApi = createApi({
         }
 
         // Standard JSON request if no files
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { files, ...jsonPayload } = data;
+        
+        // Ensure hideStatus is explicitly included as boolean if present
+        if ('hideStatus' in data) {
+          jsonPayload.hideStatus = Boolean(data.hideStatus);
+        }
+        
         return {
           url: '/listing',
           method: 'PATCH',
           body: jsonPayload,
         };
       },
-      invalidatesTags: (_result, _error, { id }) =>
-        id
-          ? [
-              { type: 'Listing', id },
-              { type: 'Listing', id: 'LIST' },
-            ]
-          : [{ type: 'Listing', id: 'LIST' }],
+      invalidatesTags: (_result, _error, { id }) => {
+        const tags: Array<{ type: 'Listing'; id?: string; _id?: string }> = [
+          { type: 'Listing', id: 'LIST' },
+          { type: 'Listing', id: 'USER_LISTINGS' }, // Invalidate user listings to refresh My Listing page
+        ];
+        if (id) {
+          tags.push({ type: 'Listing', _id: id }); // Use _id to match getUserListings format
+          tags.push({ type: 'Listing', id }); // Also invalidate by id format
+        }
+        return tags;
+      },
     }),
 
     // DELETE /listing/{listingId} - Delete a listing and its images
@@ -183,9 +197,12 @@ export const listingApi = createApi({
       ],
     }),
 
-    // GET /listing/user/{userId} - Get all listings created by a specific user
-    getUserListings: builder.query<PropertyListing[], string>({
-      query: (userId) => `/listing/user/${userId}`,
+    // GET /listing/user - Get all listings created by the authenticated user
+    getUserListings: builder.query<PropertyListing[], void>({
+      query: () => `/listing/user`,
+      transformResponse: (response: { listings: PropertyListing[] }) => {
+        return response.listings || [];
+      },
       providesTags: (result) =>
         result
           ? [

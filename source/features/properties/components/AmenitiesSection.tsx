@@ -14,33 +14,40 @@ const AmenitiesSection = () => {
   const propertyAmenities = React.useMemo(() => {
     if (!currentListing?.amenities || !Array.isArray(currentListing.amenities))
       return [];
-    return allAmenities.filter((amenity: Amenity) =>
-      currentListing.amenities.includes(amenity._id)
-    );
+    
+    // Check if amenities are full objects (from API) or just IDs
+    const firstAmenity = currentListing.amenities[0];
+    if (firstAmenity && typeof firstAmenity === 'object' && '_id' in firstAmenity) {
+      // Amenities are full objects, use them directly
+      return currentListing.amenities as Amenity[];
+    } else {
+      // Amenities are IDs, filter from allAmenities
+      return allAmenities.filter((amenity: Amenity) =>
+        currentListing.amenities.includes(amenity._id)
+      );
+    }
   }, [currentListing, allAmenities]);
 
   if (!propertyAmenities.length) return null;
 
   return (
-    <div className="py-8">
-      <h3 className="text-[#050505] font-[500] text-[16px]">
-        Popular Amenities
-      </h3>
-      <div className="mt-5">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-6 gap-y-4">
-          {propertyAmenities.map((amenity) => (
-            <div key={amenity._id} className="flex flex-row items-center gap-3">
-              <img
-                src={amenity.icon?.fileUrl}
-                alt={amenity.name}
-                className="w-[20px] h-[20px]"
-              />
-              <p className="text-[#313131] font-[400] text-[14px]">
-                {amenity.name}
-              </p>
-            </div>
-          ))}
-        </div>
+    <div className="w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+        {propertyAmenities.map((amenity) => (
+          <div 
+            key={amenity._id} 
+            className="flex flex-row items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <img
+              src={amenity.icon?.fileUrl}
+              alt={amenity.name}
+              className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0"
+            />
+            <p className="text-[#313131] font-[400] text-sm sm:text-[14px] truncate">
+              {amenity.name}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import {
 } from '@/features/favourites';
 import { ShareIcon } from '@heroicons/react/24/solid';
 import { HeartIcon } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentListing } from '@/features/properties/listingSlice';
 import {
@@ -14,6 +14,7 @@ import {
 } from '@/features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import useAlert from '@/hooks/useAlert';
+import { useGetReviewsByListingIdQuery } from '@/features/review/reviewService';
 
 const PropertyHeader: React.FC = () => {
   // Get current listing from the store
@@ -27,13 +28,45 @@ const PropertyHeader: React.FC = () => {
   const {
     _id: propertyId = '',
     name: propertyName = '',
-    description = '',
-    rating = 0,
-    // totalRatings = 115,
   } = currentListing || {};
 
   const userId = currentUser?._id;
   const listingId = propertyId;
+
+  // Fetch reviews for this listing
+  const { data: apiReviews } = useGetReviewsByListingIdQuery(
+    listingId || '',
+    {
+      skip: !listingId,
+      // Ensure the query refetches when tags are invalidated
+      refetchOnMountOrArgChange: true,
+    }
+  );
+
+  // Calculate rating and total reviews from API data
+  const ratingData = useMemo(() => {
+    if (!apiReviews?.reviews || apiReviews.reviews.length === 0) {
+      return {
+        rating: 0,
+        totalRatings: 0,
+      };
+    }
+
+    const reviews = apiReviews.reviews;
+    const totalRatings = reviews.length;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    const averageRating = parseFloat((sum / totalRatings).toFixed(1));
+
+    return {
+      rating: averageRating,
+      totalRatings,
+    };
+  }, [apiReviews]);
+
+  // Only use calculated rating from reviews, don't fallback to listing rating
+  // This ensures we only show ratings when there are actual reviews
+  const displayRating = ratingData.rating > 0 && ratingData.totalRatings > 0 ? ratingData.rating : 0;
+  const totalRatings = ratingData.totalRatings;
 
   // Check if this property is already favourited
   const isFavourited = useSelector(selectIsItemFavourited(listingId));
@@ -108,13 +141,23 @@ const PropertyHeader: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-0">
         <div className="flex flex-col gap-y-2 w-full md:w-auto">
           <h1 className="font-[400] text-xl sm:text-2xl md:text-[25px] text-[#040404] line-clamp-2">
-            {propertyName} - {description}
+            {propertyName}
           </h1>
           <p className="font-[400] text-sm sm:text-[14px] text-[#040404]">
-            ⭐{rating}{' '}
-            <span className="text-[#6f6f6f] font-[400] text-sm sm:text-[16px]">
-              [{'90'} verified positive feedbacks]
-            </span>
+            {displayRating > 0 ? (
+              <>
+                ⭐{displayRating}{' '}
+                {totalRatings > 0 && (
+                  <span className="text-[#6f6f6f] font-[400] text-sm sm:text-[16px]">
+                    [{totalRatings} verified {totalRatings === 1 ? 'feedback' : 'feedbacks'}]
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="text-[#6f6f6f] font-[400] text-sm sm:text-[16px]">
+                No ratings yet
+              </span>
+            )}
           </p>
         </div>
 

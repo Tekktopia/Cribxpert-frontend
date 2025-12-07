@@ -26,6 +26,20 @@ export const houseRuleApi = createApi({
     // GET all house rules
     getHouseRules: builder.query<HouseRuleResponse, void>({
       query: () => '/house-rules',
+      transformResponse: (response: HouseRuleResponse | HouseRuleData[] | { data: HouseRuleData[] }) => {
+        // Handle different response formats:
+        // 1. Direct array: [...]
+        // 2. Wrapped in data: { data: [...] }
+        // 3. Already in HouseRuleResponse format
+        if (Array.isArray(response)) {
+          return { data: response };
+        }
+        if (response && typeof response === 'object' && 'data' in response) {
+          return response as HouseRuleResponse;
+        }
+        // Fallback: return empty array
+        return { data: [] };
+      },
       providesTags: (result) =>
   result?.data
     ? [

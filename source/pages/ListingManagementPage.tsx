@@ -70,7 +70,7 @@ const ListingMgmtPage = () => {
   const { data: listingsData, isLoading: isLoadingListings } =
     useGetListingsQuery();
   const { data: userListings, isLoading: isLoadingUserListings } =
-    useGetUserListingsQuery(currentUser?._id || '', {
+    useGetUserListingsQuery(undefined, {
       skip: !currentUser?._id,
     });
   const [createOrUpdateListing, { isLoading: isSaving }] =

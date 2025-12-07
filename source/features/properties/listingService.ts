@@ -181,9 +181,12 @@ export const listingApi = createApi({
       ],
     }),
 
-    // GET /listing/user/{userId} - Get all listings created by a specific user
-    getUserListings: builder.query<PropertyListing[], string>({
-      query: (userId) => `/listing/user/${userId}`,
+    // GET /listing/user - Get all listings created by the authenticated user
+    getUserListings: builder.query<PropertyListing[], void>({
+      query: () => `/listing/user`,
+      transformResponse: (response: { listings: PropertyListing[] }) => {
+        return response.listings || [];
+      },
       providesTags: (result) =>
         result
           ? [

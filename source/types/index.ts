@@ -4,8 +4,8 @@ export interface PropertyListing {
   _id: string;
   name: string;
   description: string;
-  amenities: string[]; // Array of amenity IDs
-  propertyType: string; // Property type ID
+  amenities: string[] | Array<{ _id: string; name: string; icon?: { fileUrl: string } }>; // Array of amenity IDs or full objects
+  propertyType: string | { _id: string; name: string; [key: string]: unknown }; // Property type ID or full object
   street: string;
   city: string;
   state: string;
@@ -45,6 +45,7 @@ export interface PropertyListingCardProps {
   bedrooms: number;
   propertyType: string;
   minWidth?: string;
+  createdAt?: string;
 }
 
 export interface SavedListContextProps {

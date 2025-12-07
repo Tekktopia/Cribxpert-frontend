@@ -109,6 +109,32 @@ export const authApi = createApi({
         method: 'POST',
         body: data,
       }),
+      transformErrorResponse: (response: {
+        status: number;
+        data?: { message?: string; error?: string };
+      }) => {
+        if (response.status === 404) {
+          return { message: response.data?.message || 'User not found' };
+        }
+        if (response.status === 500) {
+          return {
+            message: response.data?.message || 'Server error',
+            error: response.data?.error || 'An unexpected error occurred',
+          };
+        }
+        return {
+          message: response.data?.message || 'An error occurred',
+          error: response.data?.error,
+        };
+      },
+      // Add timeout handling
+      async onQueryStarted(_arg, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error('Forgot password request failed:', err);
+        }
+      },
     }),
     // Reset password
     resetPassword: builder.mutation<

@@ -113,6 +113,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
               onDateSelect={setDateRange}
               selectedCheckIn={formData.checkInDate}
               selectedCheckOut={formData.checkOutDate}
+              minDate={property.avaliableFrom ? new Date(property.avaliableFrom) : null}
+              maxDate={property.avaliableUntil ? new Date(property.avaliableUntil) : null}
               className="flex items-start rounded-md bg-white border border-[#E6E6E6] px-4 py-2 w-full"
             />
           </div>

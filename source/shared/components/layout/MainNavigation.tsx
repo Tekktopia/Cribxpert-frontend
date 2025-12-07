@@ -14,8 +14,6 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
 }) => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  console.log('isAuthenticated', isAuthenticated);
-
   const navLinks = useMemo(() => {
     const baseLinks = [
       { label: 'Dashboard', route: '/' },
