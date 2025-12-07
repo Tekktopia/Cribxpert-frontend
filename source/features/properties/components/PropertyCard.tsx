@@ -140,9 +140,9 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   const propertySlug = React.useMemo(() => createSlug(name), [name]);
 
   return (
-    <Link to={`/propertydetail/${propertySlug}`} className="block w-full">
+    <Link to={`/propertydetail/${propertySlug}`} className="block w-full h-full">
       <div
-        className={`w-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 max-w-full`}
+        className={`w-full h-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 max-w-full flex flex-col`}
       >
         {/* Image Carousel */}
         <div className="relative overflow-hidden">
@@ -243,7 +243,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
         </div>
 
         {/* Content Section */}
-        <div className="p-3 sm:p-4">
+        <div className="p-3 sm:p-4 flex flex-col flex-1">
           {/* Property Name */}
           <div className="mb-2 sm:mb-3">
             <h3 className="font-medium text-base sm:text-lg leading-tight mb-1">{name}</h3>
@@ -305,7 +305,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
           </div>
 
           {/* Price */}
-          <div className="mt-2">
+          <div className="mt-auto pt-2">
             <span className="text-[#1D5C5C] font-bold text-base sm:text-lg">
               ₦{Number(price).toLocaleString()}
             </span>

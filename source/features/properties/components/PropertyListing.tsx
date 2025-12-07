@@ -16,7 +16,7 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
   }, {} as Record<string, string>);
 
   return (
-    <div className="px-4 2xl:container mx-auto w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-14">
+    <div className="px-4 2xl:container mx-auto w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-14 items-stretch">
       {listings?.map(
         (
           {
@@ -57,7 +57,7 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
           }
 
           return (
-            <div key={key} className="w-full flex justify-center">
+            <div key={key} className="w-full h-full flex justify-center">
               <PropertyListingCard
                 id={_id}
                 image={images[0] || ''}
