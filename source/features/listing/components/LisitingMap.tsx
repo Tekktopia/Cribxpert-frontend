@@ -42,7 +42,7 @@ const ListingMap: React.FC<ListingMapProps> = ({
   const [country, setCountry] = useState(initialCountry);
   const [longitude, setLongitude] = useState<number>(initialLongitude);
   const [latitude, setLatitude] = useState<number>(initialLatitude);
-  const [addressInput, setAddressInput] = useState(initialAddressInput);
+  const [_addressInput, setAddressInput] = useState(initialAddressInput); // Set in useEffect, not directly read
 
   // Update state when initial values change (for editing)
   useEffect(() => {

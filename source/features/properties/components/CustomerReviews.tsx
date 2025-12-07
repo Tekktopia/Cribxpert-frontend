@@ -413,7 +413,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews, listingId, o
                 const reviewUserId = typeof review.userId === 'object' && review.userId !== null
                   ? (review.userId as { _id?: string })._id
                   : review.userId;
-                const isOwnReview = currentUser?._id && reviewUserId === currentUser._id;
+                const isOwnReview: boolean = Boolean(currentUser?._id && reviewUserId === currentUser._id);
                 return (
                   <ReviewCard
                     key={review._id || index}
@@ -456,7 +456,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews, listingId, o
                 const reviewUserId = typeof review.userId === 'object' && review.userId !== null
                   ? (review.userId as { _id?: string })._id
                   : review.userId;
-                const isOwnReview = currentUser?._id && reviewUserId === currentUser._id;
+                const isOwnReview: boolean = Boolean(currentUser?._id && reviewUserId === currentUser._id);
                 return (
                   <ReviewCard
                     key={review._id || index}

@@ -93,7 +93,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const [bathroomNo, setBathroomNo] = useState(0);
   const [bedroomNo, setBedroomNo] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [hideStatus, setHideStatus] = useState(false); // false = published, true = draft
+  const [_hideStatus, setHideStatus] = useState(false); // false = published, true = draft (used in useEffect)
 
   // New state to hold created listing ID
   const [listingId, setListingId] = useState<string | null>(null);
@@ -184,7 +184,7 @@ const navigate = useNavigate();
         // Check if address input has text OR if coordinates are set OR if at least one address field is filled
         const hasAddressInput = addressInput.trim().length > 0;
         const hasCoordinates = longitude !== 0 && latitude !== 0;
-        const hasAddressFields = city || street || stateAddr || postalCode || country;
+        const hasAddressFields = !!(city || street || stateAddr || postalCode || country);
         return hasAddressInput || hasCoordinates || hasAddressFields;
 
       case 3: // Amenities - must select at least one
@@ -621,8 +621,8 @@ const navigate = useNavigate();
             setUploadCompleted={setUploadCompleted}
             selectedFiles={selectedFiles}
             setSelectedFiles={setSelectedFiles}
-            existingImages={(refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).map((img) => ({
-              _id: typeof img === 'object' && '_id' in img ? img._id : img.toString(),
+            existingImages={((refetchedListing?.listing?.listingImg || editingListing?.listingImg || []) as Array<{ _id: string; fileUrl: string; fileName?: string } | string>).map((img) => ({
+              _id: typeof img === 'object' && '_id' in img ? img._id : String(img),
               fileUrl: typeof img === 'object' && 'fileUrl' in img ? img.fileUrl : '',
               fileName: typeof img === 'object' && 'fileName' in img ? img.fileName : undefined,
             }))}
