@@ -1,5 +1,5 @@
 import React from 'react';
-import PropertyListing from '@/features/properties/components/PropertyListing';
+import SavedListingCard from '@/features/properties/components/SavedListingCard';
 import { Link } from 'react-router';
 import { useSelector } from 'react-redux';
 import { selectFavourites } from '@/features/favourites';
@@ -37,7 +37,11 @@ const SavedListing: React.FC = () => {
           </Link>
         </div>
       ) : (
-        <PropertyListing listings={savedList} />
+        <div className="px-4 2xl:container mx-auto w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-14 items-stretch">
+          {savedList.map((listing) => (
+            <SavedListingCard key={listing._id} listing={listing} />
+          ))}
+        </div>
       )}
     </div>
   );

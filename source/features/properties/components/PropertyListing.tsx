@@ -35,7 +35,21 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
           },
           key
         ) => {
-          const images = listingImg.map((img) => img.fileUrl) || [];
+          // Support fileUrl, url, secure_url (Cloudinary) and plain URL strings from API
+          const getImageUrl = (img: unknown): string | null => {
+            if (typeof img === 'string' && img.trim()) return img;
+            if (img && typeof img === 'object') {
+              const o = img as Record<string, unknown>;
+              const url = (o.fileUrl ?? o.url ?? o.secure_url) as string | undefined;
+              return url && typeof url === 'string' && url.trim() ? url : null;
+            }
+            return null;
+          };
+          const images = (listingImg ?? [])
+            .map(getImageUrl)
+            .filter((url): url is string => !!url);
+          const fallbackImage = '/images/property-image.jpeg';
+          const primaryImage = images[0] || fallbackImage;
           // Map location, filtering out empty/null values
           const locationParts = [city, state, country].filter(
             (part) => part && part.trim() !== ''
@@ -60,13 +74,13 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
             <div key={key} className="w-full h-full flex justify-center">
               <PropertyListingCard
                 id={_id}
-                image={images[0] || ''}
+                image={primaryImage}
                 price={basePrice}
                 rating={rating}
                 name={name}
                 location={location}
                 description={description}
-                images={images}
+                images={images.length > 0 ? images : [primaryImage]}
                 bedrooms={bedroomNo}
                 propertyType={propertyTypeName}
                 createdAt={createdAt}

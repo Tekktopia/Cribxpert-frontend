@@ -91,6 +91,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const [guestNo, setGuestNo] = useState(1);
   const [size, setSize] = useState(0);
   const [bathroomNo, setBathroomNo] = useState(0);
+  const [toiletNo, setToiletNo] = useState(0);
   const [bedroomNo, setBedroomNo] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [_hideStatus, setHideStatus] = useState(false); // false = published, true = draft (used in useEffect)
@@ -114,6 +115,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       // Set property details
       setBedroomNo(editingListing.bedroomNo || 0);
       setBathroomNo(editingListing.bathroomNo || 0);
+      setToiletNo((editingListing as { toiletNo?: number }).toiletNo ?? 0);
       setGuestNo(editingListing.guestNo || 1);
       setSize(editingListing.size || 0);
       
@@ -177,8 +179,8 @@ const navigate = useNavigate();
       case 0: // Property Type
         return !!selectedPropertyType;
 
-      case 1: // Property Details (guests, bedrooms, bathrooms, size)
-        return guestNo > 0 && (bedroomNo > 0 || bathroomNo > 0 || size > 0);
+      case 1: // Property Details (guests, bedrooms, bathrooms, toilet, size)
+        return guestNo > 0 && (bedroomNo > 0 || bathroomNo > 0 || toiletNo > 0 || size > 0);
 
       case 2: // Location
         // Check if address input has text OR if coordinates are set OR if at least one address field is filled
@@ -190,9 +192,10 @@ const navigate = useNavigate();
       case 3: // Amenities - must select at least one
         return Object.values(checkedAmenities).some(checked => checked === true);
 
-      case 4: // Photos - minimum 5 photos required (existing + new)
+      case 4: // Photos - minimum 1, maximum 5 (existing + new)
         const existingCount = (refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).length;
-        return (existingCount + selectedFiles.length) >= 5;
+        const totalPhotos = existingCount + selectedFiles.length;
+        return totalPhotos >= 1 && totalPhotos <= 5;
 
       case 5: // Property Page (title and description) - both required
         return title.trim().length > 0 && description.trim().length > 0;
@@ -324,29 +327,35 @@ const navigate = useNavigate();
         return;
       }
 
+      // Default dates when empty so backend always receives valid ISO dates
+      const fromDate = availableFrom?.trim() || new Date().toISOString().split('T')[0];
+      const untilDate =
+        availableUntil?.trim() ||
+        new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
       // Build the listing data object
       const listingData: ListingData & { id?: string; hideStatus?: boolean } = {
         userId: currentUser._id,
         name: title,
-        description: description || '',
+        description: description?.trim() || '',
         amenities: validAmenities,
         propertyType: selectedPropertyType,
-        street: street || '',
-        city: city || '',
-        state: stateAddr || '',
-        postalCode: postalCode || '',
-        country: country || '',
-        longitude: longitude || 0,
-        latitude: latitude || 0,
+        street: street?.trim() || '',
+        city: city?.trim() || '',
+        state: stateAddr?.trim() || '',
+        postalCode: postalCode?.trim() || '',
+        country: country?.trim() || '',
+        longitude: Number(longitude) || 0,
+        latitude: Number(latitude) || 0,
         basePrice: Number(basePrice) || 0,
         securityDeposit: Number(securityDeposit) || 0,
         cleaningFee: Number(cleaningFee) || 0,
-        avaliableFrom: availableFrom || '', // Note: typo matches backend
-        avaliableUntil: availableUntil || '', // Note: typo matches backend
-        guestNo: guestNo || 1,
-        size: size || 0,
-        bathroomNo: bathroomNo || 0,
-        bedroomNo: bedroomNo || 0,
+        avaliableFrom: fromDate, // Note: typo matches backend
+        avaliableUntil: untilDate,
+        guestNo: Math.max(1, Number(guestNo) || 1),
+        size: Math.max(0, Number(size) || 0),
+        bathroomNo: Math.max(0, Number(bathroomNo) || 0),
+        bedroomNo: Math.max(0, Number(bedroomNo) || 0),
         hideStatus: saveAsDraft, // Use parameter instead of state
       };
 
@@ -367,7 +376,7 @@ const navigate = useNavigate();
 
       // Only include files if there are any
       if (selectedFiles && selectedFiles.length > 0) {
-        listingData.files = selectedFiles.slice(0, 8);
+        listingData.files = selectedFiles.slice(0, 5);
       }
 
       console.log('Sending listing data:', listingData);
@@ -389,13 +398,30 @@ const navigate = useNavigate();
         nextStep();
       }
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error('Error:', error.message);
-        alert(error.message || 'Failed to create listing');
-      } else {
-        console.error('An unknown error occurred');
-        alert('An unknown error occurred while creating the listing.');
+      // RTK Query unwrap() throws { status, data } on 4xx/5xx
+      const err = error as {
+        status?: number;
+        data?: { message?: string; error?: string; msg?: string; errors?: string[] | { message?: string }[] };
+      };
+      const d = err?.data;
+      let serverMessage: string | undefined;
+      if (typeof d === 'string') serverMessage = d;
+      else if (d && typeof d === 'object') {
+        serverMessage =
+          d.message ||
+          d.error ||
+          d.msg ||
+          (Array.isArray(d.errors)
+            ? d.errors.map((e) => (typeof e === 'string' ? e : e?.message)).filter(Boolean).join('. ')
+            : undefined);
       }
+      const fallback =
+        err?.status === 400
+          ? 'Invalid data. Please check all required fields and try again.'
+          : 'Failed to save listing. Please try again.';
+      const messageToShow = serverMessage?.trim() || fallback;
+      console.error('Listing save error:', err?.status, err?.data ?? error);
+      alert(messageToShow);
     }
   };
 
@@ -445,18 +471,18 @@ const navigate = useNavigate();
   }, [editingListing, houseRulesData]);
  
   return (
-    <div className="w-full p-6">
+    <div className="w-full p-4 sm:p-6 min-w-0 overflow-x-hidden">
       {/* Step Indicators */}
-      <div className="relative flex items-center justify-between mb-10">
-        <div className="absolute left-0 right-0 top-5 h-1 bg-neutralLight z-0" />
+      <div className="relative flex items-center justify-between mb-6 sm:mb-10 gap-0">
+        <div className="absolute left-0 right-0 top-[18px] sm:top-5 h-0.5 sm:h-1 bg-neutralLight z-0" />
         <div
-          className="absolute top-5 h-1 bg-primary z-10 transition-all duration-300"
+          className="absolute top-[18px] sm:top-5 h-0.5 sm:h-1 bg-primary z-10 transition-all duration-300"
           style={{ width: `${(activeStep / (stepData.length - 1)) * 100}%` }}
         />
         {stepData.map((_, index) => (
-          <div key={index} className="flex flex-col items-center relative z-20">
+          <div key={index} className="flex flex-col items-center relative z-20 flex-shrink-0">
             <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center ${
+              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-base ${
                 index <= activeStep
                   ? 'bg-primary text-white'
                   : 'bg-neutralLight text-neutral'
@@ -498,7 +524,7 @@ const navigate = useNavigate();
 
       {/* Step Content */}
       {activeStep === 0 && (
-        <div className="max-w-[760px] max-h-[560px] mx-auto">
+        <div className="max-w-[760px] mx-auto pb-24 sm:pb-28">
           {isLoadingPropertyTypes ? (
             <div>Loading...</div>
           ) : error ? (
@@ -532,9 +558,10 @@ const navigate = useNavigate();
                 currentValue = guestNo;
               } else if (titleLower.includes('bedroom')) {
                 currentValue = bedroomNo;
-              } else if (titleLower.includes('bathroom') || titleLower.includes('toilet')) {
-                // Toilet is treated as bathroom
+              } else if (titleLower.includes('bathroom')) {
                 currentValue = bathroomNo;
+              } else if (titleLower.includes('toilet')) {
+                currentValue = toiletNo;
               } else if (titleLower.includes('size') || titleLower.includes('sqft')) {
                 currentValue = size;
               }
@@ -551,9 +578,10 @@ const navigate = useNavigate();
                       setGuestNo(newCount);
                     } else if (titleLower.includes('bedroom')) {
                       setBedroomNo(newCount);
-                    } else if (titleLower.includes('bathroom') || titleLower.includes('toilet')) {
-                      // Toilet updates bathroom count
+                    } else if (titleLower.includes('bathroom')) {
                       setBathroomNo(newCount);
+                    } else if (titleLower.includes('toilet')) {
+                      setToiletNo(newCount);
                     } else if (
                       titleLower.includes('size') ||
                       titleLower.includes('sqft')
@@ -666,19 +694,19 @@ const navigate = useNavigate();
       )}
 
       {activeStep === 7 && (
-        <div className="max-w-full sm:max-w-xl md:max-w-2xl mx-auto px-4 sm:px-6 py-4">
+        <div className="max-w-full sm:max-w-xl md:max-w-2xl mx-auto px-3 sm:px-6 py-4 w-full min-w-0 overflow-x-hidden">
           <HouseRulesPage
             selectedRules={houseRules}
             onChange={handleHouseRulesChange}
           />
         </div>
       )}
-      {/* Navigation Buttons */}
-      <div className="flex justify-between items-center mt-[3rem] max-w-[70rem] mx-auto w-full">
+      {/* Navigation Buttons - extra top margin so they never overlap step content */}
+      <div className="flex flex-wrap justify-between items-center gap-3 mt-8 sm:mt-10 max-w-[70rem] mx-auto w-full px-3 sm:px-4 pt-2">
         <button
           onClick={prevStep}
           disabled={activeStep === 0}
-          className="bg-neutralLight px-8 py-2 rounded disabled:opacity-50"
+          className="bg-neutralLight px-4 sm:px-8 py-2.5 sm:py-2 rounded disabled:opacity-50 text-sm sm:text-base min-w-0 shrink-0"
         >
           Previous
         </button>
@@ -692,23 +720,26 @@ const navigate = useNavigate();
                 handleUploadTrigger();
               }
             }}
-            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isUploading || (!uploadCompleted && ((refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).length + selectedFiles.length) < 5)}
+            className="bg-primary hover:bg-hoverColor text-white px-6 sm:px-12 py-2.5 sm:py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-w-0"
+            disabled={isUploading || (!uploadCompleted && (() => {
+              const total = ((refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).length + selectedFiles.length);
+              return total < 1 || total > 5;
+            })())}
           >
             {uploadCompleted ? 'Next' : isUploading ? 'Uploading...' : 'Upload'}
           </button>
         ) : activeStep === 7 ? (
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-end flex-1 min-w-0">
             <button
               onClick={() => handleCreateListing(true)}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-3 sm:py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed text-sm sm:text-base whitespace-nowrap min-w-0"
               disabled={isSaving}
             >
               {isSaving ? 'Saving...' : 'Save as Draft'}
             </button>
             <button
               onClick={() => handleCreateListing(false)}
-              className="bg-primary hover:bg-hoverColor text-white px-8 py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="bg-primary hover:bg-hoverColor text-white px-4 sm:px-8 py-3 sm:py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed text-sm sm:text-base whitespace-nowrap min-w-0"
               disabled={isSaving}
             >
               {isSaving ? 'Publishing...' : editingListing ? 'Update & Publish' : 'Publish Listing'}
@@ -717,7 +748,7 @@ const navigate = useNavigate();
         ) : (
           <button
             onClick={nextStep}
-            className="bg-primary hover:bg-hoverColor text-white px-12 py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-primary hover:bg-hoverColor text-white px-6 sm:px-12 py-2.5 sm:py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-w-0"
             disabled={!isCurrentStepValid()}
           >
             Next

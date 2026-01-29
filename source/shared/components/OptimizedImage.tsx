@@ -23,8 +23,10 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   onLoad: externalOnLoad,
   onError: externalOnError,
 }) => {
+  // Treat empty or invalid src as error so we never show spinner forever
+  const hasValidSrc = typeof src === 'string' && src.trim().length > 0;
   const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [hasError, setHasError] = useState(!hasValidSrc);
   const [fadeIn, setFadeIn] = useState(false);
 
   // Handle image load with callback
@@ -43,8 +45,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {/* Loading skeleton with pulse effect */}
-      {!isLoaded && !hasError && (
+      {/* Loading skeleton with pulse effect - only show when we have a valid src and image hasn't loaded */}
+      {hasValidSrc && !isLoaded && !hasError && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse">
           <div className="h-full w-full flex items-center justify-center">
             <svg 
@@ -71,20 +73,22 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
         </div>
       )}
 
-      {/* Actual image with improved attributes */}
-      <img
-        src={src}
-        alt={alt}
-        loading={priority ? 'eager' : loading}
-        width={width}
-        height={height}
-        decoding="async"
-        onLoad={handleLoad}
-        onError={handleError}
-        className={`w-full h-full object-cover transition-all duration-500 ${
-          fadeIn ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
+      {/* Actual image - only render when we have a valid src */}
+      {hasValidSrc && (
+        <img
+          src={src}
+          alt={alt}
+          loading={priority ? 'eager' : loading}
+          width={width}
+          height={height}
+          decoding="async"
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`w-full h-full object-cover transition-all duration-500 ${
+            fadeIn ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      )}
 
       {/* Error fallback with improved styling */}
       {hasError && (

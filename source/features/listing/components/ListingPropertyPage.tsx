@@ -57,10 +57,10 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
     }
     setSelectedFiles((prev) => {
       const currentTotal = existingImages.length + prev.length;
-      const maxNewFiles = 8 - currentTotal;
+      const maxNewFiles = 5 - currentTotal;
       const filesToAdd = newFiles.slice(0, Math.max(0, maxNewFiles));
       if (filesToAdd.length < newFiles.length) {
-        alert(`Maximum of 8 images allowed. You can add ${maxNewFiles} more.`);
+        alert(`Maximum of 5 images allowed. You can add ${maxNewFiles} more.`);
       }
       return [...prev, ...filesToAdd];
     });
@@ -104,7 +104,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
   }, [selectedFiles]);
 
   const totalImages = existingImages.length + selectedFiles.length;
-  const canAddMore = totalImages < 8;
+  const canAddMore = totalImages < 5;
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
@@ -133,7 +133,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             onClick={handleFileClick}
             className="mt-4 px-4 py-2 bg-primary text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Select Photos ({totalImages}/8)
+            Select Photos ({totalImages}/5)
           </button>
         </div>
       )}
@@ -146,7 +146,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
         <>
           {!isUploading && !uploadCompleted && (
             <p className="text-sm text-neutral mt-4 font-bold text-center">
-              Photos: ({totalImages}/8)
+              Photos: ({totalImages}/5)
             </p>
           )}
           {isUploading && (
