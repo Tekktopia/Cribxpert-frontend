@@ -30,9 +30,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   id,
   title,
   price,
-  tags: _tags, // Unused but kept for API compatibility
   image,
-  category: _category, // Unused but kept for API compatibility
   rating,
   className = '',
   onDelete,
@@ -113,9 +111,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
       if (onStatusChange) {
         onStatusChange();
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating listing status:', error);
-      const errorMessage = error?.data?.message || error?.message || 'Failed to update listing status. Please try again.';
+      const err = error as { data?: { message?: string }; message?: string };
+      const errorMessage = err?.data?.message || err?.message || 'Failed to update listing status. Please try again.';
       alert(errorMessage);
     }
   };
@@ -256,7 +255,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
 
         {/* Location and Date Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 pt-2 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-col sm:justify-between gap-1 sm:gap-2 pt-2 border-t border-gray-100">
           {/* Location */}
           {location && (
             <div className="flex items-center text-gray-600">

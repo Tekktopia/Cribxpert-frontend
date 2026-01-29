@@ -144,15 +144,15 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
       <div
         className={`w-full h-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 max-w-full flex flex-col`}
       >
-        {/* Image Carousel */}
+        {/* Image Carousel - compact aspect and max height so images don't dominate the card */}
         <div className="relative overflow-hidden">
-          <div className="relative aspect-[4/3] w-full bg-gray-100">
+          <div className="relative aspect-[16/10] w-full max-h-[220px] sm:max-h-[260px] bg-gray-100">
             {/* Current Image */}
             <OptimizedImage
               src={allImages[currentImageIndex]}
               alt={name}
               width={350}
-              height={200}
+              height={220}
               loading={currentImageIndex === 0 ? 'eager' : 'lazy'}
               priority={currentImageIndex === 0} // First image is priority
               className="w-full h-full object-cover rounded-t-lg transition-opacity duration-300"
@@ -242,16 +242,16 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
           </div>
         </div>
 
-        {/* Content Section */}
-        <div className="p-3 sm:p-4 flex flex-col flex-1">
+        {/* Content Section - min-w-0 so content can shrink and not overflow card */}
+        <div className="p-3 sm:p-4 flex flex-col flex-1 min-w-0">
           {/* Property Name */}
-          <div className="mb-2 sm:mb-3">
-            <h3 className="font-medium text-base sm:text-lg leading-tight mb-1">{name}</h3>
+          <div className="mb-2 sm:mb-3 min-w-0">
+            <h3 className="font-medium text-base sm:text-lg leading-tight mb-1 truncate" title={name}>{name}</h3>
             <p className="text-xs sm:text-sm text-gray-600 line-clamp-3">{description}</p>
           </div>
 
           {/* Property Tags Row */}
-          <div className="flex items-center flex-wrap gap-2 sm:gap-4 mb-2 sm:mb-3">
+          <div className="flex items-center flex-wrap gap-2 sm:gap-4 mb-2 sm:mb-3 min-w-0">
             {/* Property Type Tag */}
             {propertyType && (
               <span className="bg-[#1D5C5C] text-white text-xs px-2 py-1 rounded whitespace-nowrap">
@@ -275,17 +275,17 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
             ) : null}
           </div>
 
-          {/* Location and Date Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 mb-2">
-            {/* Location */}
-            <div className="flex items-center text-gray-600">
-              <IoLocationOutline className="mr-1 text-sm sm:text-base" />
-              <p className="text-xs sm:text-sm truncate">{location}</p>
+          {/* Location and Date Row - stay inside card, location truncates if needed */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2 mb-2 min-w-0 overflow-hidden">
+            {/* Location - shrinks and truncates so date stays visible */}
+            <div className="flex items-center text-gray-600 min-w-0 flex-1 sm:flex-initial sm:min-w-0">
+              <IoLocationOutline className="mr-1 text-sm sm:text-base flex-shrink-0" />
+              <p className="text-xs sm:text-sm truncate" title={location}>{location}</p>
             </div>
 
-            {/* Created Date */}
+            {/* Created Date - doesn't shrink so it stays readable */}
             {createdAt && (
-              <div className="flex items-center text-gray-500">
+              <div className="flex items-center text-gray-500 flex-shrink-0">
                 <svg
                   className="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0"
                   fill="none"

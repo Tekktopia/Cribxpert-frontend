@@ -30,7 +30,7 @@ const PropertyTypeLabelIcon: React.FC<PropertyTypeLabelIconProps> = ({
       <img
         src={image}
         alt={type}
-        className="mb-1 sm:mb-2 w-12 h-12 sm:w-16 sm:h-16 object-contain"
+        className="mb-1 sm:mb-2 w-8 h-8 sm:w-10 sm:h-10 object-contain"
       />
       <p className="text-[10px] sm:text-sm md:text-base leading-tight">{description}</p>
     </div>
