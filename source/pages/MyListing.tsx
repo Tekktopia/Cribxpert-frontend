@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useGetUserListingsQuery } from '@/features/listing/listingService';
 import { PropertyListing } from '@/types';
 import ListingHeader from '@/features/listing/components/ListingHeader';
@@ -12,24 +13,45 @@ import { useSelector } from 'react-redux';
 import { selectAllPropertyTypes } from '@/features/propertyType';
 
 const MyListing: React.FC = () => {
+  const location = useLocation();
+  const editListingIdFromState = (location.state as { editListingId?: string })?.editListingId;
+
   const [activeTab, setActiveTab] = useState('All Listings');
   const [userSteps, setUserSteps] = useState(0);
   const [initialListingsLoaded, setInitialListingsLoaded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showListings] = useState(true); // NEW STATE
+  const [showListings] = useState(true);
   const [editingListing, setEditingListing] = useState<PropertyListing | null>(null);
 
+  // When coming from detail page "Edit", we need all listings to find the one to edit
+  const statusParam =
+    activeTab === 'Active Listings'
+      ? 'approved'
+      : activeTab === 'Rejected Listing'
+        ? 'rejected'
+        : activeTab === 'Pending'
+          ? 'pending'
+          : activeTab === 'Flagged Listings'
+            ? 'flagged'
+            : undefined; // All Listings, Most Booked → no filter
+
+  // If we have editListingId from detail page, fetch all listings to get that listing; otherwise use tab filter
+  const queryArg = editListingIdFromState
+    ? undefined
+    : statusParam
+      ? { status: statusParam }
+      : undefined;
   const {
     data: listings,
     error,
     isLoading,
     refetch,
-  } = useGetUserListingsQuery();
+  } = useGetUserListingsQuery(queryArg);
 
   // Get property types for mapping
   const propertyTypes = useSelector(selectAllPropertyTypes) || [];
 
-  // Check if user has any listings
+  // Check if user has any listings (use full count for "has listings" when no filter)
   const hasListings = listings && listings.length > 0;
 
   // Show getting started only if:
@@ -45,31 +67,23 @@ const MyListing: React.FC = () => {
     !initialListingsLoaded;
 
   useEffect(() => {
-    // If user has listings, don't auto-show the form - keep initialListingsLoaded as false
-    // so they see their listings by default
-    // Only show form when they explicitly click "Create New Listing"
-  }, [hasListings, initialListingsLoaded, userSteps]);
-
-  const filteredListings = (listings || [])
-    .filter((listing) => {
-      // Filter by tab
-      if (activeTab === 'All Listings') {
-        return true;
-      } else if (activeTab === 'Active Listings') {
-        return listing?.hideStatus === false;
-      } else if (activeTab === 'Drafted Listings') {
-        return listing?.hideStatus === true;
-      } else if (activeTab === 'Most Booked Listings') {
-        // For now, return all listings. Can be enhanced later with booking data
-        return true;
+    // When navigated from detail page with "Edit", open the edit form with that listing
+    if (editListingIdFromState && listings && listings.length > 0) {
+      const toEdit = listings.find((l) => l._id === editListingIdFromState);
+      if (toEdit) {
+        setEditingListing(toEdit);
+        setInitialListingsLoaded(true);
+        setUserSteps(0);
       }
-      return listing?.country === activeTab; // Fallback for other filters
-    })
-    .filter((listing) => {
-      const name = listing?.name?.toLowerCase() || '';
-      const term = searchTerm?.toLowerCase() || '';
-      return name.includes(term);
-    });
+    }
+  }, [editListingIdFromState, listings]);
+
+  // API returns pre-filtered by status; only filter by search term client-side
+  const filteredListings = (listings || []).filter((listing) => {
+    const name = listing?.name?.toLowerCase() || '';
+    const term = searchTerm?.toLowerCase() || '';
+    return name.includes(term);
+  });
 
   return (
     <div className="px-4 sm:px-6 md:px-10 py-4">
@@ -369,6 +383,7 @@ const MyListing: React.FC = () => {
                             location={location}
                             createdAt={createdAt}
                             hideStatus={listing.hideStatus}
+                            status={listing.status}
                             className="w-full"
                             onDelete={(deletedId) => {
                               refetch();

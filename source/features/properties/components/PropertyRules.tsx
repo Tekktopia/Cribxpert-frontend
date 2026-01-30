@@ -18,8 +18,8 @@ const PropertyRules: React.FC<PropertyRulesProps> = ({ rules }) => {
 
   return (
     <div className="w-full bg-[#FBFBFB] py-6 sm:py-8 px-4 sm:px-10">
-      <div className="flex flex-col md:flex-row items-start gap-4 sm:gap-8">
-        <h2 className="text-lg sm:text-[20px] text-[#040404] font-medium">
+      <div className="flex flex-col">
+        <h2 className="text-lg sm:text-[20px] text-[#040404] font-medium mb-4 sm:mb-6">
           House Rules
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 w-full max-w-[600px]">

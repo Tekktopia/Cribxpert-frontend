@@ -9,7 +9,9 @@ const tabs = [
   'All Listings',
   'Active Listings',
   'Most Booked Listings',
-  'Drafted Listings',
+  'Flagged Listings',
+  'Pending',
+  'Rejected Listing',
 ];
 
 const ListingTabs: React.FC<ListingTabsProps> = ({ activeTab, setActiveTab }) => {

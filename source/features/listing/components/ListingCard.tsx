@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import star from '../../../assets/icons/star.png';
-import { useDeleteListingMutation, useCreateOrUpdateListingMutation } from '@/features/listing/listingService';
-import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '@/features/auth/authSlice';
+import { useDeleteListingMutation } from '@/features/listing/listingService';
 
 interface ListingCardProps {
   id: string; // Added ID prop for API calls
@@ -23,6 +22,7 @@ interface ListingCardProps {
   location?: string;
   createdAt?: string;
   hideStatus?: boolean;
+  status?: string; // Optional: 'pending' | 'flagged' when backend supports it
   onStatusChange?: () => void; // Callback when status changes
 }
 
@@ -43,16 +43,15 @@ const ListingCard: React.FC<ListingCardProps> = ({
   location,
   createdAt,
   hideStatus = false,
-  onStatusChange,
+  status: listingStatus,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const currentUser = useSelector(selectCurrentUser);
-  
+  const navigate = useNavigate();
+
   // RTK Query mutation hooks
   const [deleteListing, { isLoading: isDeleting, error: deleteError }] = useDeleteListingMutation();
-  const [updateListing, { isLoading: isUpdatingStatus }] = useCreateOrUpdateListingMutation();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -84,46 +83,24 @@ const ListingCard: React.FC<ListingCardProps> = ({
     }
   };
 
-  const handleToggleStatus = async () => {
-    if (!currentUser?._id) {
-      alert('Please log in to update listing status.');
-      return;
-    }
-    
-    const newHideStatus = !hideStatus;
-    
-    try {
-      // Send as JSON payload with explicit boolean value
-      const payload = {
-        id,
-        userId: currentUser._id,
-        hideStatus: newHideStatus,
-      };
-      
-      console.log('Toggling listing status:', payload); // Debug log
-      
-      const result = await updateListing(payload).unwrap();
-      console.log('Update result:', result); // Debug log
-      
-      setDropdownOpen(false);
-      
-      // Force refetch to ensure UI updates
-      if (onStatusChange) {
-        onStatusChange();
-      }
-    } catch (error: unknown) {
-      console.error('Error updating listing status:', error);
-      const err = error as { data?: { message?: string }; message?: string };
-      const errorMessage = err?.data?.message || err?.message || 'Failed to update listing status. Please try again.';
-      alert(errorMessage);
-    }
-  };
-
   const imageUrl = image;
   const validRating = isNaN(rating) || rating < 0 ? 0 : rating;
 
+  const goToDetails = () => navigate(`/my-listing/${id}`);
+
   return (
-    <div className={`w-full bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 ${className}`}>
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={goToDetails}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          goToDetails();
+        }
+      }}
+      className={`w-full bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 cursor-pointer ${className}`}
+    >
       <div className="relative w-full aspect-[4/3] overflow-hidden group">
         <img
           src={imageUrl}
@@ -136,13 +113,39 @@ const ListingCard: React.FC<ListingCardProps> = ({
           <img src={star} alt="star" className="w-3.5 h-3.5" />
           <span className="text-xs font-semibold">{validRating.toFixed(1)}</span>
         </div>
+        {/* Listing status badge - uses API status when present, else hideStatus (Active = approved, Rejected = rejected/draft) */}
+        <div className="absolute top-3 left-3 z-10">
+          <span
+            className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm ${
+              listingStatus === 'flagged'
+                ? 'bg-amber-500 text-white'
+                : listingStatus === 'pending'
+                  ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                  : listingStatus === 'rejected' || hideStatus
+                    ? 'bg-gray-500 text-white'
+                    : 'bg-[#1D5C5C] text-white'
+            }`}
+          >
+            {listingStatus === 'flagged'
+              ? 'Flagged'
+              : listingStatus === 'pending'
+                ? 'Pending'
+                : listingStatus === 'rejected' || hideStatus
+                  ? 'Rejected'
+                  : 'Active'}
+          </span>
+        </div>
       </div>
 
       <div className="p-5 space-y-3">
         <div className="flex justify-between items-start gap-3 relative">
           <h3 className="text-lg font-semibold leading-tight line-clamp-2 flex-1 text-gray-900">{title}</h3>
 
-          <div ref={dropdownRef} className="relative flex-shrink-0">
+          <div
+            ref={dropdownRef}
+            className="relative flex-shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -159,8 +162,20 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
             {dropdownOpen && (
               <div className="absolute right-0 top-full mt-2 w-48 bg-white shadow-xl rounded-lg border border-gray-200 z-50 overflow-hidden">
+                <button
+                  type="button"
+                  className="w-full text-left px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 text-sm font-medium text-gray-700 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDropdownOpen(false);
+                    navigate(`/my-listing/${id}`);
+                  }}
+                >
+                  View Details
+                </button>
                 {onEdit && (
                   <button
+                    type="button"
                     className="w-full text-left px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 text-sm font-medium text-gray-700 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -172,21 +187,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
                   </button>
                 )}
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDropdownOpen(false);
-                    handleToggleStatus();
-                  }}
-                  disabled={isUpdatingStatus}
-                  className="w-full text-left px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 text-sm font-medium text-gray-700 transition-colors disabled:opacity-50"
-                >
-                  {isUpdatingStatus 
-                    ? 'Updating...' 
-                    : hideStatus 
-                      ? 'Activate Listing' 
-                      : 'Draft Listing'}
-                </button>
-                <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     setDropdownOpen(false);
@@ -204,15 +205,6 @@ const ListingCard: React.FC<ListingCardProps> = ({
         {/* Description */}
         {description && (
           <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
-        )}
-
-        {/* Drafted Tag */}
-        {hideStatus && (
-          <div className="flex items-center gap-2 mb-2">
-            <span className="bg-yellow-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
-              ⚠️ Listing is Drafted
-            </span>
-          </div>
         )}
 
         {/* Property Tags Row */}
@@ -319,7 +311,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div
             className="bg-white rounded-lg w-full max-w-md min-h-[300px] flex flex-col items-center justify-center p-8 modal-container"
             onClick={(e) => e.stopPropagation()}

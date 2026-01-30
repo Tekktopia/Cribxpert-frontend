@@ -14,6 +14,8 @@ export interface PropertyListing {
   longitude?: number;
   latitude?: number;
   hideStatus: boolean;
+  /** API status: pending | approved | rejected | flagged (when backend supports it) */
+  status?: string;
   basePrice: number;
   securityDeposit: number;
   cleaningFee: number;

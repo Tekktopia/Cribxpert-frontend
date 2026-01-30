@@ -197,9 +197,20 @@ export const listingApi = createApi({
       ],
     }),
 
-    // GET /listing/user - Get all listings created by the authenticated user
-    getUserListings: builder.query<PropertyListing[], void>({
-      query: () => `/listing/user`,
+    // GET /listing/user - Get all listings created by the authenticated user (optional status filter)
+    getUserListings: builder.query<
+      PropertyListing[],
+      { status?: string } | void
+    >({
+      query: (arg) => {
+        const params = arg && typeof arg === 'object' && arg.status
+          ? { status: arg.status }
+          : undefined;
+        return {
+          url: '/listing/user',
+          params,
+        };
+      },
       transformResponse: (response: { listings: PropertyListing[] }) => {
         return response.listings || [];
       },
