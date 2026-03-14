@@ -33,10 +33,10 @@ export default function StepOne({
           </p>
         </div>
         <p className="text-[14px] text-red-500 text-left">{error}</p>
-        <CustomDropdown
+        {/* <CustomDropdown
           methodSelected={methodSelected}
           setMethodSelected={setMethodSelected}
-        />
+        /> */}
         {methodSelected === 'Email Address' ? (
           <div>
             

@@ -139,11 +139,11 @@ const Login: React.FC = () => {
             <form onSubmit={handleLogin} className="space-y-4">
               {/* Login with Email or Phone Number */}
               <div className="space-y-2 text-[#999999]">
-                <p className="text-left">Login with</p>
+                {/* <p className="text-left">Login with</p>
                 <CustomDropdown
                   methodSelected={methodSelected}
                   setMethodSelected={setMethodSelected}
-                />
+                /> */}
 
                 {methodSelected === 'Email Address' ? (
                   <div>

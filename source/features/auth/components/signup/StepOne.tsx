@@ -110,11 +110,11 @@ const StepOne: React.FC<StepOneProps> = ({
 
         <div className="space-y-2 text-[#999999]">
           <p className="text-red-500">{error}</p>
-          <p className="text-left">Register with</p>
+          {/* <p className="text-left">Register with</p>
           <CustomDropdown
             methodSelected={methodSelected}
             setMethodSelected={setMethodSelected}
-          />
+          /> */}
 
           {methodSelected === 'Email Address' ? (
             <div>

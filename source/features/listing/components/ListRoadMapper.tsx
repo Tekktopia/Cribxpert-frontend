@@ -96,6 +96,8 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [_hideStatus, setHideStatus] = useState(false); // false = published, true = draft (used in useEffect)
 
+  const [savingAction, setSavingAction] = useState<'draft' | 'publish' | null>(null);
+
   // New state to hold created listing ID
   const [listingId, setListingId] = useState<string | null>(null);
 
@@ -107,18 +109,18 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         ? (editingListing.propertyType as { _id: string })._id
         : (typeof editingListing.propertyType === 'string' ? editingListing.propertyType : '');
       setSelectedPropertyType(propertyTypeId);
-      
+
       // Set basic info
       setTitle(editingListing.name || '');
       setDescription(editingListing.description || '');
-      
+
       // Set property details
       setBedroomNo(editingListing.bedroomNo || 0);
       setBathroomNo(editingListing.bathroomNo || 0);
       setToiletNo((editingListing as { toiletNo?: number }).toiletNo ?? 0);
       setGuestNo(editingListing.guestNo || 1);
       setSize(editingListing.size || 0);
-      
+
       // Set location
       setStreet(editingListing.street || '');
       setCity(editingListing.city || '');
@@ -127,7 +129,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       setCountry(editingListing.country || '');
       setLongitude(editingListing.longitude || 0);
       setLatitude(editingListing.latitude || 0);
-      
+
       // Build address input from location fields
       const addressParts = [
         editingListing.street,
@@ -136,12 +138,12 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         editingListing.country
       ].filter(part => part && part.trim() !== '');
       setAddressInput(addressParts.join(', '));
-      
+
       // Set pricing
       setBasePrice(editingListing.basePrice?.toString() || '');
       setSecurityDeposit(editingListing.securityDeposit?.toString() || '');
       setCleaningFee(editingListing.cleaningFee?.toString() || '');
-      
+
       // Set availability dates
       if (editingListing.avaliableFrom) {
         const fromDate = new Date(editingListing.avaliableFrom);
@@ -151,16 +153,16 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         const untilDate = new Date(editingListing.avaliableUntil);
         setAvailableUntil(untilDate.toISOString().split('T')[0]);
       }
-      
+
       // Set house rules - will be handled when house rules data loads in separate useEffect
       // This ensures house rules are properly mapped when houseRulesData is available
-      
+
       // Set amenities - will be handled when amenities data loads in separate useEffect
       // This ensures amenities are properly mapped when amenitiesData is available
-      
+
       // Set listing ID for update
       setListingId(editingListing._id);
-      
+
       // Set hideStatus (draft status)
       setHideStatus(editingListing.hideStatus || false);
     }
@@ -171,7 +173,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
     return typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/) !== null;
   };
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Validation function to check if current step is valid (returns boolean)
   const isCurrentStepValid = (): boolean => {
@@ -283,6 +285,7 @@ const navigate = useNavigate();
     useCreateOrUpdateListingMutation();
 
   const handleCreateListing = async (saveAsDraft: boolean = false) => {
+    setSavingAction(saveAsDraft ? 'draft' : 'publish');
     try {
       // Add validation before sending
       if (!title.trim()) {
@@ -423,15 +426,18 @@ const navigate = useNavigate();
       console.error('Listing save error:', err?.status, err?.data ?? error);
       alert(messageToShow);
     }
+    finally {
+      setSavingAction(null);
+    }
   };
 
   const {
     data: propertyTypeData,
-    isLoading:isLoadingPropertyTypes,
+    isLoading: isLoadingPropertyTypes,
     error,
   } = useGetPropertyTypesQuery();
-  
-  const { data: amenitiesData, isLoading:isLoadingAmenities , error: amenitiesError } = useGetAmenitiesQuery();
+
+  const { data: amenitiesData, isLoading: isLoadingAmenities, error: amenitiesError } = useGetAmenitiesQuery();
   const { data: houseRulesData } = useGetHouseRulesQuery();
 
   // Refetch listing when editing to get updated images
@@ -469,7 +475,7 @@ const navigate = useNavigate();
       setHouseRules(houseRuleIds);
     }
   }, [editingListing, houseRulesData]);
- 
+
   return (
     <div className="w-full p-4 sm:p-6 min-w-0 overflow-x-hidden">
       {/* Step Indicators */}
@@ -482,11 +488,10 @@ const navigate = useNavigate();
         {stepData.map((_, index) => (
           <div key={index} className="flex flex-col items-center relative z-20 flex-shrink-0">
             <div
-              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-base ${
-                index <= activeStep
-                  ? 'bg-primary text-white'
-                  : 'bg-neutralLight text-neutral'
-              }`}
+              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-base ${index <= activeStep
+                ? 'bg-primary text-white'
+                : 'bg-neutralLight text-neutral'
+                }`}
             >
               {index + 1}
             </div>
@@ -496,28 +501,28 @@ const navigate = useNavigate();
 
       {/* Step Card Content */}
       <div className="flex justify-center text-center mb-8">
-  {activeStep === 4 && uploadCompleted ? (
-    <div className="text-center flex flex-col items-center">
-      <div className='flex justify-center items-end gap-1'>
-      <img
-        src="/other-icons/review-icon.svg"
-        alt="Review photos icon"
-        className=" w-8 h-8"
-        />
-      <h2 className="text-xl font-semibold mb-1">Review Your Photos</h2>
-        </div>
-      <p className="text-neutral text-sm max-w-md">
-        Click to select a cover photo. By default, the first image will be used as the cover.
-      </p>
-    </div>
-  ) : (
-    <ListingCardSteps
-      title={stepData[activeStep].title}
-      description={stepData[activeStep].description}
-      image={stepData[activeStep].image}
-    />
-  )}
-</div>
+        {activeStep === 4 && uploadCompleted ? (
+          <div className="text-center flex flex-col items-center">
+            <div className='flex justify-center items-end gap-1'>
+              <img
+                src="/other-icons/review-icon.svg"
+                alt="Review photos icon"
+                className=" w-8 h-8"
+              />
+              <h2 className="text-xl font-semibold mb-1">Review Your Photos</h2>
+            </div>
+            <p className="text-neutral text-sm max-w-md">
+              Click to select a cover photo. By default, the first image will be used as the cover.
+            </p>
+          </div>
+        ) : (
+          <ListingCardSteps
+            title={stepData[activeStep].title}
+            description={stepData[activeStep].description}
+            image={stepData[activeStep].image}
+          />
+        )}
+      </div>
 
 
 
@@ -553,7 +558,7 @@ const navigate = useNavigate();
               // Determine which value to use based on the title
               const titleLower = item.title.toLowerCase();
               let currentValue = item.number; // Default to data value
-              
+
               if (titleLower.includes('guest')) {
                 currentValue = guestNo;
               } else if (titleLower.includes('bedroom')) {
@@ -565,7 +570,7 @@ const navigate = useNavigate();
               } else if (titleLower.includes('size') || titleLower.includes('sqft')) {
                 currentValue = size;
               }
-              
+
               return (
                 <ListingCardStepTwo
                   key={index}
@@ -599,7 +604,7 @@ const navigate = useNavigate();
 
       {activeStep === 2 && (
         <div className="max-w-[760px] mx-auto overflow-visible">
-          <ListingMap 
+          <ListingMap
             onLocationUpdate={handleLocationUpdate}
             onInputChange={handleAddressInputChange}
             initialStreet={street}
@@ -615,27 +620,27 @@ const navigate = useNavigate();
       )}
 
       {activeStep === 3 && (
-  <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    {isLoadingAmenities ? (
-      <div>Loading...</div>
-    ) : amenitiesError ? (
-      <div>Error</div>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
-        {amenitiesData?.map((item, index) => (
-          <ListAmenity
-            key={index}
-            inputProps={{ id: item._id }}  
-            icon={item.icon?.fileUrl ?? '/path/to/default-icon.png'}  
-            description={item.name}
-            checked={checkedAmenities[item._id] ?? false}
-            onChange={(e) => handleCheckboxChange(e, item._id)}
-          />
-        ))}
-      </div>
-    )}
-  </div>
-)}
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          {isLoadingAmenities ? (
+            <div>Loading...</div>
+          ) : amenitiesError ? (
+            <div>Error</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6">
+              {amenitiesData?.map((item, index) => (
+                <ListAmenity
+                  key={index}
+                  inputProps={{ id: item._id }}
+                  icon={item.icon?.fileUrl ?? '/path/to/default-icon.png'}
+                  description={item.name}
+                  checked={checkedAmenities[item._id] ?? false}
+                  onChange={(e) => handleCheckboxChange(e, item._id)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
 
       {activeStep === 4 && (
@@ -733,16 +738,16 @@ const navigate = useNavigate();
             <button
               onClick={() => handleCreateListing(true)}
               className="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-3 sm:py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed text-sm sm:text-base whitespace-nowrap min-w-0"
-              disabled={isSaving}
+              disabled={savingAction !== null}
             >
-              {isSaving ? 'Saving...' : 'Save as Draft'}
+              {savingAction === 'draft' ? 'Saving...' : 'Save as Draft'}
             </button>
             <button
               onClick={() => handleCreateListing(false)}
               className="bg-primary hover:bg-hoverColor text-white px-4 sm:px-8 py-3 sm:py-4 rounded transition disabled:opacity-60 disabled:cursor-not-allowed text-sm sm:text-base whitespace-nowrap min-w-0"
-              disabled={isSaving}
+              disabled={savingAction !== null}
             >
-              {isSaving ? 'Publishing...' : editingListing ? 'Update & Publish' : 'Publish Listing'}
+              {savingAction === 'publish' ? 'Publishing...' : editingListing ? 'Update & Publish' : 'Publish Listing'}
             </button>
           </div>
         ) : (
@@ -756,60 +761,60 @@ const navigate = useNavigate();
         )}
       </div>
       {showSuccessModal && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white rounded-sm w-[717px] max-w-full p-6 h-[546px] text-center relative">
-      
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-sm w-[717px] max-w-full p-6 h-[546px] text-center relative">
 
-  {/* Close icon */}
-  <img
-    src="/other-icons/x_icon.svg"
-    alt="Close modal"
-    className="absolute top-4 right-4 w-6 h-6 cursor-pointer"
-    onClick={() => setShowSuccessModal(false)}
-  />
 
-  <div className="flex flex-col items-center justify-center h-[80%] px-4">
-    <h2 className="text-[25px] font-bold mb-4">
-      Listing Created Successfully
-    </h2>
+            {/* Close icon */}
+            <img
+              src="/other-icons/x_icon.svg"
+              alt="Close modal"
+              className="absolute top-4 right-4 w-6 h-6 cursor-pointer"
+              onClick={() => setShowSuccessModal(false)}
+            />
 
-    <p className="text-[16px] max-w-[430px] text-neutral">
-      It has been listed! You can now view it on your dashboard or share it with potential renters.
-    </p>
-  </div>
+            <div className="flex flex-col items-center justify-center h-[80%] px-4">
+              <h2 className="text-[25px] font-bold mb-4">
+                Listing Created Successfully
+              </h2>
 
-  <div className="flex justify-center gap-4">
-    {/* View Listing button */}
-    <button
-      onClick={() => {
-        setShowSuccessModal(false);
-        if (listingId) {
-          navigate(`/listing/${listingId}`); // React Router
-        } else {
-          console.warn("No listingId available for navigation.");
-        }
-      }}
-      className="bg-primary text-white px-6 py-2 rounded hover:bg-hoverColor transition"
-    >
-      View Listing
-    </button>
+              <p className="text-[16px] max-w-[430px] text-neutral">
+                It has been listed! You can now view it on your dashboard or share it with potential renters.
+              </p>
+            </div>
 
-    {/* Dashboard button */}
-    <button
-      onClick={() => {
-        setShowSuccessModal(false);
-        navigate('/'); // 
-      }}
-      className="bg-neutralLight text-black px-6 py-2 rounded hover:bg-gray-300 transition"
-    >
-      Go to Dashboard
-    </button>
-  </div>
+            <div className="flex justify-center gap-4">
+              {/* View Listing button */}
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  if (listingId) {
+                    navigate(`/listing/${listingId}`); // React Router
+                  } else {
+                    console.warn("No listingId available for navigation.");
+                  }
+                }}
+                className="bg-primary text-white px-6 py-2 rounded hover:bg-hoverColor transition"
+              >
+                View Listing
+              </button>
 
-</div>
+              {/* Dashboard button */}
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  navigate('/'); // 
+                }}
+                className="bg-neutralLight text-black px-6 py-2 rounded hover:bg-gray-300 transition"
+              >
+                Go to Dashboard
+              </button>
+            </div>
 
-  </div>
-)}
+          </div>
+
+        </div>
+      )}
 
 
     </div>

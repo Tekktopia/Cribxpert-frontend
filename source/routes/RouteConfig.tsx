@@ -31,6 +31,7 @@ import PaymentHistory from '@/pages/PaymentHistory';
 import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
 // import ListingMgmtPage from '@/pages/ListingManagementPage';
 import PaymentDetailsDownload from '@/pages/PaymentDetailsDownload';
+import EscrowPaymentPage from '@/pages/EscrowPaymentPage';
 
 export interface RouteConfig {
   path: string;
@@ -212,6 +213,12 @@ const routeConfig: RouteConfig[] = [
   // },
 
   // 404 route - must be last
+  {
+    path: '/escrow/:bookingId',
+    element: <EscrowPaymentPage />,
+    protected: true,
+    title: 'Secure Payment',
+  },  
   {
     path: '*',
     element: <NotFound404 />,

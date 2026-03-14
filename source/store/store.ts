@@ -8,6 +8,7 @@ import { propertyTypeReducer, propertyTypeApi } from '@/features/propertyType';
 import reviewReducer, { reviewApi } from '@/features/review';
 import notificationReducer, { notificationApi } from '@/features/notifications';
 import { messageReducer } from '@/features/messages';
+import { escrowReducer } from '@/features/escrow'; // ← NEW
 
 // Import API services
 import { authApi } from '@/features/auth/authService';
@@ -21,27 +22,28 @@ import houseRuleReducer from '@/features/houseRule/houseRuleSlice';
 export const store = configureStore({
   reducer: {
     // Feature slices
-    houseRule: houseRuleReducer,
-    auth: authReducer,
-    booking: bookingReducer,
-    favourites: favouritesReducer,
-    amenities: amenitiesReducer,
-    listing: listingReducer,
+    houseRule:    houseRuleReducer,
+    auth:         authReducer,
+    booking:      bookingReducer,
+    favourites:   favouritesReducer,
+    amenities:    amenitiesReducer,
+    listing:      listingReducer,
     propertyType: propertyTypeReducer,
-    review: reviewReducer,
+    review:       reviewReducer,
     notification: notificationReducer,
-    messages: messageReducer,
+    messages:     messageReducer,
+    escrow:       escrowReducer, // ← NEW
 
     // API reducers
-    [authApi.reducerPath]: authApi.reducer,
-    [bookingApi.reducerPath]: bookingApi.reducer,
-    [favouritesApi.reducerPath]: favouritesApi.reducer,
-    [amenitiesApi.reducerPath]: amenitiesApi.reducer,
-    [listingApi.reducerPath]: listingApi.reducer,
+    [authApi.reducerPath]:         authApi.reducer,
+    [bookingApi.reducerPath]:      bookingApi.reducer,
+    [favouritesApi.reducerPath]:   favouritesApi.reducer,
+    [amenitiesApi.reducerPath]:    amenitiesApi.reducer,
+    [listingApi.reducerPath]:      listingApi.reducer,
     [propertyTypeApi.reducerPath]: propertyTypeApi.reducer,
-    [reviewApi.reducerPath]: reviewApi.reducer,
+    [reviewApi.reducerPath]:       reviewApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
-    [houseRuleApi.reducerPath]: houseRuleApi.reducer,
+    [houseRuleApi.reducerPath]:    houseRuleApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

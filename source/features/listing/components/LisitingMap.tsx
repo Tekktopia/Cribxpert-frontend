@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 
 interface ListingMapProps {
   onLocationUpdate?: (data: {
@@ -43,9 +43,15 @@ const ListingMap: React.FC<ListingMapProps> = ({
   const [longitude, setLongitude] = useState<number>(initialLongitude);
   const [latitude, setLatitude] = useState<number>(initialLatitude);
   const [_addressInput, setAddressInput] = useState(initialAddressInput); // Set in useEffect, not directly read
+  const hasInitialized = useRef(false);
 
   // Update state when initial values change (for editing)
-  useEffect(() => {
+// Replace your existing sync useEffect with this:
+useEffect(() => {
+  if (!hasInitialized.current && (
+    initialStreet || initialCity || initialState ||
+    initialPostalCode || initialCountry || initialLongitude || initialLatitude || initialAddressInput
+  )) {
     setStreet(initialStreet);
     setCity(initialCity);
     setState(initialState);
@@ -54,7 +60,9 @@ const ListingMap: React.FC<ListingMapProps> = ({
     setLongitude(initialLongitude);
     setLatitude(initialLatitude);
     setAddressInput(initialAddressInput);
-  }, [initialStreet, initialCity, initialState, initialPostalCode, initialCountry, initialLongitude, initialLatitude, initialAddressInput]);
+    hasInitialized.current = true;
+  }
+}, [initialStreet, initialCity, initialState, initialPostalCode, initialCountry, initialLongitude, initialLatitude, initialAddressInput]);
 
   // Update Google Maps iframe URL when address changes
   // Using Google Maps embed without API key - uses the shareable link format

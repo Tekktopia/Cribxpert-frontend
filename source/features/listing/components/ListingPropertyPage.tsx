@@ -50,7 +50,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
     if (!files) return;
 
     const newFiles = Array.from(files).filter((file) =>
-      ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)
+      ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type)
     );
     if (newFiles.length !== Array.from(files).length) {
       alert('Only JPEG, PNG, or WEBP images are allowed.');
