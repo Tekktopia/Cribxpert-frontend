@@ -1,5 +1,4 @@
 import React from 'react';
-import CustomDropdown from './CustomDropdown';
 import { GoogleSignUp } from './GoogleSignUp';
 import { useInitiateEmailVerificationMutation } from '@/features/auth/authService';
 import { Link } from 'react-router';
@@ -18,7 +17,6 @@ type StepOneProps = {
 const StepOne: React.FC<StepOneProps> = ({
   methodSelected,
   nextStep,
-  setMethodSelected,
   email,
   phoneNumber,
   setEmail,

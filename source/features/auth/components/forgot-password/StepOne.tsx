@@ -1,5 +1,4 @@
 import React from 'react';
-import CustomDropdown from '../signup/CustomDropdown';
 
 type StepOneProps = {
   methodSelected: string | null;
@@ -18,7 +17,6 @@ export default function StepOne({
   setEmail,
   setPhoneNumber,
   methodSelected,
-  setMethodSelected,
   error,
   isLoading,
 }: StepOneProps) {

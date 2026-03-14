@@ -281,7 +281,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
     setAddressInput(value);
   };
 
-  const [createOrUpdateListing, { isLoading: isSaving }] =
+  const [createOrUpdateListing] =
     useCreateOrUpdateListingMutation();
 
   const handleCreateListing = async (saveAsDraft: boolean = false) => {
