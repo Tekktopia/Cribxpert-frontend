@@ -164,7 +164,7 @@ const MyListing: React.FC = () => {
           {/* Show listings when not creating a listing */}
           {!initialListingsLoaded && showListings && (
             <div className="container mx-auto p-4 md:p-8">
-              <ListingHeader 
+              <ListingHeader
                 onCreateNewListing={() => {
                   setUserSteps(0); // Start at step 0 (Property Type - first step of the form)
                   setInitialListingsLoaded(true); // This will show the form
@@ -343,16 +343,17 @@ const MyListing: React.FC = () => {
                           propertyType,
                           description,
                           createdAt,
+                          avaliableUntil, // add this
                         } = listing;
                         const imageUrl =
                           listingImg?.[0]?.fileUrl || '/default-image.jpg';
-                        
+
                         // Build location string
                         const locationParts = [city, state, country].filter(
                           (part) => part && part.trim() !== ''
                         );
-                        const location = locationParts.length > 0 
-                          ? locationParts.join(', ') 
+                        const location = locationParts.length > 0
+                          ? locationParts.join(', ')
                           : country || 'Location not specified';
 
                         // Get property type name
@@ -384,6 +385,7 @@ const MyListing: React.FC = () => {
                             createdAt={createdAt}
                             hideStatus={listing.hideStatus}
                             status={listing.status}
+                            avaliableUntil={avaliableUntil}
                             className="w-full"
                             onDelete={(deletedId) => {
                               refetch();

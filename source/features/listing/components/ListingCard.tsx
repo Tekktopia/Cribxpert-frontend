@@ -22,6 +22,7 @@ interface ListingCardProps {
   location?: string;
   createdAt?: string;
   hideStatus?: boolean;
+  avaliableUntil?: string;
   status?: string; // Optional: 'pending' | 'flagged' when backend supports it
   onStatusChange?: () => void; // Callback when status changes
 }
@@ -42,6 +43,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   description,
   location,
   createdAt,
+  avaliableUntil,
   hideStatus = false,
   status: listingStatus,
 }) => {
@@ -71,7 +73,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   const handleDelete = async () => {
     try {
       await deleteListing(id).unwrap();
-      
+
       // Success - close modal and notify parent
       setModalOpen(false);
       if (onDelete) {
@@ -115,25 +117,38 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
         {/* Listing status badge - uses API status when present, else hideStatus (Active = approved, Rejected = rejected/draft) */}
         <div className="absolute top-3 left-3 z-10">
-          <span
-            className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm ${
-              listingStatus === 'flagged'
-                ? 'bg-amber-500 text-white'
-                : listingStatus === 'pending'
-                  ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                  : listingStatus === 'rejected' || hideStatus
-                    ? 'bg-gray-500 text-white'
-                    : 'bg-[#1D5C5C] text-white'
-            }`}
-          >
-            {listingStatus === 'flagged'
-              ? 'Flagged'
-              : listingStatus === 'pending'
-                ? 'Pending'
-                : listingStatus === 'rejected' || hideStatus
-                  ? 'Rejected'
-                  : 'Active'}
-          </span>
+          {(() => {
+            const isExpired = avaliableUntil ? new Date() > new Date(avaliableUntil) : false;
+
+            if (isExpired) {
+              return (
+                <span className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm bg-red-500 text-white">
+                  Expired
+                </span>
+              );
+            }
+
+            return (
+              <span
+                className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm ${listingStatus === 'flagged'
+                    ? 'bg-amber-500 text-white'
+                    : listingStatus === 'pending'
+                      ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                      : listingStatus === 'rejected' || hideStatus
+                        ? 'bg-gray-500 text-white'
+                        : 'bg-[#1D5C5C] text-white'
+                  }`}
+              >
+                {listingStatus === 'flagged'
+                  ? 'Flagged'
+                  : listingStatus === 'pending'
+                    ? 'Pending'
+                    : listingStatus === 'rejected' || hideStatus
+                      ? 'Rejected'
+                      : 'Active'}
+              </span>
+            );
+          })()}
         </div>
       </div>
 
@@ -215,7 +230,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
               {propertyType}
             </span>
           )}
-          
+
           {/* Bedroom Tag */}
           {bedrooms !== undefined && bedrooms > 0 && (
             <span className="bg-[#1D5C5C] text-white text-xs px-2 py-1 rounded whitespace-nowrap">
@@ -282,7 +297,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
                     const now = new Date();
                     const diffTime = Math.abs(now.getTime() - date.getTime());
                     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                    
+
                     if (diffDays === 0) return 'Today';
                     if (diffDays === 1) return 'Yesterday';
                     if (diffDays < 7) return `${diffDays} days ago`;
@@ -324,7 +339,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
               Are you sure you want to permanently delete{' '}
               <span className="font-medium">"{title}"</span>? Do you want to continue?
             </p>
-            
+
             {deleteError && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
                 <p className="text-sm text-red-600">
