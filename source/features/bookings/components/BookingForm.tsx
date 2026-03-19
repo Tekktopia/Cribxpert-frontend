@@ -67,7 +67,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
 
 
-  // AFTER:
+  
   const cleaningFee = property.cleaningFee || 0;
   const securityDeposit = property.securityDeposit || 0;
   const baseTotal =
@@ -76,7 +76,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       : property.basePrice;
   const accommodationFee = baseTotal + cleaningFee;
   const serviceFee = Math.round(accommodationFee * 0.05);
-  const vat = Math.round(accommodationFee * 0.075);
+  const vat = Math.round((accommodationFee + serviceFee) * 0.075);
   const totalPrice = accommodationFee + serviceFee + vat + securityDeposit;
 
   return (
@@ -85,9 +85,11 @@ const BookingForm: React.FC<BookingFormProps> = ({
         {/* Price & Cancellation */}
         <div className="mb-4">
           <h4 className="text-[#000] text-[14px] font-bold">
-            NGN {property.basePrice.toLocaleString()} <span className="font-normal">/night</span>
+            NGN {accommodationFee.toLocaleString()} <span className="font-normal">/night</span>
           </h4>
-          <p className="text-[#6F6F6F] text-[14px]">All fees included</p>
+          <p className="text-[#6F6F6F] text-[14px]">
+            Accommodation fee · excl. service fee & VAT
+          </p>
           <hr className="border-[#E6E6E6] my-3" />
         </div>
 
@@ -186,7 +188,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 <span>NGN {serviceFee.toLocaleString()}</span>
               </div>
               <div className="flex justify-between mb-1">
-                <span>VAT </span>
+                <span>VAT     </span>
                 <span>NGN {vat.toLocaleString()}</span>
               </div>
               {securityDeposit > 0 && (

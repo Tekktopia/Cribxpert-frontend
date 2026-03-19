@@ -372,7 +372,7 @@ const MyListing: React.FC = () => {
                             key={_id}
                             id={_id}
                             title={name}
-                            price={`₦${Number(basePrice).toLocaleString()}/night`}
+                            price={`₦${Number(basePrice).toLocaleString()}/night (Accommodation fee)`}
                             image={imageUrl}
                             rating={rating || 0}
                             category={country}

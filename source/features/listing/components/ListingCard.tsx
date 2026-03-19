@@ -131,12 +131,12 @@ const ListingCard: React.FC<ListingCardProps> = ({
             return (
               <span
                 className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm ${listingStatus === 'flagged'
-                    ? 'bg-amber-500 text-white'
-                    : listingStatus === 'pending'
-                      ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                      : listingStatus === 'rejected' || hideStatus
-                        ? 'bg-gray-500 text-white'
-                        : 'bg-[#1D5C5C] text-white'
+                  ? 'bg-amber-500 text-white'
+                  : listingStatus === 'pending'
+                    ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                    : listingStatus === 'rejected' || hideStatus
+                      ? 'bg-gray-500 text-white'
+                      : 'bg-[#1D5C5C] text-white'
                   }`}
               >
                 {listingStatus === 'flagged'
@@ -320,8 +320,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
 
         {/* Price */}
+        
         <div className="pt-2 border-t border-gray-100">
           <p className="text-xl font-bold text-[#1D5C5C]">{price}</p>
+          <p className="text-gray-400 text-xs mt-0.5">Accommodation fee · excl. taxes & fees</p>
         </div>
       </div>
 

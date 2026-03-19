@@ -175,7 +175,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const securityDeposit = bookingData?.securityDeposit ?? 0;
   const accommodationFee = basePrice + cleaningFee;
   const serviceFee = Math.round(accommodationFee * 0.05);
-  const vat = Math.round(accommodationFee * 0.075);
+  const vat = Math.round((accommodationFee + serviceFee) * 0.075);
   const totalPrice = accommodationFee + serviceFee + vat + securityDeposit;
 
   const calculateTotalPrice = () => {

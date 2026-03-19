@@ -43,6 +43,7 @@ export interface PropertyListingCardProps {
   id: string;
   name: string;
   price: number;
+  cleaningFee?: number;   // add this
   rating: number;
   description: string;
   location: string;

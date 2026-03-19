@@ -27,6 +27,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   propertyType = 'Apartment', // Default value if not provided
   minWidth = 'min-w-[350px]',
   createdAt,
+  cleaningFee = 0,
 }) => {
   // Format the createdAt date
   const formatDate = (dateString?: string): string => {
@@ -36,7 +37,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - date.getTime());
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
+
       if (diffDays === 0) {
         return 'Today';
       } else if (diffDays === 1) {
@@ -182,11 +183,10 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
                     allImages.map((_, index) => (
                       <span
                         key={index}
-                        className={`block h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full transition-all ${
-                          index === currentImageIndex
-                            ? 'bg-white'
-                            : 'bg-white/50'
-                        }`}
+                        className={`block h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full transition-all ${index === currentImageIndex
+                          ? 'bg-white'
+                          : 'bg-white/50'
+                          }`}
                       />
                     ))
                   ) : (
@@ -195,11 +195,10 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
                       {[0, 1, 2].map((index) => (
                         <span
                           key={index}
-                          className={`block h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full transition-all ${
-                            currentImageIndex === index
-                              ? 'bg-white'
-                              : 'bg-white/50'
-                          }`}
+                          className={`block h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full transition-all ${currentImageIndex === index
+                            ? 'bg-white'
+                            : 'bg-white/50'
+                            }`}
                         />
                       ))}
                       {currentImageIndex > 2 &&
@@ -258,7 +257,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
                 {propertyType}
               </span>
             )}
-            
+
             {/* Bedroom Tag */}
             <span className="bg-[#1D5C5C] text-white text-xs sm:text-xs px-2 py-1 rounded whitespace-nowrap">
               {bedrooms} Bedroom{bedrooms !== 1 ? 's' : ''}
@@ -268,7 +267,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
             {rating && rating > 0 ? (
               <div className="flex items-center">
                 <span className="bg-[#A58207] text-white text-xs px-1.5 sm:px-2 py-0.5 rounded gap-1 flex items-center">
-                  <FaStar className="text-yellow-500 text-xs" /> 
+                  <FaStar className="text-yellow-500 text-xs" />
                   <span className="text-xs">{rating}</span>
                 </span>
               </div>
@@ -307,9 +306,10 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
           {/* Price */}
           <div className="mt-auto pt-2">
             <span className="text-[#1D5C5C] font-bold text-base sm:text-lg">
-              ₦{Number(price).toLocaleString()}
+              ₦{(Number(price) + Number(cleaningFee)).toLocaleString()}
             </span>
-            <span className="text-gray-500 text-xs sm:text-sm">/per night</span>
+            <span className="text-gray-500 text-xs sm:text-sm">/night</span>
+            <p className="text-gray-400 text-xs mt-0.5">Accommodation fee · excl. taxes & fees</p>
           </div>
         </div>
       </div>
