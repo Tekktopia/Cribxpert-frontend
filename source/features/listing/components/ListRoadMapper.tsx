@@ -184,12 +184,8 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       case 1: // Property Details (guests, bedrooms, bathrooms, toilet, size)
         return guestNo > 0 && (bedroomNo > 0 || bathroomNo > 0 || toiletNo > 0 || size > 0);
 
-      case 2: // Location
-        // Check if address input has text OR if coordinates are set OR if at least one address field is filled
-        const hasAddressInput = addressInput.trim().length > 0;
-        const hasCoordinates = longitude !== 0 && latitude !== 0;
-        const hasAddressFields = !!(city || street || stateAddr || postalCode || country);
-        return hasAddressInput || hasCoordinates || hasAddressFields;
+      case 2: // Location — only street is required
+        return street.trim().length > 0;
 
       case 3: // Amenities - must select at least one
         return Object.values(checkedAmenities).some(checked => checked === true);
@@ -717,22 +713,29 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         </button>
 
         {activeStep === 4 ? (
-          <button
-            onClick={() => {
-              if (uploadCompleted) {
-                nextStep();
-              } else {
-                handleUploadTrigger();
-              }
-            }}
-            className="bg-primary hover:bg-hoverColor text-white px-6 sm:px-12 py-2.5 sm:py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-w-0"
-            disabled={isUploading || (!uploadCompleted && (() => {
-              const total = ((refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).length + selectedFiles.length);
-              return total < 1 || total > 5;
-            })())}
-          >
-            {uploadCompleted ? 'Next' : isUploading ? 'Uploading...' : 'Upload'}
-          </button>
+          (() => {
+            const existingCount = (refetchedListing?.listing?.listingImg || editingListing?.listingImg || []).length;
+            const canProceed = uploadCompleted || (selectedFiles.length === 0 && existingCount >= 1);
+
+            return (
+              <button
+                onClick={() => {
+                  if (canProceed) {
+                    nextStep();
+                  } else {
+                    handleUploadTrigger();
+                  }
+                }}
+                className="bg-primary hover:bg-hoverColor text-white px-6 sm:px-12 py-2.5 sm:py-2 rounded transition disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-w-0"
+                disabled={isUploading || (() => {
+                  const total = existingCount + selectedFiles.length;
+                  return total < 1 || total > 5;
+                })()}
+              >
+                {isUploading ? 'Uploading...' : canProceed ? 'Next' : 'Upload'}
+              </button>
+            );
+          })()
         ) : activeStep === 7 ? (
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-end flex-1 min-w-0">
             <button
