@@ -150,4 +150,8 @@ export interface BookingData {
   propertyName: string;
   propertyImages?: string[];
   maxGuests?: number;
+  // Add these:
+  basePrice?: number;
+  cleaningFee?: number;
+  securityDeposit?: number;
 }

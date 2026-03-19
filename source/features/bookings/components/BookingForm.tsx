@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import AvailabilityDatePicker from './AvailabilityDatePicker';
 import { useBookingForm } from '@/hooks/useBookingForm';
 
+
 export interface BookingFormProps {
   property: PropertyListing;
   onBookingSubmit?: (formData: {
@@ -61,20 +62,20 @@ const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   // Extract property images
-  const propertyImages = property.listingImg.map((img) => img.fileUrl);
+  const propertyImages = property.listingImg
+    .map((img) => img.fileUrl)
+    .filter((url): url is string => !!url && url.trim() !== '');
 
-  // Dummy charges
+
+
   const cleaningFee = property.cleaningFee || 0;
-  const securityDepositFee = property.securityDeposit || 0;
-  const tax = (property.basePrice * 0.1).toFixed(2);
-
-  // Calculate total price based on selected nights
+  const securityDeposit = property.securityDeposit || 0;
   const baseTotal =
     numberOfNights > 0
       ? numberOfNights * property.basePrice
       : property.basePrice;
-  const totalPrice =
-    baseTotal + cleaningFee + securityDepositFee + parseFloat(tax);
+  const serviceFee = Math.round((baseTotal + cleaningFee + securityDeposit) * 0.075);
+  const totalPrice = baseTotal + cleaningFee + securityDeposit + serviceFee;
 
   return (
     <>
@@ -172,29 +173,25 @@ const BookingForm: React.FC<BookingFormProps> = ({
           {/* Price Breakdown */}
           {showBreakdown && (
             <div className="bg-[#f9f9f9] rounded-md p-4 mt-2 mb-2 text-[14px] text-[#313131]">
-              {numberOfNights > 0 && (
-                <div className="flex justify-between mb-1">
-                  <span>Base Price ({numberOfNights} nights)</span>
-                  <span>NGN {baseTotal.toLocaleString()}</span>
-                </div>
-              )}
-              {numberOfNights === 0 && (
-                <div className="flex justify-between mb-1">
-                  <span>Base Price</span>
-                  <span>NGN {property.basePrice}</span>
-                </div>
-              )}
+              <div className="flex justify-between mb-1">
+                <span>
+                  Base Price{numberOfNights > 0 ? ` (${numberOfNights} nights)` : ''}
+                </span>
+                <span>NGN {baseTotal.toLocaleString()}</span>
+              </div>
               <div className="flex justify-between mb-1">
                 <span>Cleaning Fee</span>
-                <span>NGN {cleaningFee}</span>
+                <span>NGN {cleaningFee.toLocaleString()}</span>
               </div>
+              {securityDeposit > 0 && (
+                <div className="flex justify-between mb-1">
+                  <span>Security Deposit</span>
+                  <span>NGN {securityDeposit.toLocaleString()}</span>
+                </div>
+              )}
               <div className="flex justify-between mb-1">
-                <span>Service Fee</span>
-                <span>NGN {securityDepositFee}</span>
-              </div>
-              <div className="flex justify-between mb-1">
-                <span>Tax</span>
-                <span>NGN {tax}</span>
+                <span>Service Fee <span className="text-[#999] text-xs">(7.5%)</span></span>
+                <span>NGN {serviceFee.toLocaleString()}</span>
               </div>
               <hr className="my-2" />
               <div className="flex justify-between font-semibold">
@@ -233,24 +230,26 @@ const BookingForm: React.FC<BookingFormProps> = ({
               state={
                 isLoggedIn
                   ? {
-                      propertyId: property._id,
-                      startDate: formData.checkInDate,
-                      endDate: formData.checkOutDate,
-                      guests: formData.guests,
-                      totalPrice,
-                      propertyName: property.name,
-                      propertyImages,
-                    }
+                    propertyId: property._id,
+                    startDate: formData.checkInDate,
+                    endDate: formData.checkOutDate,
+                    guests: formData.guests,
+                    totalPrice,
+                    propertyName: property.name,
+                    propertyImages,
+                    basePrice: baseTotal,
+                    cleaningFee,
+                    securityDeposit,
+                  }
                   : undefined
               }
+              className={`bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition text-center block ${!isFormValid || !isLoggedIn ? 'opacity-50 pointer-events-none' : ''
+                }`}
+              onClick={(e) => {
+                if (!isFormValid || !isLoggedIn) e.preventDefault();
+              }}
             >
-              <button
-                type="button"
-                disabled={!isFormValid || !isLoggedIn}
-                className="bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-              >
-                {isLoggedIn ? 'Book Now' : 'Login to Book'}
-              </button>
+              {isLoggedIn ? 'Book Now' : 'Login to Book'}
             </Link>
           )}
 

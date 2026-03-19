@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {
   useAddFavouriteMutation,
   useRemoveFavouriteMutation,
+  useGetFavouritesByUserIdQuery,
 } from '@/features/favourites/favouritesService';
 import { selectIsItemFavourited } from '@/features/favourites/favouritesSlice';
 import { RootState } from '@/store/store';
@@ -22,11 +23,17 @@ export const FavouriteButton = ({
 
   const { user } = useSelector((state: RootState) => state.auth);
 
+  useGetFavouritesByUserIdQuery(user?._id ?? '', {
+    skip: !user?._id,
+  });
+  
   const isFavourited = useSelector(selectIsItemFavourited(listingId));
 
   // Get API mutation hooks
   const [addFavourite] = useAddFavouriteMutation();
   const [removeFavourite] = useRemoveFavouriteMutation();
+
+
 
   const handleToggleFavourite = async () => {
     if (!user) {

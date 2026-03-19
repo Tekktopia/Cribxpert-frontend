@@ -6,7 +6,9 @@ import Booking from '@/features/bookings/components/Booking';
 import type { BookingData } from '@/types';
 
 const BookNowPage: React.FC = () => {
-  const location = useLocation();
+  const location = useLocation() as { state: BookingData };
+  console.log('FULL location object:', location);
+  console.log('location.state:', location.state);
   const initialBookingData = location.state as BookingData;
 
   // Local state to hold the booking data

@@ -170,22 +170,20 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
   const nights = calculateNights();
 
-  // Calculate total price based on current selections
+  // Calculate breakdown using actual listing fields
+  const basePrice = bookingData?.basePrice ?? 0;
+  const cleaningFee = bookingData?.cleaningFee ?? 0;
+  const securityDeposit = bookingData?.securityDeposit ?? 0;
+  const serviceFee = Math.round((basePrice + cleaningFee + securityDeposit) * 0.075);
+  const totalPrice = basePrice + cleaningFee + securityDeposit + serviceFee;
+
+  // Keep calculateTotalPrice in sync for the autosave useEffect
   const calculateTotalPrice = () => {
-    if (!bookingData) return 170000;
-
-    const basePrice = bookingData.totalPrice * 0.8; // Assuming base is 80% of original total
-    const cleaningFee = bookingData.totalPrice * 0.1; // 10% for cleaning
-    const serviceFee = bookingData.totalPrice * 0.1; // 10% for service
-
-    return basePrice + cleaningFee + serviceFee;
+    const base = bookingData?.basePrice ?? 0;
+    const cleaning = bookingData?.cleaningFee ?? 0;
+    const security = bookingData?.securityDeposit ?? 0;
+    return base + cleaning + security + Math.round((base + cleaning + security) * 0.075);
   };
-
-  // Calculate breakdown
-  const basePrice = bookingData ? bookingData.totalPrice * 0.8 : 160000;
-  const cleaningFee = bookingData ? bookingData.totalPrice * 0.1 : 10000;
-  const serviceFee = bookingData ? bookingData.totalPrice * 0.1 : 0;
-  const totalPrice = calculateTotalPrice();
 
   // Navigate to next image
   const nextImage = () => {
@@ -217,13 +215,13 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         {propertyImages.length > 0 ? (
           <>
             <div
-              className="cursor-pointer"
+              className="cursor-pointer w-full h-[220px] sm:h-[260px] rounded-md overflow-hidden"
               onClick={() => openCarousel(currentImageIndex)}
             >
               <img
                 src={propertyImages[currentImageIndex]}
                 alt={`${bookingData?.propertyName || 'Property'} ${currentImageIndex + 1}`}
-                className="w-full h-auto object-cover rounded-md"
+                className="w-full h-full object-cover rounded-md"
               />
               <div className="absolute inset-0 bg-black bg-opacity-5 rounded-md"></div>
             </div>
@@ -262,9 +260,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                         e.stopPropagation();
                         setCurrentImageIndex(idx);
                       }}
-                      className={`w-2 h-2 rounded-full transition-all ${
-                        idx === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                      }`}
+                      className={`w-2 h-2 rounded-full transition-all ${idx === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                        }`}
                       aria-label={`Go to image ${idx + 1}`}
                     />
                   ))}
@@ -310,7 +307,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
         onGuestChange={handleGuestChange}
-        onSave={() => {}}
+        onSave={() => { }}
       />
 
       {/* Price Breakdown */}
@@ -318,17 +315,14 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         nights={nights}
         basePrice={basePrice}
         cleaningFee={cleaningFee}
+        securityDeposit={securityDeposit}
         serviceFee={serviceFee}
         totalPrice={totalPrice}
         isSubmitting={isSubmitting}
         isEditing={false}
         onConfirm={() => {
-          const form = document.getElementById(
-            'booking-form'
-          ) as HTMLFormElement;
-          if (form) {
-            form.requestSubmit();
-          }
+          const form = document.getElementById('booking-form') as HTMLFormElement;
+          if (form) form.requestSubmit();
         }}
       />
 

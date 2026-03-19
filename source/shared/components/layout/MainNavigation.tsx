@@ -1,34 +1,33 @@
 import React, { useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from '@/features/auth/authSlice';
 
 interface MainNavigationProps {
   isMobile?: boolean;
   onLinkClick?: () => void;
+  isHostMode?: boolean;
 }
 
 const MainNavigation: React.FC<MainNavigationProps> = ({
   isMobile = false,
   onLinkClick,
+  isHostMode = false,
 }) => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-
   const navLinks = useMemo(() => {
-    const baseLinks = [
+    const guestLinks = [
       { label: 'Dashboard', route: '/' },
       { label: 'Discover', route: '/discover' },
       { label: 'My Bookings', route: '/my-bookings' },
       { label: 'Saved Listings', route: '/saved-listings' },
       { label: 'Payments', route: '/payments' },
     ];
-
-    if (isAuthenticated) {
-      baseLinks.push({ label: 'My Listing', route: '/my-listing' });
-    }
-
-    return baseLinks;
-  }, [isAuthenticated]);
+  
+    const hostLinks = [
+      { label: 'My Listing', route: '/my-listing' },
+      // Add future host-only links here
+    ];
+  
+    return isHostMode ? hostLinks : guestLinks;
+  }, [isHostMode]);
 
   if (isMobile) {
     return (

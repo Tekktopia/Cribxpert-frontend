@@ -1,6 +1,7 @@
 import { BiMenu, BiX } from 'react-icons/bi';
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   selectCurrentUser,
   selectIsAuthenticated,
@@ -20,6 +21,17 @@ const Header: React.FC = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  const [isHostMode, setIsHostMode] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleHostMode = () => {
+    setIsHostMode(prev => {
+      const next = !prev;
+      navigate(next ? '/my-listing' : '/');
+      return next;
+    });
+  };
 
   // Get authentication state and user data from Redux
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -74,9 +86,8 @@ const Header: React.FC = () => {
   return (
     <section className="overflow-hidden w-full">
       <header
-        className={`fixed w-full left-0 right-0 z-50 border-b border-b-[#CCCCCC80]/50 bg-white shadow-sm transition-transform duration-300 ${
-          visible ? 'translate-y-0' : '-translate-y-full'
-        }`}
+        className={`fixed w-full left-0 right-0 z-50 border-b border-b-[#CCCCCC80]/50 bg-white shadow-sm transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'
+          }`}
       >
         <div className="lg:container mx-auto">
           {/* Navigation Bar */}
@@ -91,8 +102,11 @@ const Header: React.FC = () => {
 
             {/* Icons Section */}
             <div className="w-full lg:w-auto justify-between flex flex-row gap-6 py-3">
-              <IconNavigation />
-
+              <IconNavigation
+                isHostMode={isHostMode}
+                onToggleHostMode={toggleHostMode}
+                isAuthenticated={isAuthenticated}
+              />
               <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
 
               {/* Conditional rendering based on authentication status */}
@@ -123,7 +137,7 @@ const Header: React.FC = () => {
 
           {/* Navigation Menu for Desktop */}
           <div className="hidden md:flex px-4 md:px-8 py-4">
-            <MainNavigation />
+            <MainNavigation isHostMode={isHostMode} />
           </div>
 
           {/* Mobile Menu with Profile/Auth */}

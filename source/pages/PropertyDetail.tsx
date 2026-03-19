@@ -116,30 +116,34 @@ const PropertyDetail = () => {
     checkOutDate: Date;
     guests: number;
   }) => {
-    if (!property || !currentUser) {
-      console.error('Property or user not found');
-      return;
-    }
-
-    // Calculate total price
+    if (!property || !currentUser) return;
+  
     const numberOfNights = Math.ceil(
       (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
         (1000 * 60 * 60 * 24)
     );
-    const totalPrice = numberOfNights * property.basePrice;
-
-    // Prepare booking data for BookNowPage
+  
+    const basePrice = numberOfNights * property.basePrice;
+    const cleaningFee = property.cleaningFee || 0;
+    const securityDeposit = property.securityDeposit || 0;
+    const serviceFee = Math.round((basePrice + cleaningFee + securityDeposit) * 0.075);
+    const totalPrice = basePrice + cleaningFee + securityDeposit + serviceFee;
+  
     const bookingData = {
       propertyId: property._id,
       propertyName: property.name,
       startDate: formData.checkInDate,
       endDate: formData.checkOutDate,
       guests: formData.guests,
-      totalPrice: totalPrice,
+      totalPrice,
       userId: currentUser._id,
+      propertyImages: property.listingImg.map((img) => img.fileUrl).filter(Boolean),
+      basePrice,
+      cleaningFee,
+      securityDeposit,
+      maxGuests: property.guestNo,
     };
-
-    // Navigate to BookNowPage with booking data
+  
     navigate('/book-now', { state: bookingData });
   };
 
