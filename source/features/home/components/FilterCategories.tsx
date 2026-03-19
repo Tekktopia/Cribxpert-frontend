@@ -121,7 +121,7 @@ const FilterCategories: React.FC = () => {
                 className={`relative p-2 rounded-full ${!activeFilters.propertyType ? 'bg-[#1D5C5C]/10' : ''}`}
               >
                 <img
-                  src={'/icons/otherFilterIcon.png'}
+                  src={'/other-icons/otherFilterIcon.png'}
                   alt={'All'}
                   loading="lazy"
                   className={`w-[24px] h-[24px] object-contain ${
@@ -185,7 +185,7 @@ const FilterCategories: React.FC = () => {
             className={`relative p-2 rounded-full ${!activeFilters.propertyType ? 'bg-[#1D5C5C]/10' : ''}`}
           >
             <img
-              src={'/icons/otherFilterIcon.png'}
+              src={'/other-icons/otherFilterIcon.png'}
               alt={'All'}
               loading="lazy"
               className={`w-[24px] h-[24px] object-contain ${
