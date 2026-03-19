@@ -26,6 +26,8 @@ interface MobileMenuProps {
   showProfileMenu: boolean;
   onToggleProfileMenu: () => void;
   onCloseProfileMenu: () => void;
+  isHostMode?: boolean;
+  onToggleHostMode?: () => void;
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({
@@ -36,6 +38,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   showProfileMenu,
   onToggleProfileMenu,
   onCloseProfileMenu,
+  isHostMode = false,
+  onToggleHostMode,
 }) => {
   const iconNavItems = [
     { icon: messageIcon, label: 'Message', route: '/message' },
@@ -57,12 +61,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
               onToggleMenu={onToggleProfileMenu}
               onCloseMenu={onCloseProfileMenu}
               isMobile
+              isHostMode={isHostMode}
+              onToggleHostMode={onToggleHostMode}
             />
           </div>
         )}
 
         {/* Main Navigation */}
-        <MainNavigation isMobile onLinkClick={onClose} />
+        <MainNavigation isMobile isHostMode={isHostMode} onLinkClick={onClose} />
 
         {/* Icon Navigation Items */}
         {iconNavItems.map((item, index) => (

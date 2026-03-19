@@ -17,6 +17,8 @@ interface UserProfileDropdownProps {
   onToggleMenu: () => void;
   onCloseMenu: () => void;
   isMobile?: boolean;
+  isHostMode?: boolean;
+  onToggleHostMode?: () => void;
 }
 
 const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
@@ -25,6 +27,8 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
   onToggleMenu,
   onCloseMenu,
   isMobile = false,
+  isHostMode = false,
+  onToggleHostMode,
 }) => {
   const dispatch = useDispatch();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -75,6 +79,19 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
             </p>
           </div>
         </div>
+
+        {/* Switch to Host/Guest button for mobile */}
+        {onToggleHostMode && (
+          <button
+            onClick={onToggleHostMode}
+            className={`text-[12px] font-medium px-3 py-1.5 rounded-full border transition-colors whitespace-nowrap ${isHostMode
+              ? 'bg-[#1d5c5c] text-white border-[#1d5c5c]'
+              : 'bg-white text-[#1d5c5c] border-[#1d5c5c]'
+              }`}
+          >
+            {isHostMode ? 'Switch to Guest' : 'Switch to Host'}
+          </button>
+        )}
       </div>
     );
   }
@@ -164,6 +181,23 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
                 Help Center
               </Link>
             </li>
+
+            {onToggleHostMode && (
+              <li className="border-t border-gray-100 mt-2 pt-2">
+                <button
+                  className="flex items-center w-full text-left px-4 py-2 text-sm hover:bg-gray-100 rounded-md transition-colors"
+                  onClick={() => {
+                    onToggleHostMode();
+                    onCloseMenu();
+                  }}
+                >
+                  <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                  {isHostMode ? 'Switch to Guest' : 'Switch to Host'}
+                </button>
+              </li>
+            )}
 
             <li className="border-t border-gray-100 mt-2 pt-2">
               <button

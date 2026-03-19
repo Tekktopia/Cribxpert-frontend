@@ -116,6 +116,8 @@ const Header: React.FC = () => {
                   showProfileMenu={showProfileMenu}
                   onToggleMenu={toggleProfileMenu}
                   onCloseMenu={closeProfileMenu}
+                  isHostMode={isHostMode}
+                  onToggleHostMode={toggleHostMode}
                 />
               ) : (
                 <AuthButtons />
@@ -149,6 +151,8 @@ const Header: React.FC = () => {
             showProfileMenu={showProfileMenu}
             onToggleProfileMenu={toggleProfileMenu}
             onCloseProfileMenu={closeProfileMenu}
+            isHostMode={isHostMode}
+            onToggleHostMode={toggleHostMode}
           />
         </div>
       </header>

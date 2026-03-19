@@ -83,7 +83,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         {/* Price & Cancellation */}
         <div className="mb-4">
           <h4 className="text-[#000] text-[14px] font-bold">
-            NGN {property.basePrice} <span className="font-normal">/night</span>
+            NGN {property.basePrice.toLocaleString()} <span className="font-normal">/night</span>
           </h4>
           <p className="text-[#6F6F6F] text-[14px]">All fees included</p>
           <hr className="border-[#E6E6E6] my-3" />
