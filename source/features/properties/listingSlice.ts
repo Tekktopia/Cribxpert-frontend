@@ -244,10 +244,30 @@ export const listingSlice = createSlice({
       .addMatcher(listingApi.endpoints.getListingById.matchPending, (state) => {
         state.error = null;
       })
+      // AFTER:
       .addMatcher(
         listingApi.endpoints.getListingById.matchFulfilled,
         (state, { payload }) => {
           state.currentListing = payload.listing;
+          // Sync fresh single-listing data back into allListings
+          // so cards immediately show correct cleaningFee
+          if (state.allListings && state.allListings.length > 0) {
+            const index = (state.allListings as PropertyListing[]).findIndex(
+              (l) => l._id === payload.listing._id
+            );
+            if (index !== -1) {
+              (state.allListings as PropertyListing[])[index] = payload.listing;
+            }
+          }
+          // Also sync into currentListings
+          if (state.currentListings && state.currentListings.length > 0) {
+            const index = state.currentListings.findIndex(
+              (l) => l._id === payload.listing._id
+            );
+            if (index !== -1) {
+              state.currentListings[index] = payload.listing;
+            }
+          }
         }
       )
       .addMatcher(

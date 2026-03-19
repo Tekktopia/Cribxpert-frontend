@@ -58,6 +58,7 @@
 
     // Memoize property type names lookup for better performance
     const propertyTypeNames = useMemo(() => {
+      
       return propertyTypes
         .map((type) => ({
           id: type._id,
@@ -292,6 +293,7 @@
 
                 key
               ) => {
+                console.log(name, '→ basePrice:', basePrice, 'cleaningFee:', cleaningFee);
                 const images = listingImg.map((img) => img.fileUrl) || [];
                 const location = `${city}, ${state}, ${country}`;
 

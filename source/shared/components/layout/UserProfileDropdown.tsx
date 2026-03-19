@@ -171,7 +171,7 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
             </li>
             <li>
               <Link
-                to="/help"
+                to="/support"
                 className="flex items-center px-4 py-2 text-sm hover:bg-gray-100 rounded-md transition-colors"
                 onClick={onCloseMenu}
               >

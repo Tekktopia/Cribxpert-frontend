@@ -6,7 +6,7 @@ import { baseQuery } from '@/features/api';
 export interface ListingFilter {
   // Location filters
   state?: string;
-  country?:string;
+  country?: string;
   city?: string;
 
   // Property details filters
@@ -79,10 +79,11 @@ export const listingApi = createApi({
   reducerPath: 'listingApi',
   baseQuery,
   tagTypes: ['Listing'],
-  keepUnusedDataFor: 300, // Cache data for 5 minutes
-  refetchOnMountOrArgChange: 60, // Only refetch if data is older than 60 seconds
+  // AFTER:
+  keepUnusedDataFor: 60,
+  refetchOnMountOrArgChange: true,
   refetchOnReconnect: true,
-  refetchOnFocus: false, // Disable refetch on window focus for better performance
+  refetchOnFocus: false,
   endpoints: (builder) => ({
     // GET /listing - Get all listings with optional filters
     getListings: builder.query<{ listings: PropertyListing[] }, ListingFilter | void>({
@@ -98,14 +99,14 @@ export const listingApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.listings.map(({ _id }) => ({ type: 'Listing' as const, _id })),
-              { type: 'Listing', _id: 'LIST' },
-            ]
+            ...result.listings.map(({ _id }) => ({ type: 'Listing' as const, _id })),
+            { type: 'Listing', _id: 'LIST' },
+          ]
           : [{ type: 'Listing', id: 'LIST' }],
     }),
 
     // GET /listing/{listingId} - Get a listing by its ID
-    getListingById: builder.query<{listing: PropertyListing}, string>({
+    getListingById: builder.query<{ listing: PropertyListing }, string>({
       query: (id) => `/listing/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Listing', id }],
     }),
@@ -162,9 +163,9 @@ export const listingApi = createApi({
       invalidatesTags: (_result, _error, { id }) =>
         id
           ? [
-              { type: 'Listing', id },
-              { type: 'Listing', id: 'LIST' },
-            ]
+            { type: 'Listing', id },
+            { type: 'Listing', id: 'LIST' },
+          ]
           : [{ type: 'Listing', id: 'LIST' }],
     }),
 
@@ -190,9 +191,9 @@ export const listingApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ _id }) => ({ type: 'Listing' as const, _id })),
-              { type: 'Listing', id: 'USER_LISTINGS' },
-            ]
+            ...result.map(({ _id }) => ({ type: 'Listing' as const, _id })),
+            { type: 'Listing', id: 'USER_LISTINGS' },
+          ]
           : [{ type: 'Listing', id: 'USER_LISTINGS' }],
     }),
 

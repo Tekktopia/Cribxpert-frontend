@@ -29,6 +29,8 @@ const PropertyHeader: React.FC = () => {
 
   const [isHostDrawerOpen, setIsHostDrawerOpen] = useState(false);
 
+  console.log('Detail cleaningFee:', currentListing?.cleaningFee);
+
   // Prepare fallback/default values for destructuring
   const {
     _id: propertyId = '',
