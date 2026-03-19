@@ -67,14 +67,17 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
 
 
+  // AFTER:
   const cleaningFee = property.cleaningFee || 0;
   const securityDeposit = property.securityDeposit || 0;
   const baseTotal =
     numberOfNights > 0
       ? numberOfNights * property.basePrice
       : property.basePrice;
-  const serviceFee = Math.round((baseTotal + cleaningFee + securityDeposit) * 0.075);
-  const totalPrice = baseTotal + cleaningFee + securityDeposit + serviceFee;
+  const accommodationFee = baseTotal + cleaningFee;
+  const serviceFee = Math.round(accommodationFee * 0.05);
+  const vat = Math.round(accommodationFee * 0.075);
+  const totalPrice = accommodationFee + serviceFee + vat + securityDeposit;
 
   return (
     <>
@@ -174,13 +177,17 @@ const BookingForm: React.FC<BookingFormProps> = ({
             <div className="bg-[#f9f9f9] rounded-md p-4 mt-2 mb-2 text-[14px] text-[#313131]">
               <div className="flex justify-between mb-1">
                 <span>
-                  Base Price{numberOfNights > 0 ? ` (${numberOfNights} nights)` : ''}
+                  Accommodation Fee{' '}
                 </span>
-                <span>NGN {baseTotal.toLocaleString()}</span>
+                <span>NGN {accommodationFee.toLocaleString()}</span>
               </div>
               <div className="flex justify-between mb-1">
-                <span>Cleaning Fee</span>
-                <span>NGN {cleaningFee.toLocaleString()}</span>
+                <span>Service Fee <span className="text-[#999] text-xs">(5%)</span></span>
+                <span>NGN {serviceFee.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between mb-1">
+                <span>VAT </span>
+                <span>NGN {vat.toLocaleString()}</span>
               </div>
               {securityDeposit > 0 && (
                 <div className="flex justify-between mb-1">
@@ -188,10 +195,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   <span>NGN {securityDeposit.toLocaleString()}</span>
                 </div>
               )}
-              <div className="flex justify-between mb-1">
-                <span>Service Fee <span className="text-[#999] text-xs">(7.5%)</span></span>
-                <span>NGN {serviceFee.toLocaleString()}</span>
-              </div>
               <hr className="my-2" />
               <div className="flex justify-between font-semibold">
                 <span>Total</span>

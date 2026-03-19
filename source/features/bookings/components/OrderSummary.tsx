@@ -170,19 +170,20 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
   const nights = calculateNights();
 
-  // Calculate breakdown using actual listing fields
   const basePrice = bookingData?.basePrice ?? 0;
   const cleaningFee = bookingData?.cleaningFee ?? 0;
   const securityDeposit = bookingData?.securityDeposit ?? 0;
-  const serviceFee = Math.round((basePrice + cleaningFee + securityDeposit) * 0.075);
-  const totalPrice = basePrice + cleaningFee + securityDeposit + serviceFee;
+  const accommodationFee = basePrice + cleaningFee;
+  const serviceFee = Math.round(accommodationFee * 0.05);
+  const vat = Math.round(accommodationFee * 0.075);
+  const totalPrice = accommodationFee + serviceFee + vat + securityDeposit;
 
-  // Keep calculateTotalPrice in sync for the autosave useEffect
   const calculateTotalPrice = () => {
     const base = bookingData?.basePrice ?? 0;
     const cleaning = bookingData?.cleaningFee ?? 0;
     const security = bookingData?.securityDeposit ?? 0;
-    return base + cleaning + security + Math.round((base + cleaning + security) * 0.075);
+    const accommodation = base + cleaning;
+    return accommodation + Math.round(accommodation * 0.05) + Math.round(accommodation * 0.075) + security;
   };
 
   // Navigate to next image
@@ -313,10 +314,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       {/* Price Breakdown */}
       <PriceBreakdown
         nights={nights}
-        basePrice={basePrice}
-        cleaningFee={cleaningFee}
-        securityDeposit={securityDeposit}
+        accommodationFee={accommodationFee}
         serviceFee={serviceFee}
+        vat={vat}
+        securityDeposit={securityDeposit}
         totalPrice={totalPrice}
         isSubmitting={isSubmitting}
         isEditing={false}

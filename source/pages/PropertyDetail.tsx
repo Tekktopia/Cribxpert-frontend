@@ -125,8 +125,10 @@ const PropertyDetail = () => {
     const basePrice = numberOfNights * property.basePrice;
     const cleaningFee = property.cleaningFee || 0;
     const securityDeposit = property.securityDeposit || 0;
-    const serviceFee = Math.round((basePrice + cleaningFee + securityDeposit) * 0.075);
-    const totalPrice = basePrice + cleaningFee + securityDeposit + serviceFee;
+    const accommodationFee = basePrice + cleaningFee;
+    const serviceFee = Math.round(accommodationFee * 0.05);
+    const vat = Math.round(accommodationFee * 0.075);
+    const totalPrice = accommodationFee + serviceFee + vat + securityDeposit;
 
     const bookingData = {
       propertyId: property._id,

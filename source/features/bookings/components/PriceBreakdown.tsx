@@ -2,10 +2,10 @@ import React from 'react';
 
 interface PriceBreakdownProps {
   nights: number;
-  basePrice: number;
-  cleaningFee: number;
-  securityDeposit: number;
+  accommodationFee: number;
   serviceFee: number;
+  vat: number;
+  securityDeposit: number;
   totalPrice: number;
   isSubmitting: boolean;
   isEditing: boolean;
@@ -14,10 +14,10 @@ interface PriceBreakdownProps {
 
 const PriceBreakdown: React.FC<PriceBreakdownProps> = ({
   nights,
-  basePrice,
-  cleaningFee,
-  securityDeposit,
+  accommodationFee,
   serviceFee,
+  vat,
+  securityDeposit,
   totalPrice,
   isSubmitting,
   isEditing,
@@ -26,17 +26,31 @@ const PriceBreakdown: React.FC<PriceBreakdownProps> = ({
   <div className="mt-4">
     <div className="flex justify-between">
       <p className="text-[#6F6F6F] font-[400] text-[14px]">
-        Booking fee [{nights} night{nights !== 1 ? 's' : ''}]
+        Accommodation Fee{' '}
+        <span className="text-[12px] text-[#999]">
+          (Base + Cleaning · {nights} night{nights !== 1 ? 's' : ''})
+        </span>
       </p>
       <p className="text-[#6F6F6F] font-[400] text-[14px]">
-        NGN {basePrice.toLocaleString()}
+        NGN {accommodationFee.toLocaleString()}
       </p>
     </div>
 
     <div className="flex justify-between mt-2">
-      <p className="text-[#6F6F6F] font-[400] text-[14px]">Cleaning Fee</p>
       <p className="text-[#6F6F6F] font-[400] text-[14px]">
-        NGN {cleaningFee.toLocaleString()}
+        Service Fee <span className="text-[12px] text-[#999]">(5%)</span>
+      </p>
+      <p className="text-[#6F6F6F] font-[400] text-[14px]">
+        NGN {serviceFee.toLocaleString()}
+      </p>
+    </div>
+
+    <div className="flex justify-between mt-2">
+      <p className="text-[#6F6F6F] font-[400] text-[14px]">
+        VAT <span className="text-[12px] text-[#999]">(7.5%)</span>
+      </p>
+      <p className="text-[#6F6F6F] font-[400] text-[14px]">
+        NGN {vat.toLocaleString()}
       </p>
     </div>
 
@@ -48,15 +62,6 @@ const PriceBreakdown: React.FC<PriceBreakdownProps> = ({
         </p>
       </div>
     )}
-
-    <div className="flex justify-between mt-2">
-      <p className="text-[#6F6F6F] font-[400] text-[14px]">
-        Service Fee <span className="text-[12px] text-[#999]">(7.5%)</span>
-      </p>
-      <p className="text-[#6F6F6F] font-[400] text-[14px]">
-        NGN {serviceFee.toLocaleString()}
-      </p>
-    </div>
 
     <div className="flex justify-between mt-3 pt-3 border-t border-[#E6E6E6]">
       <p className="text-[#313131] font-[500] text-[14px]">Total</p>
