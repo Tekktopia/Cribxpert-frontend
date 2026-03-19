@@ -29,8 +29,7 @@ import useAlert from '@/hooks/useAlert';
 // Import mock data from utility files
 import {
   CANCELLATION_PERIODS,
-  DAMAGE_POLICY,
-  IMPORTANT_INFO,
+  DAMAGE_POLICY
 } from '@/utils/mockData';
 
 // Helper function to convert property name to URL slug
@@ -375,7 +374,6 @@ const PropertyDetail = () => {
         <PropertyPolicies
           damagePolicy={DAMAGE_POLICY}
           cancellationPeriods={CANCELLATION_PERIODS}
-          importantInfo={IMPORTANT_INFO}
         />
         {/* Ratings and Reviews Section */}
         <div className="py-6 sm:py-8 px-4 md:px-10">
