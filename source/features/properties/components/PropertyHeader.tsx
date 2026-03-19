@@ -28,10 +28,17 @@ const PropertyHeader: React.FC = () => {
   const {
     _id: propertyId = '',
     name: propertyName = '',
+    userId: listingOwner,
   } = currentListing || {};
 
   const userId = currentUser?._id;
   const listingId = propertyId;
+
+  const hostName = listingOwner
+    ? typeof listingOwner === 'object' && 'fullName' in listingOwner
+      ? (listingOwner as { fullName?: string }).fullName || 'Host'
+      : 'Host'
+    : 'Host';
 
   // Fetch reviews for this listing
   const { data: apiReviews } = useGetReviewsByListingIdQuery(
@@ -67,6 +74,8 @@ const PropertyHeader: React.FC = () => {
   // This ensures we only show ratings when there are actual reviews
   const displayRating = ratingData.rating > 0 && ratingData.totalRatings > 0 ? ratingData.rating : 0;
   const totalRatings = ratingData.totalRatings;
+
+
 
   // Check if this property is already favourited
   const isFavourited = useSelector(selectIsItemFavourited(listingId));
@@ -159,29 +168,33 @@ const PropertyHeader: React.FC = () => {
               </span>
             )}
           </p>
+
+          <p className="text-[#6f6f6f] text-sm sm:text-[14px] flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#1D5C5C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Hosted by <span className="text-[#1D5C5C] font-medium ml-1">{hostName}</span>
+          </p>
         </div>
 
         <div className="flex items-center gap-3 mt-3 md:mt-0 w-full md:w-auto justify-start md:justify-center">
           <button
-            className={`rounded-[200px] px-4 sm:px-6 py-2 sm:py-3 transition-colors ${
-              isAuthenticated
+            className={`rounded-[200px] px-4 sm:px-6 py-2 sm:py-3 transition-colors ${isAuthenticated
                 ? 'bg-[#e6e6e6] hover:bg-[#d9d9d9]'
                 : 'bg-[#f0f0f0] cursor-pointer opacity-75 hover:opacity-100'
-            }`}
+              }`}
             onClick={onSave}
             title={!isAuthenticated ? 'Login to save properties' : undefined}
           >
             <div className="flex items-center gap-2">
               <HeartIcon
                 fill={isAuthenticated && isFavourited ? '#006073' : 'none'}
-                className={`w-4 h-4 sm:w-[20px] sm:h-[20px] ${
-                  isAuthenticated ? 'text-[#070707]' : 'text-[#999999]'
-                }`}
+                className={`w-4 h-4 sm:w-[20px] sm:h-[20px] ${isAuthenticated ? 'text-[#070707]' : 'text-[#999999]'
+                  }`}
               />
               <p
-                className={`font-[400] text-xs sm:text-[14px] text-center ${
-                  isAuthenticated ? 'text-[#070707]' : 'text-[#999999]'
-                }`}
+                className={`font-[400] text-xs sm:text-[14px] text-center ${isAuthenticated ? 'text-[#070707]' : 'text-[#999999]'
+                  }`}
               >
                 {isAuthenticated ? (isFavourited ? 'Unsave' : 'Save') : 'Save'}
               </p>

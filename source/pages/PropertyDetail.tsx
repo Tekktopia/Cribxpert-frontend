@@ -300,9 +300,15 @@ const PropertyDetail = () => {
       : property.userId
     : null;
 
+    const isExpired = property.avaliableUntil
+    ? new Date() > new Date(property.avaliableUntil)
+    : false;
+    
   const isOwner = currentUser?._id && listingOwnerId
     ? currentUser._id === listingOwnerId
     : false;
+
+
 
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
@@ -336,7 +342,21 @@ const PropertyDetail = () => {
                       This is your listing
                     </p>
                     <p className="text-[#6F6F6F] text-[14px]">
-                      You cannot book your own property. Share the link with guests to start receiving bookings.
+                      You cannot book your own property.
+                    </p>
+                  </div>
+                </div>
+              ) : isExpired ? (
+                <div className="w-full max-w-[480px] lg:ml-auto bg-white border border-[#E6E6E6] rounded-lg p-5 text-center">
+                  <div className="py-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-[#999] mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    <p className="text-[#313131] font-semibold text-[16px] mb-2">
+                      No Longer Available
+                    </p>
+                    <p className="text-[#6F6F6F] text-[14px]">
+                      This listing's availability period has ended and can no longer be booked.
                     </p>
                   </div>
                 </div>
