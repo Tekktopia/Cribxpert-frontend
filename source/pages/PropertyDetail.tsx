@@ -78,13 +78,13 @@ const PropertyDetail = () => {
     if (!apiReviews?.reviews || !Array.isArray(apiReviews.reviews)) {
       return [];
     }
-    
+
     return apiReviews.reviews.map((review) => {
       // Extract user info from populated userId
       let authorName = 'Anonymous';
       let authorEmail = '';
       let userIdString = '';
-      
+
       if (review.userId) {
         if (typeof review.userId === 'object' && review.userId !== null) {
           // userId is populated (object with fullName and email)
@@ -96,7 +96,7 @@ const PropertyDetail = () => {
           userIdString = review.userId;
         }
       }
-      
+
       return {
         _id: review._id,
         text: review.review,
@@ -117,18 +117,18 @@ const PropertyDetail = () => {
     guests: number;
   }) => {
     if (!property || !currentUser) return;
-  
+
     const numberOfNights = Math.ceil(
       (formData.checkOutDate.getTime() - formData.checkInDate.getTime()) /
-        (1000 * 60 * 60 * 24)
+      (1000 * 60 * 60 * 24)
     );
-  
+
     const basePrice = numberOfNights * property.basePrice;
     const cleaningFee = property.cleaningFee || 0;
     const securityDeposit = property.securityDeposit || 0;
     const serviceFee = Math.round((basePrice + cleaningFee + securityDeposit) * 0.075);
     const totalPrice = basePrice + cleaningFee + securityDeposit + serviceFee;
-  
+
     const bookingData = {
       propertyId: property._id,
       propertyName: property.name,
@@ -143,7 +143,7 @@ const PropertyDetail = () => {
       securityDeposit,
       maxGuests: property.guestNo,
     };
-  
+
     navigate('/book-now', { state: bookingData });
   };
 
@@ -225,27 +225,27 @@ const PropertyDetail = () => {
   // Get similar properties (same category, excluding current one)
   const similarProperties = useMemo(() => {
     if (!property) return listings.slice(0, 3);
-    
+
     // Get current property's type ID for comparison
     const currentPropertyTypeId = typeof property.propertyType === 'object' && 'name' in property.propertyType
       ? (property.propertyType as { _id: string })._id
       : (typeof property.propertyType === 'string' ? property.propertyType : '');
-    
+
     // Filter listings by same property type, excluding current property
     const sameCategoryProperties = listings.filter((item: PropertyListing) => {
       if (item._id === property._id) return false; // Exclude current property
-      
+
       // Get item's property type ID
       const itemPropertyTypeId = typeof item.propertyType === 'object' && 'name' in item.propertyType
         ? (item.propertyType as { _id: string })._id
         : (typeof item.propertyType === 'string' ? item.propertyType : '');
-      
+
       // Compare property type IDs
       return itemPropertyTypeId === currentPropertyTypeId && itemPropertyTypeId !== '';
     });
-    
+
     // Return up to 3 similar properties, or fallback to any properties if none match
-    return sameCategoryProperties.length > 0 
+    return sameCategoryProperties.length > 0
       ? sameCategoryProperties.slice(0, 3)
       : listings.filter((item: PropertyListing) => item._id !== property._id).slice(0, 3);
   }, [property, listings]);
@@ -263,34 +263,46 @@ const PropertyDetail = () => {
   // Prepare data for our components
   const propertyImages = property.listingImg.map((img) => img.fileUrl);
 
-  type HouseRule = 
-  | string
-  | { 
+  type HouseRule =
+    | string
+    | {
       _id?: string;
-      name: string; 
-      icon?: string | { fileUrl: string; [key: string]: unknown }; 
+      name: string;
+      icon?: string | { fileUrl: string;[key: string]: unknown };
       description?: string;
     };
 
-const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) => {
-  if (typeof rule === 'string') {
-    return {
-      icon: '/icons/bell.svg', // fallback icon
-      title: rule,             // string rule
-      description: '',         // optional
-    };
-  } else {
-    // Handle icon as object with fileUrl or as string
-    const iconUrl = typeof rule.icon === 'object' && rule.icon?.fileUrl
-      ? rule.icon.fileUrl
-      : (typeof rule.icon === 'string' ? rule.icon : '/icons/bell.svg');
-    
-    return {
-      icon: iconUrl,
-      title: rule.name,
-      description: rule.description || '',
-    };
-  }});
+  const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) => {
+    if (typeof rule === 'string') {
+      return {
+        icon: '/icons/bell.svg', // fallback icon
+        title: rule,             // string rule
+        description: '',         // optional
+      };
+    } else {
+      // Handle icon as object with fileUrl or as string
+      const iconUrl = typeof rule.icon === 'object' && rule.icon?.fileUrl
+        ? rule.icon.fileUrl
+        : (typeof rule.icon === 'string' ? rule.icon : '/icons/bell.svg');
+
+      return {
+        icon: iconUrl,
+        title: rule.name,
+        description: rule.description || '',
+      };
+    }
+  });
+
+  // Add this helper above the return
+  const listingOwnerId = property.userId
+    ? typeof property.userId === 'object'
+      ? property.userId._id
+      : property.userId
+    : null;
+
+  const isOwner = currentUser?._id && listingOwnerId
+    ? currentUser._id === listingOwnerId
+    : false;
 
   return (
     <section className="max-w-screen-xl mx-auto overflow-hidden">
@@ -305,7 +317,7 @@ const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) =>
           <div className="w-full lg:w-1/2">
             {/* Description Component */}
             <PropertyDescription description={property.description} />
-            
+
             {/* Amenities Available Section */}
             <div className="mt-2 sm:mt-4">
               <h3 className="text-[#050505] font-[500] text-lg sm:text-xl mb-4 sm:mb-5">
@@ -317,11 +329,24 @@ const mappedRules: Rule[] = (property.houseRules || []).map((rule: HouseRule) =>
 
           <div className="w-full lg:w-1/2">
             <div className="">
-              <BookingForm
-                property={property}
-                onBookingSubmit={handleBookingSubmit}
-                isLoggedIn={currentUser !== null}
-              />
+              {isOwner ? (
+                <div className="w-full max-w-[480px] lg:ml-auto bg-white border border-[#E6E6E6] rounded-lg p-5 text-center">
+                  <div className="py-8">
+                    <p className="text-[#1D5C5C] font-semibold text-[16px] mb-2">
+                      This is your listing
+                    </p>
+                    <p className="text-[#6F6F6F] text-[14px]">
+                      You cannot book your own property. Share the link with guests to start receiving bookings.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <BookingForm
+                  property={property}
+                  onBookingSubmit={handleBookingSubmit}
+                  isLoggedIn={currentUser !== null}
+                />
+              )}
             </div>
           </div>
         </div>{' '}

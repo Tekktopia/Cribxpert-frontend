@@ -42,22 +42,24 @@ const FilterCategories: React.FC = () => {
   // Calculate counts for each property type based on all filtered listings
   useEffect(() => {
     if (!allFilteredListings || !propertyTypes?.data) return;
-
-    // Extract listings array from response
+  
     const listings = Array.isArray(allFilteredListings)
       ? allFilteredListings
       : allFilteredListings.listings || [];
-
-    // Calculate total (for "All" category)
+  
     const counts: Record<string, number> = { all: listings.length };
-
-    // Count listings for each property type
+  
     propertyTypes.data.forEach((propertyType: { _id: string }) => {
-      counts[propertyType._id] = listings.filter(
-        (listing) => listing.propertyType === propertyType._id
-      ).length;
+      counts[propertyType._id] = listings.filter((listing) => {
+        // Handle both populated object and plain string ID
+        const typeId =
+          typeof listing.propertyType === 'object' && listing.propertyType !== null
+            ? (listing.propertyType as { _id: string })._id
+            : listing.propertyType;
+        return typeId === propertyType._id;
+      }).length;
     });
-
+  
     setCategoryCounts(counts);
   }, [allFilteredListings, propertyTypes]);
 

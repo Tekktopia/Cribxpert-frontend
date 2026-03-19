@@ -2,6 +2,7 @@ import { JSX } from 'react';
 
 export interface PropertyListing {
   _id: string;
+  userId?: string | { _id: string; fullName?: string; email?: string };
   name: string;
   description: string;
   amenities: string[] | Array<{ _id: string; name: string; icon?: { fileUrl: string } }>; // Array of amenity IDs or full objects
