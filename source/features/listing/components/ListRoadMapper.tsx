@@ -387,11 +387,15 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         setListingId(response?.listing?._id);
       }
       if (activeStep === 7) {
-        setShowSuccessModal(true); // Show modal only at the last step
-        // Call callback immediately to refresh listings (cache invalidation will also trigger refetch)
-        if (onListingSaved) {
-          // Call immediately to ensure listings are refreshed
-          onListingSaved();
+        if (editingListing) {
+          if (onListingSaved) {
+            onListingSaved();
+          }
+        } else {
+          setShowSuccessModal(true);
+          if (onListingSaved) {
+            onListingSaved();
+          }
         }
       } else {
         nextStep();

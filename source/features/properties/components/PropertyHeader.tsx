@@ -15,6 +15,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import useAlert from '@/hooks/useAlert';
 import { useGetReviewsByListingIdQuery } from '@/features/review/reviewService';
+// Add these imports at the top
+import { useState } from 'react';
+import HostProfileDrawer from '@/features/properties/components/HostProfileDrawer';
 
 const PropertyHeader: React.FC = () => {
   // Get current listing from the store
@@ -23,6 +26,8 @@ const PropertyHeader: React.FC = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const navigate = useNavigate();
   const alert = useAlert();
+
+  const [isHostDrawerOpen, setIsHostDrawerOpen] = useState(false);
 
   // Prepare fallback/default values for destructuring
   const {
@@ -173,15 +178,21 @@ const PropertyHeader: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#1D5C5C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            Hosted by <span className="text-[#1D5C5C] font-medium ml-1">{hostName}</span>
+            Hosted by{' '}
+            <button
+              onClick={() => setIsHostDrawerOpen(true)}
+              className="text-[#1D5C5C] font-medium ml-1 underline hover:text-[#006073] transition-colors"
+            >
+              {hostName}
+            </button>
           </p>
         </div>
 
         <div className="flex items-center gap-3 mt-3 md:mt-0 w-full md:w-auto justify-start md:justify-center">
           <button
             className={`rounded-[200px] px-4 sm:px-6 py-2 sm:py-3 transition-colors ${isAuthenticated
-                ? 'bg-[#e6e6e6] hover:bg-[#d9d9d9]'
-                : 'bg-[#f0f0f0] cursor-pointer opacity-75 hover:opacity-100'
+              ? 'bg-[#e6e6e6] hover:bg-[#d9d9d9]'
+              : 'bg-[#f0f0f0] cursor-pointer opacity-75 hover:opacity-100'
               }`}
             onClick={onSave}
             title={!isAuthenticated ? 'Login to save properties' : undefined}
@@ -213,6 +224,21 @@ const PropertyHeader: React.FC = () => {
           </button>
         </div>
       </div>
+      <HostProfileDrawer
+        isOpen={isHostDrawerOpen}
+        onClose={() => setIsHostDrawerOpen(false)}
+        hostName={hostName}
+        hostEmail={
+          listingOwner && typeof listingOwner === 'object' && 'email' in listingOwner
+            ? (listingOwner as { email?: string }).email
+            : undefined
+        }
+        hostAvatar={
+          listingOwner && typeof listingOwner === 'object' && 'profileImage' in listingOwner
+            ? (listingOwner as { profileImage?: string }).profileImage
+            : undefined
+        }
+      />
     </div>
   );
 };
