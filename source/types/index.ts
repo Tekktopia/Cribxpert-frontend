@@ -2,6 +2,7 @@ import { JSX } from 'react';
 
 export interface PropertyListing {
   _id: string;
+  propertyId?: string;
   userId?: string | { _id: string; fullName?: string; email?: string };
   name: string;
   description: string;

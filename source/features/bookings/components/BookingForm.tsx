@@ -195,17 +195,17 @@ const BookingForm: React.FC<BookingFormProps> = ({
               state={
                 isLoggedIn
                   ? {
-                      propertyId: property._id,
-                      startDate: formData.checkInDate,
-                      endDate: formData.checkOutDate,
-                      guests: formData.guests,
-                      totalPrice,
-                      propertyName: property.name,
-                      propertyImages,
-                      basePrice: numberOfNights > 0 ? property.basePrice * numberOfNights : property.basePrice,
-                      cleaningFee,
-                      securityDeposit,
-                    }
+                    propertyId: property._id,
+                    startDate: formData.checkInDate,
+                    endDate: formData.checkOutDate,
+                    guests: formData.guests,
+                    totalPrice,
+                    propertyName: property.name,
+                    propertyImages,
+                    basePrice: numberOfNights > 0 ? property.basePrice * numberOfNights : property.basePrice,
+                    cleaningFee,
+                    securityDeposit,
+                  }
                   : undefined
               }
               className={`bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition text-center block ${!isFormValid || !isLoggedIn ? 'opacity-50 pointer-events-none' : ''}`}
@@ -231,7 +231,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
       </div>
 
       <div className="py-8 text-center">
-        <p className="text-[#313131] text-[14px]">Property ID <strong>{property._id}</strong></p>
+        <p className="text-[#313131] text-[14px]">
+          Property ID <strong>{property.propertyId || property._id}</strong>
+        </p>
         <p className="text-[#006073] font-[400] text-[14px] mt-3 cursor-pointer hover:underline">Contact host</p>
       </div>
     </>
