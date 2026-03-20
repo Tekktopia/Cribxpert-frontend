@@ -12,6 +12,7 @@ export interface Notification {
   createdAt: string;
   updatedAt: string;
   __v: number;
+  listing?: string; 
 }
 
 // API response types
@@ -38,4 +39,5 @@ export interface NotificationComponentProps {
   isLoading: boolean;
   error: FetchBaseQueryError | SerializedError | undefined;
   onMarkAsRead: (notificationId: string) => void;
+  username?: string; // add this
 }

@@ -285,7 +285,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
     setSavingAction(saveAsDraft ? 'draft' : 'publish');
     try {
       // Run final validation check before submission, using the same logic
-      if (!validateCurrentStep()) {
+      if (!isCurrentStepValid()) {
         return;
       }
 
