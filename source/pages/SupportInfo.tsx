@@ -7,7 +7,7 @@ import {
 const SupportInfo = () => {
   return (
     <div>
-      <div className="mt-32">
+      <div className="">
         <SupportHeader />
         <div className="lg:p-8">
           <div className=" text-[#6F6F6F] flex p-[60px] flex-col gap-[20px] bg-[#FFF] shadow-lg shadow-[#1D5C5C14] text-sm lg:text-lg">

@@ -13,7 +13,7 @@ import { Country, State, City } from 'country-state-city';
 const FilterBar: React.FC = () => {
   const dispatch = useDispatch();
   const activeFilters = useSelector(selectActiveFilters);
-  useFilteredListings();
+  const { isLoading: isFiltering, refetch } = useFilteredListings();
 
   const [isGeolocationActive, setIsGeolocationActive] = useState(false);
   const userLocation = useGeolocation(isGeolocationActive);
@@ -28,6 +28,10 @@ const FilterBar: React.FC = () => {
     }
   };
 
+  const handleSearch = () => {
+    refetch();
+  };
+
   const [filterParameters, setFilterParameters] = useState<FilterParameter[]>([
     { name: 'country', label: 'Country', options: [] },
     { name: 'stateProvince', label: 'State/Province', options: [] },
@@ -35,7 +39,6 @@ const FilterBar: React.FC = () => {
     { name: 'priceRange', label: 'Price Range', options: [] },
   ]);
 
-  // Load all countries on mount
   useEffect(() => {
     const countryOptions = Country.getAllCountries().map((c) => ({
       value: c.name,
@@ -49,7 +52,6 @@ const FilterBar: React.FC = () => {
     );
   }, []);
 
-  // Load states when country changes
   useEffect(() => {
     const selectedCountry = activeFilters.country;
     if (selectedCountry) {
@@ -76,7 +78,6 @@ const FilterBar: React.FC = () => {
     }
   }, [activeFilters.country]);
 
-  // Load cities when state changes
   useEffect(() => {
     const selectedCountry = activeFilters.country;
     const selectedState = activeFilters.stateProvince;
@@ -110,7 +111,6 @@ const FilterBar: React.FC = () => {
     }
   }, [activeFilters.country, activeFilters.stateProvince]);
 
-  // Price ranges
   const basePriceRanges = useMemo(
     () => [
       { value: '0-1000', label: '0 - 1,000' },
@@ -135,7 +135,6 @@ const FilterBar: React.FC = () => {
     );
   }, [basePriceRanges]);
 
-  // Geolocation handler
   const handleGeoLocation = () => {
     setIsGeolocationActive(true);
   };
@@ -159,16 +158,10 @@ const FilterBar: React.FC = () => {
 
           if (countryName) {
             dispatch(updateFilter({ name: 'country', value: countryName }));
-
-            // Wait for states to load
             await new Promise((resolve) => setTimeout(resolve, 800));
-
             if (stateName) {
               dispatch(updateFilter({ name: 'stateProvince', value: stateName }));
-
-              // Wait for cities to load
               await new Promise((resolve) => setTimeout(resolve, 800));
-
               if (cityName) {
                 dispatch(updateFilter({ name: 'city', value: cityName.trim() }));
               }
@@ -202,77 +195,78 @@ const FilterBar: React.FC = () => {
             />
           ))}
 
-        <button
-          onClick={handleGeoLocation}
-          disabled={userLocation.loading}
-          className={`bg-primary text-white h-[36px] px-4 py-2 rounded-md whitespace-nowrap text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end flex items-center justify-center ${
-            userLocation.loading ? 'opacity-70 cursor-not-allowed' : ''
-          }`}
-        >
-          {userLocation.loading ? (
-            <>
-              <svg
-                className="animate-spin h-4 w-4 mr-2 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                ></path>
-              </svg>
-              Locating...
-            </>
-          ) : (
-            'Use My Location'
-          )}
-        </button>
+          <button
+            onClick={handleGeoLocation}
+            disabled={userLocation.loading}
+            className={`bg-primary text-white h-[36px] px-4 py-2 rounded-md whitespace-nowrap text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end flex items-center justify-center ${
+              userLocation.loading ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
+          >
+            {userLocation.loading ? (
+              <>
+                <svg
+                  className="animate-spin h-4 w-4 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+                Locating...
+              </>
+            ) : (
+              'Use My Location'
+            )}
+          </button>
 
-        <button
-          onClick={handleSearch}
-          disabled={isFiltering}
-          className={`bg-black text-white h-[36px] px-4 py-2 rounded-md text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end ${
-            isFiltering ? 'opacity-70 cursor-not-allowed' : ''
-          }`}
-        >
-          {isFiltering ? (
-            <span className="flex items-center justify-center">
-              <svg
-                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-              Filtering...
-            </span>
-          ) : (
-            'Search'
-          )}
-        </button>
+          <button
+            onClick={handleSearch}
+            disabled={isFiltering}
+            className={`bg-black text-white h-[36px] px-4 py-2 rounded-md text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end ${
+              isFiltering ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
+          >
+            {isFiltering ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Filtering...
+              </span>
+            ) : (
+              'Search'
+            )}
+          </button>
+        </div>{/* ← this closing div was missing */}
       </div>
     </div>
   );
