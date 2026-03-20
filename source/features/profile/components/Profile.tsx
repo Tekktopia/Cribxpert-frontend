@@ -1,7 +1,7 @@
-// import { CameraIcon } from '@heroicons/react/16/solid';
 import { ProfileFormProps } from '@/types';
 import { CameraIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import Footer from '@/shared/components/layout/Footer';
 
 const Profile = ({
   initialFirstName,
@@ -91,110 +91,116 @@ const Profile = ({
   };
 
   return (
-    <div className="lg:w-[800px] w-full flex flex-col gap-6 lg:items-start my-9 ">
-      <div className="flex  items-center gap-3">
-        {profileImage ? (
-          <img
-            src={profileImage}
-            alt="Profile"
-            className="w-[100px] h-24 rounded-[24px] border object-cover"
-          />
-        ) : (
-          <div className="w-[100px] h-24 rounded-[24px]  flex items-center justify-center bg-[#1D5C5C]/10">
-            <CameraIcon className="w-6 h-6 text-[#1D5C5C]" />
-          </div>
-        )}
-        <div className="flex flex-col gap-1">
-          <div className="flex p-[10px] gap-[6px] items-center justify-center border border-[#BCC3CA] rounded-lg w-[179px] h-[44px]">
-            <CameraIcon className="w-6 h-6 text-[#1D5C5C]" />
-            <label
-              htmlFor="file"
-              className="cursor-pointer text-sm leading-5 text-[#1D5C5C]"
-            >
-              Change Picture
-            </label>
-            <input
-              type="file"
-              id="file"
-              name="file"
-              className="hidden"
-              onChange={handleImageChange}
-            />
+    <div className="min-h-screen flex flex-col">
+      {/* Main content - centered with max width */}
+      <div className="flex-1 flex justify-center">
+        <div className="lg:w-[800px] w-full flex flex-col gap-6 lg:items-start my-9 px-4">
+          <div className="flex items-center gap-3">
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="Profile"
+                className="w-[100px] h-24 rounded-[24px] border object-cover"
+              />
+            ) : (
+              <div className="w-[100px] h-24 rounded-[24px] flex items-center justify-center bg-primary/10">
+                <CameraIcon className="w-6 h-6 text-primary" />
+              </div>
+            )}
+            <div className="flex flex-col gap-1">
+              <div className="flex p-[10px] gap-[6px] items-center justify-center border border-[#BCC3CA] rounded-lg w-[179px] h-[44px]">
+                <CameraIcon className="w-6 h-6 text-primary" />
+                <label
+                  htmlFor="file"
+                  className="cursor-pointer text-sm leading-5 text-primary"
+                >
+                  Change Picture
+                </label>
+                <input
+                  type="file"
+                  id="file"
+                  name="file"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </div>
+              {errors.profileImage && (
+                <p className="text-red-500">{errors.profileImage}</p>
+              )}
+            </div>
           </div>
 
-          {/* accept="image */}
-          {errors.profileImage && (
-            <p className="text-red-500">{errors.profileImage}</p>
-          )}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[42px]">
+            <div className="grid lg:grid-cols-2 lg:gap-[42px] gap-6">
+              <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
+                <label className="text-[#999999]">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="amoria"
+                  className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
+                />
+                {errors.firstName && (
+                  <p className="text-red-500">{errors.firstName}</p>
+                )}
+              </div>
+
+              <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
+                <label className="text-[#999999]">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  placeholder="amoria"
+                  onChange={handleChange}
+                  className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
+                />
+                {errors.lastName && (
+                  <p className="text-red-500">{errors.lastName}</p>
+                )}
+              </div>
+
+              <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
+                <label className="text-[#999999]">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="amoriamakinwa@gmail.com"
+                  className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
+                />
+                {errors.email && <p className="text-red-500">{errors.email}</p>}
+              </div>
+
+              <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
+                <label className="text-[#999999]">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+2348167990657"
+                  className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
+                />
+                {errors.phone && <p className="text-red-500">{errors.phone}</p>}
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-[156px] bg-primary text-white p-[10px] rounded-lg hover:bg-hoverColor"
+            >
+              Save
+            </button>
+          </form>
         </div>
       </div>
-
-      <form onSubmit={handleSubmit} className=" flex flex-col gap-[42px] ">
-        <div className=" grid lg:grid-cols-2 lg:gap-[42px] gap-6 ">
-          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
-            <label className=" text-[#999999] ">First Name</label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              placeholder="amoria"
-              className="w-full py-3 px-4 border rounded  border-1 border-[#DFE4EA] text-[#999999]"
-            />
-            {errors.firstName && (
-              <p className="text-red-500">{errors.firstName}</p>
-            )}
-          </div>
-
-          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
-            <label className=" text-[#999999] ">Last Name</label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              placeholder="amoria"
-              onChange={handleChange}
-              className="w-full py-3 px-4 border rounded  border-1 border-[#DFE4EA] text-[#999999]"
-            />
-            {errors.lastName && (
-              <p className="text-red-500">{errors.lastName}</p>
-            )}
-          </div>
-
-          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
-            <label className=" text-[#999999] ">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="amoriamakinwa@gmail.com"
-              className="w-full py-3 px-4 border rounded  border-1 border-[#DFE4EA] text-[#999999]"
-            />
-            {errors.email && <p className="text-red-500">{errors.email}</p>}
-          </div>
-
-          <div className="flex gap-1 flex-col lg:w-[395px] lg:h-[70px]">
-            <label className=" text-[#999999] ">Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="+2348167990657"
-              className="w-full py-3 px-4 border rounded   border-1 border-[#DFE4EA] text-[#999999]"
-            />
-            {errors.phone && <p className="text-red-500">{errors.phone}</p>}
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className="w-[156px] bg-[#1D5C5C] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
-        >
-          Save
-        </button>
-      </form>
+      
+      {/* Footer - full width */}
+      <Footer />
     </div>
   );
 };

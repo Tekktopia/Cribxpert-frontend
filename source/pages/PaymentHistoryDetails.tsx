@@ -50,7 +50,7 @@ const PaymentHistoryDetails = () => {
           </p>
           <button
             onClick={() => navigate('/payments')}
-            className="inline-flex items-center px-4 py-2 bg-[#2B7B8B] text-white rounded-md hover:bg-[#2B7B8B] transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-hoverColor transition-colors"
           >
             Back to Payments
           </button>
@@ -265,7 +265,7 @@ const PaymentHistoryDetails = () => {
           {/* Action Button */}
           <div className="mb-8">
             <Link to={`/invoice/${id}`}>
-              <button className="w-full sm:w-auto bg-[#2B7B8B] text-white px-6 py-3 rounded-md hover:bg-[#2B7B8B] transition-colors font-medium">
+              <button className="w-full sm:w-auto bg-primary text-white px-6 py-3 rounded-md hover:bg-hoverColor transition-colors font-medium">
                 Download Invoice
               </button>
             </Link>
@@ -281,7 +281,7 @@ const PaymentHistoryDetails = () => {
             </p>
             <div className="space-y-3 mb-6">
               <div className="flex items-start">
-                <div className="w-2 h-2 bg-[#2B7B8B] rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
                 <div>
                   <span className="font-medium text-gray-900">
                     Full Refund:
@@ -293,7 +293,7 @@ const PaymentHistoryDetails = () => {
                 </div>
               </div>
               <div className="flex items-start">
-                <div className="w-2 h-2 bg-[#2B7B8B] rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
                 <div>
                   <span className="font-medium text-gray-900">50% Refund:</span>
                   <span className="text-gray-600">
@@ -304,7 +304,7 @@ const PaymentHistoryDetails = () => {
                 </div>
               </div>
               <div className="flex items-start">
-                <div className="w-2 h-2 bg-[#2B7B8B] rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
                 <div>
                   <span className="font-medium text-gray-900">No Refund:</span>
                   <span className="text-gray-600">
@@ -314,7 +314,7 @@ const PaymentHistoryDetails = () => {
                 </div>
               </div>
             </div>
-            <button className="border border-[#2B7B8B] text-[#2B7B8B] px-6 py-3 rounded-md hover:bg-[#2B7B8B] hover:text-white transition-colors font-medium">
+            <button className="border border-primary text-primary px-6 py-3 rounded-md hover:bg-hoverColor hover:text-white transition-colors font-medium">
               Request Refund
             </button>
           </div>

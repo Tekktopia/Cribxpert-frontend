@@ -47,7 +47,7 @@ const BookingsNav = ({ active, setActive }: Props) => {
           </div>
         </div>
         <div>
-          <button className="text-white p-[10px] w-full text-nowrap  bg-primary rounded-xl">
+          <button className="text-white p-[10px] w-full text-nowrap  bg-primary rounded-xl hover:bg-hoverColor hover:shadow/80 transition duration-300">
             Discover Properties
           </button>
         </div>

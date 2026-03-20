@@ -216,7 +216,7 @@ const PaymentHistory = () => {
                             `/payment-history/${item.bookingId.replace('#', '')}`
                           )
                         }
-                        className={`text-nowrap items-center px-2 py-2 text-[14px] font-medium rounded transition-colors ${getActionButtonStyle(item.paymentStatus)}`}
+                        className={`text-nowrap items-center px-2 py-2 text-[14px] hover:bg-hoverColor hover:border-none font-medium rounded transition-colors ${getActionButtonStyle(item.paymentStatus)}`}
                       >
                         View Details
                       </button>

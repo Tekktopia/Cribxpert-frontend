@@ -395,7 +395,7 @@ export default function FilterPanel({
               Reset
             </button>
             <button
-              className="bg-[#1D5C5C] text-white px-4 py-2 rounded hover:bg-[#174747]"
+              className="bg-primary text-white px-4 py-2 rounded hover:bg-hoverColor transition-colors"
               onClick={handleApplyFilters}
             >
               Apply Filter

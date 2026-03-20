@@ -47,7 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {!(currentPage === totalPages) && (
         <button
-          className="bg-[#1D5C5C] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
+          className="bg-primary hover:bg-hoverColor text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
           onClick={handleNext}
         >
           Next Page
@@ -56,7 +56,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {currentPage === totalPages && (
         <button
-          className="bg-[#1D5C5C] text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
+          className="bg-primary hover:bg-hoverColor text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
           onClick={handlePrev}
         >
           Previous Page

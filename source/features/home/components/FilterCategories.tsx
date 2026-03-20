@@ -110,7 +110,7 @@ const FilterCategories: React.FC = () => {
             {/* "All" option that works since it uses empty string */}
             <div
               key="all"
-              className={`flex flex-col items-center text-center cursor-pointer ${
+              className={`flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:scale-105 ${
                 !activeFilters.propertyType
                   ? 'scale-110 transition-transform'
                   : ''
@@ -118,13 +118,17 @@ const FilterCategories: React.FC = () => {
               onClick={() => handleCategoryClick('')}
             >
               <div
-                className={`relative p-2 rounded-full ${!activeFilters.propertyType ? 'bg-[#1D5C5C]/10' : ''}`}
+                className={`relative p-2 rounded-full transition-colors duration-200 ${
+                  !activeFilters.propertyType 
+                    ? 'bg-[#1D5C5C]/10' 
+                    : 'hover:bg-[#1D5C5C]/5'
+                }`}
               >
                 <img
                   src={'/other-icons/otherFilterIcon.png'}
                   alt={'All'}
                   loading="lazy"
-                  className={`w-[24px] h-[24px] object-contain ${
+                  className={`w-[24px] h-[24px] object-contain transition-all duration-200 ${
                     !activeFilters.propertyType
                       ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
                       : ''
@@ -132,7 +136,11 @@ const FilterCategories: React.FC = () => {
                 />
               </div>
               <p
-                className={`text-[14px] font-[400] hover:text-hoverColor ${!activeFilters.propertyType ? 'text-primary font-medium' : 'text-[#999999]'}`}
+                className={`text-[14px] font-[400] transition-colors duration-200 ${
+                  !activeFilters.propertyType 
+                    ? 'text-primary font-medium' 
+                    : 'text-[#999999] hover:text-primary'
+                }`}
               >
                 All
               </p>
@@ -165,7 +173,7 @@ const FilterCategories: React.FC = () => {
   }
 
   return (
-    <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-screen">
+    <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-screen relative">
       {/* Show filtering indicator if needed */}
       {isFilteringListings && (
         <div className="absolute right-4 top-2">
@@ -176,19 +184,23 @@ const FilterCategories: React.FC = () => {
       <div className="flex items-center gap-6 min-w-max px-4">
         <div
           key="all"
-          className={`flex flex-col items-center text-center cursor-pointer ${
+          className={`flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:scale-105 ${
             !activeFilters.propertyType ? 'scale-110 transition-transform' : ''
           }`}
           onClick={() => handleCategoryClick('')}
         >
           <div
-            className={`relative p-2 rounded-full ${!activeFilters.propertyType ? 'bg-[#1D5C5C]/10' : ''}`}
+            className={`relative p-2 rounded-full transition-colors duration-200 ${
+              !activeFilters.propertyType 
+                ? 'bg-[#1D5C5C]/10' 
+                : 'hover:bg-[#1D5C5C]/5'
+            }`}
           >
             <img
               src={'/other-icons/otherFilterIcon.png'}
               alt={'All'}
               loading="lazy"
-              className={`w-[24px] h-[24px] object-contain ${
+              className={`w-[24px] h-[24px] object-contain transition-all duration-200 ${
                 !activeFilters.propertyType
                   ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
                   : ''
@@ -201,7 +213,11 @@ const FilterCategories: React.FC = () => {
             )}
           </div>
           <p
-            className={`text-[14px] font-[400] ${!activeFilters.propertyType ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
+            className={`text-[14px] font-[400] transition-colors duration-200 ${
+              !activeFilters.propertyType 
+                ? 'text-[#1D5C5C] font-medium' 
+                : 'text-[#999999] hover:text-primary'
+            }`}
           >
             All
           </p>
@@ -222,13 +238,17 @@ const FilterCategories: React.FC = () => {
             return (
               <div
                 key={propertyType._id}
-                className={`flex flex-col items-center text-center cursor-pointer ${
+                className={`flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:scale-105 ${
                   isActive ? 'scale-110 transition-transform' : ''
                 }`}
                 onClick={() => handleCategoryClick(propertyType._id)}
               >
                 <div
-                  className={`relative p-2 rounded-full ${isActive ? 'bg-[#1D5C5C]/10' : ''}`}
+                  className={`relative p-2 rounded-full transition-colors duration-200 ${
+                    isActive 
+                      ? 'bg-[#1D5C5C]/10' 
+                      : 'hover:bg-[#1D5C5C]/5'
+                  }`}
                 >
                   <img
                     src={
@@ -237,10 +257,10 @@ const FilterCategories: React.FC = () => {
                     }
                     alt={propertyType.name}
                     loading="lazy"
-                    className={`w-[24px] h-[24px] object-contain ${
+                    className={`w-[24px] h-[24px] object-contain transition-all duration-200 ${
                       isActive
                         ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                        : ''
+                        : 'hover:filter hover:invert-[15%] hover:sepia-[100%] hover:saturate-[3000%] hover:hue-rotate-[195deg] hover:brightness-[75%]'
                     }`}
                   />
                   {count > 0 && (
@@ -250,7 +270,11 @@ const FilterCategories: React.FC = () => {
                   )}
                 </div>
                 <p
-                  className={`text-[14px] font-[400] ${isActive ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
+                  className={`text-[14px] font-[400] transition-colors duration-200 ${
+                    isActive 
+                      ? 'text-[#1D5C5C] font-medium' 
+                      : 'text-[#999999] hover:text-primary'
+                  }`}
                 >
                   {propertyType.name}
                 </p>

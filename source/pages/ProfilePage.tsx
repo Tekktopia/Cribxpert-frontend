@@ -10,7 +10,7 @@ const ProfilePage = () => {
   const [active, setActive] = useState<ActiveProfile>(ActiveProfile.Profile);
   return (
     <div>
-      <div className=" px-[30px] lg:px-[80px] mt-32 container mx-auto">
+      <div className="  mt-32 container mx-auto">
         <ProfileNav active={active} setActive={setActive} />
         {active === ActiveProfile.Profile && (
           <Profile

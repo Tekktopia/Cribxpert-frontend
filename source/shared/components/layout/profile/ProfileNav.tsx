@@ -18,7 +18,7 @@ const ProfileNav = ({ active, setActive }: Props) => {
   return (
     <nav>
       <div className="flex justify-between items-center">
-        <div className=" hidden lg:flex w-full py-3 lg:gap-[10px] text-[#999] text-[10px]  sm:text-[14px] lg:text-[18px] ">
+        <div className=" justify-center hidden lg:flex w-full py-3 lg:gap-[10px] text-[#999] text-[10px]  sm:text-[14px] lg:text-[18px] ">
           <div className={` items-center justify-center py-2  lg:px-4 `}>
             <ProfileLinks
               page="Profile"

@@ -15,9 +15,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, header = true }) => {
         {header && <HeaderSpacer />}
         {children}
       </div>
-      {/* <div className="px-[30px] lg:px-[80px] container mx-auto">
-        {children}
-      </div> */}
+      
     </div>
   );
 };

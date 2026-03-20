@@ -1,6 +1,7 @@
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
+
 const Password = () => {
   const [formData, setFormData] = useState({
     oldPassword: '',
@@ -80,7 +81,7 @@ const Password = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 lg:items-start my-9 ">
+    <div className="flex flex-col gap-6 lg:items-start my-9  justify-center">
       <form onSubmit={handleSubmit} className=" flex flex-col gap-[42px]">
         <div className=" flex gap-6 sm:gap-[42px] flex-wrap ">
           <div className="flex gap-1 flex-col lg:w-[300px] w-full ">
@@ -137,20 +138,20 @@ const Password = () => {
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex gap-1 items-center">
-            <CheckCircleIcon className="w-6 h-6 text-[#1D5C5C]" />
-            <p className=" text-sm leading-5 text-[#1D5C5C]">
+            <CheckCircleIcon className="w-6 h-6 text-primary" />
+            <p className=" text-sm leading-5 text-primary">
               Minimum 8 characters.
             </p>
           </div>
           <div className="flex gap-1 items-center">
-            <CheckCircleIcon className="w-6 h-6 text-[#1D5C5C]" />
-            <p className=" text-sm leading-5 text-[#1D5C5C]">
+            <CheckCircleIcon className="w-6 h-6 text-primary" />
+            <p className=" text-sm leading-5 text-primary">
               Use combination of uppercase and lowercase letters.
             </p>
           </div>
           <div className="flex gap-1 items-center">
-            <CheckCircleIcon className="w-6 h-6 text-[#1D5C5C]" />
-            <p className=" text-sm leading-5 text-[#1D5C5C]">
+            <CheckCircleIcon className="w-6 h-6 text-primary" />
+            <p className=" text-sm leading-5 text-primary">
               Use of special characters (e.g., !, @, #, $, %)
             </p>
           </div>
@@ -159,11 +160,11 @@ const Password = () => {
         <div className="flex gap-4">
           <button
             type="submit"
-            className="w-[156px] bg-[#1D5C5C] text-white p-[10px] rounded-lg hover:bg-[#3f013e]"
+            className="w-[156px] bg-primary text-white p-[10px] rounded-lg hover:bg-hoverColor"
           >
             Update Password
           </button>
-          <button className="w-[156px] border-2 border-[#1D5C5C] text-[#1D5C5C] p-[10px] rounded-lg hover:border-[#3f013e]">
+          <button className="w-[156px] border-2 border-primary text-primary p-[10px] rounded-lg ">
             Cancel
           </button>
         </div>
