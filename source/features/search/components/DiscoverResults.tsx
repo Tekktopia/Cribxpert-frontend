@@ -293,7 +293,7 @@
 
                 key
               ) => {
-                console.log(name, '→ basePrice:', basePrice, 'cleaningFee:', cleaningFee);
+                console.log(`[CARD] ${name} | basePrice: ${basePrice} | cleaningFee: ${cleaningFee} | type: ${typeof cleaningFee}`)
                 const images = listingImg.map((img) => img.fileUrl) || [];
                 const location = `${city}, ${state}, ${country}`;
 

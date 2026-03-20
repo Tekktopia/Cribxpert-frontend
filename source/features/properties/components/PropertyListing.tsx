@@ -19,10 +19,12 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
     <div className="px-4 2xl:container mx-auto w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-14 items-stretch">
       {listings?.map(
         (
+          // AFTER:
           {
             _id,
             listingImg,
             basePrice,
+            cleaningFee,
             rating,
             name,
             city,
@@ -54,10 +56,10 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
           const locationParts = [city, state, country].filter(
             (part) => part && part.trim() !== ''
           );
-          const location = locationParts.length > 0 
-            ? locationParts.join(', ') 
+          const location = locationParts.length > 0
+            ? locationParts.join(', ')
             : 'Location not specified';
-          
+
           // Get property type name - handle both object and ID formats
           let propertyTypeName = '';
           if (propertyType) {
@@ -76,6 +78,7 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
                 id={_id}
                 image={primaryImage}
                 price={basePrice}
+                cleaningFee={cleaningFee ?? 0}
                 rating={rating}
                 name={name}
                 location={location}

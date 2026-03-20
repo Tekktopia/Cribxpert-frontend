@@ -96,7 +96,6 @@ export const listingApi = createApi({
         return {
           url: '/listing',
           params: formattedFilters,
-          headers: { 'Cache-Control': 'no-cache' }, // add this
         };
       },
       providesTags: (result) =>

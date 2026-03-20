@@ -112,6 +112,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
         ...listing,
         isFavorited: favouriteIds.includes(listing._id),
       }));
+      console.log('[LoadingManager] Sample listing cleaningFee:', listingsData.listings[0]?.name, listingsData.listings[0]?.cleaningFee);
       dispatch(setAllListings(mergedListings));
     }
   }, [

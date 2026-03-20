@@ -88,12 +88,10 @@ export const listingApi = createApi({
     // GET /listing - Get all listings with optional filters
     getListings: builder.query<{ listings: PropertyListing[] }, ListingFilter | void>({
       query: (filters) => {
-        // Format dates if they exist
         const formattedFilters = filters ? { ...filters } : undefined;
-
         return {
           url: '/listing',
-          params: formattedFilters,
+          params: { ...formattedFilters, _t: Date.now() },
         };
       },
       providesTags: (result) =>

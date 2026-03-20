@@ -67,7 +67,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
 
 
-  
+
   const cleaningFee = property.cleaningFee || 0;
   const securityDeposit = property.securityDeposit || 0;
   const baseTotal =
@@ -88,7 +88,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
             NGN {accommodationFee.toLocaleString()} <span className="font-normal">/night</span>
           </h4>
           <p className="text-[#6F6F6F] text-[14px]">
-            Accommodation fee · excl. service fee & VAT
+            {numberOfNights > 0
+              ? `${numberOfNights} night${numberOfNights !== 1 ? 's' : ''} · excl. service fee & VAT`
+              : 'Per night · excl. service fee & VAT'}
           </p>
           <hr className="border-[#E6E6E6] my-3" />
         </div>
