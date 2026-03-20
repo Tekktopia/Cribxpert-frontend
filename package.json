@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@tailwindcss/vite": "^4.0.8",
     "axios": "^1.12.2",
+    "country-state-city": "^3.2.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.16.0",
     "lucide-react": "^0.477.0",
