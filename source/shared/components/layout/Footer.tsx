@@ -7,7 +7,7 @@ interface FooterProps {
 
 const Footer = ({ className }: FooterProps) => {
   return (
-    <footer className={`bg-[#1D5C5C] text-white mt-20 ${className}`}>
+    <footer className={`bg-primary text-white mt-20 ${className}`}>
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}

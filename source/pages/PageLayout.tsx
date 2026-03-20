@@ -11,7 +11,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, header = true }) => {
   return (
     <div className="h-full relative">
       {header && <Header />}
-      <div className="pb-6 lg:pb-8">
+      <div className="">
         {header && <HeaderSpacer />}
         {children}
       </div>

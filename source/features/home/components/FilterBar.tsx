@@ -319,7 +319,7 @@ const FilterBar: React.FC = () => {
           )}
         </button>
 
-        <button
+        {/* <button
           onClick={handleSearch}
           disabled={isFiltering}
           className={`bg-black text-white h-[36px] px-4 py-2 rounded-md text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end ${
@@ -353,7 +353,7 @@ const FilterBar: React.FC = () => {
           ) : (
             'Search'
           )}
-        </button>
+        </button> */}
       </div>
     </div>
   );
