@@ -6,6 +6,7 @@ import BookingDetails from './BookingDetails';
 import PriceBreakdown from './PriceBreakdown';
 import AvailabilityDatePicker from './AvailabilityDatePicker';
 import type { BookingData } from '@/types';
+import { calculatePricing } from '@/utils/pricingUtils';
 
 interface OrderSummaryProps {
   bookingData?: BookingData;
@@ -170,21 +171,20 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
   const nights = calculateNights();
 
-  const basePrice = bookingData?.basePrice ?? 0;
-  const cleaningFee = bookingData?.cleaningFee ?? 0;
   const securityDeposit = bookingData?.securityDeposit ?? 0;
-  const accommodationFee = basePrice + cleaningFee;
-  const serviceFee = Math.round(accommodationFee * 0.05);
-  const vat = Math.round((accommodationFee + serviceFee) * 0.075);
-  const totalPrice = accommodationFee + serviceFee + vat + securityDeposit;
-
-  const calculateTotalPrice = () => {
-    const base = bookingData?.basePrice ?? 0;
-    const cleaning = bookingData?.cleaningFee ?? 0;
-    const security = bookingData?.securityDeposit ?? 0;
-    const accommodation = base + cleaning;
-    return accommodation + Math.round(accommodation * 0.05) + Math.round(accommodation * 0.075) + security;
-  };
+  const { accommodationFee, serviceFee, vat, totalPrice } = calculatePricing({
+    basePrice: bookingData?.basePrice ?? 0,
+    cleaningFee: bookingData?.cleaningFee ?? 0,
+    securityDeposit,
+    numberOfNights: nights,
+  });
+  
+  const calculateTotalPrice = () => calculatePricing({
+    basePrice: bookingData?.basePrice ?? 0,
+    cleaningFee: bookingData?.cleaningFee ?? 0,
+    securityDeposit,
+    numberOfNights: nights,
+  }).totalPrice;
 
   // Navigate to next image
   const nextImage = () => {

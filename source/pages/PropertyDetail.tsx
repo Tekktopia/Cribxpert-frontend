@@ -12,6 +12,7 @@ import {
   useCreateReviewMutation,
   useGetReviewsByListingIdQuery,
 } from '@/features/review/reviewService';
+import { calculatePricing } from '@/utils/pricingUtils';
 
 // Import our new components
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
@@ -122,13 +123,15 @@ const PropertyDetail = () => {
       (1000 * 60 * 60 * 24)
     );
 
-    const basePrice = numberOfNights * property.basePrice;
     const cleaningFee = property.cleaningFee || 0;
     const securityDeposit = property.securityDeposit || 0;
-    const accommodationFee = basePrice + cleaningFee;
-    const serviceFee = Math.round(accommodationFee * 0.05);
-    const vat = Math.round((accommodationFee + serviceFee) * 0.075);
-    const totalPrice = accommodationFee + serviceFee + vat + securityDeposit;
+    const { totalPrice } = calculatePricing({
+      basePrice: property.basePrice,
+      cleaningFee,
+      securityDeposit,
+      numberOfNights,
+    });
+    const basePrice = numberOfNights * property.basePrice; // still needed for bookingData
 
     const bookingData = {
       propertyId: property._id,

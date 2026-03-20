@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import InfoTooltip from '@/shared/components/ui/InfoTooltip';
 
 interface PricingPageProps {
   basePrice: string;
@@ -25,42 +26,31 @@ const PricingPage: React.FC<PricingPageProps> = ({
   availableUntil,
   setAvailableUntil,
 }) => {
-  // Get today's date in YYYY-MM-DD format for min date restriction
   const today = new Date().toISOString().split('T')[0];
 
-  // Helper function to format number with commas
+  useEffect(() => {
+    const numeric = Number(basePrice.replace(/\D/g, ''));
+    if (numeric > 0) {
+      setSecurityDeposit(String(Math.round(numeric * 0.1)));
+    } else {
+      setSecurityDeposit('');
+    }
+  }, [basePrice, setSecurityDeposit]);
+
   const formatNumberWithCommas = (value: string): string => {
-    // Remove all non-digit characters
     const numericValue = value.replace(/\D/g, '');
     if (!numericValue) return '';
-    // Format with commas
     return Number(numericValue).toLocaleString('en-US');
   };
 
-  // Helper function to get numeric value (without commas) for storage
-  const getNumericValue = (value: string): string => {
-    return value.replace(/\D/g, '');
-  };
+  const getNumericValue = (value: string): string => value.replace(/\D/g, '');
 
-  // Handler for base price
   const handleBasePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatNumberWithCommas(e.target.value);
-    const numeric = getNumericValue(formatted);
-    setBasePrice(numeric); // Store numeric value without commas
+    setBasePrice(getNumericValue(e.target.value));
   };
 
-  // Handler for security deposit
-  const handleSecurityDepositChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatNumberWithCommas(e.target.value);
-    const numeric = getNumericValue(formatted);
-    setSecurityDeposit(numeric); // Store numeric value without commas
-  };
-
-  // Handler for cleaning fee
   const handleCleaningFeeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatNumberWithCommas(e.target.value);
-    const numeric = getNumericValue(formatted);
-    setCleaningFee(numeric); // Store numeric value without commas
+    setCleaningFee(getNumericValue(e.target.value));
   };
 
   return (
@@ -83,18 +73,21 @@ const PricingPage: React.FC<PricingPageProps> = ({
           />
         </div>
 
-        <label htmlFor="security-deposit" className="block mb-2 font-medium p-2">
+        <label htmlFor="security-deposit" className="flex items-center mb-2 font-medium p-2">
           Security Deposit
+          <InfoTooltip text="The security deposit protects your property from damages or late cancellations. If there are no issues after checkout, the full amount is returned to the guest." />
+          <span className="ml-2 text-xs text-gray-400 font-normal">(Auto-calculated at 10% of base price)</span>
         </label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">₦</span>
           <input
             id="security-deposit"
             type="text"
-            placeholder="0.00"
-            className="w-full border border-neutralLight p-2 pl-8 rounded"
+            placeholder="Auto-calculated"
+            className="w-full border border-neutralLight p-2 pl-8 rounded bg-gray-50 text-gray-500 cursor-not-allowed"
             value={securityDeposit ? formatNumberWithCommas(securityDeposit) : ''}
-            onChange={handleSecurityDepositChange}
+            readOnly
+            disabled
           />
         </div>
 
@@ -141,8 +134,9 @@ const PricingPage: React.FC<PricingPageProps> = ({
           min={availableFrom || today}
         />
       </section>
+
       <p className="mt-4 p-1 text-sm text-center">
-        You’ll be able to block specific dates or adjust pricing for certain periods after creating your listing
+        You'll be able to block specific dates or adjust pricing for certain periods after creating your listing
       </p>
     </>
   );

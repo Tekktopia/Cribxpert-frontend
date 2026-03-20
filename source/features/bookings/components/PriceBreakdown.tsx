@@ -1,4 +1,5 @@
 import React from 'react';
+import InfoTooltip from '@/shared/components/ui/InfoTooltip';
 
 interface PriceBreakdownProps {
   nights: number;
@@ -56,7 +57,10 @@ const PriceBreakdown: React.FC<PriceBreakdownProps> = ({
 
     {securityDeposit > 0 && (
       <div className="flex justify-between mt-2">
-        <p className="text-[#6F6F6F] font-[400] text-[14px]">Security Deposit</p>
+        <p className="text-[#6F6F6F] font-[400] text-[14px] flex items-center">
+          Security Deposit
+          <InfoTooltip text="A refundable amount held for damages or late cancellations. It's returned in full after checkout if no issues are found." />
+        </p>
         <p className="text-[#6F6F6F] font-[400] text-[14px]">
           NGN {securityDeposit.toLocaleString()}
         </p>
