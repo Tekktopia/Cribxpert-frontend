@@ -397,6 +397,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
           if (onListingSaved) {
             onListingSaved();
           }
+          navigate('/my-listing'); // add this
         } else {
           setShowSuccessModal(true);
           if (onListingSaved) {
