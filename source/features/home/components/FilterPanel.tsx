@@ -59,24 +59,21 @@ export default function FilterPanel({
   // Sync with active filters when panel opens
   useEffect(() => {
     if (isOpen) {
+      const city = activeFilters.city || '';
+      const state = activeFilters.stateProvince || '';
+      const country = activeFilters.country || '';
+      const locationStr = [city, state, country].filter(Boolean).join(', ');
+
       setTempFilters({
         bookingAvailability: activeFilters.bookingAvailability || '',
-        // Handle the case where amenities might be a string or array
         amenities: Array.isArray(activeFilters.amenities)
           ? activeFilters.amenities
-          : activeFilters.amenities
-            ? [activeFilters.amenities as string]
-            : [],
+          : activeFilters.amenities ? [activeFilters.amenities as string] : [],
         priceMin: activeFilters.priceMin || '',
         priceMax: activeFilters.priceMax || '',
         priceRange: activeFilters.priceRange || '',
         rating: activeFilters.rating || '',
-        location:
-          activeFilters.city +
-            ',' +
-            activeFilters.stateProvince +
-            ',' +
-            activeFilters.country || 'Lagos, Nigeria',
+        location: locationStr || '',
       });
     }
   }, [isOpen, activeFilters]);
@@ -109,18 +106,35 @@ export default function FilterPanel({
 
   // Apply all filters
   const handleApplyFilters = () => {
-    // Dispatch each filter update
-    Object.entries(tempFilters).forEach(([key, value]) => {
-      if (value !== undefined && value !== '') {
-        dispatch(updateFilter({ name: key, value }));
-      }
-    });
-    handleToggle(); // Close the filter panel
+    if (tempFilters.location) {
+      const parts = tempFilters.location.split(',').map((p) => p.trim());
+      dispatch(updateFilter({ name: 'city', value: parts[0] || '' }));
+      dispatch(updateFilter({ name: 'stateProvince', value: parts[1] || '' }));
+      dispatch(updateFilter({ name: 'country', value: parts[2] || '' }));
+    }
+  
+    dispatch(updateFilter({ name: 'amenities', value: tempFilters.amenities }));
+  
+    if (tempFilters.priceRange) {
+      dispatch(updateFilter({ name: 'priceRange', value: tempFilters.priceRange }));
+    } else if (tempFilters.priceMin || tempFilters.priceMax) {
+      dispatch(updateFilter({ name: 'priceMin', value: tempFilters.priceMin }));
+      dispatch(updateFilter({ name: 'priceMax', value: tempFilters.priceMax }));
+    }
+  
+    if (tempFilters.rating) {
+      dispatch(updateFilter({ name: 'rating', value: tempFilters.rating }));
+    }
+  
+    // ← handleToggle() removed — panel stays open
   };
 
   // Reset all filters
   const handleResetFilters = () => {
     dispatch(resetFilters());
+    dispatch(updateFilter({ name: 'city', value: '' }));
+    dispatch(updateFilter({ name: 'stateProvince', value: '' }));
+    dispatch(updateFilter({ name: 'country', value: '' }));
     setTempFilters({
       bookingAvailability: '',
       amenities: [],
@@ -128,7 +142,7 @@ export default function FilterPanel({
       priceMax: '',
       priceRange: '',
       rating: '',
-      location: 'Lagos, Nigeria',
+      location: '',
     });
   };
 

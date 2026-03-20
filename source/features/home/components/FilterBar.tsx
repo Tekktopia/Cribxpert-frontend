@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useMemo } from 'react';
 import type { FilterParameter } from '@/types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,21 +7,19 @@ import {
 } from '@/features/properties/listingSlice';
 import FilterItem from './FilterItem';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { nigerianLocations } from '@/utils/locationUtils';
 import { useFilteredListings } from '@/hooks/useFilteredListings';
+import { Country, State, City } from 'country-state-city';
 
 const FilterBar: React.FC = () => {
-  const apiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
   const dispatch = useDispatch();
   const activeFilters = useSelector(selectActiveFilters);
-  const { isLoading: isFiltering } = useFilteredListings();
+  useFilteredListings();
 
   const [isGeolocationActive, setIsGeolocationActive] = useState(false);
   const userLocation = useGeolocation(isGeolocationActive);
 
   const handleFilterChange = (name: string, value: string) => {
     dispatch(updateFilter({ name, value }));
-
     if (name === 'country') {
       dispatch(updateFilter({ name: 'stateProvince', value: '' }));
       dispatch(updateFilter({ name: 'city', value: '' }));
@@ -38,125 +35,38 @@ const FilterBar: React.FC = () => {
     { name: 'priceRange', label: 'Price Range', options: [] },
   ]);
 
+  // Load all countries on mount
   useEffect(() => {
-    fetch('https://restcountries.com/v3.1/all?fields=name,currencies,cca2')
-      .then((res) => res.json())
-      .then((data) => {
-        const countryOption = data
-          .map((country: any) => ({
-            value: country.name.common,
-            label: country.name.common,
-            currency: country.currencies
-              ? Object.keys(country.currencies)[0]
-              : '',
-          }))
-          .sort((a: any, b: any) => a.label.localeCompare(b.label));
-
-        setFilterParameters((prevParams) =>
-          prevParams.map((param) =>
-            param.name === 'country'
-              ? { ...param, options: countryOption }
-              : param
-          )
-        );
-      })
-      .catch((error) => console.error('Failed to fetch Countries', error));
-  }, []);
-
-  const handleGeoLocation = () => {
-    setIsGeolocationActive(true);
-  };
-
-  useEffect(() => {
-    if (!isGeolocationActive || userLocation.loading) return;
-
-    if (userLocation.latitude && userLocation.longitude) {
-      const fetchLocationDetails = async () => {
-        try {
-          const response = await fetch(
-            `https://api.opencagedata.com/geocode/v1/json?q=${userLocation.latitude}+${userLocation.longitude}&key=${apiKey}`
-          );
-          const data = await response.json();
-          console.log('Reverse geocode result:', data);
-
-          const components = data?.results?.[0]?.components;
-
-          const country = components?.country;
-          const state =
-            components?.state || components?.province || components?.region;
-          const city =
-            components?.city || components?.town || components?.village;
-
-          if (country)
-            dispatch(updateFilter({ name: 'country', value: country }));
-
-          if (state)
-            dispatch(updateFilter({ name: 'stateProvince', value: state }));
-
-          if (city) {
-            const cleanedCity = city.trim();
-            dispatch(updateFilter({ name: 'city', value: cleanedCity }));
-          } else {
-            console.warn('City not found in location components:', components);
-          }
-        } catch (err) {
-          console.error('Reverse geocoding failed:', err);
-          setFallbackLocationOptions();
-        } finally {
-          setIsGeolocationActive(false);
-        }
-      };
-
-      fetchLocationDetails();
-    } else if (userLocation.error) {
-      console.error('Geolocation error:', userLocation.error);
-      setFallbackLocationOptions();
-      setIsGeolocationActive(false);
-    }
-  }, [isGeolocationActive, userLocation, dispatch]);
-
-  const setFallbackLocationOptions = () => {
+    const countryOptions = Country.getAllCountries().map((c) => ({
+      value: c.name,
+      label: c.name,
+      currency: c.currency || '',
+    }));
     setFilterParameters((prevParams) =>
       prevParams.map((param) =>
-        param.name === 'location'
-          ? {
-              ...param,
-              options: nigerianLocations
-                .slice(0, 10)
-                .map((loc) => ({ value: loc.value, label: loc.label })),
-            }
-          : param
+        param.name === 'country' ? { ...param, options: countryOptions } : param
       )
     );
-  };
+  }, []);
 
+  // Load states when country changes
   useEffect(() => {
     const selectedCountry = activeFilters.country;
     if (selectedCountry) {
-      fetch('https://countriesnow.space/api/v0.1/countries/states')
-        .then((res) => res.json())
-        .then((apiData) => {
-          const countryData = apiData?.data?.find(
-            (country: any) => country.name === selectedCountry
-          );
-
-          const stateOptions =
-            countryData?.states?.map((state: any) => ({
-              label: state.name,
-              value: state.name,
-            })) ?? [];
-
-          setFilterParameters((prevParams) =>
-            prevParams.map((param) =>
-              param.name === 'stateProvince'
-                ? { ...param, options: stateOptions }
-                : param
-            )
-          );
-        })
-        .catch((error) =>
-          console.error('Failed to fetch States/Provinces', error)
-        );
+      const countryObj = Country.getAllCountries().find(
+        (c) => c.name === selectedCountry
+      );
+      const stateOptions = countryObj
+        ? State.getStatesOfCountry(countryObj.isoCode).map((s) => ({
+            label: s.name,
+            value: s.name,
+          }))
+        : [];
+      setFilterParameters((prevParams) =>
+        prevParams.map((param) =>
+          param.name === 'stateProvince' ? { ...param, options: stateOptions } : param
+        )
+      );
     } else {
       setFilterParameters((prevParams) =>
         prevParams.map((param) =>
@@ -166,43 +76,31 @@ const FilterBar: React.FC = () => {
     }
   }, [activeFilters.country]);
 
+  // Load cities when state changes
   useEffect(() => {
     const selectedCountry = activeFilters.country;
     const selectedState = activeFilters.stateProvince;
-
     if (selectedCountry && selectedState) {
-      fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          country: selectedCountry,
-          state: selectedState,
-        }),
-      })
-        .then((res) => res.json())
-        .then((apiData) => {
-          const cityOptions =
-            apiData?.data?.map((city: string) => ({
-              label: city,
-              value: city,
-            })) ?? [];
-
-          setFilterParameters((prevParams) =>
-            prevParams.map((param) =>
-              param.name === 'city' ? { ...param, options: cityOptions } : param
-            )
-          );
-        })
-        .catch((error) => {
-          console.error('Failed to fetch Cities', error);
-          setFilterParameters((prevParams) =>
-            prevParams.map((param) =>
-              param.name === 'city' ? { ...param, options: [] } : param
-            )
-          );
-        });
+      const countryObj = Country.getAllCountries().find(
+        (c) => c.name === selectedCountry
+      );
+      const stateObj = countryObj
+        ? State.getStatesOfCountry(countryObj.isoCode).find(
+            (s) => s.name === selectedState
+          )
+        : null;
+      const cityOptions =
+        countryObj && stateObj
+          ? City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode).map((city) => ({
+              label: city.name,
+              value: city.name,
+            }))
+          : [];
+      setFilterParameters((prevParams) =>
+        prevParams.map((param) =>
+          param.name === 'city' ? { ...param, options: cityOptions } : param
+        )
+      );
     } else {
       setFilterParameters((prevParams) =>
         prevParams.map((param) =>
@@ -212,6 +110,7 @@ const FilterBar: React.FC = () => {
     }
   }, [activeFilters.country, activeFilters.stateProvince]);
 
+  // Price ranges
   const basePriceRanges = useMemo(
     () => [
       { value: '0-1000', label: '0 - 1,000' },
@@ -225,63 +124,83 @@ const FilterBar: React.FC = () => {
   );
 
   useEffect(() => {
-    const selectedCountryName = activeFilters.country;
-    let selectedCurrency = '';
-
-    const locationParam = filterParameters.find(
-      (param) => param.name === 'location'
-    );
-
-    if (locationParam && selectedCountryName) {
-      const country = locationParam.options.find(
-        (option: any) => option.value === selectedCountryName
-      );
-      if (country && country.currency) {
-        selectedCurrency = country.currency;
-      }
-    }
-
-    const priceRangeOptions = basePriceRanges.map((range) => {
-      const label = selectedCurrency
-        ? `${selectedCurrency} ${range.label}`
-        : range.label;
-
-      return {
-        value: range.value,
-        label,
-      };
-    });
-
+    const priceRangeOptions = basePriceRanges.map((range) => ({
+      value: range.value,
+      label: range.label,
+    }));
     setFilterParameters((prevParams) =>
       prevParams.map((param) =>
-        param.name === 'priceRange'
-          ? { ...param, options: priceRangeOptions }
-          : param
+        param.name === 'priceRange' ? { ...param, options: priceRangeOptions } : param
       )
     );
-  }, [activeFilters.country, basePriceRanges]);
+  }, [basePriceRanges]);
 
-  const handleSearch = () => {
-    console.log('Current filters:', activeFilters);
+  // Geolocation handler
+  const handleGeoLocation = () => {
+    setIsGeolocationActive(true);
   };
+
+  useEffect(() => {
+    if (!isGeolocationActive || userLocation.loading) return;
+
+    if (userLocation.latitude && userLocation.longitude) {
+      const fetchLocationDetails = async () => {
+        try {
+          const response = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${userLocation.latitude}&longitude=${userLocation.longitude}&localityLanguage=en`
+          );
+          const data = await response.json();
+
+          const countryName = data?.countryName;
+          const stateName = data?.principalSubdivision
+            ?.replace(/\s+State$/i, '')
+            .trim();
+          const cityName = data?.city || data?.locality;
+
+          if (countryName) {
+            dispatch(updateFilter({ name: 'country', value: countryName }));
+
+            // Wait for states to load
+            await new Promise((resolve) => setTimeout(resolve, 800));
+
+            if (stateName) {
+              dispatch(updateFilter({ name: 'stateProvince', value: stateName }));
+
+              // Wait for cities to load
+              await new Promise((resolve) => setTimeout(resolve, 800));
+
+              if (cityName) {
+                dispatch(updateFilter({ name: 'city', value: cityName.trim() }));
+              }
+            }
+          }
+        } catch (err) {
+          console.error('Reverse geocoding failed:', err);
+        } finally {
+          setIsGeolocationActive(false);
+        }
+      };
+      fetchLocationDetails();
+    } else if (userLocation.error) {
+      console.error('Geolocation error:', userLocation.error);
+      setIsGeolocationActive(false);
+    }
+  }, [isGeolocationActive, userLocation, dispatch]);
 
   return (
     <div className="bg-primary w-full py-4 px-3 md:px-8 hidden lg:block">
-      <div className="md:hidden mb-2 flex justify-between items-center text-white">
-        <span className="font-medium">Filters</span>
-      </div>
-
-      <div className="flex flex-col md:flex-row container mx-auto justify-center md:justify-between gap-3 md:gap-6">
-        <div className="flex md:flex-wrap overflow-x-auto pb-2 md:pb-0 scrollbar-hide gap-3">
+      <div className="flex flex-row container mx-auto justify-center md:justify-between items-center gap-3 md:gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           {filterParameters.map((param, index) => (
             <FilterItem
               key={index}
               param={param}
-              // value={activeFilters[param.name]}
+              value={
+                (activeFilters[param.name as keyof typeof activeFilters] as string) || ''
+              }
               handleFilterChange={handleFilterChange}
             />
           ))}
-        </div>
 
         <button
           onClick={handleGeoLocation}
@@ -319,7 +238,7 @@ const FilterBar: React.FC = () => {
           )}
         </button>
 
-        {/* <button
+        <button
           onClick={handleSearch}
           disabled={isFiltering}
           className={`bg-black text-white h-[36px] px-4 py-2 rounded-md text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end ${
@@ -353,7 +272,7 @@ const FilterBar: React.FC = () => {
           ) : (
             'Search'
           )}
-        </button> */}
+        </button>
       </div>
     </div>
   );
