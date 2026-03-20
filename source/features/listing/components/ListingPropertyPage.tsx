@@ -74,6 +74,12 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
     setSelectedFiles(newFiles);
     setPreviews(newPreviews);
     setUploadedIndexes((prev) => prev.filter((i) => i !== index));
+    
+    // Logic to handle completed state reset if the last file is deleted
+    if (newFiles.length === 0) {
+        setUploadCompleted(false);
+        setShowUploadBox(true);
+    }
   };
 
   const handleDeleteExistingImage = async (imageId: string) => {
@@ -137,9 +143,6 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
           </button>
         </div>
       )}
-
-      {/* Review instructions after upload is complete */}
-      
 
       {/* Preview Section */}
       {(existingImages.length > 0 || selectedFiles.length > 0) && (
@@ -243,12 +246,19 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             className="hidden"
             onClick={() => {
               if (!uploadCompleted) {
+                // Since the parent component only triggers this when files > 0,
+                // we safely proceed to upload here.
                 setIsUploading(true);
                 setShowUploadBox(false);
+                
                 selectedFiles.forEach((_, index) => {
+                  // Simulate upload delay per file
                   setTimeout(() => {
                     setUploadedIndexes((prev) => [...prev, index]);
+                    
+                    // Check if this is the last file
                     if (index === selectedFiles.length - 1) {
+                      // Final timeout to transition out of uploading state
                       setTimeout(() => {
                         setIsUploading(false);
                         setUploadCompleted(true);

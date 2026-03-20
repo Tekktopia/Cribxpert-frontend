@@ -10,22 +10,18 @@ import All from '@/features/notifications/components/All';
 import NotificationNav from '@/shared/components/layout/notification/NotificationNav';
 import Bookings from '@/features/notifications/components/Bookings';
 import Payments from '@/features/notifications/components/Payments';
-import Reviews from '@/features/review/components/Reviews';
+import ReviewsTest from '@/features/review/components/ReviewsTest';
 import Listings from '@/features/notifications/components/Listings';
 import Financials from '@/features/notifications/components/Financials';
+import NoNotification from '@/features/notifications/components/NoNotification';
 const NotificationPage = () => {
-  const [active, setActive] = useState<ActiveNotification>(
-    ActiveNotification.All
-  );
+  const [active, setActive] = useState<ActiveNotification>(ActiveNotification.All);
 
   const currentUser = useSelector(selectCurrentUser);
-  const {
-    data: notificationsData,
-    isLoading,
-    error,
-  } = useGetUserNotificationsQuery(currentUser?._id || '', {
-    skip: !currentUser?._id,
-  });
+  const { data: notificationsData, isLoading, error } = useGetUserNotificationsQuery(
+    currentUser?._id || '',
+    { skip: !currentUser?._id }
+  );
   const [markAsRead] = useMarkNotificationAsReadMutation();
 
   const handleMarkAsRead = async (notificationId: string) => {
@@ -38,90 +34,81 @@ const NotificationPage = () => {
 
   const notifications = notificationsData?.notifications || [];
 
-  // Filter notifications by type
-  const bookingNotifications = notifications.filter(
-    (notification) => notification.category === 'booking'
-  );
-
-  const paymentNotifications = notifications.filter(
-    (notification) => notification.category === 'payment'
-  );
-
-  const reviewNotifications = notifications.filter(
-    (notification) => notification.category === 'review'
-  );
-
-  // Add filters for listings and financials
-  const listingNotifications = notifications.filter(
-    (notification) => notification.category === 'listing'
-  );
-
-  const financialNotifications = notifications.filter(
-    (notification) => notification.category === 'financial'
-  );
-
+  // Categorize notifications
+  const bookingNotifications = notifications.filter(n => n.category === 'booking');
+  const paymentNotifications = notifications.filter(n => n.category === 'payment');
+  const reviewNotifications = notifications.filter(n => n.category === 'review');
+  const listingNotifications = notifications.filter(n => n.category === 'listing');
+  const financialNotifications = notifications.filter(n => n.category === 'financial');
+  
+  // Extract unique listing IDs from review notifications for dynamic fetching
+  const reviewListingIds = Array.from(new Set(reviewNotifications.map(r => r.listing)));
+  console.log("reviewListingIds:", reviewListingIds)
+  
   return (
-    <div>
-      <div className="px-[30px] lg:px-[80px] container mx-auto">
-        <h1 className="pt-[43px] text-[20px] text-[#040404]">Notifications</h1>
-        <NotificationNav active={active} setActive={setActive} />
+    <div className="px-[30px] lg:px-[80px] container mx-auto">
+      <h1 className="pt-[43px] text-[20px] text-[#040404]">Notifications</h1>
+      <NotificationNav active={active} setActive={setActive} />
 
-        {active === ActiveNotification.All && (
-          <All
-            notifications={notifications}
-            isLoading={isLoading}
-            error={error}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        )}
+      {active === ActiveNotification.All && (
+        <All
+          notifications={notifications}
+          isLoading={isLoading}
+          error={error}
+          onMarkAsRead={handleMarkAsRead}
+        />
+      )}
 
-        {active === ActiveNotification.Bookings && (
-          <Bookings
-            notifications={bookingNotifications}
-            isLoading={isLoading}
-            error={error}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        )}
+      {active === ActiveNotification.Bookings && (
+        <Bookings
+          notifications={bookingNotifications}
+          isLoading={isLoading}
+          error={error}
+          onMarkAsRead={handleMarkAsRead}
+        />
+      )}
 
-        {active === ActiveNotification.Payments && (
-          <Payments
-            notifications={paymentNotifications}
-            isLoading={isLoading}
-            error={error}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        )}
+      {active === ActiveNotification.Payments && (
+        <Payments
+          notifications={paymentNotifications}
+          isLoading={isLoading}
+          error={error}
+          onMarkAsRead={handleMarkAsRead}
+        />
+      )}
 
-        {active === ActiveNotification.Reviews && (
-          <Reviews
-            notifications={reviewNotifications}
-            isLoading={isLoading}
-            error={error}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        )}
+      {active === ActiveNotification.Reviews && (
+  <>
+    {reviewNotifications.length > 0 ? (
+      reviewNotifications.map((notification) => (
+        <ReviewsTest
+          key={notification._id}
+          listingId={notification.listing} // <-- use listing id from the notification
+        />
+      ))
+    ) : (
+      <NoNotification />
+    )}
+  </>
+)}
 
-        {/* New tabs for Listings and Financials */}
+      {active === ActiveNotification.Listings && (
+        <Listings
+          notifications={listingNotifications}
+          isLoading={isLoading}
+          error={error}
+          onMarkAsRead={handleMarkAsRead}
+        />
+      )}
 
-        {active === ActiveNotification.Listings && (
-          <Listings
-            notifications={listingNotifications}
-            isLoading={isLoading}
-            error={error}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        )}
-
-        {active === ActiveNotification.Financials && (
-          <Financials
-            notifications={financialNotifications}
-            isLoading={isLoading}
-            error={error}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        )}
-      </div>
+      {active === ActiveNotification.Financials && (
+        <Financials
+          notifications={financialNotifications}
+          isLoading={isLoading}
+          error={error}
+          onMarkAsRead={handleMarkAsRead}
+        />
+      )}
     </div>
   );
 };

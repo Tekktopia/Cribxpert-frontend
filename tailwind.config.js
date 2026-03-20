@@ -8,12 +8,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#006073',
-        accent: '#E6EFF1',
-        neutral: '#6F6F6F',
-        neutralLight: '#999999',
-        neutralDark: '#070707',
-        hoverColor: '#C18B3F',
+        primary: '#006073',     // Deep teal (blue-green)
+        accent: '#E6EFF1',      // Very light blue / soft gray
+        neutral: '#6F6F6F',     // Medium gray
+        neutralLight: '#999999', // Light gray
+        neutralDark: '#070707', // Almost black
+        hoverColor: '#C18B3F', // Warm gold / amber
       },
     },
   },

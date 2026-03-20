@@ -243,6 +243,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
     if (uploadBox) {
       uploadBox.scrollIntoView({ behavior: 'smooth' });
     }
+    // Triggers the hidden button in ListingPropertyPage
     document.getElementById('upload-start')?.click();
   };
 
@@ -283,7 +284,12 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
   const handleCreateListing = async (saveAsDraft: boolean = false) => {
     setSavingAction(saveAsDraft ? 'draft' : 'publish');
     try {
-      // Add validation before sending
+      // Run final validation check before submission, using the same logic
+      if (!validateCurrentStep()) {
+        return;
+      }
+
+      // Existing validation checks (for good measure before API call)
       if (!title.trim()) {
         console.error('Title is required');
         alert('Please enter a title for your listing');
