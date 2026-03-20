@@ -217,7 +217,7 @@ const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mx-auto mt-8 p-3 bg-[#1D5C5C] text-white font-semibold rounded-md flex items-center justify-center gap-2"
+                className="w-full mx-auto mt-8 p-3 bg-primary hover:bg-hoverColor text-white font-semibold rounded-md flex items-center justify-center gap-2"
               >
                 {isLoading ? 'Logging in...' : 'Login'}
               </button>

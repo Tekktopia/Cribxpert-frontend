@@ -129,7 +129,7 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-[#006073] text-white py-3 px-6 rounded-md hover:bg-[#004d5a] transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full bg-primary text-white py-3 px-6 rounded-md hover:bg-hoverColor transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Submitting...' : 'Submit Your Review'}
         </button>

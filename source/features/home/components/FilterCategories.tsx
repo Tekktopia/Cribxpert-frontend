@@ -130,7 +130,7 @@ const FilterCategories: React.FC = () => {
                 />
               </div>
               <p
-                className={`text-[14px] font-[400] ${!activeFilters.propertyType ? 'text-[#1D5C5C] font-medium' : 'text-[#999999]'}`}
+                className={`text-[14px] font-[400] hover:text-hoverColor ${!activeFilters.propertyType ? 'text-primary font-medium' : 'text-[#999999]'}`}
               >
                 All
               </p>

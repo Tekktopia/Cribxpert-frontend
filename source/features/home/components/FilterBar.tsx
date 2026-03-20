@@ -266,7 +266,7 @@ const FilterBar: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#1d5c5c] w-full py-4 px-3 md:px-8 hidden lg:block">
+    <div className="bg-primary w-full py-4 px-3 md:px-8 hidden lg:block">
       <div className="md:hidden mb-2 flex justify-between items-center text-white">
         <span className="font-medium">Filters</span>
       </div>
@@ -286,7 +286,7 @@ const FilterBar: React.FC = () => {
         <button
           onClick={handleGeoLocation}
           disabled={userLocation.loading}
-          className={`bg-[#2e7777] text-white h-[36px] px-4 py-2 rounded-md whitespace-nowrap text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end flex items-center justify-center ${
+          className={`bg-primary text-white h-[36px] px-4 py-2 rounded-md whitespace-nowrap text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end flex items-center justify-center ${
             userLocation.loading ? 'opacity-70 cursor-not-allowed' : ''
           }`}
         >
