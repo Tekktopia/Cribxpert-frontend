@@ -75,8 +75,8 @@ const IconNavigation: React.FC<IconNavigationProps> = ({ isHostMode, onToggleHos
           whitespace-nowrap border
           ${
             isHostMode
-              ? 'bg-[#1d5c5c] text-white border-[#1d5c5c] hover:bg-[#164747]'
-              : 'bg-white text-[#1d5c5c] border-[#1d5c5c] hover:bg-[#1d5c5c]/5'
+              ? 'bg-[#1d5c5c] text-white border-[#1d5c5c] hover:bg-hoverColor'
+              : 'bg-white text-[#1d5c5c] border-[#1d5c5c] hover:bg-hoverColor'
           }
         `}
       >
