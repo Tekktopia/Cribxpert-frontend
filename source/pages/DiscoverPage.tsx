@@ -4,6 +4,7 @@ import { Settings2Icon } from 'lucide-react';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import FilterCategories from '@/features/home/components/FilterCategories';
+import  Footer from '@/shared/components/layout/Footer';
 
 export default function DiscoverPage() {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(true);
@@ -99,6 +100,7 @@ export default function DiscoverPage() {
           />
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -29,7 +29,10 @@ import VerifyEmail from '@/pages/VerifyEmail';
 import Message from '@/pages/Message';
 import PaymentHistory from '@/pages/PaymentHistory';
 import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
+import TermsAndConditions from '@/pages/TermsAndConditions';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
 // import ListingMgmtPage from '@/pages/ListingManagementPage';
+
 import PaymentDetailsDownload from '@/pages/PaymentDetailsDownload';
 import EscrowPaymentPage from '@/pages/EscrowPaymentPage';
 
@@ -200,6 +203,18 @@ const routeConfig: RouteConfig[] = [
     element: <Message />,
     protected: true,
     title: 'Message',
+  },
+  {
+    path: '/terms-and-conditions',
+    element: <TermsAndConditions />,
+    protected: false,
+    title: 'Terms and Conditions',
+  },
+    {
+    path: '/privacy-policy',
+    element: <PrivacyPolicy />,
+    protected: false,
+    title: 'Privacy Policy',
   },
 
   //Must be removed in production

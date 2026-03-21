@@ -75,12 +75,12 @@ const Footer = ({ className }: FooterProps) => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:underline">
+                <Link to="/terms-and-conditions" className="hover:underline">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link to="#" className="hover:underline">
+                <Link to="/privacy-policy" className="hover:underline">
                   Privacy Policy
                 </Link>
               </li>

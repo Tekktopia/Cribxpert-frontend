@@ -4,6 +4,7 @@ import CancelledBookings from '@/features/bookings/components/CancelledBookings'
 import PastBookings from '@/features/bookings/components/PastBookings';
 import UpcomingBookings from '@/features/bookings/components/UpcomingBookings';
 import Spinner from '@/shared/components/Spinner';
+import Footer from '@/shared/components/layout/Footer';
 import { ActiveBooking } from '@/types';
 import { useState } from 'react';
 import { useGetBookingsByUserIdQuery } from '@/features/bookings/bookingService';
@@ -17,7 +18,7 @@ function BookingsPage() {
   
   // Enable real-time booking updates
   useBookingUpdates();
-  // TODO: Replace with real user ID from auth context or redux
+  
   const userId = currentUser?._id;
   const {
     data: bookingsData,
@@ -63,47 +64,55 @@ function BookingsPage() {
   };
 
   return (
-    <div className="h-full">
-      <div className=" px-[30px] lg:px-[80px] container mt-12">
-        <BookingsNav active={active} setActive={setActive} />
-        {isLoading && (
-          <div className="flex justify-center py-10 min-h-[calc(100vh-100px)] items-center">
-            <Spinner />
-          </div>
-        )}
-        {!isLoading && (
-          <>
-            {active === ActiveBooking.All && (
-              <AllBookings
-                bookings={bookings}
-                error={NoBookings ? null : getErrorMessage()}
-                onRetry={handleRetry}
-              />
-            )}
-            {active === ActiveBooking.Upcoming && (
-              <UpcomingBookings
-                bookings={bookings}
-                error={NoBookings ? null : getErrorMessage()}
-                onRetry={handleRetry}
-              />
-            )}
-            {active === ActiveBooking.Past && (
-              <PastBookings
-                bookings={bookings}
-                error={NoBookings ? null : getErrorMessage()}
-                onRetry={handleRetry}
-              />
-            )}
-            {active === ActiveBooking.Cancelled && (
-              <CancelledBookings
-                bookings={bookings}
-                error={NoBookings ? null : getErrorMessage()}
-                onRetry={handleRetry}
-              />
-            )}
-          </>
-        )}
+    <div className="min-h-screen flex flex-col bg-white">
+      {/* Main Content - flex-1 pushes footer down */}
+      <div className="flex-1">
+        <div className="px-[30px] lg:px-[80px] container mx-auto mt-12 pb-8">
+          <BookingsNav active={active} setActive={setActive} />
+          
+          {isLoading && (
+            <div className="flex justify-center py-10 min-h-[calc(100vh-200px)] items-center">
+              <Spinner />
+            </div>
+          )}
+          
+          {!isLoading && (
+            <>
+              {active === ActiveBooking.All && (
+                <AllBookings
+                  bookings={bookings}
+                  error={NoBookings ? null : getErrorMessage()}
+                  onRetry={handleRetry}
+                />
+              )}
+              {active === ActiveBooking.Upcoming && (
+                <UpcomingBookings
+                  bookings={bookings}
+                  error={NoBookings ? null : getErrorMessage()}
+                  onRetry={handleRetry}
+                />
+              )}
+              {active === ActiveBooking.Past && (
+                <PastBookings
+                  bookings={bookings}
+                  error={NoBookings ? null : getErrorMessage()}
+                  onRetry={handleRetry}
+                />
+              )}
+              {active === ActiveBooking.Cancelled && (
+                <CancelledBookings
+                  bookings={bookings}
+                  error={NoBookings ? null : getErrorMessage()}
+                  onRetry={handleRetry}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
+      
+      {/* Footer - Full width and stays at bottom */}
+      <Footer />
     </div>
   );
 }
