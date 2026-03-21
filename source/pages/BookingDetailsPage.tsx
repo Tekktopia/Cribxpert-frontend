@@ -92,7 +92,7 @@ const BookingDetailsPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => window.location.reload()}
-              className="px-6 py-2 bg-[#006073] text-white rounded-md hover:bg-[#004d5c] transition-colors duration-200 font-medium"
+              className="px-6 py-2 bg-[#006073] text-white rounded-md hover:bg-hoverColor transition-colors duration-200 font-medium"
             >
               Try Again
             </button>
@@ -464,7 +464,7 @@ const BookingDetailsPage: React.FC = () => {
                       className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-[#006073] focus:ring-1 focus:ring-[#006073] resize-none"
                     />
                   </div>
-                  <button className="w-full bg-[#006073] text-white py-3 rounded-md hover:bg-[#004d5c] transition-colors text-sm font-medium">
+                  <button className="w-full bg-[#006073] text-white py-3 rounded-md hover:bg-hoverColor transition-colors text-sm font-medium">
                     Submit Review
                   </button>
                 </div>

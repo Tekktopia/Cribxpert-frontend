@@ -16,11 +16,11 @@ const { facebook, instagram, x } = socialIcons;
 const contactInfo: Array<ContactInfo> = [
   {
     icon: <PhoneArrowUpRightIcon className="h-5 w-5 md:h-6 md:w-6" />,
-    title: '+2348167890978',
+    title: '+2348105963769',
   },
   {
     icon: <EnvelopeIcon className="h-5 w-5 md:h-6 md:w-6" />,
-    title: 'shortletng.com',
+    title: 'info@cribxpert.com',
   },
   {
     icon: <MapPinIcon className="h-5 w-5 md:h-6 md:w-6" />,
@@ -285,7 +285,7 @@ const SupportInfo = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-[156px] bg-[#006073] text-white p-[10px] rounded-lg hover:bg-[#004d5c] transition-colors self-end disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-[156px] bg-[#006073] text-white p-[10px] rounded-lg hover:bg-hoverColor transition-colors self-end disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
@@ -340,7 +340,7 @@ const SupportInfo = () => {
             </p>
             <button
               onClick={closeModal}
-              className="bg-[#006073] text-white px-8 py-3 rounded-lg hover:bg-[#004d5c] transition-colors"
+              className="bg-[#006073] text-white px-8 py-3 rounded-lg hover:bg-hoverColor transition-colors"
             >
               Done
             </button>
@@ -361,7 +361,7 @@ const SupportInfo = () => {
             <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-[#313131] mb-2">Something went wrong</h2>
             <p className="text-[#6F6F6F] mb-6">
-              We couldn't send your message. Please try again or email us directly at shortletng.com.
+              We couldn't send your message. Please try again or email us directly at info@cribxpert.com.
             </p>
             <button
               onClick={closeModal}

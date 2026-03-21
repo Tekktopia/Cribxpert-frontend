@@ -410,7 +410,7 @@ const Support = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-[156px] bg-[#006073] text-white p-[10px] rounded-lg hover:bg-[#004d5c] transition-colors self-end disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-[156px] bg-[#006073] text-white p-[10px] rounded-lg hover:bg-hoverColor transition-colors self-end disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </button>
@@ -460,7 +460,7 @@ const Support = () => {
             </p>
             <button
               onClick={closeModal}
-              className="bg-[#006073] text-white px-8 py-3 rounded-lg hover:bg-[#004d5c] transition-colors"
+              className="bg-[#006073] text-white px-8 py-3 rounded-lg hover:bg-hoverColor transition-colors"
             >
               Done
             </button>
