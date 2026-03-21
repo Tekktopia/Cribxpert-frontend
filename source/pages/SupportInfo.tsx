@@ -1,8 +1,9 @@
 import SupportHeader from '@/features/support/components/SupportHeader';
-import {
-  HandThumbUpIcon,
-  HandThumbDownIcon,
-} from '@heroicons/react/24/outline';
+import Footer from '@/shared/components/layout/Footer';
+// import {
+//   HandThumbUpIcon,
+//   HandThumbDownIcon,
+// } from '@heroicons/react/24/outline';
 
 const SupportInfo = () => {
   return (
@@ -10,7 +11,7 @@ const SupportInfo = () => {
       <div className="">
         <SupportHeader />
         <div className="lg:p-8">
-          <div className=" text-[#6F6F6F] flex p-[60px] flex-col gap-[20px] bg-[#FFF] shadow-lg shadow-[#1D5C5C14] text-sm lg:text-lg">
+          {/* <div className=" text-[#6F6F6F] flex p-[60px] flex-col gap-[20px] bg-[#FFF] shadow-lg shadow-[#1D5C5C14] text-sm lg:text-lg">
             <div className=" gap-[10px] flex flex-col ">
               <h1 className="text-[#070707] text-2xl lg:text-[31px] font-bold mb-4">
                 How do i Cancel or modify a booking?
@@ -63,8 +64,9 @@ const SupportInfo = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
+        <Footer />
       </div>
     </div>
   );

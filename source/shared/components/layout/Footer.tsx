@@ -70,7 +70,7 @@ const Footer = ({ className }: FooterProps) => {
                 </Link>
               </li>
               <li>
-                <Link to="/support-info" className="hover:underline">
+                <Link to="/faqs" className="hover:underline">
                   FAQs
                 </Link>
               </li>

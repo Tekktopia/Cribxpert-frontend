@@ -117,7 +117,7 @@ const Support = () => {
               <div className="flex gap-2 md:gap-3">
                 <div className="flex-shrink-0">{item.iconList}</div>
                 <Link
-                  to={`/support-info`}
+                  to={`/faqs`}
                   className="text-xs md:text-sm text-[#070707] hover:text-[#1D5C5C] transition-colors"
                 >
                   {item.list1}

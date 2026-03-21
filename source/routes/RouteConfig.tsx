@@ -184,13 +184,13 @@ const routeConfig: RouteConfig[] = [
 
   // Support routes
   {
-    path: '/support',
+    path: '/faqs',
     element: <SupportPage />,
     protected: false,
     title: 'Support',
   },
   {
-    path: '/support-info',
+    path: '/support',
     element: <SupportInfo />,
     protected: false,
     title: 'Support Information',
