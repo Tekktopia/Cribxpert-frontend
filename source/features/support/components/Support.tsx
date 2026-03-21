@@ -13,6 +13,7 @@ import {
 import { Link } from 'react-router';
 import { socialIcons } from '@/assets';
 import { CheckCircle, XCircle, X, Copy, Check } from 'lucide-react';
+import { createTicket } from '@/features/ticket/ticketService';
 
 const { facebook, instagram, x } = socialIcons;
 
@@ -109,37 +110,6 @@ const subjects = [
 
 type ModalState = 'success' | 'error' | null;
 
-// Generate unique ticket ID
-// Generate ticket ID with sequential numbers
-const generateTicketId = (subject: string) => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-
-  // Map subject to department code
-  const departmentMap: Record<string, string> = {
-    'Booking Issues': 'BK',
-    'Technical Support': 'TC',
-    'Payment Issues': 'PY',
-    'Billing Issues': 'BL',
-    'Report': 'RP',
-    'Others': 'OT'
-  };
-
-  const deptCode = departmentMap[subject] || 'GN';
-  const key = `ticket_${deptCode}_${year}${month}`;
-
-  // Get current count for this department this month
-  let currentCount = localStorage.getItem(key);
-  let nextNumber = currentCount ? parseInt(currentCount) + 1 : 1;
-
-  // Store the new count
-  localStorage.setItem(key, nextNumber.toString());
-
-  // Format: BK-202403-001
-  return `${deptCode}-${year}${month}-${nextNumber.toString().padStart(3, '0')}`;
-};
-
 const Support = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -180,28 +150,47 @@ const Support = () => {
     setIsSubmitting(true);
 
     try {
-      // Generate ticket ID based on subject
-      const ticketId = generateTicketId(formData.subject);
-      setLastTicketId(ticketId);
-
-      const templateParams = {
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        user_email: formData.user_email,
-        user_phone: formData.user_phone,
+      // 1. Create ticket in backend (MongoDB)
+      const result = await createTicket({
+        firstName: formData.first_name,
+        lastName: formData.last_name,
+        email: formData.user_email,
+        phone: formData.user_phone,
         subject: formData.subject,
         message: formData.message,
-        ticket_id: ticketId,
-        department_code: ticketId.split('-')[0], // Extract department code
-        date_submitted: new Date().toLocaleString(),
-      };
+        source: 'website',
+      });
 
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        templateParams,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to create ticket');
+      }
+
+      const ticketId = result.data.ticketId;
+      setLastTicketId(ticketId);
+
+      // 2. Optional: Send confirmation email via EmailJS
+      try {
+        const templateParams = {
+          first_name: formData.first_name,
+          last_name: formData.last_name,
+          user_email: formData.user_email,
+          user_phone: formData.user_phone,
+          subject: formData.subject,
+          message: formData.message,
+          ticket_id: ticketId,
+          department_code: ticketId.split('-')[0],
+          date_submitted: new Date().toLocaleString(),
+        };
+
+        await emailjs.send(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          templateParams,
+          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        );
+      } catch (emailError) {
+        console.warn('Email notification failed, but ticket was created:', emailError);
+      }
 
       setModal('success');
       setFormData({
@@ -212,8 +201,8 @@ const Support = () => {
         subject: '',
         message: '',
       });
-    } catch (error) {
-      console.error('EmailJS error:', error);
+    } catch (error: any) {
+      console.error('Error submitting ticket:', error);
       setModal('error');
     } finally {
       setIsSubmitting(false);
