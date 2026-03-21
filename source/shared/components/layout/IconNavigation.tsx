@@ -57,8 +57,7 @@ const IconNavigation: React.FC<IconNavigationProps> = ({ isHostMode, onToggleHos
           to={item.route}
           key={index}
           className={({ isActive }) =>
-            `flex flex-col items-center gap-1 cursor-pointer transition-colors group ${
-              isActive ? 'text-[#1d5c5c]' : 'text-[#999999] hover:text-[#1d5c5c]'
+            `flex flex-col items-center gap-1 cursor-pointer transition-colors group ${isActive ? 'text-[#1d5c5c]' : 'text-[#999999] hover:text-[#1d5c5c]'
             }`
           }
         >
@@ -66,19 +65,18 @@ const IconNavigation: React.FC<IconNavigationProps> = ({ isHostMode, onToggleHos
           <span className="text-[12px] font-medium">{item.label}</span>
         </NavLink>
       ))}
-
       <button
         onClick={handleHostToggle}
         className={`
-          text-[13px] font-medium px-4 py-1.5 
-          rounded-full transition-all duration-200
-          whitespace-nowrap border
-          ${
-            isHostMode
-              ? 'bg-[#1d5c5c] text-white border-[#1d5c5c] hover:bg-hoverColor'
-              : 'bg-white text-[#1d5c5c] border-[#1d5c5c] hover:bg-hoverColor'
+    text-[13px] font-medium px-4 py-1.5 
+    rounded-full transition-all duration-200
+    whitespace-nowrap border
+    ${isHostMode
+            ? 'bg-[#1d5c5c] text-white border-[#1d5c5c]'
+            : 'bg-white text-[#1d5c5c] border-[#1d5c5c]'
           }
-        `}
+    hover:text-hoverColor hover:border-hoverColor hover:bg-white
+  `}
       >
         {isHostMode ? 'Switch to Guest' : 'Switch to Host'}
       </button>
