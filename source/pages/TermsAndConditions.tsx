@@ -4,13 +4,13 @@ import Footer from "@/shared/components/layout/Footer";
 export default function TermsAndConditions() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50">
-      <div className="flex-1 flex justify-center">
+      <div>
         <div className=" w-full my-12 px-4">
           {/* Header Section */}
           <div className="mb-12">
             <LegalHeader 
               title="Cribxpert Terms & Conditions" 
-              subtitle="By accessing, using, or booking through Cribxpert, you agree to the Terms & Conditions outlined below."
+              subtitle="Cribxpert is a property listing and booking platform owned and operated by Tekktopia Limited. By accessing, using, or booking through Cribxpert, you agree to the Terms & Conditions outlined below."
             />
             <div className="flex items-center gap-3 mt-4">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
@@ -38,7 +38,8 @@ export default function TermsAndConditions() {
                 "Cancellations",
                 "Support",
                 "Liability",
-                "Ownership"
+                "Ownership",
+                "Acceptance"
               ].map((item, index) => (
                 <a
                   key={index}
@@ -142,7 +143,7 @@ export default function TermsAndConditions() {
                 </div>
                 <h2 className="text-xl font-semibold text-gray-900">How Guest Payments Are Held</h2>
               </div>
-              <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+              <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                     <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,7 +156,7 @@ export default function TermsAndConditions() {
                   </div>
                 </div>
               </div>
-              <ul className="mt-4 space-y-3 text-gray-600">
+              <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
                   <span>When a guest pays for a booking on Cribxpert, the platform securely holds the funds from the date of payment until the end of the guest's stay.</span>
@@ -209,7 +210,7 @@ export default function TermsAndConditions() {
               </div>
               <p className="text-gray-600 mb-3">This fee supports:</p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
-                {["Platform maintenance", "Customer support", "Fraud prevention", "Secure payment processing", "Continuous improvements"].map((item, idx) => (
+                {["Platform maintenance", "Customer support", "Fraud prevention", "Secure payment processing", "Continuous improvements to Cribxpert's technology"].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -295,23 +296,110 @@ export default function TermsAndConditions() {
               </ul>
             </section>
 
-            {/* 9-13 sections continue with similar styling... */}
-            
-            {/* Acceptance Section with Call to Action */}
-            <section className="bg-primary/5 rounded-xl border border-primary/20 p-8 text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-3">Acceptance of Terms</h2>
-              <p className="text-gray-600 mb-6">
-                By using the Cribxpert platform, you confirm that you have read, understood, and agreed to these Terms & Conditions.
-              </p>
-              <div className="flex gap-4 justify-center">
-                <button className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
-                  I Agree
-                </button>
-                <button className="px-6 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors">
-                  Contact Support
-                </button>
+            {/* 9. Cancellations & Refunds */}
+            <section id="section-9" className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <span className="text-primary font-semibold">9</span>
+                </div>
+                <h2 className="text-xl font-semibold text-gray-900">Cancellations & Refunds</h2>
               </div>
+              <ul className="space-y-3 text-gray-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Cancellation policies are determined by Cribxpert and displayed on the property listing.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Refunds, when applicable, follow the stated cancellation policy.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Late cancellations will result in the forfeiture of the entire security deposit.</span>
+                </li>
+              </ul>
             </section>
+
+            {/* 10. Reporting Issues & Support Response */}
+            <section id="section-10" className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <span className="text-primary font-semibold">10</span>
+                </div>
+                <h2 className="text-xl font-semibold text-gray-900">Reporting Issues & Support Response</h2>
+              </div>
+              <ul className="space-y-3 text-gray-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Guests or hosts experiencing issues, scams, fraud attempts, or conflicts can contact Cribxpert Support.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
+                  <span>Cribxpert will acknowledge and respond within 24–48 hours.</span>
+                </li>
+              </ul>
+            </section>
+
+            {/* 11. Limitation of Liability */}
+            <section id="section-11" className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <span className="text-primary font-semibold">11</span>
+                </div>
+                <h2 className="text-xl font-semibold text-gray-900">Limitation of Liability</h2>
+              </div>
+              <p className="text-gray-600 mb-2">Cribxpert is not responsible for:</p>
+              <ul className="space-y-2 text-gray-600 ml-6 mb-3">
+                <li className="flex items-start gap-2">- off‑platform payments</li>
+                <li className="flex items-start gap-2">- host–guest arrangements made outside Cribxpert</li>
+                <li className="flex items-start gap-2">- damages caused by guests or property conditions created by hosts</li>
+                <li className="flex items-start gap-2">- unavailable or inaccurate property information</li>
+              </ul>
+              <p className="text-gray-600">Cribxpert functions as a marketplace and does not own, manage, or operate listed properties.</p>
+            </section>
+
+            {/* 12. Platform Ownership */}
+            <section id="section-12" className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                  <span className="text-primary font-semibold">12</span>
+                </div>
+                <h2 className="text-xl font-semibold text-gray-900">Platform Ownership</h2>
+              </div>
+              <p className="text-gray-600">
+                Cribxpert is a software product, brand, and intellectual property of{' '}
+                <a 
+                  href="https://tekktopia.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline font-medium"
+                >
+                  Tekktopia Limited
+                </a>
+                . All rights reserved.
+              </p>
+            </section>
+
+            {/* 13. Acceptance of Terms */}
+            <section id="section-13" className="bg-primary/5 rounded-xl border border-primary/20 p-8 text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                <span className="text-primary font-semibold">13</span>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Acceptance of Terms</h2>
+            </div>
+            <p className="text-gray-600 mb-6">
+              By using the Cribxpert platform, you confirm that you have read, understood, and agreed to these Terms & Conditions.
+            </p>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <button className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                I Agree
+              </button>
+              <button className="px-6 py-2 border-2 border-primary text-primary rounded-lg hover:bg-primary/5 transition-colors">
+                Contact Support
+              </button>
+            </div>
+          </section>
           </div>
         </div>
       </div>
