@@ -137,7 +137,7 @@ const StepOne: React.FC<StepOneProps> = ({
                   // type="number"
                   name="phoneNumber"
                   minLength={11}
-                  placeholder="0702*****00"
+                  placeholder="+2348123456789"
                   className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                   required
                 />

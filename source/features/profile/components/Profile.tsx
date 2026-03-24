@@ -139,7 +139,7 @@ const Profile = ({
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
-                  placeholder="amoria"
+                  placeholder="John"
                   className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
                 />
                 {errors.firstName && (
@@ -153,7 +153,7 @@ const Profile = ({
                   type="text"
                   name="lastName"
                   value={formData.lastName}
-                  placeholder="amoria"
+                  placeholder="Doe"
                   onChange={handleChange}
                   className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
                 />
@@ -169,7 +169,7 @@ const Profile = ({
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="amoriamakinwa@gmail.com"
+                  placeholder="johndoe@cribxpert.com"
                   className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
                 />
                 {errors.email && <p className="text-red-500">{errors.email}</p>}
@@ -182,7 +182,7 @@ const Profile = ({
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+2348167990657"
+                  placeholder="+2348123456789"
                   className="w-full py-3 px-4 border rounded border-1 border-[#DFE4EA] text-[#999999]"
                 />
                 {errors.phone && <p className="text-red-500">{errors.phone}</p>}

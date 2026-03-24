@@ -220,7 +220,7 @@ const SupportInfo = () => {
                     name="user_email"
                     value={formData.user_email}
                     onChange={handleChange}
-                    placeholder="you@example.com"
+                    placeholder="johndoe@cribxpert.com"
                     required
                     className="w-full py-3 px-4 border rounded border-[#DFE4EA] text-[#999999] focus:outline-none focus:border-[#006073]"
                   />

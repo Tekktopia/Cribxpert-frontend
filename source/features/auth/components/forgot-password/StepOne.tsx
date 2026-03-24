@@ -55,7 +55,7 @@ export default function StepOne({
               <input
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 type="number"
-                placeholder="07068839585"
+                placeholder="+2348123456789"
                 className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
                 required
               />

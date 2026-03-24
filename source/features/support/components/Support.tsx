@@ -342,7 +342,7 @@ const Support = () => {
                 name="user_email"
                 value={formData.user_email}
                 onChange={handleChange}
-                placeholder="you@example.com"
+                placeholder="johndoe@cribxpert.com"
                 required
                 className="w-full py-3 px-4 border rounded border-[#DFE4EA] text-[#999999] focus:outline-none focus:border-[#006073]"
               />
@@ -355,7 +355,7 @@ const Support = () => {
                 name="user_phone"
                 value={formData.user_phone}
                 onChange={handleChange}
-                placeholder="+2348167990657"
+                placeholder="+2348123456789"
                 className="w-full py-3 px-4 border rounded border-[#DFE4EA] text-[#999999] focus:outline-none focus:border-[#006073]"
               />
             </div>

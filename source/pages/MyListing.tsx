@@ -11,6 +11,7 @@ import RoadmapStepper from '@/features/listing/components/ListRoadMapper';
 import { InitialSteps } from '@/features/listing/components/data/onboardingSteps';
 import { useSelector } from 'react-redux';
 import { selectAllPropertyTypes } from '@/features/propertyType';
+import Footer from '@/shared/components/layout/Footer';
 
 const MyListing: React.FC = () => {
   const location = useLocation();
@@ -86,6 +87,7 @@ const MyListing: React.FC = () => {
   });
 
   return (
+    <div className='w-full'>
     <div className="px-4 sm:px-6 md:px-10 py-4">
       {showGettingStarted ? (
         <div className="flex flex-col md:flex-row gap-12 mt-20">
@@ -200,7 +202,7 @@ const MyListing: React.FC = () => {
                     <p className="text-gray-500 max-w-md mb-4">
                       {(() => {
                         if (!error) return 'Unable to load your listings.';
-
+                        
                         // Check if it's a FetchBaseQueryError
                         if ('status' in error) {
                           const errMsg =
@@ -226,12 +228,12 @@ const MyListing: React.FC = () => {
                         if ('message' in error) {
                           if (
                             error.message
-                              ?.toLowerCase()
+                            ?.toLowerCase()
                               .includes('no listings found') ||
                             error.message
-                              ?.toLowerCase()
+                            ?.toLowerCase()
                               .includes('no listings available')
-                          ) {
+                            ) {
                             return "You haven't created any listings yet. Start by creating your first listing!";
                           }
                           return 'Unable to load your listings. Please try again later.';
@@ -369,8 +371,8 @@ const MyListing: React.FC = () => {
 
                         return (
                           <ListingCard
-                            key={_id}
-                            id={_id}
+                          key={_id}
+                          id={_id}
                             title={name}
                             price={`₦${Number(basePrice).toLocaleString()}/night (Accommodation fee)`}
                             image={imageUrl}
@@ -404,8 +406,8 @@ const MyListing: React.FC = () => {
                             onStatusChange={() => {
                               refetch();
                             }}
-                          />
-                        );
+                            />
+                          );
                       })}
                     </div>
                   )}
@@ -416,6 +418,8 @@ const MyListing: React.FC = () => {
         </>
       )}
     </div>
+    <Footer />
+      </div>
   );
 };
 
