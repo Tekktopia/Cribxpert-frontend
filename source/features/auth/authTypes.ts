@@ -104,3 +104,14 @@ export interface ErrorResponse {
   error?: string;
   status?: number;
 }
+
+// Update password types
+export type UpdatePasswordRequest = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+export type UpdatePasswordResponse = {
+  message: string;
+  success: boolean;
+};

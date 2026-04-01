@@ -15,6 +15,8 @@ import {
   ForgotPasswordResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
+  UpdatePasswordRequest,
+  UpdatePasswordResponse,
 } from './authTypes';
 
 export const authApi = createApi({
@@ -155,6 +157,40 @@ export const authApi = createApi({
         body: data,
       }),
     }),
+    // Update password
+    updatePassword: builder.mutation<
+      UpdatePasswordResponse,
+      UpdatePasswordRequest
+    >({
+      query: (data) => ({
+        url: '/auth/update-password',
+        method: 'POST',
+        body: data,
+      }),
+      // Optional: Add error transformation if needed
+      transformErrorResponse: (response: {
+        status: number;
+        data?: { message?: string; error?: string };
+      }) => {
+         console.log('Full error response:', response);
+        console.log('Response status:', response.status);
+        console.log('Response data:', response.data);
+        if (response.status === 401) {
+          return {
+            message: response.data?.message || 'Current password is incorrect',
+          };
+        }
+        if (response.status === 400) {
+          return {
+            message: response.data?.message || 'Invalid password format',
+          };
+        }
+        return {
+          message: response.data?.message || 'Failed to update password',
+          error: response.data?.error,
+        };
+      },
+    }),
   }),
 });
 
@@ -169,5 +205,6 @@ export const {
   useCompleteRegistrationMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
-  useVerifyOtpMutation, // Export the new hook
+  useVerifyOtpMutation, 
+  useUpdatePasswordMutation,// Export the new hook
 } = authApi;
