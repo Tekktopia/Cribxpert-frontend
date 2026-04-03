@@ -4,9 +4,9 @@ import Footer from '@/shared/components/layout/Footer';
 import { EyeOff, Eye } from 'lucide-react';
 import { useUpdatePasswordMutation } from '@/features/auth/authService';
 
-
 const Password = () => {
-    const [updatePassword, { isLoading, error }] = useUpdatePasswordMutation();
+  // FIXED: Removed the unused { isLoading, error } variables
+  const [updatePassword] = useUpdatePasswordMutation();
   const [successMessage, setSuccessMessage] = useState('');
 
   const [formData, setFormData] = useState({
@@ -14,8 +14,6 @@ const Password = () => {
     newPassword: '',
     confirmPassword: '',
   });
-
-  
 
   const [errors, setErrors] = useState({
     oldPassword: '',
@@ -265,6 +263,13 @@ const Password = () => {
                 </p>
               </div>
             </div>
+
+            {/* FIXED: Added JSX to render the successMessage */}
+            {successMessage && (
+              <div className="p-3 bg-green-50 text-green-700 border border-green-200 rounded-lg">
+                {successMessage}
+              </div>
+            )}
 
             <div className="flex gap-4 flex-wrap">
               <button
