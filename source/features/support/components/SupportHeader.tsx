@@ -1,12 +1,42 @@
+// frontend/src/features/support/components/SupportHeader.tsx
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { supportBanner } from '@/assets';
+import { useState } from 'react';
 
 interface SupportHeaderProps {
   title?: string;
   subtitle?: string;
+  onSearch?: (query: string) => void;
+  popularTerms?: string[];
 }
 
-const SupportHeader = ({ title = "Support Center", subtitle }: SupportHeaderProps) => {
+const SupportHeader = ({ 
+  title = "Support Center", 
+  subtitle, 
+  onSearch,
+  popularTerms = ["What is refund process?", "How do i cancel a booking?"]
+}: SupportHeaderProps) => {
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = () => {
+    if (onSearch && searchValue.trim()) {
+      onSearch(searchValue);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handlePopularClick = (term: string) => {
+    setSearchValue(term);
+    if (onSearch) {
+      onSearch(term);
+    }
+  };
+
   return (
     <div className="relative min-h-screen">
       <div
@@ -25,17 +55,33 @@ const SupportHeader = ({ title = "Support Center", subtitle }: SupportHeaderProp
                     type="search"
                     name="search"
                     id="search"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className="text-[#6F6F6F] text-[16px] w-full outline-none"
-                    placeholder="search"
+                    placeholder="Search for answers..."
                   />
                 </div>
-                <button className="flex py-2 px-7 justify-center items-center gap-2 bg-[#ECB90A] text-[#070707] w-1/5 lg:text-[16px] text-sm">
+                <button 
+                  onClick={handleSearch}
+                  className="flex py-2 px-7 justify-center items-center gap-2 bg-[#ECB90A] text-[#070707] w-1/5 lg:text-[16px] text-sm hover:bg-[#d4a308] transition-colors"
+                >
                   Search
                 </button>
               </div>
               <p className="text-base font-normal">
                 <span className="font-semibold text-white pr-2">POPULAR:</span>
-                What is refund process? How do i cancel a booking?
+                {popularTerms.map((term, index) => (
+                  <span key={index}>
+                    <button
+                      onClick={() => handlePopularClick(term)}
+                      className="hover:underline cursor-pointer"
+                    >
+                      {term}
+                    </button>
+                    {index < popularTerms.length - 1 && ' • '}
+                  </span>
+                ))}
               </p>
             </div>
           </div>
