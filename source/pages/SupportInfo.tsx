@@ -182,6 +182,8 @@ const SupportInfo = () => {
 
   // In SupportInfo.tsx, update the handleSubmit function:
 
+// In SupportInfo.tsx, update the handleSubmit function with proper typing:
+
 const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
@@ -257,10 +259,20 @@ const handleSubmit = async (e: React.FormEvent) => {
     });
     setIsSearchModalOpen(false);
     setShowContactFormInModal(false);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error submitting ticket:', error);
-    // Show more detailed error message
-    const errorMessage = error.message || 'Internal server error';
+    
+    // Type guard to safely access error message
+    let errorMessage = 'An unknown error occurred';
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && typeof error === 'object' && 'message' in error) {
+      errorMessage = String(error.message);
+    }
+    
     alert(`Failed to submit ticket: ${errorMessage}. Please try again or contact us directly at info@cribxpert.com.`);
     setModal('error');
   } finally {
