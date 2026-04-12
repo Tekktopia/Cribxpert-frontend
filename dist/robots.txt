@@ -1,0 +1,14 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /bookings
+Disallow: /messages
+Disallow: /profile
+
+# Sitemap
+Sitemap: https://cribxpert.com/sitemap.xml
+
+# Crawl-delay for polite crawlers
+Crawl-delay: 1

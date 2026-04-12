@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://cribxpert.com/</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Properties/Listings Page -->
+  <url>
+    <loc>https://cribxpert.com/properties</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Search Page -->
+  <url>
+    <loc>https://cribxpert.com/search</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- About Page (if exists) -->
+  <url>
+    <loc>https://cribxpert.com/about</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Contact/Support Page -->
+  <url>
+    <loc>https://cribxpert.com/support</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Authentication Pages -->
+  <url>
+    <loc>https://cribxpert.com/auth/login</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://cribxpert.com/auth/signup</loc>
+    <lastmod>2025-01-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <!-- 
+    NOTE: For individual property listings, you should generate this sitemap dynamically
+    to include all property URLs like:
+    <url>
+      <loc>https://cribxpert.com/properties/[property-id]</loc>
+      <lastmod>[property-updated-date]</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.7</priority>
+    </url>
+    
+    Consider using a sitemap generator package or creating a backend endpoint
+    that generates this dynamically based on your database.
+  -->
+
+</urlset>
+

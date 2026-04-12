@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [staging]
+  pull_request:
+    branches: [staging]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Check code formatting
+        id: format-verify
+        run: npm run format:verify
+        continue-on-error: true
+
+      - name: Run format if verify fails
+        if: failure() && steps.format-verify.outcome == 'failure'
+        run: npm run format
