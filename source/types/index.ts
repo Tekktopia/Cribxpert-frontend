@@ -115,6 +115,11 @@ export type SupportType = {
   list3: string;
   list4: string;
   list5: string;
+  ans1: string;
+  ans2: string;
+  ans3: string;
+  ans4: string;
+  ans5: string;
 };
 export type BookingsType = {
   id: string;

@@ -12,7 +12,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router';
 import { socialIcons } from '@/assets';
-import { CheckCircle, XCircle, X, Copy, Check } from 'lucide-react';
+import { CheckCircle, XCircle, X, Copy, Check, ChevronDownIcon } from 'lucide-react';
 import { createTicket } from '@/features/ticket/ticketService';
 
 const { facebook, instagram, x } = socialIcons;
@@ -46,6 +46,11 @@ const header: Array<SupportType> = [
     list3: 'What is the cancellation policy?',
     list4: 'How do I change my booking date?',
     list5: 'What happens if host cancels?',
+    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -56,6 +61,11 @@ const header: Array<SupportType> = [
     list3: 'What payment methods are accepted?',
     list4: 'How do I request a refund?',
     list5: 'Are there any hidden fees?',
+    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -66,6 +76,11 @@ const header: Array<SupportType> = [
     list3: 'How do I enable 2FA?',
     list4: 'How do I delete my account?',
     list5: 'How do I change my email?',
+    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -76,6 +91,11 @@ const header: Array<SupportType> = [
     list3: 'How to manage pricing?',
     list4: 'How to view booking requests?',
     list5: 'How to communicate with guests?',
+    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -86,6 +106,11 @@ const header: Array<SupportType> = [
     list3: 'What are guest expectations?',
     list4: 'How to handle complaints?',
     list5: 'What is the host guarantee?',
+    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -96,6 +121,11 @@ const header: Array<SupportType> = [
     list3: 'Payment gateway error?',
     list4: 'Notification not working?',
     list5: 'How to clear cache?',
+    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
   },
 ];
 
@@ -124,6 +154,21 @@ const Support = () => {
     subject: '',
     message: '',
   });
+
+  const [openQuestion, setOpenQuestion] = useState<string | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleQuestionEnter = (key: string) => {
+    hoverTimerRef.current = setTimeout(() => setOpenQuestion(key), 180);
+  };
+
+  const handleQuestionLeave = () => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+  };
+
+  const handleQuestionClick = (key: string) => {
+    setOpenQuestion((prev) => (prev === key ? null : key));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -219,56 +264,71 @@ const Support = () => {
     <div className="container mx-auto px-4 py-6 md:py-8">
       {/* FAQ Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 mb-8">
-        {header.map((item: SupportType, index: number) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 md:p-4"
-          >
-            <div className="flex items-center gap-3">
-              <div className="bg-[#e6ecf1] rounded-full p-2 md:p-3">
-                {item.icon}
-              </div>
-              <h1 className="text-sm md:text-base text-[#070707] font-bold">
-                {item.title}
-              </h1>
-            </div>
-            <div className="flex flex-col gap-3 py-3 md:py-4 px-1 md:px-2">
-              <div className="flex gap-2 md:gap-3">
-                <div className="flex-shrink-0">{item.iconList}</div>
-                <Link
-                  to={`/faqs`}
-                  className="text-xs md:text-sm text-[#070707] hover:text-[#1D5C5C] transition-colors"
-                >
-                  {item.list1}
-                </Link>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="flex-shrink-0">{item.iconList}</div>
-                <h1 className="text-xs md:text-sm text-[#070707]">
-                  {item.list2}
-                </h1>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="flex-shrink-0">{item.iconList}</div>
-                <h1 className="text-xs md:text-sm text-[#070707]">
-                  {item.list3}
-                </h1>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="flex-shrink-0">{item.iconList}</div>
-                <h1 className="text-xs md:text-sm text-[#070707]">
-                  {item.list4}
-                </h1>
-              </div>
-              <div className="flex items-center gap-2 md:gap-3">
-                <div className="flex-shrink-0">{item.iconList}</div>
-                <h1 className="text-xs md:text-sm text-[#070707]">
-                  {item.list5}
-                </h1>
-              </div>
-            </div>
-          </div>
-        ))}
+        {header.map((item: SupportType, index: number) => {
+
+            const questions = [
+              { q: item.list1, a: item.ans1 },
+              { q: item.list2, a: item.ans2 },
+              { q: item.list3, a: item.ans3 },
+              { q: item.list4, a: item.ans4 },
+              { q: item.list5, a: item.ans5 },
+            ];
+
+            return (
+              <div 
+                key={index}
+                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 md:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-[#e6ecf1] rounded-full p-2 md:p-3">
+                      {item.icon}
+                    </div>
+                    <h1 className="text-sm md:text-base text-[#070707] font-bold">
+                      {item.title}
+                    </h1>
+                  </div>
+
+                  <div className="flex flex-col gap-1 py-3 md:py-4 px-1 md:px-2">
+                    {questions.map(({q, a}, qIdx) => {
+                      const key = `${index}-${qIdx}`;
+                      const isOpen = openQuestion === key;
+
+                      return (
+                        <div key={key}>
+                          <div 
+                            className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors hover:bg-gray-50 select-none"
+                            onMouseEnter={() => handleQuestionEnter(key)}
+                            onMouseLeave={handleQuestionLeave}
+                            onClick={() => handleQuestionClick(key)}
+                            >
+                              <div className="flex-shrink-0">{item.iconList}</div>
+
+                              <span className="text-xs md:text-sm text-[#070707] flex-1">
+                                {q}
+                              </span>
+
+                              <ChevronDownIcon
+                                className={`h-3 w-3 text-[#6F6F6F] flex-shrink-0 transition-transform duration-200 ${
+                                  isOpen ? 'rotate-180' : ''
+                                }`}
+                              />
+                          </div>
+
+                          <div 
+                            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                              isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                            }`}
+                            >
+                              <p className="text-xs text-[#6F6F6F] leading-relaxed px-2 pt-1 pb-2 border-l-2 border-[#1D5C5C] ml-2 mt-1">
+                                {a}
+                              </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+            );
+          })}
       </div>
 
       {/* Contact Form Section */}
@@ -486,3 +546,63 @@ const Support = () => {
 };
 
 export default Support;
+
+
+
+
+
+
+
+
+
+// (
+  //   <div
+  //     key={index}
+  //     className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 md:p-4"
+  //   >
+  //     <div className="flex items-center gap-3">
+  //       <div className="bg-[#e6ecf1] rounded-full p-2 md:p-3">
+  //         {item.icon}
+  //       </div>
+  //       <h1 className="text-sm md:text-base text-[#070707] font-bold">
+  //         {item.title}
+  //       </h1>
+  //     </div>
+  //     <div className="flex flex-col gap-3 py-3 md:py-4 px-1 md:px-2">
+  //       <div className="flex gap-2 md:gap-3">
+  //         <div className="flex-shrink-0">{item.iconList}</div>
+  //         <Link
+  //           to={`/faqs`}
+  //           className="text-xs md:text-sm text-[#070707] hover:text-[#1D5C5C] transition-colors"
+  //         >
+  //           {item.list1}
+  //         </Link>
+  //       </div>
+  //       <div className="flex items-center gap-2 md:gap-3">
+  //         <div className="flex-shrink-0">{item.iconList}</div>
+  //         <h1 className="text-xs md:text-sm text-[#070707]">
+  //           {item.list2}
+  //         </h1>
+  //       </div>
+  //       <div className="flex items-center gap-2 md:gap-3">
+  //         <div className="flex-shrink-0">{item.iconList}</div>
+  //         <h1 className="text-xs md:text-sm text-[#070707]">
+  //           {item.list3}
+  //         </h1>
+  //       </div>
+  //       <div className="flex items-center gap-2 md:gap-3">
+  //         <div className="flex-shrink-0">{item.iconList}</div>
+  //         <h1 className="text-xs md:text-sm text-[#070707]">
+  //           {item.list4}
+  //         </h1>
+  //       </div>
+  //       <div className="flex items-center gap-2 md:gap-3">
+  //         <div className="flex-shrink-0">{item.iconList}</div>
+  //         <h1 className="text-xs md:text-sm text-[#070707]">
+  //           {item.list5}
+  //         </h1>
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
+  
