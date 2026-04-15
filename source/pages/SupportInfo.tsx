@@ -317,8 +317,8 @@ const handleSubmit = async (e: React.FormEvent) => {
 
       {/* Search Modal - Stays open when showing contact form */}
       {isSearchModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[85vh] overflow-hidden relative">
+        <div className="fixed inset-0 py-2 bg-black/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] lg:max-h-[85vh] overflow-hidden relative">
             {/* Modal Header */}
             <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
               <div className="flex items-center gap-2">
