@@ -41,11 +41,11 @@ const ProfileNav = ({ active, setActive }: Props) => {
             />
           </div>
         </div>
-        <div className="lg:hidden w-full text-[#1D5C5C] px-4 py-2">
-          <div className="font-bold text-[18px] mb-2">
+        <div className="lg:hidden w-full text-[#1D5C5C] px-4 pt-0 pb-2">
+          <div className="font-bold text-[18px] mb-3">
             <h1>PROFILE</h1>
           </div>
-          <div className="flex gap-3 text-[#999] text-[12px] flex-wrap">
+          <div className="flex gap-x-4 text-[#999] text-[10px] overflow-x-auto">
             <ProfileLinks page="Profile" active={active} setActive={setActive} />
             <ProfileLinks page="Password Management" active={active} setActive={setActive} />
             <ProfileLinks page="Manage Payment" active={active} setActive={setActive} />

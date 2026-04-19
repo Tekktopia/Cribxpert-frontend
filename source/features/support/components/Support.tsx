@@ -47,10 +47,10 @@ const header: Array<SupportType> = [
     list4: 'How do I change my booking date?',
     list5: 'What happens if host cancels?',
     ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: '',
+    ans3: '',
+    ans4: '',
+    ans5: '',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -62,10 +62,10 @@ const header: Array<SupportType> = [
     list4: 'How do I request a refund?',
     list5: 'Are there any hidden fees?',
     ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: '',
+    ans3: '',
+    ans4: '',
+    ans5: '',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -77,10 +77,10 @@ const header: Array<SupportType> = [
     list4: 'How do I delete my account?',
     list5: 'How do I change my email?',
     ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: '',
+    ans3: '',
+    ans4: '',
+    ans5: '',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -92,10 +92,10 @@ const header: Array<SupportType> = [
     list4: 'How to view booking requests?',
     list5: 'How to communicate with guests?',
     ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: '',
+    ans3: '',
+    ans4: '',
+    ans5: '',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -107,10 +107,10 @@ const header: Array<SupportType> = [
     list4: 'How to handle complaints?',
     list5: 'What is the host guarantee?',
     ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: '',
+    ans3: '',
+    ans4: '',
+    ans5: '',
   },
   {
     icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
@@ -122,10 +122,10 @@ const header: Array<SupportType> = [
     list4: 'Notification not working?',
     list5: 'How to clear cache?',
     ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans3: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans4: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans5: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ans2: '',
+    ans3: '',
+    ans4: '',
+    ans5: '',
   },
 ];
 
@@ -295,7 +295,7 @@ const Support = () => {
                       return (
                         <div key={key}>
                           <div 
-                            className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors hover:bg-gray-50 select-none"
+                            className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors duration-300 hover:bg-hoverColor select-none"
                             onMouseEnter={() => handleQuestionEnter(key)}
                             onMouseLeave={handleQuestionLeave}
                             onClick={() => handleQuestionClick(key)}
@@ -307,14 +307,14 @@ const Support = () => {
                               </span>
 
                               <ChevronDownIcon
-                                className={`h-3 w-3 text-[#6F6F6F] flex-shrink-0 transition-transform duration-200 ${
+                                className={`h-3 w-3 text-[#6F6F6F] flex-shrink-0 transition-transform duration-300 ${
                                   isOpen ? 'rotate-180' : ''
                                 }`}
                               />
                           </div>
 
                           <div 
-                            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                            className={`overflow-hidden transition-all duration-500 ease-in-out ${
                               isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
                             }`}
                             >
