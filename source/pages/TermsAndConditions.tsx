@@ -120,6 +120,18 @@ export default function TermsAndConditions() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
+                  <div className="flex flex-col">
+                    <span>If a host or guest chooses to complete payment outside the Cribxpert system—whether privately or secretly—Cribxpert will not be responsible or liable for:</span>
+                    <ul className="ml-6 mt-2 space-y-1 text-gray-500">
+                      <li className="flex items-start gap-2">- loss of funds</li>
+                      <li className="flex items-start gap-2">- double charges</li>
+                      <li className="flex items-start gap-2">- fraudulent behavior</li>
+                      <li className="flex items-start gap-2">- booking issues or disputes</li>
+                    </ul>
+                  </div>
+                </li>
+                {/* <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">•</span>
                   <span>If a host or guest chooses to complete payment outside the Cribxpert system—whether privately or secretly—Cribxpert will not be responsible or liable for:</span>
                   <ul className="ml-6 mt-2 space-y-1 text-gray-500">
                     <li className="flex items-start gap-2">- loss of funds</li>
@@ -127,7 +139,7 @@ export default function TermsAndConditions() {
                     <li className="flex items-start gap-2">- fraudulent behavior</li>
                     <li className="flex items-start gap-2">- booking issues or disputes</li>
                   </ul>
-                </li>
+                </li> */}
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">•</span>
                   <span className="font-medium text-red-600">Off‑platform payments void any Cribxpert protection for both host and guest.</span>
