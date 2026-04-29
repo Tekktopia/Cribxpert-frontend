@@ -4,6 +4,7 @@ import './index.css';
 // Routing related imports
 import { BrowserRouter as Router } from 'react-router-dom';
 import ScrollToTop from './shared/components/ScrollToTop';
+import { InstallPrompt } from './features/InstallPrompt.tsx'; 
 
 // App components
 import LoadingManager from './shared/components/LoadingManager';
@@ -21,6 +22,7 @@ const AppContent = () => {
     <SocketProvider>
       <LoadingManager>
         <AppRoutes />
+        <InstallPrompt />
       </LoadingManager>
     </SocketProvider>
   );
