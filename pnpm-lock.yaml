@@ -87,9 +87,6 @@ importers:
       '@rollup/wasm-node':
         specifier: ^4.40.0
         version: 4.59.1
-      '@tailwindcss/vite':
-        specifier: ^4.0.8
-        version: 4.2.2(vite@6.4.1(@types/node@20.19.37)(jiti@1.21.7)(lightningcss@1.32.0)(terser@5.46.1))
       '@types/leaflet':
         specifier: ^1.9.20
         version: 1.9.21
@@ -2150,6 +2147,9 @@ packages:
   iceberg-js@0.8.1:
     resolution: {integrity: sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA==}
     engines: {node: '>=20.0.0'}
+
+  ico-endec@0.1.6:
+    resolution: {integrity: sha512-ZdLU38ZoED3g1j3iEyzcQj+wAkY2xfWNkymszfJPoxucIUhK7NayQ+/C4Kv0nDFMIsbtbEHldv3V8PU494/ueQ==}
 
   idb@7.1.1:
     resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
@@ -5502,6 +5502,8 @@ snapshots:
       - supports-color
 
   iceberg-js@0.8.1: {}
+
+  ico-endec@0.1.6: {}
 
   idb@7.1.1: {}
 
