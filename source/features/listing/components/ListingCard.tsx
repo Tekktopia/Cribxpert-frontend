@@ -342,16 +342,17 @@ const ListingCard: React.FC<ListingCardProps> = ({
               <span className="font-medium">"{title}"</span>? Do you want to continue?
             </p>
 
-            {deleteError && (
+            {!!deleteError && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
                 <p className="text-sm text-red-600">
                   {(() => {
-                    if ('data' in deleteError && deleteError.data && typeof deleteError.data === 'object') {
-                      const errorData = deleteError.data as { message?: string };
+                    const err = deleteError as Record<string, unknown> | null;
+                    if (err && 'data' in err && err.data && typeof err.data === 'object') {
+                      const errorData = err.data as { message?: string };
                       return errorData.message || 'Failed to delete listing';
                     }
-                    if ('message' in deleteError && typeof deleteError.message === 'string') {
-                      return deleteError.message;
+                    if (err && 'message' in err && typeof err.message === 'string') {
+                      return err.message;
                     }
                     return 'Failed to delete listing';
                   })()}

@@ -19,7 +19,6 @@ const StepOne: React.FC<StepOneProps> = ({
   methodSelected,
   nextStep,
   email,
-  phoneNumber,
   setEmail,
   setPhoneNumber,
 }) => {

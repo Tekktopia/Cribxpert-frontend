@@ -45,10 +45,10 @@ export const reviewApi = createApi({
             listing: data.listing_id,
             rating: data.rating,
             userId: data.user
-              ? { _id: data.user.id, fullName: data.user.full_name, email: data.user.email }
+              ? { _id: data.user.id, fullName: data.user.full_name ?? '', email: data.user.email }
               : data.user_id,
-            name: data.user?.full_name,
-            email: data.user?.email,
+            name: data.user?.full_name ?? undefined,
+            email: data.user?.email ?? undefined,
             createdAt: data.created_at,
             updatedAt: data.updated_at,
           },
@@ -73,10 +73,10 @@ export const reviewApi = createApi({
           listing: r.listing_id,
           rating: r.rating,
           userId: r.user
-            ? { _id: r.user.id, fullName: r.user.full_name, email: r.user.email }
+            ? { _id: r.user.id, fullName: r.user.full_name ?? '', email: r.user.email }
             : r.user_id,
-          name: r.user?.full_name,
-          email: r.user?.email,
+          name: r.user?.full_name ?? undefined,
+          email: r.user?.email ?? undefined,
           createdAt: r.created_at,
           updatedAt: r.updated_at,
         }));

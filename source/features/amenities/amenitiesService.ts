@@ -52,6 +52,7 @@ export const amenitiesApi = createApi({
 
     createAmenity: builder.mutation<Amenity, Partial<Amenity>>({
       queryFn: async (amenity) => {
+        if (!amenity.name) return { error: { status: 'CUSTOM_ERROR', error: 'Name is required' } };
         const { data, error } = await supabase
           .from('amenities')
           .insert({ name: amenity.name })

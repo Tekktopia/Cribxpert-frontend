@@ -3,7 +3,6 @@ import { supabase } from '@/lib/supabase';
 import {
   Conversation,
   MessageItem,
-  GetConversationsResponse,
   CreateConversationRequest,
   SendMessageRequest,
   GetMessagesRequest,
@@ -43,7 +42,7 @@ export const messageApi = createApi({
               firstName: (u.full_name ?? '').split(' ')[0] ?? '',
               lastName: (u.full_name ?? '').split(' ').slice(1).join(' ') ?? '',
               email: u.email ?? '',
-              profilePicture: u.profile_image,
+              profilePicture: u.profile_image ?? undefined,
             }));
           const msgs = (c.lastMessage as Array<Record<string, string>> | null) ?? [];
           const last = msgs.sort((a, b) =>
@@ -74,7 +73,7 @@ export const messageApi = createApi({
     }),
 
     createConversation: builder.mutation<Conversation, CreateConversationRequest>({
-      queryFn: async ({ otherUserId, listingId }) => {
+      queryFn: async ({ otherUserId }) => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return { error: { status: 'CUSTOM_ERROR', error: 'Not authenticated' } };
 
@@ -107,7 +106,7 @@ export const messageApi = createApi({
                   firstName: (u.full_name ?? '').split(' ')[0] ?? '',
                   lastName: (u.full_name ?? '').split(' ').slice(1).join(' ') ?? '',
                   email: u.email ?? '',
-                  profilePicture: u.profile_image,
+                  profilePicture: u.profile_image ?? undefined,
                 }));
               return {
                 data: {
@@ -123,7 +122,7 @@ export const messageApi = createApi({
         // Create new conversation
         const { data: newConv, error: createErr } = await supabase
           .from('conversations')
-          .insert({ listing_id: listingId ?? null })
+          .insert({})
           .select('id')
           .single();
         if (createErr) return { error: { status: 'CUSTOM_ERROR', error: createErr.message } };
@@ -132,10 +131,6 @@ export const messageApi = createApi({
           { conversation_id: newConv.id, user_id: user.id },
           { conversation_id: newConv.id, user_id: otherUserId },
         ]);
-
-        const { data: { user: otherUser } } = await supabase.auth.admin
-          ? { data: { user: null } }
-          : { data: { user: null } };
 
         const { data: profiles } = await supabase
           .from('profiles')
@@ -147,7 +142,7 @@ export const messageApi = createApi({
           firstName: (u.full_name ?? '').split(' ')[0] ?? '',
           lastName: (u.full_name ?? '').split(' ').slice(1).join(' ') ?? '',
           email: u.email ?? '',
-          profilePicture: u.profile_image,
+          profilePicture: u.profile_image ?? undefined,
         }));
 
         return {
@@ -167,7 +162,7 @@ export const messageApi = createApi({
       queryFn: async ({ conversationId, limit = 50, before }) => {
         let query = supabase
           .from('messages')
-          .select('id, conversation_id, sender_id, body, read_by, created_at, updated_at')
+          .select('id, conversation_id, sender_id, body, created_at, updated_at')
           .eq('conversation_id', conversationId)
           .order('created_at', { ascending: false })
           .limit(limit);
@@ -179,7 +174,7 @@ export const messageApi = createApi({
           conversationId: m.conversation_id,
           senderId: m.sender_id,
           body: m.body,
-          readBy: m.read_by ?? [],
+          readBy: [],
           createdAt: m.created_at,
           updatedAt: m.updated_at ?? m.created_at,
         }));
@@ -211,7 +206,7 @@ export const messageApi = createApi({
             conversationId: data.conversation_id,
             senderId: data.sender_id,
             body: data.body,
-            readBy: data.read_by ?? [],
+            readBy: [],
             createdAt: data.created_at,
             updatedAt: data.updated_at ?? data.created_at,
           },

@@ -37,10 +37,11 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
 
   // Helper to map Booking to UI fields
   const mapBookingToUI = (booking: Booking) => {
+    const listingObj = typeof booking.listing !== 'string' ? booking.listing : null;
     let image = '/images/property-image.jpeg'; // Default fallback image
-    if (booking.listing?.listingImg && booking.listing.listingImg.length > 0) {
+    if (listingObj?.listingImg && listingObj.listingImg.length > 0) {
       // Use fileUrl if present, otherwise fallback to the value itself (for legacy data)
-      const firstImg = booking.listing?.listingImg[0];
+      const firstImg = listingObj.listingImg[0];
       const imgUrl =
         typeof firstImg === 'string' ? firstImg : firstImg?.fileUrl || '';
       if (imgUrl) {
@@ -63,11 +64,11 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
     return {
       id: booking._id || 'Unknown ID',
       image,
-      name: booking.listing?.name || 'Unknown Property',
+      name: listingObj?.name || 'Unknown Property',
       checkin: formatDate(booking.startDate),
       checkout: formatDate(booking.endDate),
       status: booking.status || 'Unknown',
-      description: booking.listing?.description || 'No description available',
+      description: listingObj?.description || 'No description available',
     };
   };
 

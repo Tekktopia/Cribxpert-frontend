@@ -72,7 +72,12 @@ export const userApi = createApi({
 
     updateUserById: builder.mutation<UpdateUserResponse, { id: string; data: UpdateUserRequest }>({
       queryFn: async ({ id, data: payload }) => {
-        const row: Record<string, unknown> = {};
+        const row: {
+          full_name?: string;
+          email?: string;
+          profile_image?: string;
+          phone_number?: string;
+        } = {};
         if (payload.fullName !== undefined) row.full_name = payload.fullName;
         if (payload.email !== undefined) row.email = payload.email;
         if (payload.profileImage !== undefined) row.profile_image = payload.profileImage;

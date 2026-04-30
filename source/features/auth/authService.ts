@@ -45,9 +45,9 @@ export const authApi = createApi({
               id: profile.id,
               fullName: profile.full_name ?? '',
               email: profile.email ?? user.email ?? '',
-              profileImage: profile.profile_image,
-              role: profile.role,
-              phoneNumber: profile.phone_number,
+              profileImage: profile.profile_image ?? undefined,
+              role: profile.role ?? undefined,
+              phoneNumber: profile.phone_number ?? undefined,
             },
           },
         };

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import type { SerializedError } from '@reduxjs/toolkit';
 import { ActiveNotification } from '@/types';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import {
@@ -54,7 +56,7 @@ const NotificationPage = () => {
         <All
           notifications={notifications}
           isLoading={isLoading}
-          error={error}
+          error={error as FetchBaseQueryError | SerializedError | undefined}
           onMarkAsRead={handleMarkAsRead}
         />
       )}
@@ -63,7 +65,7 @@ const NotificationPage = () => {
         <Bookings
           notifications={bookingNotifications}
           isLoading={isLoading}
-          error={error}
+          error={error as FetchBaseQueryError | SerializedError | undefined}
           onMarkAsRead={handleMarkAsRead}
         />
       )}
@@ -72,7 +74,7 @@ const NotificationPage = () => {
         <Payments
           notifications={paymentNotifications}
           isLoading={isLoading}
-          error={error}
+          error={error as FetchBaseQueryError | SerializedError | undefined}
           onMarkAsRead={handleMarkAsRead}
         />
       )}
@@ -96,7 +98,7 @@ const NotificationPage = () => {
         <Listings
           notifications={listingNotifications}
           isLoading={isLoading}
-          error={error}
+          error={error as FetchBaseQueryError | SerializedError | undefined}
           onMarkAsRead={handleMarkAsRead}
         />
       )}
@@ -105,7 +107,7 @@ const NotificationPage = () => {
         <Financials
           notifications={financialNotifications}
           isLoading={isLoading}
-          error={error}
+          error={error as FetchBaseQueryError | SerializedError | undefined}
           onMarkAsRead={handleMarkAsRead}
         />
       )}

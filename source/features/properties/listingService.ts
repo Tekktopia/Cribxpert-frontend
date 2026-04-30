@@ -29,6 +29,15 @@ export interface CreateListingRequest {
   files?: File[];
 }
 
+export interface UnavailableDate {
+  date: string;
+  reason: string;
+}
+
+export interface UnavailableDatesResponse {
+  unavailableDates: UnavailableDate[];
+}
+
 export interface ListingFilter {
   state?: string;
   country?: string;
@@ -145,7 +154,7 @@ export const listingApi = createApi({
 
         const { data, error } = await query.order('created_at', { ascending: false });
         if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
-        return { data: { listings: (data ?? []).map(mapListing) } };
+        return { data: { listings: ((data as unknown as Record<string, unknown>[]) ?? []).map(mapListing) } };
       },
       providesTags: (result) =>
         result
@@ -164,7 +173,7 @@ export const listingApi = createApi({
           .eq('id', id)
           .single();
         if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
-        return { data: { listing: mapListing(data) } };
+        return { data: { listing: mapListing(data as unknown as Record<string, unknown>) } };
       },
       providesTags: (_result, _error, id) => [{ type: 'Listing', id }],
     }),
@@ -178,10 +187,10 @@ export const listingApi = createApi({
           .select(LISTING_SELECT)
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
-        if (arg?.status) query = query.eq('status', arg.status);
+        if (arg?.status) query = query.eq('status', arg.status as 'pending' | 'rejected' | 'approved' | 'flagged');
         const { data, error } = await query;
         if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
-        return { data: (data ?? []).map(mapListing) };
+        return { data: ((data as unknown as Record<string, unknown>[]) ?? []).map(mapListing) };
       },
       providesTags: (result) =>
         result
@@ -224,7 +233,8 @@ export const listingApi = createApi({
         } else {
           const { data, error } = await supabase
             .from('listings')
-            .insert({ ...row, status: 'pending' })
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .insert({ ...row, status: 'pending' } as any)
             .select('id')
             .single();
           if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
@@ -311,7 +321,7 @@ export const listingApi = createApi({
           .eq('id', listingId)
           .single();
         if (fetchErr) return { error: { status: 'CUSTOM_ERROR', error: fetchErr.message } };
-        return { data: mapListing(updated) };
+        return { data: mapListing(updated as unknown as Record<string, unknown>) };
       },
       invalidatesTags: (_result, _error, payload) =>
         payload?.id
@@ -355,7 +365,7 @@ export const listingApi = createApi({
           .eq('user_id', user.id)
           .eq('status', 'pending');
         if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
-        return { data: (data ?? []).map(mapListing) };
+        return { data: ((data as unknown as Record<string, unknown>[]) ?? []).map(mapListing) };
       },
       providesTags: [{ type: 'Listing', id: 'UNCOMPLETED' }],
     }),

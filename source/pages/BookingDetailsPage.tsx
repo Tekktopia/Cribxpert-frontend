@@ -111,6 +111,9 @@ const BookingDetailsPage: React.FC = () => {
   // Only render booking details if booking is set
   if (!booking) return null;
 
+  // Narrow the listing union type (it's either a populated object or a plain ID string)
+  const listingObj = typeof booking.listing !== 'string' ? booking.listing : null;
+
   // Calculate booking metrics
   const checkInDate = new Date(booking.startDate);
   const checkOutDate = new Date(booking.endDate);
@@ -157,10 +160,10 @@ const BookingDetailsPage: React.FC = () => {
             <div className="mb-6">
               <img
                 src={
-                  booking.listing.listingImg[0]?.fileUrl ||
+                  listingObj?.listingImg?.[0]?.fileUrl ||
                   'https://res.cloudinary.com/dvv4wwuk1/image/upload/v1750192828/shortlet/listingImages/ayqvgn1pocgqlzsy3yci.jpg'
                 }
-                alt={booking.listing.name}
+                alt={listingObj?.name ?? ''}
                 className="w-full h-[300px] object-cover rounded-lg"
               />
             </div>
@@ -233,10 +236,10 @@ const BookingDetailsPage: React.FC = () => {
                     Listing Name:
                   </h3>
                   <p className="text-[#6F6F6F] text-sm mb-1">
-                    {booking.listing.name}
+                    {listingObj?.name}
                   </p>
                   <p className="text-[#6F6F6F] text-sm">
-                    {booking.listing.city}, {booking.listing.state}
+                    {listingObj?.city}, {listingObj?.state}
                   </p>
                 </div>
               </div>

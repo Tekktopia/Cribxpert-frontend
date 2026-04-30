@@ -214,43 +214,21 @@ const MyListing: React.FC = () => {
                     <p className="text-gray-500 max-w-md mb-4">
                       {(() => {
                         if (!error) return 'Unable to load your listings.';
-                        
-                        // Check if it's a FetchBaseQueryError
-                        if ('status' in error) {
-                          const errMsg =
-                            typeof error.data === 'string'
-                              ? error.data
-                              : (error.data as { message?: string })?.message;
+                        // Use a generic cast so both FetchBaseQueryError and SerializedError work
+                        const err = error as Record<string, unknown>;
+                        const errMsg =
+                          typeof err.data === 'string'
+                            ? err.data
+                            : typeof (err.data as Record<string, unknown>)?.message === 'string'
+                              ? (err.data as Record<string, unknown>).message as string
+                              : typeof err.message === 'string'
+                                ? err.message as string
+                                : null;
 
-                          // Check if it's the "no listings found" message
-                          if (
-                            errMsg
-                              ?.toLowerCase()
-                              .includes('no listings found') ||
-                            errMsg
-                              ?.toLowerCase()
-                              .includes('no listings available')
-                          ) {
-                            return "You haven't created any listings yet. Start by creating your first listing!";
-                          }
-                          return 'Unable to load your listings. Please try again later.';
+                        if (errMsg?.toLowerCase().includes('no listings found') ||
+                            errMsg?.toLowerCase().includes('no listings available')) {
+                          return "You haven't created any listings yet. Start by creating your first listing!";
                         }
-
-                        // Otherwise, it might be a SerializedError
-                        if ('message' in error) {
-                          if (
-                            error.message
-                            ?.toLowerCase()
-                              .includes('no listings found') ||
-                            error.message
-                            ?.toLowerCase()
-                              .includes('no listings available')
-                            ) {
-                            return "You haven't created any listings yet. Start by creating your first listing!";
-                          }
-                          return 'Unable to load your listings. Please try again later.';
-                        }
-
                         return 'Unable to load your listings. Please try again later.';
                       })()}
                     </p>

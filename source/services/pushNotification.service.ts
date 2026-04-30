@@ -152,7 +152,7 @@ export async function subscribeToPushNotifications(
       if (user) {
         await supabase.from('push_subscriptions').upsert({
           user_id: user.id,
-          endpoint: subJson.endpoint,
+          endpoint: subJson.endpoint ?? '',
           p256dh: (subJson.keys as Record<string, string>)?.p256dh ?? '',
           auth: (subJson.keys as Record<string, string>)?.auth ?? '',
         }, { onConflict: 'endpoint' });

@@ -392,8 +392,8 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
       const response = await createOrUpdateListing(listingData).unwrap();
       console.log('Listing saved successfully:', response);
       // Save the listing ID if creating new
-      if (!listingId && response?.listing?._id) {
-        setListingId(response?.listing?._id);
+      if (!listingId && response?._id) {
+        setListingId(response._id);
       }
       if (activeStep === 7) {
         if (editingListing) {

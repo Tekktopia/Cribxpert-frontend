@@ -1,6 +1,7 @@
 import { Booking } from '@/features/bookings/bookingService';
 
 const Listing = ({ booking }: { booking: Booking }) => {
+  const listingObj = typeof booking.listing !== 'string' ? booking.listing : null;
   return (
     <div className="text-[#6F6F6F] p-4">
       <div className="flex flex-col lg:flex-row gap-6 ">
@@ -19,14 +20,14 @@ const Listing = ({ booking }: { booking: Booking }) => {
           </div>
           <div>
             <p>
-              {booking.listing.name} - {booking.listing.description}
+              {listingObj?.name} - {listingObj?.description}
             </p>
           </div>
           {['pending', 'confirmed', 'cancelled'].includes(booking.status) && (
             <div className="flex gap-1 items-center mt-2">
               {/* boilerplate */}
               {/* <img src={star} alt="" /> */}
-              <p>{booking.listing.rating} [115 verified positive feedbacks]</p>
+              <p>{listingObj?.rating} [115 verified positive feedbacks]</p>
             </div>
           )}
         </div>

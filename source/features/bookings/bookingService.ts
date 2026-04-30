@@ -186,7 +186,7 @@ export const bookingApi = createApi({
           .select(BOOKING_SELECT)
           .single();
         if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
-        return { data: { message: 'Booking created successfully', booking: mapBooking(data) } };
+        return { data: { message: 'Booking created successfully', booking: mapBooking(data as unknown as Record<string, unknown>) } };
       },
       invalidatesTags: [{ type: 'Booking', id: 'LIST' }],
     }),
@@ -199,7 +199,7 @@ export const bookingApi = createApi({
           .eq('id', id)
           .single();
         if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
-        return { data: { message: 'success', booking: mapBooking(data) } };
+        return { data: { message: 'success', booking: mapBooking(data as unknown as Record<string, unknown>) } };
       },
       providesTags: (_result, _error, id) => [{ type: 'Booking', id }],
     }),
@@ -215,7 +215,7 @@ export const bookingApi = createApi({
         return {
           data: {
             message: 'success',
-            bookings: (data ?? []).map(mapBooking),
+            bookings: ((data as unknown as Record<string, unknown>[]) ?? []).map(mapBooking),
           },
         };
       },

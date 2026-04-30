@@ -6,7 +6,6 @@ import {
   useUpdatePropertyTypeMutation,
   useDeletePropertyTypeMutation,
   type PropertyType,
-  type CreatePropertyTypeRequest,
 } from './propertyTypeService';
 
 // Import and re-export from propertyTypeSlice.ts
@@ -71,4 +70,4 @@ export {
 };
 
 // Export types
-export type { PropertyType, CreatePropertyTypeRequest };
+export type { PropertyType };

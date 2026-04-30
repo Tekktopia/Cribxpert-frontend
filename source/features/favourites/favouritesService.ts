@@ -99,8 +99,8 @@ export const favouritesApi = createApi({
           .select(`listing:listings!listing_id(${LISTING_SELECT})`)
           .eq('user_id', userId);
         if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
-        const listings = (data ?? [])
-          .map((row) => row.listing as Record<string, unknown> | null)
+        const listings = ((data ?? []) as unknown as Array<{ listing: Record<string, unknown> | null }>)
+          .map((row) => row.listing)
           .filter(Boolean)
           .map((l) => mapListing(l!));
         return { data: listings };

@@ -45,6 +45,7 @@ export const createTicket = async (ticketData: CreateTicketData): Promise<Create
   const { data, error } = await supabase
     .from('tickets')
     .insert({
+      ticket_id: `TKT-${Date.now()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`,
       first_name: ticketData.firstName,
       last_name: ticketData.lastName ?? '',
       email: ticketData.email,
@@ -72,7 +73,7 @@ export const createTicket = async (ticketData: CreateTicketData): Promise<Create
     status: data.status,
     priority: data.priority,
     assignedTo: data.assigned_to ?? null,
-    notes: data.notes ?? [],
+    notes: (data as unknown as { notes?: Array<{ message: string; addedBy: string; createdAt: string }> }).notes ?? [],
     source: data.source,
     createdAt: data.created_at,
     updatedAt: data.updated_at ?? data.created_at,

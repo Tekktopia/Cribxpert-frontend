@@ -291,7 +291,7 @@ export const listingSlice = createSlice({
         listingApi.endpoints.createOrUpdateListing.matchFulfilled,
         (state, { payload }) => {
           state.isCreating = false;
-          state.currentListing = payload.listing;
+          state.currentListing = payload;
           state.draftListing = initialState.draftListing;
         }
       )

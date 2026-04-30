@@ -18,7 +18,7 @@ interface BookingProps {
 const Booking: React.FC<BookingProps> = ({ bookingData }) => {
   const currentUser = useSelector(selectCurrentUser);
 
-  const nameParts = currentUser?.fullName?.split(' ') || [];
+  const nameParts = ((currentUser?.user_metadata as Record<string, string>)?.full_name ?? '').split(' ').filter(Boolean);
   const defaultFirstName = nameParts[0] || '';
   const defaultLastName = nameParts.slice(1).join(' ') || '';
 
