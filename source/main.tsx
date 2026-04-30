@@ -14,8 +14,8 @@ import ErrorBoundary from './shared/components/ErrorBoundary';
 // Log when main.tsx loads
 console.log('🚀 Main.tsx loaded, initializing app...');
 
-// Unregister all service workers in development to prevent caching issues
-if ('serviceWorker' in navigator) {
+// In development: unregister all service workers and clear caches to prevent stale-cache issues
+if (import.meta.env.DEV && 'serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then((registrations) => {
     for (const registration of registrations) {
       registration.unregister().then((success) => {
@@ -25,20 +25,28 @@ if ('serviceWorker' in navigator) {
       });
     }
   });
-  
-  // Also clear service worker cache
+
   if ('caches' in window) {
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
         cacheNames.map((cacheName) => {
           console.log('🗑️ Deleting cache:', cacheName);
           return caches.delete(cacheName);
         })
-      );
-    }).then(() => {
+      )
+    ).then(() => {
       console.log('✅ All caches cleared');
     });
   }
+}
+
+// In production: register the service worker (injectRegister is null so we do it manually)
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch((err) => {
+      console.error('❌ Service worker registration failed:', err);
+    });
+  });
 }
 
 // Initialize listings when the application starts (wrap in try-catch to prevent blocking)

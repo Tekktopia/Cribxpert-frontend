@@ -15,22 +15,34 @@ export default defineConfig({
         type: 'module',
       },
       manifest: {
-        name: 'Cribxpert',
-        short_name: 'Cribxpert',
-        description: 'A sample PWA built with React and TypeScript.',
+        name: 'CribXpert',
+        short_name: 'CribXpert',
+        description: "Nigeria's premier platform for finding and booking verified short-let accommodations.",
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#ffffff',
+        theme_color: '#0D9488',
         icons: [
           {
-            src: 'web-app-manifest-192x192.png',
-            sizes: '192x192',
+            src: 'pwa-64x64.png',
+            sizes: '64x64',
             type: 'image/png',
-            purpose: 'maskable'
+            purpose: 'any'
           },
           {
-            src: 'web-app-manifest-512x512.png',
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'maskable-icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'
@@ -88,15 +100,20 @@ export default defineConfig({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
-        skipWaiting: false, // Don't skip waiting to avoid blank screens
-        clientsClaim: false, // Don't claim clients immediately
+        skipWaiting: false,
+        clientsClaim: false,
+        importScripts: ['/push-handlers.js'],
       },
       includeAssets: [
-        'favicon.svg',
+        'CribXpert.svg',
+        'favicon.ico',
         'robots.txt',
-        'web-app-manifest-192x192.png',
-        'web-app-manifest-512x512.png',
-        'apple-touch-icon.png'
+        'pwa-64x64.png',
+        'pwa-192x192.png',
+        'pwa-512x512.png',
+        'maskable-icon-512x512.png',
+        'apple-touch-icon-180x180.png',
+        'push-handlers.js',
       ],
     })
   ],
