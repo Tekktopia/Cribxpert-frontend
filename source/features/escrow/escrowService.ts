@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { supabase } from '@/lib/supabase';
 import type {
   WalletResponse,
   BookingEscrowStatus,
@@ -6,15 +6,24 @@ import type {
   DisburseResult,
 } from './escrowTypes';
 
-// Points to YOUR Express backend — never calls Sznd directly
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// Sznd API keys are secret — all escrow calls proxy through Supabase Edge Functions
+const EDGE_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/escrow`;
 
-const escrowApi = axios.create({
-  baseURL: `${API_BASE}/api/escrow`,
-  withCredentials: true, // send auth cookies
-});
-
-// ─── Guest Registration ───────────────────────────────────────────────────────
+async function edgeRequest<T>(path: string, options?: RequestInit): Promise<T> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token ?? '';
+  const response = await fetch(`${EDGE_BASE}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      ...(options?.headers ?? {}),
+    },
+  });
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(json?.error ?? json?.message ?? 'Request failed');
+  return json as T;
+}
 
 export const registerGuestService = async (details: {
   email: string;
@@ -24,68 +33,63 @@ export const registerGuestService = async (details: {
   countryCode: string;
   dateOfBirth: string;
 }): Promise<{ guestId: string; message: string; currency: string }> => {
-  const response = await escrowApi.post('/guests/register', details);
-  return response.data;
+  return edgeRequest('/guests/register', {
+    method: 'POST',
+    body: JSON.stringify(details),
+  });
 };
-
-// ─── Virtual Wallet ───────────────────────────────────────────────────────────
 
 export const getGuestWalletService = async (
   szndUserId: string
 ): Promise<WalletResponse> => {
-  const response = await escrowApi.get(`/guests/${szndUserId}/wallet`);
-  return response.data;
+  return edgeRequest(`/guests/${szndUserId}/wallet`);
 };
-
-// ─── Booking Escrow Status ────────────────────────────────────────────────────
 
 export const getBookingEscrowStatusService = async (
   bookingId: string
 ): Promise<BookingEscrowStatus> => {
-  const response = await escrowApi.get(`/bookings/${bookingId}/status`);
-  return response.data;
+  return edgeRequest(`/bookings/${bookingId}/status`);
 };
-
-// ─── Confirm Delivery ─────────────────────────────────────────────────────────
 
 export const confirmDeliveryService = async (
   bookingId: string,
   guestId: string
 ): Promise<{ success: boolean; status: string; message: string }> => {
-  const response = await escrowApi.post(`/bookings/${bookingId}/confirm-delivery`, {
-    guestId,
+  return edgeRequest(`/bookings/${bookingId}/confirm-delivery`, {
+    method: 'POST',
+    body: JSON.stringify({ guestId }),
   });
-  return response.data;
 };
-
-// ─── Raise Dispute ────────────────────────────────────────────────────────────
 
 export const raiseDisputeService = async (
   bookingId: string,
   payload: { guestId: string; reason: string; description: string }
 ): Promise<{ success: boolean; status: string; message: string }> => {
-  const response = await escrowApi.post(`/bookings/${bookingId}/dispute`, payload);
-  return response.data;
+  return edgeRequest(`/bookings/${bookingId}/dispute`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
 };
-
-// ─── Admin: Disburse Funds to Host ───────────────────────────────────────────
 
 export const disburseToHostService = async (
   payload: DisbursePayload
 ): Promise<DisburseResult> => {
   const { bookingId, ...body } = payload;
-  const response = await escrowApi.post(`/bookings/${bookingId}/disburse`, body);
-  return response.data;
+  return edgeRequest(`/bookings/${bookingId}/disburse`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
 };
-
-// ─── Transaction History ──────────────────────────────────────────────────────
 
 export const getTransactionHistoryService = async (
   szndUserId: string,
   page = 1
-): Promise<{ data: any[]; pagination: any }> => {
-  const response = await escrowApi.get(`/users/${szndUserId}/transactions`, {
-    params: { page },
-  });
-  return response.data;
+): Promise<{ data: unknown[]; pagination: unknown }> => {
+  return edgeRequest(`/users/${szndUserId}/transactions?page=${page}`);
+};
+
+export const verifyBookingPaymentService = async (
+  bookingId: string
+): Promise<{ success: boolean; status: string; message: string }> => {
+  return edgeRequest(`/bookings/${bookingId}/verify-payment`);
 };

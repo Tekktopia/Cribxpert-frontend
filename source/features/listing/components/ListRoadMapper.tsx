@@ -168,9 +168,12 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
     }
   }, [editingListing]);
 
-  // Helper function to validate ObjectId format
+  // Accept both Supabase UUIDs and legacy MongoDB ObjectIds
   const isValidObjectId = (id: string): boolean => {
-    return typeof id === 'string' && id.match(/^[0-9a-fA-F]{24}$/) !== null;
+    if (typeof id !== 'string' || !id.trim()) return false;
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    const isMongoId = /^[0-9a-fA-F]{24}$/.test(id);
+    return isUuid || isMongoId;
   };
 
   const navigate = useNavigate();
@@ -311,7 +314,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
         return;
       }
 
-      if (!currentUser?._id) {
+      if (!currentUser?.id) {
         alert('Please sign in before creating a listing.');
         return;
       }
@@ -340,7 +343,7 @@ const RoadmapStepper: React.FC<RoadmapStepperProps> = ({
 
       // Build the listing data object
       const listingData: ListingData & { id?: string; hideStatus?: boolean } = {
-        userId: currentUser._id,
+        userId: currentUser.id,
         name: title,
         description: description?.trim() || '',
         amenities: validAmenities,

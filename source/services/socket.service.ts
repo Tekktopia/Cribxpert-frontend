@@ -1,6 +1,8 @@
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5500';
+// Real-time messaging via Socket.io will be replaced by Supabase Realtime.
+// Set VITE_SOCKET_URL to a deployed socket server URL, or leave blank to disable.
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || '';
 
 class SocketService {
   private socket: Socket | null = null;
@@ -12,8 +14,11 @@ class SocketService {
    * @param token - JWT token for authentication
    */
   connect(token: string): Socket {
+    if (!SOCKET_URL) {
+      console.warn('Socket disabled: VITE_SOCKET_URL not set. Messaging uses Supabase Realtime instead.');
+      return this.socket as Socket;
+    }
     if (this.socket?.connected) {
-      console.log('Socket already connected');
       return this.socket;
     }
 

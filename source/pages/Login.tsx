@@ -1,21 +1,14 @@
 import { Eye, EyeOff } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import GoogleSignIn from '@/features/auth/components/login/GoogleSignIn';
-import { useDispatch } from 'react-redux';
-import {
-  clearError,
-  setIsAuthenticated,
-  setUser,
-  useLoginMutation,
-} from '@/features/auth';
 import { isValidEmail } from '@/utils/utils';
 import AuthLeftSide from '@/features/auth/components/AuthLeftSide';
+import { supabase } from '@/lib/supabase';
 
 const Login: React.FC = () => {
-  const [login, { isLoading, error: loginError }] = useLoginMutation();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
@@ -24,89 +17,49 @@ const Login: React.FC = () => {
     password: '',
   });
 
-  useEffect(() => {
-    if (loginError) {
-      if ('data' in loginError) {
-        setError(
-          typeof loginError.data === 'object' &&
-            loginError.data !== null &&
-            'message' in loginError.data
-            ? (loginError.data as { message?: string }).message ||
-                'Login failed. Please try again.'
-            : 'Login failed. Please try again.'
-        );
-      } else {
-        setError('Network error. Please check your connection.');
-      }
-    }
-
-    // Clear error when component unmounts
-    return () => {
-      dispatch(clearError());
-    };
-  }, [loginError, dispatch]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const [methodSelected] = useState<string | null>('Email Address');
-  
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     const identifier =
-      methodSelected === 'Email Address'
-        ? formData.email
-        : formData.phoneNumber;
+      methodSelected === 'Email Address' ? formData.email : formData.phoneNumber;
 
     if (!identifier) {
-      setError(
-        `${
-          methodSelected === 'Email Address' ? 'Email' : 'Phone number'
-        } is required`
-      );
+      setError(`${methodSelected === 'Email Address' ? 'Email' : 'Phone number'} is required`);
       return;
     }
-
-    // Add email validation check
     if (methodSelected === 'Email Address' && !isValidEmail(formData.email)) {
       setError('Please enter a valid email address');
       return;
     }
-
     if (!formData.password) {
       setError('Password is required');
       return;
     }
 
-    const result = await login({
-      identifier,
+    setIsLoading(true);
+    const { error: sbError } = await supabase.auth.signInWithPassword({
+      email: formData.email,
       password: formData.password,
-    }).unwrap();
+    });
+    setIsLoading(false);
 
-    if (result) {
-      // Store the access token in sessionStorage
-      if (result.accessToken) {
-        sessionStorage.setItem('token', result.accessToken);
-
-        setIsAuthenticated(true);
-
-        // store user data if needed
-        if (result.user) {
-          setUser(result.user);
-        }
-      }
-
-      navigate('/'); // Redirect to home after successful login
+    if (sbError) {
+      setError(sbError.message || 'Login failed. Please try again.');
+      return;
     }
+
+    // authListener fires onAuthStateChange → dispatches setSession → Redux updates
+    navigate('/');
   };
 
   return (

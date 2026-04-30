@@ -23,8 +23,8 @@ export const FavouriteButton = ({
 
   const { user } = useSelector((state: RootState) => state.auth);
 
-  useGetFavouritesByUserIdQuery(user?._id ?? '', {
-    skip: !user?._id,
+  useGetFavouritesByUserIdQuery(user?.id ?? '', {
+    skip: !user?.id,
   });
   
   const isFavourited = useSelector(selectIsItemFavourited(listingId));
@@ -47,9 +47,9 @@ export const FavouriteButton = ({
     try {
       setIsLoading(true);
       if (isFavourited) {
-        await removeFavourite({ userId: user._id, listingId });
+        await removeFavourite({ userId: user.id, listingId });
       } else {
-        await addFavourite({ userId: user._id, listingId });
+        await addFavourite({ userId: user.id, listingId });
       }
       setIsLoading(false);
     } catch {

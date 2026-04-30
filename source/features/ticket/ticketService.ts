@@ -1,5 +1,4 @@
-// frontend/src/features/ticket/ticketService.ts
-import { BASE_URL } from '../api/baseApi';
+import { supabase } from '@/lib/supabase';
 
 export interface CreateTicketData {
   firstName: string;
@@ -42,26 +41,46 @@ export interface CreateTicketResponse {
   };
 }
 
-// Create new ticket using fetch API directly (public endpoint)
 export const createTicket = async (ticketData: CreateTicketData): Promise<CreateTicketResponse> => {
-  try {
-    const response = await fetch(`${BASE_URL}/api/tickets`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(ticketData),
-    });
+  const { data, error } = await supabase
+    .from('tickets')
+    .insert({
+      first_name: ticketData.firstName,
+      last_name: ticketData.lastName ?? '',
+      email: ticketData.email,
+      phone: ticketData.phone ?? '',
+      subject: ticketData.subject,
+      message: ticketData.message,
+      source: ticketData.source ?? 'website',
+      status: 'pending',
+      priority: 'medium',
+    })
+    .select('*')
+    .single();
 
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.message || 'Failed to create ticket');
-    }
-    
-    return data;
-  } catch (error: any) {
-    console.error('Error creating ticket:', error);
-    throw error;
-  }
+  if (error) throw new Error(error.message);
+
+  const ticket: Ticket = {
+    _id: data.id,
+    ticketId: data.ticket_id ?? data.id,
+    firstName: data.first_name,
+    lastName: data.last_name,
+    email: data.email,
+    phone: data.phone ?? '',
+    subject: data.subject,
+    message: data.message,
+    status: data.status,
+    priority: data.priority,
+    assignedTo: data.assigned_to ?? null,
+    notes: data.notes ?? [],
+    source: data.source,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at ?? data.created_at,
+  };
+
+  return {
+    success: true,
+    message: 'Ticket created successfully',
+    data: { ticket, ticketId: ticket.ticketId },
+  };
 };

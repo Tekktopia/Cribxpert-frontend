@@ -1,8 +1,9 @@
 import React from 'react';
 import { GoogleSignUp } from './GoogleSignUp';
-import { useInitiateEmailVerificationMutation } from '@/features/auth/authService';
 import { Link } from 'react-router';
 import { isValidEmail } from '@/utils/utils';
+import { supabase } from '@/lib/supabase';
+import { Eye, EyeOff } from 'lucide-react';
 
 type StepOneProps = {
   methodSelected: string | null;
@@ -23,66 +24,47 @@ const StepOne: React.FC<StepOneProps> = ({
   setPhoneNumber,
 }) => {
   const [error, setError] = React.useState<string>('');
-  const [initiateEmailVerification, { isLoading }] =
-    useInitiateEmailVerificationMutation();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [password, setPassword] = React.useState('');
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const handleSignUp = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent default button click behavior
     e.preventDefault();
     e.stopPropagation();
+    setError('');
 
-    try {
-      if (methodSelected === 'Email Address') {
-
-        // Check email format
-        if (!isValidEmail(email)) {
-          throw new Error('Please enter a valid email address');
-        }
-
-        const result = await initiateEmailVerification({ email });
-
-        // Check for errors in the result
-        if ('error' in result) {
-          // console.error('API error:', result.error);
-          throw result.error;
-        }
-
-        // Access data safely
-        const response = result.data;
-        if (response?.user) {
-          localStorage.setItem('pendingEmail', email);
-        }
-        // console.log('Verification email sent:', response?.message);
-
-        // Only proceed if we get here without errors
-        nextStep();
-      } else {
-        // Phone number validation
-        if (!phoneNumber) {
-          throw new Error('Phone number is required');
-        } else if (phoneNumber.length < 11 || phoneNumber.length > 11) {
-          throw new Error('Phone number must be 11 digits');
-        }
-
-        // Phone verification not implemented
-        throw new Error('Phone verification is not implemented yet');
-      }
-    } catch (err: unknown) {
-      // Error handling
-      if (typeof err === 'object' && err !== null) {
-        const errorObj = err as {
-          data?: { message?: string };
-          message?: string;
-        };
-        setError(
-          errorObj.data?.message ||
-            errorObj.message ||
-            'An error occurred during sign-up'
-        );
-      } else {
-        setError('An error occurred during sign-up');
-      }
+    if (methodSelected !== 'Email Address') {
+      setError('Phone verification is not yet supported');
+      return;
     }
+
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+
+    setIsLoading(true);
+    const { error: sbError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${import.meta.env.VITE_FRONTEND_URL || window.location.origin}/onboarding`,
+      },
+    });
+    setIsLoading(false);
+
+    if (sbError) {
+      setError(sbError.message || 'An error occurred during sign-up');
+      return;
+    }
+
+    localStorage.setItem('pendingEmail', email);
+    nextStep();
   };
 
   return (
@@ -115,7 +97,7 @@ const StepOne: React.FC<StepOneProps> = ({
           /> */}
 
           {methodSelected === 'Email Address' ? (
-            <div>
+            <div className="space-y-3">
               <label className="cursor-pointer flex flex-col items-start gap-2">
                 Email
                 <input
@@ -123,9 +105,31 @@ const StepOne: React.FC<StepOneProps> = ({
                   name="email"
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full p-3 border  border-[#1D5C5C] rounded-md flex justify-between items-center"
+                  className="w-full p-3 border border-[#1D5C5C] rounded-md flex justify-between items-center"
                   required
                 />
+              </label>
+              <label className="cursor-pointer flex flex-col items-start gap-2">
+                Password
+                <div className="relative w-full">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Create a password (min. 8 characters)"
+                    className="w-full p-3 border border-[#1D5C5C] rounded-md"
+                    required
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </label>
             </div>
           ) : (

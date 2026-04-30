@@ -1,37 +1,33 @@
-// Export all auth-related functionality from a single file
+// Auth barrel — re-exports the slice reducer and new Supabase-based actions.
 
 import authReducer, {
-  setUser,
-  clearUser,
+  setSession,
+  setProfile,
+  clearSession,
+  setAuthLoading,
+  setAuthError,
   updateUserProfile,
-  clearError,
-  setIsAuthenticated,
+  selectCurrentUser,
+  selectProfile,
+  selectSession,
+  selectIsAuthenticated,
+  selectAuthLoading,
+  selectAuthError,
 } from './authSlice';
 
-import {
-  useLoginMutation,
-  useRegisterMutation,
-  useGetCurrentUserQuery,
-} from './authService';
-
-import type { User } from './authTypes';
-
-// Re-export everything
 export {
-  setUser,
-  setIsAuthenticated,
-  clearUser,
+  setSession,
+  setProfile,
+  clearSession,
+  setAuthLoading,
+  setAuthError,
   updateUserProfile,
-  clearError,
-  useLoginMutation,
-  useRegisterMutation,
-  useGetCurrentUserQuery,
+  selectCurrentUser,
+  selectProfile,
+  selectSession,
+  selectIsAuthenticated,
+  selectAuthLoading,
+  selectAuthError,
 };
 
-// Re-export types
-export type {
-  User,
-};
-
-// Export the reducer as the default export
 export default authReducer;

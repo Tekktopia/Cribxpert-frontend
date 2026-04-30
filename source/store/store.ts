@@ -7,7 +7,7 @@ import { bookingReducer } from '@/features/bookings';
 import { propertyTypeReducer, propertyTypeApi } from '@/features/propertyType';
 import reviewReducer, { reviewApi } from '@/features/review';
 import notificationReducer, { notificationApi } from '@/features/notifications';
-import { messageReducer } from '@/features/messages';
+import { messageReducer, messageApi } from '@/features/messages';
 import { escrowReducer } from '@/features/escrow'; // ← NEW
 
 // Import API services
@@ -18,6 +18,7 @@ import amenitiesReducer, { amenitiesApi } from '@/features/amenities';
 import listingReducer, { listingApi } from '@/features/properties';
 import { houseRuleApi } from '@/features/houseRule/houseRuleService';
 import houseRuleReducer from '@/features/houseRule/houseRuleSlice';
+import { userApi } from '@/features/profile/userService';
 
 export const store = configureStore({
   reducer: {
@@ -44,6 +45,8 @@ export const store = configureStore({
     [reviewApi.reducerPath]:       reviewApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
     [houseRuleApi.reducerPath]:    houseRuleApi.reducer,
+    [userApi.reducerPath]:         userApi.reducer,
+    [messageApi.reducerPath]:      messageApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -56,6 +59,8 @@ export const store = configureStore({
       reviewApi.middleware,
       notificationApi.middleware,
       houseRuleApi.middleware,
+      userApi.middleware,
+      messageApi.middleware,
     ),
 });
 

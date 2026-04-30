@@ -2,18 +2,8 @@ import { EyeOff, Eye, CheckCircle, XCircle } from 'lucide-react';
 import { useState } from 'react';
 
 type StepOneProps = {
-  formData: {
-    password: string;
-    email: string;
-    token: string;
-  };
-  setFormData: React.Dispatch<
-    React.SetStateAction<{
-      password: string;
-      email: string;
-      token: string;
-    }>
-  >;
+  formData: { password: string };
+  setFormData: React.Dispatch<React.SetStateAction<{ password: string }>>;
   nextStep: () => void;
   handleResetPassword: (password: string) => Promise<boolean>;
   isLoading: boolean;

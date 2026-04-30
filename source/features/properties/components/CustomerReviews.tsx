@@ -316,23 +316,23 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews, listingId, o
       review._id && !deletedReviewIds.has(review._id)
     );
     
-    if (!currentUser?._id) return activeReviews;
+    if (!currentUser?.id) return activeReviews;
     
     const userReviews = activeReviews.filter((review) => {
       const reviewUserId = typeof review.userId === 'object' && review.userId !== null
         ? (review.userId as { _id?: string })._id
         : review.userId;
-      return reviewUserId && reviewUserId === currentUser._id;
+      return reviewUserId && reviewUserId === currentUser.id;
     });
     const otherReviews = activeReviews.filter((review) => {
       const reviewUserId = typeof review.userId === 'object' && review.userId !== null
         ? (review.userId as { _id?: string })._id
         : review.userId;
-      return !reviewUserId || reviewUserId !== currentUser._id;
+      return !reviewUserId || reviewUserId !== currentUser.id;
     });
     
     return [...userReviews, ...otherReviews];
-  }, [reviews, currentUser?._id, deletedReviewIds]);
+  }, [reviews, currentUser?.id, deletedReviewIds]);
 
   // Empty state
   if (sortedReviews.length === 0) {
@@ -413,7 +413,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews, listingId, o
                 const reviewUserId = typeof review.userId === 'object' && review.userId !== null
                   ? (review.userId as { _id?: string })._id
                   : review.userId;
-                const isOwnReview: boolean = Boolean(currentUser?._id && reviewUserId === currentUser._id);
+                const isOwnReview: boolean = Boolean(currentUser?.id && reviewUserId === currentUser.id);
                 return (
                   <ReviewCard
                     key={review._id || index}
@@ -456,7 +456,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews, listingId, o
                 const reviewUserId = typeof review.userId === 'object' && review.userId !== null
                   ? (review.userId as { _id?: string })._id
                   : review.userId;
-                const isOwnReview: boolean = Boolean(currentUser?._id && reviewUserId === currentUser._id);
+                const isOwnReview: boolean = Boolean(currentUser?.id && reviewUserId === currentUser.id);
                 return (
                   <ReviewCard
                     key={review._id || index}

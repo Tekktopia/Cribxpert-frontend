@@ -1,3 +1,4 @@
+// source/routes/RouteConfig.tsx
 import React from 'react';
 
 // Authentication & User Management Pages
@@ -31,23 +32,22 @@ import PaymentHistory from '@/pages/PaymentHistory';
 import PaymentHistoryDetails from '@/pages/PaymentHistoryDetails';
 import TermsAndConditions from '@/pages/TermsAndConditions';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
-// import ListingMgmtPage from '@/pages/ListingManagementPage';
 
 import PaymentDetailsDownload from '@/pages/PaymentDetailsDownload';
 import EscrowPaymentPage from '@/pages/EscrowPaymentPage';
+import PaymentSuccessPage from '@/pages/PaymentSuccessPage';
 
 export interface RouteConfig {
   path: string;
   element: React.ReactNode;
   protected: boolean;
-  authRoute?: boolean; // New property to identify auth routes
+  authRoute?: boolean;
   title: string;
   children?: RouteConfig[];
   header?: boolean;
 }
 
 const routeConfig: RouteConfig[] = [
-  // Public routes
   {
     path: '/',
     element: <Home />,
@@ -78,8 +78,6 @@ const routeConfig: RouteConfig[] = [
     protected: false,
     title: 'Listing Details',
   },
-
-  // Auth routes
   {
     path: '/sign-up',
     element: <SignUp />,
@@ -114,8 +112,6 @@ const routeConfig: RouteConfig[] = [
     authRoute: true,
     title: 'Reset Password',
   },
-
-  // Protected routes
   {
     path: '/my-bookings',
     element: <BookingsPage />,
@@ -174,9 +170,9 @@ const routeConfig: RouteConfig[] = [
   {
     path: '/onboarding',
     element: <Onboarding />,
-    protected: false,
-    authRoute: true,
+    protected: true,
     title: 'Complete Your Profile',
+    header: false,
   },
   {
     path: '/notification',
@@ -184,8 +180,6 @@ const routeConfig: RouteConfig[] = [
     protected: false,
     title: 'Notifications',
   },
-
-  // Support routes
   {
     path: '/faqs',
     element: <SupportPage />,
@@ -210,30 +204,24 @@ const routeConfig: RouteConfig[] = [
     protected: false,
     title: 'Terms and Conditions',
   },
-    {
+  {
     path: '/privacy-policy',
     element: <PrivacyPolicy />,
     protected: false,
     title: 'Privacy Policy',
   },
-
-  //Must be removed in production
-  //This is a simple page to manage listing in development with admin priviledges
-  // {
-  //   path: '/listing-management',
-  //   element: <ListingMgmtPage />,
-  //   protected: true,
-  //   title: 'Listing Management',
-  //   header: false,
-  // },
-
-  // 404 route - must be last
   {
     path: '/escrow/:bookingId',
     element: <EscrowPaymentPage />,
     protected: true,
     title: 'Secure Payment',
-  },  
+  },
+  {
+    path: '/payment-success',
+    element: <PaymentSuccessPage />,
+    protected: true,
+    title: 'Payment Success',
+  },
   {
     path: '*',
     element: <NotFound404 />,

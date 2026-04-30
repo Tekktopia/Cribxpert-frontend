@@ -1,5 +1,8 @@
 // Push Notification Service
-import { BASE_URL } from '@/features/api/baseApi';
+import { supabase } from '@/lib/supabase';
+
+const PUSH_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/push`;
+const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY as string | undefined;
 
 /**
  * Convert VAPID public key to Uint8Array
@@ -79,13 +82,14 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 }
 
 /**
- * Get VAPID public key from server
+ * Get VAPID public key — from env var first, then Edge Function fallback
  */
 async function getVapidPublicKey(): Promise<string | null> {
+  if (VAPID_PUBLIC_KEY) return VAPID_PUBLIC_KEY;
   try {
-    const response = await fetch(`${BASE_URL}/push/vapid-public-key`);
+    const response = await fetch(`${PUSH_BASE}/vapid-public-key`);
     const data = await response.json();
-    return data.publicKey;
+    return data.publicKey ?? null;
   } catch (error) {
     console.error('Error fetching VAPID public key:', error);
     return null;
@@ -134,17 +138,28 @@ export async function subscribeToPushNotifications(
 
     console.log('✅ Push subscription created:', subscription);
 
-    // Send subscription to server
-    await fetch(`${BASE_URL}/push/subscribe`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(subscription.toJSON()),
-    });
+    // Save subscription — try Edge Function first, fall back to Supabase table
+    const subJson = subscription.toJSON();
+    try {
+      const res = await fetch(`${PUSH_BASE}/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(subJson),
+      });
+      if (!res.ok) throw new Error(`Edge Function returned ${res.status}`);
+    } catch {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('push_subscriptions').upsert({
+          user_id: user.id,
+          endpoint: subJson.endpoint,
+          p256dh: (subJson.keys as Record<string, string>)?.p256dh ?? '',
+          auth: (subJson.keys as Record<string, string>)?.auth ?? '',
+        }, { onConflict: 'endpoint' });
+      }
+    }
 
-    console.log('✅ Subscription sent to server');
+    console.log('✅ Subscription saved');
 
     return subscription;
   } catch (error) {
@@ -170,15 +185,15 @@ export async function unsubscribeFromPush(token: string): Promise<boolean> {
     const successful = await subscription.unsubscribe();
 
     if (successful) {
-      // Notify server
-      await fetch(`${BASE_URL}/push/unsubscribe`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ endpoint: subscription.endpoint }),
-      });
+      try {
+        await fetch(`${PUSH_BASE}/unsubscribe`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ endpoint: subscription.endpoint }),
+        });
+      } catch {
+        await supabase.from('push_subscriptions').delete().eq('endpoint', subscription.endpoint);
+      }
 
       console.log('✅ Unsubscribed from push notifications');
     }

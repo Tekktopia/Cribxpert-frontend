@@ -96,10 +96,11 @@ self.addEventListener('sync', (event) => {
   }
 });
 
-// Fetch event (optional - for caching)
+// Fetch event — only handle same-origin requests; let cross-origin requests
+// (Supabase, APIs, fonts, etc.) go straight to the network without interference.
 self.addEventListener('fetch', (event) => {
-  // You can add caching strategy here if needed
-  // For now, just pass through to network
-  event.respondWith(fetch(event.request));
+  if (event.request.url.startsWith(self.location.origin)) {
+    event.respondWith(fetch(event.request));
+  }
 });
 

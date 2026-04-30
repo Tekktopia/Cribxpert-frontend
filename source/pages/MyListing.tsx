@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { supabase } from '@/lib/supabase';
 import { useGetUserListingsQuery } from '@/features/listing/listingService';
 import { PropertyListing } from '@/types';
 import ListingHeader from '@/features/listing/components/ListingHeader';
@@ -66,6 +67,17 @@ const MyListing: React.FC = () => {
     !hasListings &&
     userSteps === 0 &&
     !initialListingsLoaded;
+
+  // Realtime: refetch whenever user's listings change
+  useEffect(() => {
+    const channel = supabase
+      .channel('my-listings-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'listings' }, () => {
+        refetch();
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [refetch]);
 
   useEffect(() => {
     // When navigated from detail page with "Edit", open the edit form with that listing

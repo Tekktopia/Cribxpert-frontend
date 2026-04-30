@@ -131,7 +131,6 @@ const PropertyDetail = () => {
       securityDeposit,
       numberOfNights,
     });
-    const basePrice = numberOfNights * property.basePrice; // still needed for bookingData
 
     const bookingData = {
       propertyId: property._id,
@@ -140,9 +139,9 @@ const PropertyDetail = () => {
       endDate: formData.checkOutDate,
       guests: formData.guests,
       totalPrice,
-      userId: currentUser._id,
+      userId: currentUser.id,
       propertyImages: property.listingImg.map((img) => img.fileUrl).filter(Boolean),
-      basePrice,
+      basePrice: property.basePrice,
       cleaningFee,
       securityDeposit,
       maxGuests: property.guestNo,
@@ -308,8 +307,8 @@ const PropertyDetail = () => {
     ? new Date() > new Date(property.avaliableUntil)
     : false;
     
-  const isOwner = currentUser?._id && listingOwnerId
-    ? currentUser._id === listingOwnerId
+  const isOwner = currentUser?.id && listingOwnerId
+    ? currentUser.id === listingOwnerId
     : false;
 
 

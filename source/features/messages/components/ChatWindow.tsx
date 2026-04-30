@@ -32,7 +32,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Get current user ID from auth
-  const currentUserId = useSelector((state: RootState) => state.auth.user?._id);
+  const currentUserId = useSelector((state: RootState) => state.auth.user?.id);
 
   // Get typing users for this conversation
   const typingUsers = useSelector((state: RootState) => {

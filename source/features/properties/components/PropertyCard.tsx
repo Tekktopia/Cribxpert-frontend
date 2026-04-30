@@ -81,7 +81,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
       e.stopPropagation();
 
       // If user is not logged in, you might want to redirect to login
-      if (!user?._id) {
+      if (!user?.id) {
         // Handle unauthenticated user - maybe show a login prompt
         console.warn('User must be logged in to save favourites');
         navigate('/login');
@@ -97,10 +97,10 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
       try {
         if (isSavedProperty) {
           // Remove from favourites
-          await removeFavourite({ userId: user._id, listingId: id });
+          await removeFavourite({ userId: user.id, listingId: id });
         } else {
           // Add to favourites
-          await addFavourite({ userId: user._id, listingId: id });
+          await addFavourite({ userId: user.id, listingId: id });
         }
       } catch (error) {
         console.error('Failed to update favourite:', error);

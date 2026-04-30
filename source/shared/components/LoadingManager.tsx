@@ -12,6 +12,8 @@ import Preloader from '@/shared/components/Preloader';
 import { useGetPropertyTypesQuery } from '@/features/propertyType';
 import { useGetListingsQuery } from '@/features/properties';
 import { setAllListings } from '@/features/properties/listingSlice';
+import { useNotificationRealtime } from '@/hooks/useNotificationRealtime';
+import { useGetUserNotificationsQuery } from '@/features/notifications/notificationService';
 
 interface LoadingManagerProps {
   children: React.ReactNode;
@@ -22,6 +24,9 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
   const location = useLocation();
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const user = useSelector(selectCurrentUser);
+
+  // Live notification updates via Supabase Realtime
+  useNotificationRealtime();
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const [timeoutExceeded, setTimeoutExceeded] = useState(false);
   const [shouldFetchUser, setShouldFetchUser] = useState(false);
@@ -77,6 +82,8 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
   // Preload global data
   useGetAmenitiesQuery();
   useGetPropertyTypesQuery();
+  // Pre-fetch notifications so the bell unread count is correct on first load
+  useGetUserNotificationsQuery(user?.id || '', { skip: !isAuthenticated || !user?.id });
 
   // Fetch all listings
   const {
@@ -90,11 +97,11 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
     data: favouritesData,
     isLoading: favouritesLoading,
     isError: favouritesError,
-  } = useGetFavouritesByUserIdQuery(user?._id || '', {
-    skip: !isAuthenticated || !user?._id, // Skip if user is not authenticated
+  } = useGetFavouritesByUserIdQuery(user?.id || '', {
+    skip: !isAuthenticated || !user?.id, // Skip if user is not authenticated
   });
 
-  // console.log(favouritesData, user?._id, isAuthenticated);
+  // console.log(favouritesData, user?.id, isAuthenticated);
   // console.log(listingsData);
 
   // Merge listings and favourites after both are loaded and no errors
@@ -133,7 +140,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
 
   const shouldWaitForFavourites =
     isAuthenticated &&
-    user?._id &&
+    user?.id &&
     requiresFavourites &&
     favouritesLoading &&
     !timeoutExceeded;
@@ -167,7 +174,7 @@ const LoadingManager: React.FC<LoadingManagerProps> = ({ children }) => {
   // Reset timeout when route changes or user changes
   useEffect(() => {
     setTimeoutExceeded(false);
-  }, [user?._id]);
+  }, [user?.id]);
 
   // Add a safety timeout to prevent infinite loading (5 seconds max)
   useEffect(() => {

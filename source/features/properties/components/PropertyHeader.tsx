@@ -38,7 +38,7 @@ const PropertyHeader: React.FC = () => {
     userId: listingOwner,
   } = currentListing || {};
 
-  const userId = currentUser?._id;
+  const userId = currentUser?.id;
   const listingId = propertyId;
 
   const hostName = listingOwner

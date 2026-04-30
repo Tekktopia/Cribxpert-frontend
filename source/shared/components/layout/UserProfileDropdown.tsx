@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { clearUser } from '@/features/auth/authSlice';
+import { clearSession } from '@/features/auth/authSlice';
+import { supabase } from '@/lib/supabase';
 import { hamburger } from '@/assets';
 
 interface User {
@@ -49,8 +50,9 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
     };
   }, [showProfileMenu, onCloseMenu]);
 
-  const handleLogout = () => {
-    dispatch(clearUser());
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    dispatch(clearSession());
     onCloseMenu();
     window.location.href = '/login';
   };

@@ -19,7 +19,7 @@ function BookingsPage() {
   // Enable real-time booking updates
   useBookingUpdates();
   
-  const userId = currentUser?._id;
+  const userId = currentUser?.id;
   const {
     data: bookingsData,
     isLoading,

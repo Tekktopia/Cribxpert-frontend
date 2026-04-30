@@ -71,7 +71,7 @@ const ListingMgmtPage = () => {
     useGetListingsQuery();
   const { data: userListings, isLoading: isLoadingUserListings } =
     useGetUserListingsQuery(undefined, {
-      skip: !currentUser?._id,
+      skip: !currentUser?.id,
     });
   const [createOrUpdateListing, { isLoading: isSaving }] =
     useCreateOrUpdateListingMutation();
@@ -159,7 +159,7 @@ const ListingMgmtPage = () => {
     e.preventDefault();
 
     try {
-      if (!currentUser?._id) {
+      if (!currentUser?.id) {
         showAlert({
           icon: 'error',
           title: 'Please sign in to manage listings.',
@@ -191,7 +191,7 @@ const ListingMgmtPage = () => {
         cleaningFee: formData.cleaningFee,
         avaliableFrom: formData.avaliableFrom,
         avaliableUntil: formData.avaliableUntil,
-        userId: currentUser._id,
+        userId: currentUser.id,
         ...(trimmedHouseRules.length > 0 && { houseRules: trimmedHouseRules }),
         ...(editingListing && { id: editingListing._id }),
         ...(selectedFiles.length > 0 && { files: selectedFiles.slice(0, 5) }),

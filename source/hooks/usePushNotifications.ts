@@ -10,7 +10,7 @@ export const usePushNotifications = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const token = useSelector((state: RootState) => state.auth.token);
+  const token = useSelector((state: RootState) => state.auth.session?.access_token ?? null);
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   // Check support and subscription status

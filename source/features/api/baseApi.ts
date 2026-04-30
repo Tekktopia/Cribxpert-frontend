@@ -5,10 +5,11 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 export const BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 // Create a base fetchBaseQuery instance
+// Token is written to sessionStorage by authSlice.setSession on every auth state change
 const baseQueryWithTimeout = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (headers) => {
-    const token = sessionStorage.getItem('token');
+    const token = sessionStorage.getItem('sb_access_token');
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }

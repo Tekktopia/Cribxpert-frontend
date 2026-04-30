@@ -1,7 +1,6 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '@/features/api';
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { supabase } from '@/lib/supabase';
 
-// Types for amenity data
 export interface Amenity {
   _id: string;
   name: string;
@@ -9,52 +8,75 @@ export interface Amenity {
     _id?: string;
     fileUrl: string;
     fileType: string;
-  },
+  };
   createdAt?: string;
   updatedAt?: string;
 }
 
-// API service for amenities
 export const amenitiesApi = createApi({
   reducerPath: 'amenitiesApi',
-  baseQuery,
+  baseQuery: fakeBaseQuery(),
   tagTypes: ['Amenity'],
-  keepUnusedDataFor: 3600, // Cache amenities for 1 hour (rarely changes)
-  refetchOnMountOrArgChange: 1800, // Only refetch if data is older than 30 minutes
-  refetchOnReconnect: false, // Don't refetch amenities on reconnect
+  keepUnusedDataFor: 3600,
+  refetchOnMountOrArgChange: 1800,
+  refetchOnReconnect: false,
   refetchOnFocus: false,
   endpoints: (builder) => ({
-    // GET /amenities - Retrieve all amenities
     getAmenities: builder.query<Amenity[], void>({
-      query: () => '/amenities',
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from('amenities')
+          .select('*, icon:amenity_icons(id, file_url, file_type)')
+          .order('name');
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return {
+          data: (data ?? []).map((a) => ({
+            _id: a.id,
+            name: a.name,
+            icon: a.icon
+              ? { _id: a.icon.id, fileUrl: a.icon.file_url, fileType: a.icon.file_type }
+              : undefined,
+            createdAt: a.created_at,
+            updatedAt: a.updated_at,
+          })),
+        };
+      },
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ _id }) => ({
-                type: 'Amenity' as const,
-                id: _id,
-              })),
+              ...result.map(({ _id }) => ({ type: 'Amenity' as const, id: _id })),
               { type: 'Amenity', id: 'LIST' },
             ]
           : [{ type: 'Amenity', id: 'LIST' }],
     }),
 
-    // POST /amenities - Create a new amenity
     createAmenity: builder.mutation<Amenity, Partial<Amenity>>({
-      query: (amenity) => ({
-        url: '/amenities',
-        method: 'POST',
-        body: amenity,
-      }),
+      queryFn: async (amenity) => {
+        const { data, error } = await supabase
+          .from('amenities')
+          .insert({ name: amenity.name })
+          .select('*, icon:amenity_icons(id, file_url, file_type)')
+          .single();
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return {
+          data: {
+            _id: data.id,
+            name: data.name,
+            icon: data.icon
+              ? { _id: data.icon.id, fileUrl: data.icon.file_url, fileType: data.icon.file_type }
+              : undefined,
+          },
+        };
+      },
       invalidatesTags: [{ type: 'Amenity', id: 'LIST' }],
     }),
 
-    // DELETE /amenities/{id} - Delete an amenity
     deleteAmenity: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `/amenities/${id}`,
-        method: 'DELETE',
-      }),
+      queryFn: async (id) => {
+        const { error } = await supabase.from('amenities').delete().eq('id', id);
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return { data: undefined };
+      },
       invalidatesTags: (_result, _error, id) => [
         { type: 'Amenity', id },
         { type: 'Amenity', id: 'LIST' },
@@ -63,7 +85,6 @@ export const amenitiesApi = createApi({
   }),
 });
 
-// Export hooks for use in components
 export const {
   useGetAmenitiesQuery,
   useCreateAmenityMutation,

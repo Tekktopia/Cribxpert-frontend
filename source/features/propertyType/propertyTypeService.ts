@@ -1,7 +1,6 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from '@/features/api';
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { supabase } from '@/lib/supabase';
 
-// Define the property type interface
 export interface PropertyType {
   _id: string;
   name: string;
@@ -10,78 +9,96 @@ export interface PropertyType {
   };
 }
 
-// Request body for creating a property type
-export interface CreatePropertyTypeRequest {
-  name: string;
-  icon: File;
-}
-
-// Create the property type API service
 export const propertyTypeApi = createApi({
   reducerPath: 'propertyTypeApi',
-  baseQuery,
+  baseQuery: fakeBaseQuery(),
   tagTypes: ['PropertyType'],
-  keepUnusedDataFor: 3600, // Cache property types for 1 hour (rarely changes)
-  refetchOnMountOrArgChange: 1800, // Only refetch if data is older than 30 minutes
+  keepUnusedDataFor: 3600,
+  refetchOnMountOrArgChange: 1800,
   refetchOnReconnect: false,
   refetchOnFocus: false,
   endpoints: (builder) => ({
-    // GET /property-types - Get all property types
     getPropertyTypes: builder.query<{ data: PropertyType[] }, void>({
-      query: () => '/property-types',
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from('property_types')
+          .select('*, icon:property_type_icons(file_url, file_type)')
+          .order('name');
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return {
+          data: {
+            data: (data ?? []).map((pt) => ({
+              _id: pt.id,
+              name: pt.name,
+              icon: { fileUrl: pt.icon?.file_url ?? '' },
+            })),
+          },
+        };
+      },
       providesTags: (result) =>
-        Array.isArray(result)
+        result?.data
           ? [
-              ...result.map(({ _id }) => ({
-                type: 'PropertyType' as const,
-                id: _id,
-              })),
+              ...result.data.map(({ _id }) => ({ type: 'PropertyType' as const, id: _id })),
               { type: 'PropertyType', id: 'LIST' },
             ]
           : [{ type: 'PropertyType', id: 'LIST' }],
     }),
 
-    // GET /property-types/{id} - Get a specific property type
     getPropertyTypeById: builder.query<PropertyType, string>({
-      query: (id) => `/property-types/${id}`,
+      queryFn: async (id) => {
+        const { data, error } = await supabase
+          .from('property_types')
+          .select('*, icon:property_type_icons(file_url)')
+          .eq('id', id)
+          .single();
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return {
+          data: { _id: data.id, name: data.name, icon: { fileUrl: data.icon?.file_url ?? '' } },
+        };
+      },
       providesTags: (_result, _error, id) => [{ type: 'PropertyType', id }],
     }),
 
-    // POST /property-types - Create a new property type
-    createPropertyType: builder.mutation<
-      PropertyType,
-      CreatePropertyTypeRequest
-    >({
-      query: (propertyType) => ({
-        url: '/property-types',
-        method: 'POST',
-        body: propertyType,
-      }),
+    createPropertyType: builder.mutation<PropertyType, { name: string }>({
+      queryFn: async ({ name }) => {
+        const { data, error } = await supabase
+          .from('property_types')
+          .insert({ name })
+          .select('*, icon:property_type_icons(file_url)')
+          .single();
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return {
+          data: { _id: data.id, name: data.name, icon: { fileUrl: data.icon?.file_url ?? '' } },
+        };
+      },
       invalidatesTags: [{ type: 'PropertyType', id: 'LIST' }],
     }),
 
-    // PUT /property-types/{id} - Update a property type
-    updatePropertyType: builder.mutation<
-      PropertyType,
-      Partial<PropertyType> & { _id: string }
-    >({
-      query: ({ _id, ...data }) => ({
-        url: `/property-types/${_id}`,
-        method: 'PUT',
-        body: data,
-      }),
+    updatePropertyType: builder.mutation<PropertyType, Partial<PropertyType> & { _id: string }>({
+      queryFn: async ({ _id, name }) => {
+        const { data, error } = await supabase
+          .from('property_types')
+          .update({ name })
+          .eq('id', _id)
+          .select('*, icon:property_type_icons(file_url)')
+          .single();
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return {
+          data: { _id: data.id, name: data.name, icon: { fileUrl: data.icon?.file_url ?? '' } },
+        };
+      },
       invalidatesTags: (_result, _error, { _id }) => [
         { type: 'PropertyType', id: _id },
         { type: 'PropertyType', id: 'LIST' },
       ],
     }),
 
-    // DELETE /property-types/{id} - Delete a property type
     deletePropertyType: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `/property-types/${id}`,
-        method: 'DELETE',
-      }),
+      queryFn: async (id) => {
+        const { error } = await supabase.from('property_types').delete().eq('id', id);
+        if (error) return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        return { data: undefined };
+      },
       invalidatesTags: (_result, _error, id) => [
         { type: 'PropertyType', id },
         { type: 'PropertyType', id: 'LIST' },
@@ -90,7 +107,6 @@ export const propertyTypeApi = createApi({
   }),
 });
 
-// Export hooks for use in components
 export const {
   useGetPropertyTypesQuery,
   useGetPropertyTypeByIdQuery,

@@ -19,8 +19,8 @@ const NotificationPage = () => {
 
   const currentUser = useSelector(selectCurrentUser);
   const { data: notificationsData, isLoading, error } = useGetUserNotificationsQuery(
-    currentUser?._id || '',
-    { skip: !currentUser?._id }
+    currentUser?.id || '',
+    { skip: !currentUser?.id }
   );
   const [markAsRead] = useMarkNotificationAsReadMutation();
 
