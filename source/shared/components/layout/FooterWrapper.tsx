@@ -13,6 +13,7 @@ const FooterWrapper = () => {
   }
 
   // Otherwise, render the footer
+    // Otherwise, render the footer
   return <Footer />;
 };
 
