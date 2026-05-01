@@ -67,7 +67,7 @@ const IconNavigation: React.FC<IconNavigationProps> = ({ isHostMode, onToggleHos
           to={item.route}
           key={index}
           className={({ isActive }) =>
-            `flex flex-col items-center gap-1 cursor-pointer transition-colors group ${isActive ? 'text-[#1d5c5c]' : 'text-[#999999] hover:text-[#1d5c5c]'
+            `flex flex-col  items-center gap-1 cursor-pointer transition-colors group ${isActive ? 'text-[#1d5c5c]' : 'text-[#999999] hover:text-[#1d5c5c]'
             }`
           }
         >
