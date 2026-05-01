@@ -30,6 +30,7 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
             city,
             state,
             country,
+            street,
             description,
             bedroomNo,
             propertyType,
@@ -52,13 +53,14 @@ const PropertyListings = ({ listings }: { listings: PropertyListing[] }) => {
             .filter((url): url is string => !!url);
           const fallbackImage = '/images/property-image.jpeg';
           const primaryImage = images[0] || fallbackImage;
-          // Map location, filtering out empty/null values
+          // Map location: prefer city/state/country; fall back to street if those are empty
           const locationParts = [city, state, country].filter(
             (part) => part && part.trim() !== ''
           );
-          const location = locationParts.length > 0
-            ? locationParts.join(', ')
-            : 'Location not specified';
+          const location =
+            locationParts.length > 0
+              ? locationParts.join(', ')
+              : street?.trim() || 'Location not specified';
 
           // Get property type name - handle both object and ID formats
           let propertyTypeName = '';

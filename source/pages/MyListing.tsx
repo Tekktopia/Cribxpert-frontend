@@ -329,6 +329,7 @@ const MyListing: React.FC = () => {
                           country,
                           city,
                           state,
+                          street,
                           bedroomNo,
                           bathroomNo,
                           guestNo,
@@ -340,13 +341,14 @@ const MyListing: React.FC = () => {
                         const imageUrl =
                           listingImg?.[0]?.fileUrl || '/default-image.jpg';
 
-                        // Build location string
+                        // Build location string: prefer city/state/country, fall back to street
                         const locationParts = [city, state, country].filter(
                           (part) => part && part.trim() !== ''
                         );
-                        const location = locationParts.length > 0
-                          ? locationParts.join(', ')
-                          : country || 'Location not specified';
+                        const location =
+                          locationParts.length > 0
+                            ? locationParts.join(', ')
+                            : street?.trim() || 'Location not specified';
 
                         // Get property type name
                         let propertyTypeName = '';

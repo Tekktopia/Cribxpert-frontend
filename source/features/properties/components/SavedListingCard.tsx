@@ -66,6 +66,7 @@ const SavedListingCard: React.FC<SavedListingCardProps> = ({ listing }) => {
     city,
     state,
     country,
+    street,
     description,
     bedroomNo,
     propertyType,
@@ -84,7 +85,7 @@ const SavedListingCard: React.FC<SavedListingCardProps> = ({ listing }) => {
   const location =
     locationParts.length > 0
       ? locationParts.join(', ')
-      : 'Location not specified';
+      : street?.trim() || 'Location not specified';
 
   let propertyTypeName = '';
   if (propertyType) {

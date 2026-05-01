@@ -1,19 +1,19 @@
 import { useLocation } from 'react-router';
 import Footer from './Footer';
 
+// True when the app is running as an installed PWA (standalone window, no browser chrome)
+const isPWA =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+
 const FooterWrapper = () => {
   const location = useLocation();
 
-  // Only show footer on the landing page (/)
-  const shouldShowFooter = location.pathname === '/';
+  // Only show footer on the landing page — and never inside the installed PWA
+  const shouldShowFooter = location.pathname === '/' && !isPWA;
 
-  // Don't render the footer if not on landing page
-  if (!shouldShowFooter) {
-    return null;
-  }
+  if (!shouldShowFooter) return null;
 
-  // Otherwise, render the footer
-    // Otherwise, render the footer
   return <Footer />;
 };
 
