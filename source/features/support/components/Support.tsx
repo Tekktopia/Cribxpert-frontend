@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { fetchSheetData, SheetRow, clearCache  } from '@/services/sheetService';
 import emailjs from '@emailjs/browser';
 import { ContactInfo, SupportType } from '@/types';
 import {
@@ -10,6 +11,7 @@ import {
   EnvelopeIcon,
   MapPinIcon,
 } from '@heroicons/react/24/solid';
+
 import { Link } from 'react-router';
 import { socialIcons } from '@/assets';
 import { CheckCircle, XCircle, X, Copy, Check, ChevronDownIcon } from 'lucide-react';
@@ -32,102 +34,7 @@ const contactInfo: Array<ContactInfo> = [
   },
 ];
 
-const header: Array<SupportType> = [
-  {
-    icon: (
-      <InformationCircleIcon className="h-5 w-5 md:h-6 md:w-6 text-[#1D5C5C]" />
-    ),
-    title: 'Booking & Cancellations',
-    iconList: (
-      <DocumentTextIcon className="h-5 w-5 md:h-6 md:w-6 text-[#6F6F6F]" />
-    ),
-    list1: 'How do i cancel or modify a booking?',
-    list2: 'What is refund process?',
-    list3: 'What is the cancellation policy?',
-    list4: 'How do I change my booking date?',
-    list5: 'What happens if host cancels?',
-    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: '',
-    ans3: '',
-    ans4: '',
-    ans5: '',
-  },
-  {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
-    title: 'Payments & Refunds',
-    iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
-    list1: 'How do I update my payment method?',
-    list2: 'When will I receive my refund?',
-    list3: 'What payment methods are accepted?',
-    list4: 'How do I request a refund?',
-    list5: 'Are there any hidden fees?',
-    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: '',
-    ans3: '',
-    ans4: '',
-    ans5: '',
-  },
-  {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
-    title: 'Account & Security',
-    iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
-    list1: 'How do I reset my password?',
-    list2: 'How do I update my profile?',
-    list3: 'How do I enable 2FA?',
-    list4: 'How do I delete my account?',
-    list5: 'How do I change my email?',
-    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: '',
-    ans3: '',
-    ans4: '',
-    ans5: '',
-  },
-  {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
-    title: 'Property Management',
-    iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
-    list1: 'How do I list my property?',
-    list2: 'How to set availability?',
-    list3: 'How to manage pricing?',
-    list4: 'How to view booking requests?',
-    list5: 'How to communicate with guests?',
-    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: '',
-    ans3: '',
-    ans4: '',
-    ans5: '',
-  },
-  {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
-    title: 'Hosting Guidelines',
-    iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
-    list1: 'What are hosting requirements?',
-    list2: 'How to prepare my property?',
-    list3: 'What are guest expectations?',
-    list4: 'How to handle complaints?',
-    list5: 'What is the host guarantee?',
-    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: '',
-    ans3: '',
-    ans4: '',
-    ans5: '',
-  },
-  {
-    icon: <InformationCircleIcon className="h-6 w-6 text-[#1D5C5C]" />,
-    title: 'Technical Support',
-    iconList: <DocumentTextIcon className="h-6 w-6 text-[#6F6F6F]" />,
-    list1: 'Website not loading?',
-    list2: 'App crashing issues?',
-    list3: 'Payment gateway error?',
-    list4: 'Notification not working?',
-    list5: 'How to clear cache?',
-    ans1: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    ans2: '',
-    ans3: '',
-    ans4: '',
-    ans5: '',
-  },
-];
+
 
 const subjects = [
   { id: 'booking', label: 'Booking Issues' },
@@ -155,6 +62,59 @@ const Support = () => {
     message: '',
   });
 
+  const [faqs, setFaqs] = useState<SheetRow[]>([]);
+  const [loadingFAQs, setLoadingFAQs] = useState(true);
+
+  const [faqError, setFaqError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadFAQs = async () => {
+      try {
+        setLoadingFAQs(true);
+        setFaqError(null);
+
+        console.log('🚀 Starting to fetch FAQs...');
+
+        clearCache();
+
+        const data = await fetchSheetData("Sheet1");
+        console.log('📊 All FAQs from sheet:', data);
+
+        // Filter only active ones
+        const active = data.filter((f) => f.isactive);
+        console.log('✅ Active FAQs:', active);
+        console.log('📈 Active count:', active.length, 'out of', data.length);
+
+        if (active.length === 0) {
+          console.warn('⚠️ No active FAQs found. Check the isActive column in your sheet.');
+          setFaqError('No FAQs available at the moment. Please check back later.');
+        }
+        
+        setFaqs(active);
+      } catch (err) {
+        console.error('Failed to load FAQs', err);
+        setFaqError('Failed to load FAQs. Please try refreshing the page.');
+      } finally {
+        setLoadingFAQs(false);
+      }
+    };
+
+    loadFAQs();
+  }, []);
+
+  const groupedFAQs = faqs.reduce((acc, faq) => {
+    const key = faq.section;
+
+    if (!acc[key]) acc[key] = [];
+
+    acc[key].push(faq);
+
+    return acc;
+  }, {} as Record<string, SheetRow[]>);
+
+  console.log('📑 Grouped FAQs:', groupedFAQs);
+  console.log('🔑 Section keys:', Object.keys(groupedFAQs));
+
   const [openQuestion, setOpenQuestion] = useState<string | null>(null);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -164,6 +124,7 @@ const Support = () => {
 
   const handleQuestionLeave = () => {
     if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    setOpenQuestion(null);
   };
 
   const handleQuestionClick = (key: string) => {
@@ -264,7 +225,133 @@ const Support = () => {
     <div className="container mx-auto px-4 py-6 md:py-8">
       {/* FAQ Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 mb-8">
-        {header.map((item: SupportType, index: number) => {
+        { loadingFAQs ? (
+          <div className="col-span-full flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#006073]"></div>
+            <span className="ml-3 text-gray-600">Loading FAQs...</span>
+          </div>
+        ) : faqError ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-red-500">{faqError}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="mt-4 bg-[#006073] text-white px-4 py-2 rounded hover:bg-hoverColor"
+            >
+              Refresh Page
+            </button>
+          </div>
+        ) : Object.keys(groupedFAQs).length === 0 ? (
+          <div className="col-span-full text-center py-12">
+            <p className="text-gray-500">No FAQs available at the moment.</p>
+            <p className="text-sm text-gray-400 mt-2">Please check back later or contact support.</p>
+          </div>
+        ) : (
+          Object.entries(groupedFAQs).map(([section, items]) => (
+            // <div
+            //   key={section}
+            //   className="bg-white rounded-lg shadow-sm hover:shadow-md p-4"
+            //   data-section={section}
+            //   data-count={items.length}
+            // >
+            <div
+              key={section}
+              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-3 md:p-4"
+              data-section={section}
+              data-count={items.length}
+            >
+              {/* <div className="flex items-center gap-3 mb-3">
+                <InformationCircleIcon className="h-5 w-5 text-[#1D5C5C]" />
+                <h1 className="font-bold">{section}</h1>
+              </div> */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="bg-[#e6ecf1] rounded-full p-2 md:p-3">
+                  <InformationCircleIcon className="h-5 w-5 md:h-6 md:w-6 text-[#1D5C5C]" />
+                </div>
+                <h1 className="text-sm md:text-base text-[#070707] font-bold">{section}</h1>
+              </div>
+
+              {/* {items
+              .sort((a, b) => a.order - b.order)
+              .map((item, idx) => {
+                const key = `${section}-${idx}`;
+                const isOpen = openQuestion === key;
+
+                return (
+                  <div key={key}>
+                    <div 
+                      className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded"
+                      onMouseEnter={() => handleQuestionEnter(key)}
+                      onMouseLeave={handleQuestionLeave}
+                      onClick={() => handleQuestionClick(key)}
+                    >
+                      <div className="flex-shrink-0">
+                        <DocumentTextIcon className="h-5 w-5 md:h-6 md:w-6 text-[#6F6F6F]" />
+                      </div>
+                      <span className="flex-1 text-sm">{item.question}</span>
+
+                      <ChevronDownIcon
+                        className={`h-3 w-3 text-[#6F6F6F] flex-shrink-0 transition-transform duration-300 ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </div>
+
+                    {isOpen && (
+                      <p className="text-xs text-gray-500 pl-6 pb-2">
+                        {item.answer}
+                      </p>
+                    )}
+                  </div>
+                );
+              })} */}
+              <div className="flex flex-col gap-1 py-3 md:py-4 px-1 md:px-2">
+                {items
+                .sort((a, b) => a.order - b.order)
+                .map((item, idx) => {
+                  const key = `${section}-${idx}`;
+                  const isOpen = openQuestion === key;
+
+                  return (
+                    <div key={key}>
+                      <div 
+                        className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors duration-300 hover:bg-hoverColor select-none"
+                        onMouseEnter={() => handleQuestionEnter(key)}
+                        onMouseLeave={handleQuestionLeave}
+                        onClick={() => handleQuestionClick(key)}
+                      >
+                        <div className="flex-shrink-0">
+                          <DocumentTextIcon className="h-5 w-5 md:h-6 md:w-6 text-[#6F6F6F]" />
+                        </div>
+
+                        <span className="text-xs md:text-sm text-[#070707] flex-1">
+                          {item.question}
+                        </span>
+
+                        <ChevronDownIcon
+                          className={`h-3 w-3 text-[#6F6F6F] flex-shrink-0 transition-transform duration-300 ${
+                            isOpen ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </div>
+
+                      <div 
+                        className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                          isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                        }`}
+                      >
+                        <p className="text-xs text-[#6F6F6F] leading-relaxed px-2 pt-1 pb-2 border-l-2 border-[#1D5C5C] ml-2 mt-1">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+            </div>
+          ))
+          )}
+        {/* {header.map((item: SupportType, index: number) => {
 
             const questions = [
               { q: item.list1, a: item.ans1 },
@@ -328,7 +415,7 @@ const Support = () => {
                   </div>
                 </div>
             );
-          })}
+          })} */}
       </div>
 
       {/* Contact Form Section */}

@@ -57,41 +57,54 @@ const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
 
   if (isMobile) {
     return (
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-3">
-          {user?.profileImage ? (
-            <img
-              src={user.profileImage}
-              alt="Profile"
-              className="w-[40px] h-[40px] rounded-full object-cover"
-            />
-          ) : (
-            <div className="w-[40px] h-[40px] rounded-full bg-[#1D5C5C] text-white flex items-center justify-center text-lg font-medium">
-              {user?.email?.charAt(0)?.toUpperCase() || 'U'}
+      <div className="flex flex-col w-full gap-3">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            {user?.profileImage ? (
+              <img
+                src={user.profileImage}
+                alt="Profile"
+                className="w-[40px] h-[40px] rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-[40px] h-[40px] rounded-full bg-[#1D5C5C] text-white flex items-center justify-center text-lg font-medium">
+                {user?.email?.charAt(0)?.toUpperCase() || 'U'}
+              </div>
+            )}
+            <div>
+              <p className="font-medium text-sm">
+                {user?.fullName || user?.email || 'Account'}
+              </p>
+              <p className="text-gray-500 text-xs truncate">
+                {user?.email || ''}
+              </p>
             </div>
-          )}
-          <div>
-            <p className="font-medium text-sm">
-              {user?.fullName || user?.email || 'Account'}
-            </p>
-            <p className="text-gray-500 text-xs truncate">
-              {user?.email || ''}
-            </p>
           </div>
+
+          {/* Switch to Host/Guest button for mobile */}
+          {onToggleHostMode && (
+            <button
+              onClick={onToggleHostMode}
+              className={`text-[12px] font-medium px-3 py-1.5 rounded-full border transition-colors whitespace-nowrap ${isHostMode
+                ? 'bg-[#1d5c5c] text-white border-[#1d5c5c]'
+                : 'bg-white text-[#1d5c5c] border-[#1d5c5c]'
+                }`}
+            >
+              {isHostMode ? 'Switch to Guest' : 'Switch to Host'}
+            </button>
+          )}
         </div>
 
-        {/* Switch to Host/Guest button for mobile */}
-        {onToggleHostMode && (
-          <button
-            onClick={onToggleHostMode}
-            className={`text-[12px] font-medium px-3 py-1.5 rounded-full border transition-colors whitespace-nowrap ${isHostMode
-              ? 'bg-[#1d5c5c] text-white border-[#1d5c5c]'
-              : 'bg-white text-[#1d5c5c] border-[#1d5c5c]'
-              }`}
-          >
-            {isHostMode ? 'Switch to Guest' : 'Switch to Host'}
-          </button>
-        )}
+        {/* ✅ Logout button — visible only on mobile */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 w-full text-left px-1 py-1.5 text-sm text-red-500 hover:text-red-600 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Logout
+        </button>
       </div>
     );
   }
