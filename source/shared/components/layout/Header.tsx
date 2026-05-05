@@ -127,7 +127,7 @@ const Header: React.FC = () => {
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden flex justify-between items-center p-4">
-            <Logo showIcon={false} />
+            <Logo showIcon={true} />
 
             {/* Menu Toggle Button */}
             {isOpen ? (

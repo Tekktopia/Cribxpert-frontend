@@ -16,7 +16,7 @@ const Logo: React.FC<LogoProps> = ({ showIcon = true, className = '' }) => {
           className="w-[35px] h-[35px] mr-[10px]"
         />
       )}
-      <h1 className="font-bold text-[20px] text-[#1d5c5c]">CribXpert</h1>
+      <h1 className="font-bold text-[20px] text-[#1d5c5c]">Cribxpert</h1>
     </Link>
   );
 };
