@@ -1,3 +1,4 @@
+import Title from '@/shared/components/ui/Title';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +11,7 @@ import {
 } from '@/features/properties';
 import { selectCurrentUser } from '@/features/auth/authSlice';
 import { PropertyListing } from '@/types';
-import useAlert from '@/hooks/useAlert';
+// import useAlert from '@/hooks/useAlert';
 
 interface ListingFormData {
   name: string;
@@ -34,6 +35,8 @@ interface ListingFormData {
   houseRules: string;
   files?: File[];
 }
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 const ListingMgmtPage = () => {
   const [editingListing, setEditingListing] = useState<PropertyListing | null>(
@@ -63,8 +66,43 @@ const ListingMgmtPage = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const currentUser = useSelector(selectCurrentUser);
-  const showAlert = useAlert();
+  // const showAlert = useAlert();
   const navigate = useNavigate();
+
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    type: TitleType;
+    title: string;
+    message: string;
+    primaryAction?: { label: string; onClick: () => void };
+    secondaryAction?: { label: string; onClick: () => void };
+  }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: '',
+  });
+
+  const showModal = (
+    type: TitleType,
+    title: string,
+    message: string,
+    primaryAction?: { label: string; onClick: () => void },
+    secondaryAction?: { label: string; onClick: () => void }
+  ) => {
+    setModal({
+      isOpen: true,
+      type,
+      title,
+      message,
+      primaryAction,
+      secondaryAction,
+    });
+  };
+
+  const closeModal = () => {
+    setModal((prev) => ({ ...prev, isOpen: false }));
+  };
 
   // API hooks
   const { data: listingsData, isLoading: isLoadingListings } =
@@ -120,10 +158,11 @@ const ListingMgmtPage = () => {
     );
 
     if (filteredFiles.length !== incomingFiles.length) {
-      showAlert({
-        icon: 'warning',
-        title: 'Only JPEG, PNG, or WEBP images are allowed.',
-      });
+      showModal(
+        'warning',
+        'Invalid File Type',
+        'Only JPEG, PNG, or WEBP images are allowed. Please select valid image files.'
+      );
     }
 
     setSelectedFiles(filteredFiles.slice(0, 5));
@@ -160,10 +199,18 @@ const ListingMgmtPage = () => {
 
     try {
       if (!currentUser?._id) {
-        showAlert({
-          icon: 'error',
-          title: 'Please sign in to manage listings.',
-        });
+        showModal(
+          'error',
+          'Authentication Required',
+          'Please sign in to manage listings.',
+          {
+            label: 'Sign In',
+            onClick: () => {
+              closeModal();
+              navigate('/login');
+            },
+          }
+        );
         return;
       }
 
@@ -199,19 +246,25 @@ const ListingMgmtPage = () => {
 
       await createOrUpdateListing(payload).unwrap();
 
-      showAlert({
-        icon: 'success',
-        title: editingListing
-          ? 'Listing updated successfully!'
-          : 'Listing created successfully!',
-      });
+      showModal(
+        'success',
+        editingListing ? 'Listing Updated!' : 'Listing Created!',
+        editingListing
+          ? 'Your listing has been updated successfully.'
+          : 'Your new listing has been created successfully.'
+      );
       resetForm();
     } catch (error) {
-      showAlert({
-        icon: 'error',
-        title: 'Failed to save listing. Please try again.',
-      });
       console.error('Error saving listing:', error);
+      showModal(
+        'error',
+        'Save Failed',
+        'Failed to save listing. Please check your information and try again.',
+        {
+          label: 'Try Again',
+          onClick: closeModal,
+        }
+      );
     }
   };
 
@@ -252,23 +305,45 @@ const ListingMgmtPage = () => {
       avaliableUntil: listing.avaliableUntil,
       houseRules: listing.houseRules?.join(', ') || '',
     });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleDelete = async (listingId: string) => {
-    if (window.confirm('Are you sure you want to delete this listing?')) {
-      try {
-        await deleteListing(listingId).unwrap();
-        showAlert({
-          icon: 'success',
-          title: 'Listing deleted successfully!',
-        });
-      } catch (error) {
-        showAlert({
-          icon: 'error',
-          title: 'Failed to delete listing. Please try again.',
-        });
-        console.error('Error deleting listing:', error);
+  const handleDeleteClick = (listingId: string) => {
+    showModal(
+      'warning',
+      'Delete Listing',
+      'Are you sure you want to delete this listing? This action cannot be undone and all associated data will be permanently removed.',
+      {
+        label: 'Delete',
+        onClick: () => handleDeleteConfirm(listingId),
+      },
+      {
+        label: 'Cancel',
+        onClick: closeModal,
       }
+    );
+  };
+
+  const handleDeleteConfirm = async (listingId: string) => {
+    closeModal();
+    try {
+      await deleteListing(listingId).unwrap();
+      showModal(
+        'success',
+        'Listing Deleted',
+        'The listing has been deleted successfully.'
+      );
+    } catch (error) {
+      console.error('Error deleting listing:', error);
+      showModal(
+        'error',
+        'Delete Failed',
+        'Failed to delete listing. Please try again.',
+        {
+          label: 'Try Again',
+          onClick: closeModal,
+        }
+      );
     }
   };
 
@@ -708,11 +783,11 @@ const ListingMgmtPage = () => {
                               Edit
                             </button>
                             <button
-                              onClick={() => handleDelete(listing._id)}
+                              onClick={() => handleDeleteClick(listing._id)}
                               disabled={isDeleting}
                               className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
                             >
-                              {isDeleting ? 'Deleting...' : 'Delete'}
+                              Delete
                             </button>
                           </div>
                         </div>
@@ -725,6 +800,16 @@ const ListingMgmtPage = () => {
           </div>
         </div>
       </div>
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </div>
   );
 };

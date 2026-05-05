@@ -1,3 +1,4 @@
+// import Title from '@/components/ui/Title';
 import { useEffect, useState, useRef } from 'react';
 import { fetchSheetData, SheetRow, clearCache  } from '@/services/sheetService';
 import emailjs from '@emailjs/browser';
@@ -16,6 +17,8 @@ import { Link } from 'react-router';
 import { socialIcons } from '@/assets';
 import { CheckCircle, XCircle, X, Copy, Check, ChevronDownIcon } from 'lucide-react';
 import { createTicket } from '@/features/ticket/ticketService';
+
+import Title from '@/shared/components/ui/Title';
 
 const { facebook, instagram, x } = socialIcons;
 
@@ -45,12 +48,23 @@ const subjects = [
   { id: 'others', label: 'Others' },
 ];
 
-type ModalState = 'success' | 'error' | null;
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 const Support = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modal, setModal] = useState<ModalState>(null);
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    type: TitleType;
+    title: string;
+    message: string;
+    primaryAction?: { label: string; onClick: () => void };
+  }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: '',
+  });
   const [lastTicketId, setLastTicketId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({
@@ -149,7 +163,12 @@ const Support = () => {
     e.preventDefault();
 
     if (!formData.first_name || !formData.user_email || !formData.message || !formData.subject) {
-      alert('Please fill in all required fields');
+      setModal({
+        isOpen: true,
+        type: 'warning',
+        title: 'Missing Fields',
+        message: 'Please fill in all required fields before submitting.',
+      });
       return;
     }
 
@@ -198,7 +217,12 @@ const Support = () => {
         console.warn('Email notification failed, but ticket was created:', emailError);
       }
 
-      setModal('success');
+      setModal({
+        isOpen: true,
+        type: 'success',
+        title: 'Message Sent!',
+        message: `Thank you for reaching out. Your ticket ID is ${ticketId}. We'll get back to you within 24-48 hours.`,
+      });
       setFormData({
         first_name: '',
         last_name: '',
@@ -209,14 +233,19 @@ const Support = () => {
       });
     } catch (error: any) {
       console.error('Error submitting ticket:', error);
-      setModal('error');
+      setModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Something Went Wrong',
+        message: 'We couldn\'t send your message. Please try again or email us directly at info@cribxpert.com.',
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const closeModal = () => {
-    setModal(null);
+    setModal((prev) => ({ ...prev, isOpen: false }));
     setLastTicketId(null);
     setCopied(false);
   };
@@ -554,80 +583,28 @@ const Support = () => {
       </div>
 
       {/* Success Modal */}
-      {modal === 'success' && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center relative">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <CheckCircle className="w-16 h-16 text-[#006073] mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-[#313131] mb-2">Message Sent!</h2>
-
-            {lastTicketId && (
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                <p className="text-sm text-gray-600 mb-2">Your Ticket ID:</p>
-                <div className="flex items-center justify-center gap-2">
-                  <code className="text-lg font-mono font-bold text-[#006073] bg-white px-3 py-1 rounded border border-gray-200">
-                    {lastTicketId}
-                  </code>
-                  <button
-                    onClick={copyTicketId}
-                    className="p-1 hover:bg-gray-200 rounded transition-colors"
-                    title="Copy ticket ID"
-                  >
-                    {copied ? (
-                      <Check className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-500" />
-                    )}
-                  </button>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Please save this ticket ID for reference
-                </p>
-              </div>
-            )}
-
-            <p className="text-[#6F6F6F] mb-6">
-              Thank you for reaching out. We've received your message and will get back to you within 24–48 hours.
-            </p>
-            <button
-              onClick={closeModal}
-              className="bg-[#006073] text-white px-8 py-3 rounded-lg hover:bg-hoverColor transition-colors"
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Error Modal */}
-      {modal === 'error' && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center relative">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-[#313131] mb-2">Something went wrong</h2>
-            <p className="text-[#6F6F6F] mb-6">
-              We couldn't send your message. Please try again or email us directly at info@cribxpert.com.
-            </p>
-            <button
-              onClick={closeModal}
-              className="bg-red-500 text-white px-8 py-3 rounded-lg hover:bg-red-600 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      )}
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={{
+          label: modal.type === 'error' ? 'Try Again' : 'Done',
+          onClick: closeModal,
+        }}
+        secondaryAction={
+          modal.type === 'error'
+            ? {
+                label: 'Email Support',
+                onClick: () => {
+                  window.location.href = 'mailto:info@cribxpert.com';
+                  closeModal();
+                },
+              }
+            : undefined
+        }
+      />
     </div>
   );
 };

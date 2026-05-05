@@ -2,6 +2,9 @@ import { ProfileFormProps } from '@/types';
 import { CameraIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import Footer from '@/shared/components/layout/Footer';
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 const Profile = ({
   initialFirstName,
@@ -28,6 +31,44 @@ const Profile = ({
     phone: '',
     profileImage: '',
   });
+
+  // modal state for title comp
+        const [modal, setModal] = useState<{
+          isOpen: boolean;
+          type: TitleType;
+          title: string;
+          message: string;
+          primaryAction?: { label: string; onClick: () => void };
+          secondaryAction?: { label: string; onClick: () => void };
+        }>({
+          isOpen: false,
+          type: 'info',
+          title: '',
+          message: '',
+        });
+      
+        // helper func to show modal
+        const showModal = (
+          type: TitleType,
+          title: string,
+          message: string,
+          primaryAction?: { label: string; onClick: () => void },
+          secondaryAction?: { label: string; onClick: () => void }
+        ) => {
+          setModal({
+            isOpen: true,
+            type,
+            title,
+            message,
+            primaryAction,
+            secondaryAction,
+          });
+        };
+      
+        // Helper function to close modal
+        const closeModal = () => {
+          setModal((prev) => ({ ...prev, isOpen: false }));
+        };
 
   const validate = () => {
     let isValid = true;
@@ -65,6 +106,15 @@ const Profile = ({
     }
 
     setErrors(newErrors);
+
+    if (!isValid) {
+      showModal(
+        'warning',
+        'Missing Fields',
+        'Please fill in all required fields before saving.',
+      );
+    }
+
     return isValid;
   };
 
@@ -75,7 +125,26 @@ const Profile = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        showModal(
+          'warning',
+          'Invalid File Type',
+          'Only JPEG, PNG, or WEBP images are allowed.',
+        );
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showModal(
+        'warning',
+        'File Too Large',
+        'Image must be less than 5MB.',
+      );
+      return;
+    }
+
+    const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImage(reader.result as string);
       };
@@ -87,6 +156,12 @@ const Profile = ({
     e.preventDefault();
     if (validate()) {
       console.log({ ...formData, profileImage });
+
+      showModal(
+        'success',
+        'Profile Updated!',
+        'Your profile has been updated successfully.',
+      );
     }
   };
 
@@ -201,6 +276,16 @@ const Profile = ({
       
       {/* Footer - full width */}
       <Footer />
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </div>
   );
 };

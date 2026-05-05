@@ -8,6 +8,9 @@ import AvailabilityDatePicker from './AvailabilityDatePicker';
 import { useBookingForm } from '@/hooks/useBookingForm';
 import { calculatePricing } from '@/utils/pricingUtils';
 import InfoTooltip from '@/shared/components/ui/InfoTooltip';
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 export interface BookingFormProps {
   property: PropertyListing;
@@ -35,6 +38,44 @@ const BookingForm: React.FC<BookingFormProps> = ({
   } = useBookingForm();
 
   const [showBreakdown, setShowBreakdown] = useState(false);
+
+  // modal state for title comp
+      const [modal, setModal] = useState<{
+        isOpen: boolean;
+        type: TitleType;
+        title: string;
+        message: string;
+        primaryAction?: { label: string; onClick: () => void };
+        secondaryAction?: { label: string; onClick: () => void };
+      }>({
+        isOpen: false,
+        type: 'info',
+        title: '',
+        message: '',
+      });
+    
+      // helper func to show modal
+      const showModal = (
+        type: TitleType,
+        title: string,
+        message: string,
+        primaryAction?: { label: string; onClick: () => void },
+        secondaryAction?: { label: string; onClick: () => void }
+      ) => {
+        setModal({
+          isOpen: true,
+          type,
+          title,
+          message,
+          primaryAction,
+          secondaryAction,
+        });
+      };
+    
+      // Helper function to close modal
+      const closeModal = () => {
+        setModal((prev) => ({ ...prev, isOpen: false }));
+      };
 
   const maxGuests = property.guestNo || 1;
 
@@ -186,6 +227,27 @@ const BookingForm: React.FC<BookingFormProps> = ({
               type="submit"
               disabled={!isFormValid || isSubmitting || !isLoggedIn}
               className="bg-[#006073] w-full py-3 rounded-lg text-white font-medium mt-4 hover:bg-[#3c8999] transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+              onClick={(e) => {
+                if (!isLoggedIn) {
+                  e.preventDefault();
+                  showModal(
+                    'info',
+                    'Login Required',
+                    'Please log in to make a booking.',
+                    {
+                      label: 'Log In',
+                      onClick: () => {
+                        closeModal();
+                        window.location.href = '/login';
+                      },
+                    },
+                    {
+                      label: 'Cancel',
+                      onClick: closeModal,
+                    }
+                  );
+                }
+              }}
             >
               {isLoggedIn ? (isSubmitting ? 'Processing...' : 'Book Now') : 'Login to Book'}
             </button>
@@ -220,6 +282,12 @@ const BookingForm: React.FC<BookingFormProps> = ({
               Please select check-in and check-out dates to continue
             </p>
           )}
+
+          {!isLoggedIn && (
+            <p className="text-sm text-amber-600 text-center mt-2">
+              You need to log in to complete your booking
+            </p>
+          )}
         </form>
 
         <div className="flex items-center justify-center mt-3 text-[#070707] text-[14px]">
@@ -236,6 +304,16 @@ const BookingForm: React.FC<BookingFormProps> = ({
         </p>
         <p className="text-[#006073] font-[400] text-[14px] mt-3 cursor-pointer hover:underline">Contact host</p>
       </div>
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </>
   );
 };

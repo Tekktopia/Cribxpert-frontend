@@ -2,7 +2,10 @@ import { selectCurrentUser } from '@/features/auth/authSlice';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import useAlert from '@/hooks/useAlert';
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
+// import useAlert from '@/hooks/useAlert';
 
 interface LeaveReviewFormProps {
   onSubmit?: (review: {
@@ -20,32 +23,84 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
   const navigate = useNavigate();
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState('');
-  const showAlert = useAlert();
+  // const showAlert = useAlert();
+
+  // modal state for title comp
+      const [modal, setModal] = useState<{
+        isOpen: boolean;
+        type: TitleType;
+        title: string;
+        message: string;
+        primaryAction?: { label: string; onClick: () => void };
+        secondaryAction?: { label: string; onClick: () => void };
+      }>({
+        isOpen: false,
+        type: 'info',
+        title: '',
+        message: '',
+      });
+    
+      // helper func to show modal
+      const showModal = (
+        type: TitleType,
+        title: string,
+        message: string,
+        primaryAction?: { label: string; onClick: () => void },
+        secondaryAction?: { label: string; onClick: () => void }
+      ) => {
+        setModal({
+          isOpen: true,
+          type,
+          title,
+          message,
+          primaryAction,
+          secondaryAction,
+        });
+      };
+    
+      // Helper function to close modal
+      const closeModal = () => {
+        setModal((prev) => ({ ...prev, isOpen: false }));
+      };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!currentUser) {
-      showAlert({
-        title: 'Please log in to leave a review',
-        icon: 'error',
-      });
+      showModal(
+        'error',
+        'Login Required',
+        'Please log in to leave a review.',
+        {
+          label: 'Log In',
+          onClick: () => {
+            closeModal();
+            navigate('/login');
+          },
+        },
+        {
+          label: 'Cancel',
+          onClick: closeModal,
+        }
+      );
       return;
     }
     
     if (rating === 0) {
-      showAlert({
-        title: 'Please select a rating',
-        icon: 'error',
-      });
+      showModal(
+        'warning',
+        'Rating Required',
+        'Please select a star rating before submitting.',
+      );
       return;
     }
 
     if (!review.trim()) {
-      showAlert({
-        title: 'Please write a review',
-        icon: 'error',
-      });
+      showModal(
+        'warning',
+        'Review Required',
+        'Please write a review before submitting.',
+      );
       return;
     }
 
@@ -57,8 +112,24 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
       // Reset form after successful submission
       setRating(0);
       setReview('');
+
+      showModal(
+        'success',
+        'Review Submitted!',
+        'Thank you for your review! Your feedback helps other guests.',
+      );
     } catch (error) {
+      console.error('Review submission error:', error);
       // Error handling is done in the parent component
+      showModal(
+        'error',
+        'Submission Failed',
+        'Failed to submit your review. Please try again.',
+        {
+          label: 'Try Again',
+          onClick: closeModal,
+        }
+      );
     }
   };
 
@@ -165,6 +236,16 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
           {isSubmitting ? 'Submitting...' : 'Submit Your Review'}
         </button>
       </form>
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </div>
   );
 };

@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CheckCircle, AlertTriangle, ChevronDown, X } from 'lucide-react';
 import type { AppDispatch, RootState } from '../../../store/store';
 import { confirmDelivery, raiseDispute } from '../escrowSlice';
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 interface Props {
   bookingId: string;
@@ -143,14 +146,67 @@ export const ConfirmDelivery: React.FC<Props> = ({
   const [showDispute, setShowDispute] = useState(false);
   const [showConfirmStep, setShowConfirmStep] = useState(false);
 
-  const { actionLoading, actionSuccess, actionError } = useSelector(
+  const { actionLoading, actionError } = useSelector(
     (state: RootState) => state.escrow
   );
+
+  // modal state for title comp
+      const [modal, setModal] = useState<{
+        isOpen: boolean;
+        type: TitleType;
+        title: string;
+        message: string;
+        primaryAction?: { label: string; onClick: () => void };
+        secondaryAction?: { label: string; onClick: () => void };
+      }>({
+        isOpen: false,
+        type: 'info',
+        title: '',
+        message: '',
+      });
+    
+      // helper func to show modal
+      const showModal = (
+        type: TitleType,
+        title: string,
+        message: string,
+        primaryAction?: { label: string; onClick: () => void },
+        secondaryAction?: { label: string; onClick: () => void }
+      ) => {
+        setModal({
+          isOpen: true,
+          type,
+          title,
+          message,
+          primaryAction,
+          secondaryAction,
+        });
+      };
+    
+      // Helper function to close modal
+      const closeModal = () => {
+        setModal((prev) => ({ ...prev, isOpen: false }));
+      };
 
   const handleConfirm = async () => {
     const result = await dispatch(confirmDelivery({ bookingId, guestId }));
     if (confirmDelivery.fulfilled.match(result)) {
+      showModal(
+        'success',
+        'Payment Released!',
+        'The host has been notified and will receive payment shortly.',
+      );
       onConfirmed?.();
+    } else{
+      showModal(
+        'error',
+        'Confirmation Failed',
+        'Failed to confirm delivery. Please try again.',
+        {
+          label: 'Try Again',
+          onClick: closeModal,
+        }
+      );
     }
     setShowConfirmStep(false);
   };
@@ -159,23 +215,28 @@ export const ConfirmDelivery: React.FC<Props> = ({
     const result = await dispatch(raiseDispute({ bookingId, guestId, reason, description }));
     if (raiseDispute.fulfilled.match(result)) {
       setShowDispute(false);
+      showModal(
+        'success',
+        'Dispute Submitted',
+        'Your dispute has been submitted. Cribxpert will review and respond within 24 hours.',
+      );
       onDisputed?.();
     }
   };
 
-  if (actionSuccess) {
-    return (
-      <div className="text-center py-6">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-          <CheckCircle size={32} className="text-green-500" />
-        </div>
-        <h3 className="font-bold text-gray-900 text-lg mb-1">Payment Released!</h3>
-        <p className="text-sm text-gray-500">
-          The host has been notified and will receive payment shortly.
-        </p>
-      </div>
-    );
-  }
+  // if (actionSuccess) {
+  //   return (
+  //     <div className="text-center py-6">
+  //       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+  //         <CheckCircle size={32} className="text-green-500" />
+  //       </div>
+  //       <h3 className="font-bold text-gray-900 text-lg mb-1">Payment Released!</h3>
+  //       <p className="text-sm text-gray-500">
+  //         The host has been notified and will receive payment shortly.
+  //       </p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -257,6 +318,16 @@ export const ConfirmDelivery: React.FC<Props> = ({
           </div>
         )}
       </div>
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </>
   );
 };

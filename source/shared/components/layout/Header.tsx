@@ -1,5 +1,5 @@
 import { BiMenu, BiX } from 'react-icons/bi';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -24,6 +24,10 @@ const Header: React.FC = () => {
 
   const [isHostMode, setIsHostMode] = useState(false);
   const navigate = useNavigate();
+
+  //Mouse leave refs functionality
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const toggleHostMode = () => {
     setIsHostMode(prev => {
@@ -52,6 +56,66 @@ const Header: React.FC = () => {
   const closeMobileMenu = () => {
     setIsOpen(false);
   };
+
+  // Mouse enter handler for mobile menu
+  const handleMobileMenuEnter = () => {
+    // Clear any pending close timer when mouse enters
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+  };
+
+  // Mouse leave handler for mobile menu
+  const handleMobileMenuLeave = () => {
+    // Close menu after 300ms delay when mouse leaves
+    leaveTimerRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 300);
+  };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (leaveTimerRef.current) {
+        clearTimeout(leaveTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileMenuRef.current && 
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        isOpen
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Close on escape key
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isOpen]);
+
 
   // Control header visibility based on scroll direction
   const controlNavbar = useCallback(() => {
@@ -126,7 +190,12 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Mobile Menu Toggle */}
-          <div className="md:hidden flex justify-between items-center p-4">
+          <div 
+            className="md:hidden flex justify-between items-center p-4"
+            ref={mobileMenuRef}
+            onMouseEnter={handleMobileMenuEnter}
+            onMouseLeave={isOpen ? handleMobileMenuLeave : undefined}
+          >
             <Logo showIcon={false} />
 
             {/* Menu Toggle Button */}
@@ -143,17 +212,22 @@ const Header: React.FC = () => {
           </div>
 
           {/* Mobile Menu with Profile/Auth */}
-          <MobileMenu
-            isOpen={isOpen}
-            isAuthenticated={isAuthenticated}
-            onClose={closeMobileMenu}
-            user={user}
-            showProfileMenu={showProfileMenu}
-            onToggleProfileMenu={toggleProfileMenu}
-            onCloseProfileMenu={closeProfileMenu}
-            isHostMode={isHostMode}
-            onToggleHostMode={toggleHostMode}
-          />
+          <div 
+            onMouseEnter={handleMobileMenuEnter}
+            onMouseLeave={isOpen ? handleMobileMenuLeave : undefined}
+          >
+            <MobileMenu
+              isOpen={isOpen}
+              isAuthenticated={isAuthenticated}
+              onClose={closeMobileMenu}
+              user={user}
+              showProfileMenu={showProfileMenu}
+              onToggleProfileMenu={toggleProfileMenu}
+              onCloseProfileMenu={closeProfileMenu}
+              isHostMode={isHostMode}
+              onToggleHostMode={toggleHostMode}
+            />
+          </div>
         </div>
       </header>
     </section>

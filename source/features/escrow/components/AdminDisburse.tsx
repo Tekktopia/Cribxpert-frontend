@@ -4,6 +4,9 @@ import { AlertTriangle, CheckCircle, Send, ShieldAlert } from 'lucide-react';
 import type { AppDispatch, RootState } from '../../../store/store';
 import { disburseToHost } from '../escrowSlice';
 import type { EscrowStatus } from '../escrowTypes';
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 interface Props {
   bookingId: string;
@@ -38,21 +41,93 @@ export const AdminDisburse: React.FC<Props> = ({
     (state: RootState) => state.escrow
   );
 
+  // modal state for title comp
+        const [modal, setModal] = useState<{
+          isOpen: boolean;
+          type: TitleType;
+          title: string;
+          message: string;
+          primaryAction?: { label: string; onClick: () => void };
+          secondaryAction?: { label: string; onClick: () => void };
+        }>({
+          isOpen: false,
+          type: 'info',
+          title: '',
+          message: '',
+        });
+      
+        // helper func to show modal
+        const showModal = (
+          type: TitleType,
+          title: string,
+          message: string,
+          primaryAction?: { label: string; onClick: () => void },
+          secondaryAction?: { label: string; onClick: () => void }
+        ) => {
+          setModal({
+            isOpen: true,
+            type,
+            title,
+            message,
+            primaryAction,
+            secondaryAction,
+          });
+        };
+      
+        // Helper function to close modal
+        const closeModal = () => {
+          setModal((prev) => ({ ...prev, isOpen: false }));
+        };
+
   const canDisburse = DISBURSABLE_STATUSES.includes(currentStatus);
   const isDisbursed = currentStatus === 'DISBURSED' || disburseResult?.success;
 
   const handleDisburse = async () => {
-    await dispatch(
-      disburseToHost({
-        bookingId,
-        hostUserTag,
-        customerId,
-        amount: overrideAmount,
-        adminId,
-      })
-    );
-    setConfirmStep(false);
+    try{
+      const resultAction = await dispatch(
+        disburseToHost({
+          bookingId,
+          hostUserTag,
+          customerId,
+          amount: overrideAmount,
+          adminId,
+        })
+      );
+      setConfirmStep(false);
+
+      if (disburseToHost.fulfilled.match(resultAction)) {
+        showModal(
+          'success',
+          'Disbursement Complete!',
+          `Funds of ₦${Number(overrideAmount).toLocaleString('en-NG')} have been sent to @${hostUserTag}.`,
+        );
+      } else {
+        showModal(
+          'error',
+          'Disbursement Failed',
+          'Failed to disburse funds. Please try again.',
+          {
+            label: 'Try Again',
+            onClick: closeModal,
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Disburse error:', error);
+      setConfirmStep(false);
+      showModal(
+        'error',
+        'Disbursement Failed',
+        'An unexpected error occurred. Please try again.',
+        {
+          label: 'Try Again',
+          onClick: closeModal,
+        }
+      );
+    }
   };
+
+
 
   // ── Success state ────────────────────────────────────────────────────────────
   if (isDisbursed) {
@@ -68,7 +143,7 @@ export const AdminDisburse: React.FC<Props> = ({
         {disburseResult && (
           <div className="bg-white border border-green-200 rounded-xl p-3 text-left space-y-1.5">
             {[
-              { label: 'Transaction ID', value: disburseResult.transactionId.slice(0, 20) + '...' },
+              { label: 'Transaction ID', value: (disburseResult.transactionId || '').slice(0, 20) + '...' },
               { label: 'Reference',      value: disburseResult.reference },
               { label: 'Amount Sent',    value: `₦${Number(disburseResult.amountDisbursed).toLocaleString('en-NG')}` },
               { label: 'Fees',           value: `₦${Number(disburseResult.fees).toLocaleString('en-NG')}` },
@@ -188,6 +263,16 @@ export const AdminDisburse: React.FC<Props> = ({
           </div>
         </div>
       )}
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </div>
   );
 };

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDeleteListingImageMutation } from '@/features/listing/listingService';
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 interface ExistingImage {
   _id: string;
@@ -35,8 +38,8 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
   const [previews, setPreviews] = useState<string[]>([]);
   const [showUploadBox, setShowUploadBox] = useState(true);
   const [uploadedIndexes, setUploadedIndexes] = useState<number[]>([]);
-  const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
-  const [confirmDeleteImageId, setConfirmDeleteImageId] = useState<string | null>(null);
+  // const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
+  // const [confirmDeleteImageId, setConfirmDeleteImageId] = useState<string | null>(null);
   const [deletingImageId, setDeletingImageId] = useState<string | null>(null);
   
   const [deleteListingImage, { isLoading: isDeletingImage }] = useDeleteListingImageMutation();
@@ -44,6 +47,44 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
   const handleFileClick = () => {
     document.getElementById('file-upload')?.click();
   };
+
+  // modal state for title comp
+    const [modal, setModal] = useState<{
+      isOpen: boolean;
+      type: TitleType;
+      title: string;
+      message: string;
+      primaryAction?: { label: string; onClick: () => void };
+      secondaryAction?: { label: string; onClick: () => void };
+    }>({
+      isOpen: false,
+      type: 'info',
+      title: '',
+      message: '',
+    });
+  
+    // helper func to show modal
+    const showModal = (
+      type: TitleType,
+      title: string,
+      message: string,
+      primaryAction?: { label: string; onClick: () => void },
+      secondaryAction?: { label: string; onClick: () => void }
+    ) => {
+      setModal({
+        isOpen: true,
+        type,
+        title,
+        message,
+        primaryAction,
+        secondaryAction,
+      });
+    };
+  
+    // Helper function to close modal
+    const closeModal = () => {
+      setModal((prev) => ({ ...prev, isOpen: false }));
+    };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -53,17 +94,62 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(file.type)
     );
     if (newFiles.length !== Array.from(files).length) {
-      alert('Only JPEG, PNG, or WEBP images are allowed.');
+      showModal(
+        'warning',
+        'Invalid File Type',
+        'Only JPEG, PNG, or WEBP images are allowed. Please select valid image files.'
+      );
     }
     setSelectedFiles((prev) => {
       const currentTotal = existingImages.length + prev.length;
       const maxNewFiles = 5 - currentTotal;
       const filesToAdd = newFiles.slice(0, Math.max(0, maxNewFiles));
       if (filesToAdd.length < newFiles.length) {
-        alert(`Maximum of 5 images allowed. You can add ${maxNewFiles} more.`);
+        showModal(
+          'warning',
+          'Maximum Images Reached',
+          `Maximum of 5 images allowed. You can add ${maxNewFiles} more image${maxNewFiles === 1 ? '' : 's'}.`
+        );
       }
       return [...prev, ...filesToAdd];
     });
+  };
+
+  // Handle delete confirmation for new files
+  const handleDeleteNewFileClick = (index: number) => {
+    showModal(
+      'warning',
+      'Delete Photo',
+      'Are you sure you want to delete this photo?',
+      {
+        label: 'Delete',
+        onClick: () => {
+          handleDelete(index);
+          closeModal();
+        },
+      },
+      {
+        label: 'Cancel',
+        onClick: closeModal,
+      }
+    );
+  };
+
+  // Handle delete confirmation for existing images
+  const handleDeleteExistingClick = (imageId: string) => {
+    showModal(
+      'warning',
+      'Delete Photo',
+      'Are you sure you want to delete this photo? This action cannot be undone.',
+      {
+        label: isDeletingImage ? 'Deleting...' : 'Delete',
+        onClick: () => handleDeleteExistingImage(imageId),
+      },
+      {
+        label: 'Cancel',
+        onClick: closeModal,
+      }
+    );
   };
 
   const handleDelete = (index: number) => {
@@ -91,10 +177,24 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       if (onImageDeleted) {
         onImageDeleted();
       }
-      setConfirmDeleteImageId(null);
+      closeModal();
+      // Show success modal after delete
+      showModal(
+        'success',
+        'Image Deleted',
+        'The image has been deleted successfully.'
+      );
     } catch (error) {
       console.error('Error deleting image:', error);
-      alert('Failed to delete image. Please try again.');
+      showModal(
+        'error',
+        'Delete Failed',
+        'Failed to delete image. Please try again.',
+        {
+          label: 'Try Again',
+          onClick: closeModal,
+        }
+      );
     } finally {
       setDeletingImageId(null);
     }
@@ -166,7 +266,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                 className="relative border-2 border-neutralLight p-4 w-full h-[220px] shadow-sm rounded"
               >
                 <button
-                  onClick={() => setConfirmDeleteImageId(image._id)}
+                  onClick={() => handleDeleteExistingClick(image._id)}
                   disabled={isDeletingImage && deletingImageId === image._id}
                   className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-100 z-20 disabled:opacity-50"
                 >
@@ -201,7 +301,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
                 className="relative border-2 border-neutralLight p-4 w-full h-[220px] shadow-sm rounded"
               >
                 <button
-                  onClick={() => setConfirmDeleteIndex(index)}
+                  onClick={() => handleDeleteNewFileClick(index)}
                   disabled={isUploading}
                   className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-100 z-20"
                 >
@@ -273,7 +373,7 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
       )}
 
       {/* Delete Confirmation Modal for New Files */}
-      {confirmDeleteIndex !== null && (
+      {/* {confirmDeleteIndex !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded shadow-lg p-6 max-w-sm w-full">
             <h2 className="text-lg font-semibold mb-4">Delete Photo</h2>
@@ -297,10 +397,10 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Delete Confirmation Modal for Existing Images */}
-      {confirmDeleteImageId !== null && (
+      {/* {confirmDeleteImageId !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
           <div className="bg-white rounded shadow-lg p-6 max-w-sm w-full">
             <h2 className="text-lg font-semibold mb-4">Delete Photo</h2>
@@ -323,7 +423,17 @@ const ListingPropertyPage: React.FC<ListingPropertyPageProps> = ({
             </div>
           </div>
         </div>
-      )}
+      )} */}
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </div>
   );
 };

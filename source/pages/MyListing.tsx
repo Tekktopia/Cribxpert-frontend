@@ -12,6 +12,9 @@ import { InitialSteps } from '@/features/listing/components/data/onboardingSteps
 import { useSelector } from 'react-redux';
 import { selectAllPropertyTypes } from '@/features/propertyType';
 import Footer from '@/shared/components/layout/Footer';
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
 
 const MyListing: React.FC = () => {
   const location = useLocation();
@@ -23,6 +26,45 @@ const MyListing: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showListings] = useState(true);
   const [editingListing, setEditingListing] = useState<PropertyListing | null>(null);
+
+  // modal state for title comp
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    type: TitleType;
+    title: string;
+    message: string;
+    primaryAction?: { label: string; onClick: () => void };
+    secondaryAction?: { label: string; onClick: () => void };
+  }>({
+    isOpen: false,
+    type: 'info',
+    title: '',
+    message: '',
+  });
+
+  // helper func to show modal
+  const showModal = (
+    type: TitleType,
+    title: string,
+    message: string,
+    primaryAction?: { label: string; onClick: () => void },
+    secondaryAction?: { label: string; onClick: () => void }
+  ) => {
+    setModal({
+      isOpen: true,
+      type,
+      title,
+      message,
+      primaryAction,
+      secondaryAction,
+    });
+  };
+
+  // Helper function to close modal
+  const closeModal = () => {
+    setModal((prev) => ({ ...prev, isOpen: false }));
+  };
+
 
   // When coming from detail page "Edit", we need all listings to find the one to edit
   const statusParam =
@@ -158,6 +200,13 @@ const MyListing: React.FC = () => {
                   setInitialListingsLoaded(false);
                   setUserSteps(0);
                   refetch();
+                  showModal(
+                    'success',
+                    editingListing ? 'Listing Updated!' : 'Listing Created!',
+                    editingListing
+                      ? 'Your listing has been updated successfully.'
+                      : 'Your new listing has been created successfully.'
+                  );
                 }}
               />
             </>
@@ -389,10 +438,12 @@ const MyListing: React.FC = () => {
                             status={listing.status}
                             avaliableUntil={avaliableUntil}
                             className="w-full"
-                            onDelete={(deletedId) => {
+                            onDelete={() => {
                               refetch();
-                              console.log(
-                                `Listing ${deletedId} deleted successfully`
+                              showModal(
+                                'success',
+                                'Listing Deleted',
+                                'The listing has been deleted successfully.'
                               );
                             }}
                             onEdit={(listingId) => {
@@ -405,6 +456,11 @@ const MyListing: React.FC = () => {
                             }}
                             onStatusChange={() => {
                               refetch();
+                              showModal(
+                                'success',
+                                'Status Updated',
+                                'The listing status has been updated successfully.'
+                              );
                             }}
                             />
                           );
@@ -419,7 +475,17 @@ const MyListing: React.FC = () => {
       )}
     </div>
     <Footer />
-      </div>
+
+    <Title
+      isOpen={modal.isOpen}
+      onClose={closeModal}
+      type={modal.type}
+      title={modal.title}
+      message={modal.message}
+      primaryAction={modal.primaryAction}
+      secondaryAction={modal.secondaryAction}
+    />
+    </div>
   );
 };
 

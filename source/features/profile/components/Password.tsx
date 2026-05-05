@@ -4,10 +4,52 @@ import Footer from '@/shared/components/layout/Footer';
 import { EyeOff, Eye } from 'lucide-react';
 import { useUpdatePasswordMutation } from '@/features/auth/authService';
 
+import Title from '@/shared/components/ui/Title';
+
+type TitleType = 'success' | 'error' | 'info' | 'warning';
+
 const Password = () => {
   // FIXED: Removed the unused { isLoading, error } variables
   const [updatePassword] = useUpdatePasswordMutation();
-  const [successMessage, setSuccessMessage] = useState('');
+  // const [successMessage, setSuccessMessage] = useState('');
+
+  // modal state for title comp
+      const [modal, setModal] = useState<{
+        isOpen: boolean;
+        type: TitleType;
+        title: string;
+        message: string;
+        primaryAction?: { label: string; onClick: () => void };
+        secondaryAction?: { label: string; onClick: () => void };
+      }>({
+        isOpen: false,
+        type: 'info',
+        title: '',
+        message: '',
+      });
+    
+      // helper func to show modal
+      const showModal = (
+        type: TitleType,
+        title: string,
+        message: string,
+        primaryAction?: { label: string; onClick: () => void },
+        secondaryAction?: { label: string; onClick: () => void }
+      ) => {
+        setModal({
+          isOpen: true,
+          type,
+          title,
+          message,
+          primaryAction,
+          secondaryAction,
+        });
+      };
+    
+      // Helper function to close modal
+      const closeModal = () => {
+        setModal((prev) => ({ ...prev, isOpen: false }));
+      };
 
   const [formData, setFormData] = useState({
     oldPassword: '',
@@ -118,21 +160,83 @@ const Password = () => {
           newPassword: formData.newPassword,
         }).unwrap();
         
-        setSuccessMessage('Password updated successfully!');
-        setFormData({
-          oldPassword: '',
-          newPassword: '',
-          confirmPassword: '',
-        });
-        
-        setTimeout(() => setSuccessMessage(''), 3000);
-      } catch (err: any) {
+        showModal(
+          'success',
+          'Password Updated!',
+          'Your password has been updated successfully.',
+          {
+            label: 'Done',
+            onClick: () => {
+              closeModal();
+              setFormData({
+                oldPassword: '',
+                newPassword: '',
+                confirmPassword: '',
+              });
+            },
+          }
+        );
+      } catch (err: unknown) {
         console.error('Failed to update password:', err);
-        setErrors({
-          ...errors,
-          oldPassword: err.data?.message || 'Failed to update password',
-        });
+        const error = err as { data?: { message?: string }; message?: string };
+        const errorMessage = error.data?.message || 'Failed to update password. Please try again.';
+        if (
+          errorMessage.toLowerCase().includes('current password') || 
+          errorMessage.toLowerCase().includes('old password') ||
+          errorMessage.toLowerCase().includes('incorrect password')
+        ){
+          setErrors({
+            ...errors,
+            oldPassword: errorMessage,
+          });
+        }
+
+        showModal(
+          'error',
+          'Update Failed',
+          errorMessage,
+          {
+            label: 'Try Again',
+            onClick: closeModal,
+          }
+        );
       }
+    }
+  };
+
+  // Handle cancel button with confirmation if form has data
+  const handleCancel = () => {
+    if (formData.oldPassword || formData.newPassword || formData.confirmPassword) {
+      showModal(
+        'warning',
+        'Discard Changes',
+        'Are you sure you want to discard your changes?',
+        {
+          label: 'Discard',
+          onClick: () => {
+            setFormData({
+              oldPassword: '',
+              newPassword: '',
+              confirmPassword: '',
+            });
+            setErrors({
+              oldPassword: '',
+              newPassword: {
+                length: '',
+                uppercase: '',
+                lowercase: '',
+                specialChar: '',
+              },
+              confirmPassword: '',
+            });
+            closeModal();
+          },
+        },
+        {
+          label: 'Keep Editing',
+          onClick: closeModal,
+        }
+      );
     }
   };
 
@@ -265,11 +369,11 @@ const Password = () => {
             </div>
 
             {/* FIXED: Added JSX to render the successMessage */}
-            {successMessage && (
+            {/* {successMessage && (
               <div className="p-3 bg-green-50 text-green-700 border border-green-200 rounded-lg">
                 {successMessage}
               </div>
-            )}
+            )} */}
 
             <div className="flex gap-4 flex-wrap">
               <button
@@ -281,13 +385,7 @@ const Password = () => {
               <button
                 type="button"
                 className="w-[156px] border-2 border-primary text-primary p-[10px] rounded-lg hover:bg-primary/5 transition-colors"
-                onClick={() => {
-                  setFormData({
-                    oldPassword: '',
-                    newPassword: '',
-                    confirmPassword: '',
-                  });
-                }}
+                onClick={handleCancel}
               >
                 Cancel
               </button>
@@ -296,6 +394,16 @@ const Password = () => {
         </div>
       </div>
       <Footer />
+
+      <Title
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        primaryAction={modal.primaryAction}
+        secondaryAction={modal.secondaryAction}
+      />
     </div>
   );
 };
