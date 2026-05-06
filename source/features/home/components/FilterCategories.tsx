@@ -173,52 +173,35 @@ const FilterCategories: React.FC = () => {
   }
 
   return (
-    <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-screen relative">
+    <div className="w-full bg-white overflow-x-auto py-6 scrollbar-hide border-b border-neutral-100 content-container relative">
       {/* Show filtering indicator if needed */}
       {isFilteringListings && (
-        <div className="absolute right-4 top-2">
-          <div className="animate-spin h-4 w-4 border-2 border-[#1D5C5C] border-t-transparent rounded-full"></div>
+        <div className="absolute right-8 top-2">
+          <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
         </div>
       )}
 
-      <div className="flex items-center gap-6 min-w-max px-4">
+      <div className="flex items-center gap-6 min-w-max pb-4 pt-2">
         <div
           key="all"
-          className={`flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:scale-105 ${
-            !activeFilters.propertyType ? 'scale-110 transition-transform' : ''
+          className={`flex items-center gap-3 px-6 py-3 rounded-full cursor-pointer transition-all duration-500 group ${
+            !activeFilters.propertyType 
+              ? 'bg-secondary text-white shadow-xl shadow-secondary/20 scale-105' 
+              : 'bg-neutral-50 text-neutral-400 hover:bg-neutral-100'
           }`}
           onClick={() => handleCategoryClick('')}
         >
-          <div
-            className={`relative p-2 rounded-full transition-colors duration-200 ${
-              !activeFilters.propertyType 
-                ? 'bg-[#1D5C5C]/10' 
-                : 'hover:bg-[#1D5C5C]/5'
+          <img
+            src={'/other-icons/otherFilterIcon.png'}
+            alt={'All'}
+            loading="lazy"
+            className={`w-4 h-4 object-contain transition-all duration-300 ${
+              !activeFilters.propertyType
+                ? 'filter brightness-0 invert'
+                : 'filter grayscale opacity-50 group-hover:opacity-100'
             }`}
-          >
-            <img
-              src={'/other-icons/otherFilterIcon.png'}
-              alt={'All'}
-              loading="lazy"
-              className={`w-[24px] h-[24px] object-contain transition-all duration-200 ${
-                !activeFilters.propertyType
-                  ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                  : ''
-              }`}
-            />
-            {categoryCounts.all > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {categoryCounts.all}
-              </span>
-            )}
-          </div>
-          <p
-            className={`text-[14px] font-[400] transition-colors duration-200 ${
-              !activeFilters.propertyType 
-                ? 'text-[#1D5C5C] font-medium' 
-                : 'text-[#999999] hover:text-primary'
-            }`}
-          >
+          />
+          <p className="text-[10px] uppercase tracking-[0.2em] font-bold">
             All
           </p>
         </div>
@@ -229,55 +212,42 @@ const FilterCategories: React.FC = () => {
             icon: { fileUrl: string };
             name: string;
           }) => {
-            // Check if this filter is currently active
             const isActive = activeFilters.propertyType === propertyType._id;
-
-            // Use the pre-calculated count from categoryCounts
             const count = categoryCounts[propertyType._id] || 0;
 
             return (
               <div
                 key={propertyType._id}
-                className={`flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:scale-105 ${
-                  isActive ? 'scale-110 transition-transform' : ''
+                className={`flex items-center gap-3 px-6 py-3 rounded-full cursor-pointer transition-all duration-500 group relative ${
+                  isActive 
+                    ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-105' 
+                    : 'bg-neutral-50 text-neutral-400 hover:bg-neutral-100'
                 }`}
                 onClick={() => handleCategoryClick(propertyType._id)}
               >
-                <div
-                  className={`relative p-2 rounded-full transition-colors duration-200 ${
-                    isActive 
-                      ? 'bg-[#1D5C5C]/10' 
-                      : 'hover:bg-[#1D5C5C]/5'
+                <img
+                  src={
+                    propertyType.icon?.fileUrl ||
+                    '/icons/default-property.svg'
+                  }
+                  alt={propertyType.name}
+                  loading="lazy"
+                  className={`w-4 h-4 object-contain transition-all duration-300 ${
+                    isActive
+                      ? 'filter brightness-0 invert'
+                      : 'filter grayscale opacity-50 group-hover:opacity-100'
                   }`}
-                >
-                  <img
-                    src={
-                      propertyType.icon?.fileUrl ||
-                      '/icons/default-property.svg'
-                    }
-                    alt={propertyType.name}
-                    loading="lazy"
-                    className={`w-[24px] h-[24px] object-contain transition-all duration-200 ${
-                      isActive
-                        ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                        : 'hover:filter hover:invert-[15%] hover:sepia-[100%] hover:saturate-[3000%] hover:hue-rotate-[195deg] hover:brightness-[75%]'
-                    }`}
-                  />
-                  {count > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {count}
-                    </span>
-                  )}
-                </div>
-                <p
-                  className={`text-[14px] font-[400] transition-colors duration-200 ${
-                    isActive 
-                      ? 'text-[#1D5C5C] font-medium' 
-                      : 'text-[#999999] hover:text-primary'
-                  }`}
-                >
+                />
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold whitespace-nowrap">
                   {propertyType.name}
                 </p>
+                {count > 0 && (
+                  <span className={`flex items-center justify-center text-[8px] font-bold px-1.5 py-0.5 rounded-full border transition-all duration-300 ${
+                    isActive ? 'bg-white text-primary border-white' : 'bg-neutral-200 text-neutral-500 border-neutral-200'
+                  }`}>
+                    {count}
+                  </span>
+                )}
               </div>
             );
           }

@@ -37,10 +37,10 @@ const ReviewCard: React.FC<{
   isDeleting = false,
 }) => (
   <div
-    className={`rounded-lg p-4 sm:p-6 bg-white border-2 shadow-sm hover:shadow-md transition-shadow relative w-full ${
+    className={`p-6 bg-white border transition-all duration-500 relative w-full ${
       isOwnReview 
-        ? 'border-[#006073] bg-[#f0f9fa]' 
-        : 'border-[#E6E6E6]'
+        ? 'border-primary bg-primary/5 shadow-premium' 
+        : 'border-neutral-100 hover:border-neutral-200'
     } ${className}`}
   >
     {/* Top Right Actions - Delete Button and Badge */}
@@ -390,9 +390,9 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews, listingId, o
   // );
 
   return (
-    <div className="mt-8 sm:mt-10">
-      <h3 className="text-base sm:text-lg font-medium text-[#040404] mb-4">
-        Customer Reviews
+    <div className="mt-12 sm:mt-16">
+      <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 mb-8 border-b border-neutral-100 pb-4">
+        Guest Impressions
       </h3>
 
       <div className="pb-4 relative">

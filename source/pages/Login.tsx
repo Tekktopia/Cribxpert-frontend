@@ -69,6 +69,19 @@ const Login: React.FC = () => {
 
       {/* Right Side - Login Section */}
       <div className="relative w-full lg:w-1/2 flex flex-col items-center justify-center p-8">
+        {/* Back to Website Button */}
+        <div className="absolute top-8 left-8">
+          <Link 
+            to="/" 
+            className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 hover:text-primary transition-colors group"
+          >
+            <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Website
+          </Link>
+        </div>
+
         <div className="w-full max-w-[512px] text-center space-y-6">
           <div className="text-left w-full max-w-[342px] ">
             <h2 className="text-[20px] font-semibold mb-4">Login</h2>

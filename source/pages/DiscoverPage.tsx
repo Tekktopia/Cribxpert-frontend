@@ -43,24 +43,32 @@ export default function DiscoverPage() {
   }, [isFilterPanelOpen]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ flex: 1 }}>
-        <div className="xl:container mx-auto lg:mt-4 w-full flex flex-col md:flex-row relative bg-white pb-6">
+    <div className="min-h-screen flex flex-col bg-white">
+      <div className="flex-1">
+        <div className="w-full flex flex-col md:flex-row relative bg-white pb-6 px-[2%] gap-12 lg:gap-16">
           {/* Filter panel */}
           <FilterPanel isOpen={isFilterPanelOpen} handleToggle={handleToggle} />
 
           {/* Main content area with responsive layout */}
-          <div className={`${mainContentClasses} w-full mb-8 pt-0`}>
+          <div className={`${mainContentClasses} w-full mb-8 pt-6`}>
             <div className="sticky top-0 z-10 bg-white pt-4">
-              <div className="flex flex-col items-center md:flex-row gap-4 mb-4">
+              {/* Page Indicator */}
+              <div className="mb-10">
+                <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-primary mb-3">Explore</p>
+                <h1 className="text-4xl font-light tracking-tighter text-neutral-900 uppercase">
+                  Our <span className="font-bold">Discoveries</span>
+                </h1>
+              </div>
+
+              <div className="flex flex-col items-center md:flex-row gap-6 mb-8">
                 {!isFilterPanelOpen && (
                   <button
-                    className="flex items-center max-h-[50px] border border-[#1D5C5C] p-3 bg-white rounded-md transition-colors hover:bg-gray-50"
+                    className="flex items-center gap-3 max-h-[50px] border border-neutral-100 px-8 py-4 bg-white rounded-full transition-all hover:bg-neutral-50 text-[10px] uppercase tracking-[0.3em] font-bold shadow-sm"
                     onClick={handleToggle}
                     aria-label="Show filters"
                   >
-                    <Settings2Icon size={18} />
-                    <span>Filters</span>
+                    <Settings2Icon size={14} className="text-primary" />
+                    <span>Open Filters</span>
                   </button>
                 )}
 

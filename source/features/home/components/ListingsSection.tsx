@@ -1,7 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropertyListings from '@/features/properties/components/PropertyListing';
-import Pagination from '../../search/components/Pagination';
 import { selectCurrentListings } from '@/features/properties';
 import LoadingState from '@/shared/components/LoadingState';
 import EmptyState from '@/shared/components/EmptyState';
@@ -26,9 +25,6 @@ const ListingsSection: React.FC<ListingsSectionProps> = ({
     );
   }, [page, itemsPerPage, currentListings]);
 
-  const handlePageChange = useCallback((selected: number) => {
-    setPage(selected);
-  }, []);
 
   // Loading state
   if (isLoading) {
@@ -42,15 +38,19 @@ const ListingsSection: React.FC<ListingsSectionProps> = ({
 
   // Property Listings Section
   return (
-    <div className="my-5">
+    <div className="py-20">
       <PropertyListings listings={paginatedData} />
-
-      {/* Pagination */}
-      <Pagination
-        currentPage={page}
-        totalPages={Math.ceil(currentListings.length / itemsPerPage)}
-        onPageChange={handlePageChange}
-      />
+      
+      {currentListings.length > itemsPerPage && (
+        <div className="flex justify-center mt-24">
+          <button 
+            onClick={() => setPage(p => p + 1)}
+            className="premium-transition border-2 border-neutral-200 text-neutral-900 px-12 py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-primary hover:border-primary hover:text-white"
+          >
+            Load More Spaces
+          </button>
+        </div>
+      )}
     </div>
   );
 };

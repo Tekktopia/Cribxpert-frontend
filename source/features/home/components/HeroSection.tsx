@@ -9,6 +9,7 @@ const heroImages = [
 ];
 
 const HeroSection: React.FC = () => {
+
   return (
     <section className="relative w-full">
       <Hero
@@ -17,6 +18,7 @@ const HeroSection: React.FC = () => {
         subtitle="From cozy apartment to luxury spaces, find and book your perfect home away from home"
         buttonText="Discover"
         buttonLink="/discover"
+        fullHeight={true}
       />
     </section>
   );

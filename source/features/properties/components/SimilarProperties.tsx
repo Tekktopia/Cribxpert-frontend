@@ -8,14 +8,13 @@ interface SimilarPropertiesProps {
 }
 
 const SimilarProperties: React.FC<SimilarPropertiesProps> = ({
-  propertyName,
   similarProperties,
 }) => {
   return (
-    <div className="py-8">
-      <h1 className="text-[#040404] text-md md:text-[20px] font-[400] mb-4">
-        Similar properties to {propertyName}
-      </h1>
+    <div className="py-16 border-t border-neutral-100">
+      <h2 className="text-2xl font-light tracking-tight text-neutral-900 mb-12 uppercase">
+        Explore <span className="font-bold">Similar Spaces</span>
+      </h2>
       <PropertyListings listings={similarProperties} />
     </div>
   );

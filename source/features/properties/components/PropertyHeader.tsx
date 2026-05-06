@@ -4,7 +4,6 @@ import {
   useRemoveFavouriteMutation,
 } from '@/features/favourites';
 import { ShareIcon } from '@heroicons/react/24/solid';
-import { HeartIcon } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentListing } from '@/features/properties/listingSlice';
@@ -80,7 +79,6 @@ const PropertyHeader: React.FC = () => {
   // Only use calculated rating from reviews, don't fallback to listing rating
   // This ensures we only show ratings when there are actual reviews
   const displayRating = ratingData.rating > 0 && ratingData.totalRatings > 0 ? ratingData.rating : 0;
-  const totalRatings = ratingData.totalRatings;
 
 
 
@@ -153,76 +151,53 @@ const PropertyHeader: React.FC = () => {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 m-3 sm:m-5">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-0">
-        <div className="flex flex-col gap-y-2 w-full md:w-auto">
-          <h1 className="font-[400] text-xl sm:text-2xl md:text-[25px] text-[#040404] line-clamp-2">
-            {propertyName}
-          </h1>
-          <p className="font-[400] text-sm sm:text-[14px] text-[#040404]">
-            {displayRating > 0 ? (
-              <>
-                ⭐{displayRating}{' '}
-                {totalRatings > 0 && (
-                  <span className="text-[#6f6f6f] font-[400] text-sm sm:text-[16px]">
-                    [{totalRatings} verified {totalRatings === 1 ? 'feedback' : 'feedbacks'}]
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="text-[#6f6f6f] font-[400] text-sm sm:text-[16px]">
-                No ratings yet
-              </span>
-            )}
-          </p>
+    <div className="py-12 border-t border-neutral-100">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-4">
+             <h2 className="text-sm uppercase tracking-[0.3em] font-bold text-neutral-900">
+              {propertyName}
+            </h2>
+            <div className="h-[1px] w-12 bg-neutral-200"></div>
+            <p className="text-[10px] uppercase tracking-widest text-neutral-400 font-bold">
+              {displayRating > 0 ? (
+                <>
+                  {displayRating} / 5.0 Rating
+                </>
+              ) : (
+                'New Listing'
+              )}
+            </p>
+          </div>
 
-          <p className="text-[#6f6f6f] text-sm sm:text-[14px] flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#1D5C5C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Hosted by{' '}
+          <p className="text-neutral-500 text-xs flex items-center gap-2 uppercase tracking-widest">
+            Managed by{' '}
             <button
               onClick={() => setIsHostDrawerOpen(true)}
-              className="text-[#1D5C5C] font-medium ml-1 underline hover:text-[#006073] transition-colors"
+              className="text-neutral-900 font-bold hover:text-primary transition-colors border-b border-neutral-200"
             >
               {hostName}
             </button>
           </p>
         </div>
 
-        <div className="flex items-center gap-3 mt-3 md:mt-0 w-full md:w-auto justify-start md:justify-center">
+        <div className="flex items-center gap-4">
           <button
-            className={`rounded-[200px] px-4 sm:px-6 py-2 sm:py-3 transition-colors ${isAuthenticated
-              ? 'bg-[#e6e6e6] hover:bg-[#d9d9d9]'
-              : 'bg-[#f0f0f0] cursor-pointer opacity-75 hover:opacity-100'
-              }`}
+            className={`premium-transition px-8 py-3 rounded-full border-2 text-[10px] uppercase tracking-[0.2em] font-bold ${
+              isAuthenticated && isFavourited
+                ? 'bg-primary border-primary text-white'
+                : 'bg-transparent border-neutral-100 text-neutral-400 hover:border-primary hover:text-primary'
+            }`}
             onClick={onSave}
-            title={!isAuthenticated ? 'Login to save properties' : undefined}
           >
-            <div className="flex items-center gap-2">
-              <HeartIcon
-                fill={isAuthenticated && isFavourited ? '#006073' : 'none'}
-                className={`w-4 h-4 sm:w-[20px] sm:h-[20px] ${isAuthenticated ? 'text-[#070707]' : 'text-[#999999]'
-                  }`}
-              />
-              <p
-                className={`font-[400] text-xs sm:text-[14px] text-center ${isAuthenticated ? 'text-[#070707]' : 'text-[#999999]'
-                  }`}
-              >
-                {isAuthenticated ? (isFavourited ? 'Unsave' : 'Save') : 'Save'}
-              </p>
-            </div>
+            {isAuthenticated && isFavourited ? 'Favourited' : 'Add to Collection'}
           </button>
+          
           <button
             onClick={onShareClick}
-            className="rounded-[200px] px-4 sm:px-6 py-2 sm:py-3 bg-[#e6e6e6] hover:bg-[#d9d9d9] transition-colors"
+            className="w-12 h-12 rounded-full border border-neutral-100 flex items-center justify-center hover:bg-neutral-50 transition-colors"
           >
-            <div className="flex items-center gap-2">
-              <ShareIcon className="w-4 h-4 sm:w-[20px] sm:h-[20px] text-[#070707]" />
-              <p className="text-[#070707] font-[400] text-xs sm:text-[14px]">
-                Share
-              </p>
-            </div>
+            <ShareIcon className="w-4 h-4 text-neutral-900" />
           </button>
         </div>
       </div>

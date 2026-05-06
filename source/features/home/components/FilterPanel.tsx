@@ -1,4 +1,4 @@
-import { ArrowLeft, Settings2Icon, XIcon, Star } from 'lucide-react';
+import { ArrowLeft, Settings2Icon, XIcon } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -7,7 +7,7 @@ import {
   resetFilters,
 } from '@/features/properties';
 import { useGetAmenitiesQuery } from '@/features/amenities';
-import { Country, State, City } from 'country-state-city';
+import { Country, State } from 'country-state-city';
 
 type FilterPanelProps = {
   isOpen: boolean;
@@ -49,18 +49,6 @@ export default function FilterPanel({ isOpen, handleToggle }: FilterPanelProps) 
     }));
   }, [tempFilters.country]);
 
-  const cityOptions = useMemo(() => {
-    if (!tempFilters.country || !tempFilters.stateProvince) return [];
-    const countryObj = Country.getAllCountries().find((c) => c.name === tempFilters.country);
-    const stateObj = countryObj
-      ? State.getStatesOfCountry(countryObj.isoCode).find((s) => s.name === tempFilters.stateProvince)
-      : null;
-    if (!countryObj || !stateObj) return [];
-    return City.getCitiesOfState(countryObj.isoCode, stateObj.isoCode).map((c) => ({
-      value: c.name,
-      label: c.name,
-    }));
-  }, [tempFilters.country, tempFilters.stateProvince]);
 
   const priceRanges = [
     { value: '0-50000', label: '₦0 - ₦50,000' },
@@ -89,7 +77,7 @@ export default function FilterPanel({ isOpen, handleToggle }: FilterPanelProps) 
     }
   }, [isOpen, activeFilters]);
 
-  const handleTempChange = (name: string, value: string) => {
+  const handleTempChange = (name: string, value: string | string[]) => {
     setTempFilters((prev) => {
       const updated = { ...prev, [name]: value };
       // Reset dependent fields
@@ -140,14 +128,12 @@ export default function FilterPanel({ isOpen, handleToggle }: FilterPanelProps) 
     });
   };
 
-  const selectClass = "w-full border border-gray-200 rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D5C5C]";
-
   const panelClasses = useMemo(() => {
-    const base = 'h-fit p-4 pb-8 xl:pb-0 z-30 top-0 bg-white border-r-[1px] md:pr-2';
+    const base = 'h-fit p-8 pb-12 xl:pb-0 z-30 top-0 bg-white border-r border-neutral-100 pr-10';
     const transform = isOpen
-      ? 'translate-x-0 w-full lg:w-1/4 lg:max-w-[276px]'
+      ? 'translate-x-0 w-full lg:w-1/4 lg:max-w-[320px]'
       : '-translate-x-full w-0';
-    return `${transform} ${base} transition-transform duration-150 ease-out absolute lg:sticky`;
+    return `${transform} ${base} transition-all duration-300 ease-out absolute lg:sticky`;
   }, [isOpen]);
 
   return (
@@ -155,35 +141,36 @@ export default function FilterPanel({ isOpen, handleToggle }: FilterPanelProps) 
       {isOpen && (
         <div className="relative">
           {/* Header */}
-          <div className="sticky top-0 z-10 bg-white pt-4">
-            <div className="flex pb-4 justify-between">
-              <span className="flex items-center gap-2">
-                <Settings2Icon size={18} />
-                <span className="font-medium">Filters</span>
+          <div className="sticky top-0 z-10 bg-white pt-2">
+            <div className="flex pb-8 justify-between items-center border-b border-neutral-100">
+              <span className="flex items-center gap-3">
+                <Settings2Icon size={14} className="text-primary" />
+                <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-neutral-900">Refine Search</span>
               </span>
-              <button className="flex hover:cursor-pointer" onClick={handleToggle}>
-                <ArrowLeft className="-mr-1 hidden lg:block" />
-                <XIcon className="-mr-1 lg:hidden" />
+              <button 
+                className="flex hover:cursor-pointer p-2.5 hover:bg-neutral-50 rounded-full transition-all group" 
+                onClick={handleToggle}
+              >
+                <ArrowLeft size={16} className="hidden lg:block text-neutral-400 group-hover:text-primary transition-colors" />
+                <XIcon size={16} className="lg:hidden text-neutral-400" />
               </button>
             </div>
           </div>
 
-          <div className="filters overflow-y-scroll scrollbar-hide h-fit max-h-screen xl:pb-0">
-            <div className="space-y-4 mt-4">
+          <div className="filters overflow-y-scroll scrollbar-hide h-fit max-h-[calc(100vh-200px)] xl:pb-12 pt-10">
+            <div className="space-y-12">
 
               {/* Location */}
-              <details open className="rounded-md border pt-2 bg-[#e6eff199]">
-                <summary className="flex justify-between items-center cursor-pointer font-medium px-2 pb-2">
-                  Location
-                </summary>
-                <div className="space-y-3 p-2 bg-white">
+              <div className="space-y-6">
+                <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 mb-6">Location</h3>
+                <div className="space-y-5">
                   {/* Country */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Country</label>
+                    <label className="block text-[9px] font-bold uppercase tracking-widest text-neutral-400 mb-2.5 ml-1">Country</label>
                     <select
                       value={tempFilters.country}
                       onChange={(e) => handleTempChange('country', e.target.value)}
-                      className={selectClass}
+                      className="w-full bg-neutral-50 border border-neutral-100 rounded-xl px-5 py-3.5 text-[12px] text-neutral-900 focus:ring-1 focus:ring-primary/20 transition-all outline-none appearance-none cursor-pointer"
                     >
                       <option value="">All Countries</option>
                       {countryOptions.map((c) => (
@@ -194,152 +181,126 @@ export default function FilterPanel({ isOpen, handleToggle }: FilterPanelProps) 
 
                   {/* State/Province */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">State / Province</label>
+                    <label className="block text-[9px] font-bold uppercase tracking-widest text-neutral-400 mb-2.5 ml-1">State / Province</label>
                     <select
                       value={tempFilters.stateProvince}
                       onChange={(e) => handleTempChange('stateProvince', e.target.value)}
                       disabled={!tempFilters.country}
-                      className={`${selectClass} disabled:opacity-50 disabled:cursor-not-allowed`}
+                      className="w-full bg-neutral-50 border border-neutral-100 rounded-xl px-5 py-3.5 text-[12px] text-neutral-900 focus:ring-1 focus:ring-primary/20 transition-all outline-none appearance-none disabled:opacity-50 cursor-pointer"
                     >
                       <option value="">
-                        {tempFilters.country ? 'All States' : 'Select a country first'}
+                        {tempFilters.country ? 'All States' : 'Select country'}
                       </option>
                       {stateOptions.map((s) => (
                         <option key={s.isoCode} value={s.value}>{s.label}</option>
                       ))}
                     </select>
                   </div>
-
-                  {/* City */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">City</label>
-                    <select
-                      value={tempFilters.city}
-                      onChange={(e) => handleTempChange('city', e.target.value)}
-                      disabled={!tempFilters.stateProvince}
-                      className={`${selectClass} disabled:opacity-50 disabled:cursor-not-allowed`}
-                    >
-                      <option value="">
-                        {tempFilters.stateProvince ? 'All Cities' : 'Select a state first'}
-                      </option>
-                      {cityOptions.map((c, i) => (
-                        <option key={i} value={c.value}>{c.label}</option>
-                      ))}
-                    </select>
-                  </div>
                 </div>
-              </details>
+              </div>
 
               {/* Price Range */}
-              <details open className="rounded-md border pt-2 bg-[#e6eff199]">
-                <summary className="flex justify-between items-center cursor-pointer font-medium px-2 pb-2">
-                  Price Range
-                </summary>
-                <div className="space-y-2 p-2 bg-white">
-                  <div className="flex space-x-2">
+              <div className="space-y-6 pt-10 border-t border-neutral-50">
+                <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400">Price Range</h3>
+                <div className="flex gap-3">
+                  <div className="relative w-1/2">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] text-neutral-400">₦</span>
                     <input
                       type="number"
                       placeholder="Min"
-                      className="w-1/2 border rounded p-1 text-sm"
+                      className="w-full bg-neutral-50 border border-neutral-100 rounded-xl pl-8 pr-4 py-3.5 text-[12px] outline-none focus:ring-1 focus:ring-primary/20 transition-all"
                       value={tempFilters.priceMin}
                       onChange={(e) => handleTempChange('priceMin', e.target.value)}
                     />
+                  </div>
+                  <div className="relative w-1/2">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[10px] text-neutral-400">₦</span>
                     <input
                       type="number"
                       placeholder="Max"
-                      className="w-1/2 border rounded p-1 text-sm"
+                      className="w-full bg-neutral-50 border border-neutral-100 rounded-xl pl-8 pr-4 py-3.5 text-[12px] outline-none focus:ring-1 focus:ring-primary/20 transition-all"
                       value={tempFilters.priceMax}
                       onChange={(e) => handleTempChange('priceMax', e.target.value)}
                     />
                   </div>
+                </div>
+                <div className="grid grid-cols-1 gap-3.5 pt-2">
                   {priceRanges.map((range, idx) => (
-                    <label key={idx} className="flex items-center space-x-2">
+                    <label key={idx} className="flex items-center space-x-3.5 cursor-pointer group">
                       <input
                         type="radio"
                         name="price"
-                        className="accent-[#1D5C5C]"
+                        className="accent-primary w-4 h-4"
                         checked={tempFilters.priceRange === range.value}
                         onChange={() => handleTempChange('priceRange', range.value)}
                       />
-                      <span className="text-sm">{range.label}</span>
+                      <span className="text-[12px] text-neutral-500 group-hover:text-neutral-900 transition-colors">{range.label}</span>
                     </label>
                   ))}
                 </div>
-              </details>
+              </div>
 
               {/* Amenities */}
-              <details open className="rounded-md border pt-2 bg-[#e6eff199]">
-                <summary className="flex justify-between items-center cursor-pointer font-medium px-2 pb-2">
-                  Amenities
-                </summary>
-                <div className="space-y-1 p-2 bg-white">
+              <div className="space-y-6 pt-10 border-t border-neutral-50">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400">Amenities</h3>
+                  {tempFilters.amenities.length > 0 && (
+                    <button 
+                      onClick={() => handleTempChange('amenities', [])}
+                      className="text-[8px] uppercase tracking-widest text-primary font-bold hover:underline"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <div className="grid grid-cols-1 gap-4 max-h-72 overflow-y-auto scrollbar-hide pr-2">
                   {amenitiesLoading ? (
-                    <div className="text-sm text-gray-500">Loading amenities...</div>
+                    <div className="text-[10px] text-neutral-400 italic">Loading features...</div>
                   ) : (
                     (amenitiesData || []).map((amenity) => (
-                      <label key={amenity._id} className="flex items-center space-x-2">
+                      <label key={amenity._id} className="flex items-center space-x-4 cursor-pointer group">
                         <input
                           type="checkbox"
-                          className="accent-[#1D5C5C]"
+                          className="accent-primary w-4.5 h-4.5 rounded border-neutral-200"
                           checked={tempFilters.amenities.includes(amenity._id)}
                           onChange={(e) => handleAmenityChange(amenity._id, e.target.checked)}
                         />
-                        <span className="flex items-center gap-2 text-sm">
+                        <span className="flex items-center gap-3.5 text-[12px] text-neutral-500 group-hover:text-neutral-900 transition-all">
                           {amenity.icon && (
-                            <img src={amenity.icon.fileUrl} alt={amenity.name} className="w-4 h-4" />
+                            <img 
+                              src={amenity.icon.fileUrl} 
+                              alt={amenity.name} 
+                              className={`w-4 h-4 transition-opacity duration-300 ${
+                                tempFilters.amenities.includes(amenity._id) ? 'opacity-100' : 'opacity-30 group-hover:opacity-100'
+                              }`} 
+                            />
                           )}
-                          {amenity.name}
+                          <span className={tempFilters.amenities.includes(amenity._id) ? 'font-medium text-neutral-900' : ''}>
+                            {amenity.name}
+                          </span>
                         </span>
                       </label>
                     ))
                   )}
                 </div>
-              </details>
-
-              {/* Rating */}
-              <details open className="rounded-md border pt-2 bg-[#e6eff199]">
-                <summary className="flex justify-between items-center cursor-pointer font-medium px-2 pb-2">
-                  Rating
-                </summary>
-                <div className="space-y-2 p-2 bg-white">
-                  {[5, 4, 3, 2, 1].map((stars) => (
-                    <label key={stars} className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name="rating"
-                        className="accent-[#1D5C5C]"
-                        checked={tempFilters.rating === stars.toString()}
-                        onChange={() => handleTempChange('rating', stars.toString())}
-                      />
-                      <span className="flex items-center">
-                        {[...Array(stars)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 text-[#1D5C5C] fill-current" />
-                        ))}
-                        {[...Array(5 - stars)].map((_, i) => (
-                          <Star key={i} className="w-4 h-4 text-gray-300" />
-                        ))}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </details>
+              </div>
 
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-between mt-4">
+          <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-neutral-100 bg-white">
             <button
-              className="border px-4 py-2 rounded hover:bg-gray-100 text-sm"
-              onClick={handleResetFilters}
-            >
-              Reset
-            </button>
-            <button
-              className="bg-[#1D5C5C] text-white px-4 py-2 rounded hover:bg-[#174747] text-sm transition-colors"
+              className="w-full border border-luxury-green/20 text-luxury-green py-4 rounded-full text-[10px] uppercase tracking-[0.4em] font-bold hover:bg-luxury-green hover:text-white transition-all active:scale-[0.98] shadow-sm"
               onClick={handleApplyFilters}
             >
-              Apply Filter
+              Apply Selection
+            </button>
+            <button
+              className="w-full border border-neutral-100 text-neutral-400 py-4 rounded-full text-[9px] uppercase tracking-[0.4em] font-bold hover:bg-neutral-50 transition-colors"
+              onClick={handleResetFilters}
+            >
+              Reset All
             </button>
           </div>
         </div>

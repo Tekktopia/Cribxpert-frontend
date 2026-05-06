@@ -181,9 +181,9 @@ const FilterBar: React.FC = () => {
   }, [isGeolocationActive, userLocation, dispatch]);
 
   return (
-    <div className="bg-primary w-full py-4 px-3 md:px-8 hidden lg:block">
-      <div className="flex flex-row container mx-auto justify-center md:justify-between items-center gap-3 md:gap-4">
-        <div className="flex flex-wrap items-center gap-3">
+    <div className="w-full py-8 bg-primary text-white border-b border-white/10 px-[2%]">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-12 w-full lg:w-auto">
           {filterParameters.map((param, index) => (
             <FilterItem
               key={index}
@@ -195,78 +195,80 @@ const FilterBar: React.FC = () => {
             />
           ))}
 
-          <button
-            onClick={handleGeoLocation}
-            disabled={userLocation.loading}
-            className={`bg-primary text-white h-[36px] px-4 py-2 rounded-md whitespace-nowrap text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end flex items-center justify-center ${
-              userLocation.loading ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
-          >
-            {userLocation.loading ? (
-              <>
-                <svg
-                  className="animate-spin h-4 w-4 mr-2 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                  ></path>
-                </svg>
-                Locating...
-              </>
-            ) : (
-              'Use My Location'
-            )}
-          </button>
+          <div className="flex items-center gap-6 w-full lg:w-auto justify-center lg:justify-end">
+            <button
+              onClick={handleGeoLocation}
+              disabled={userLocation.loading}
+              className={`premium-transition h-[48px] px-8 rounded-full border border-white/30 text-white text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white hover:text-primary flex items-center justify-center ${
+                userLocation.loading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              {userLocation.loading ? (
+                <>
+                  <svg
+                    className="animate-spin h-4 w-4 mr-2 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                  Locating...
+                </>
+              ) : (
+                'Use My Location'
+              )}
+            </button>
 
-          <button
-            onClick={handleSearch}
-            disabled={isFiltering}
-            className={`bg-black text-white h-[36px] px-4 py-2 rounded-md text-sm md:text-base mt-0 md:mt-auto md:ml-2 md:min-w-[100px] md:self-end ${
-              isFiltering ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
-          >
-            {isFiltering ? (
-              <span className="flex items-center justify-center">
-                <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Filtering...
-              </span>
-            ) : (
-              'Search'
-            )}
-          </button>
-        </div>{/* ← this closing div was missing */}
+            <button
+              onClick={handleSearch}
+              disabled={isFiltering}
+              className={`premium-transition h-[48px] px-10 rounded-full bg-white text-primary text-[10px] uppercase tracking-[0.2em] font-bold shadow-premium hover:shadow-premium-hover hover:scale-105 ${
+                isFiltering ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
+            >
+              {isFiltering ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Searching...
+                </span>
+              ) : (
+                'Search Spaces'
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
