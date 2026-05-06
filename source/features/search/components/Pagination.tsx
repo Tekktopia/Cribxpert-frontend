@@ -11,6 +11,8 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
+  if (totalPages <= 1) return null;
+
   const handleNext = () => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
@@ -27,67 +29,46 @@ const Pagination: React.FC<PaginationProps> = ({
     const pages = [];
     pages.push(1);
 
-    if (currentPage > 2) pages.push('...');
+    if (currentPage > 3) pages.push('...');
 
-    if (currentPage !== 1 && currentPage !== totalPages) {
-      pages.push(currentPage);
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      if (!pages.includes(i)) pages.push(i);
     }
 
-    if (currentPage < totalPages - 1) pages.push('...');
+    if (currentPage < totalPages - 2) pages.push('...');
 
-    if (totalPages > 1) pages.push(totalPages);
+    if (totalPages > 1 && !pages.includes(totalPages)) pages.push(totalPages);
 
     return pages;
   };
 
   return (
-    <div className="flex justify-between items-center py-4">
-      {/* Buttons*/}
-      <button></button>
-
-      {!(currentPage === totalPages) && (
-        <button
-          className="bg-primary hover:bg-hoverColor text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
-          onClick={handleNext}
-        >
-          Next Page
-        </button>
-      )}
-
-      {currentPage === totalPages && (
-        <button
-          className="bg-primary hover:bg-hoverColor text-white px-6 py-2 rounded-md cursor-pointer hidden md:flex"
-          onClick={handlePrev}
-        >
-          Previous Page
-        </button>
-      )}
-
-      {/* Main Pagination */}
-      <div className="flex items-center w-full md:w-auto justify-center space-x-2 text-sm">
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-
-        {/* Previous Button */}
+    <div className="flex flex-col md:flex-row justify-between items-center py-10 border-t border-neutral-100 mt-12 gap-8">
+      <div className="flex items-center gap-4">
         <button
           onClick={handlePrev}
-          className="bg-[#e6ebf1] text-[#1D5C5C] px-2 py-1 rounded cursor-pointer"
           disabled={currentPage === 1}
+          className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 disabled:opacity-20 transition-all hover:text-primary"
         >
-          &lt;
+          <div className="w-10 h-10 rounded-full border border-neutral-100 flex items-center justify-center group-hover:border-primary transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </div>
+          <span className="hidden sm:inline">Previous</span>
         </button>
+      </div>
 
-        {/* Page Numbers */}
+      <div className="flex items-center gap-3">
         {getPageNumbers().map((page, index) =>
           typeof page === 'number' ? (
             <button
               key={index}
               onClick={() => onPageChange(page)}
-              className={`px-3 py-1 rounded cursor-pointer ${
+              className={`w-10 h-10 rounded-full text-[10px] font-bold transition-all duration-300 ${
                 page === currentPage
-                  ? 'bg-[#1D5C5C] text-white'
-                  : 'bg-[#e6ebf1] text-[#1D5C5C]'
+                  ? 'bg-neutral-900 text-white shadow-lg'
+                  : 'text-neutral-400 hover:text-neutral-900 hover:bg-neutral-50'
               }`}
             >
               {page}
@@ -95,20 +76,26 @@ const Pagination: React.FC<PaginationProps> = ({
           ) : (
             <span
               key={index}
-              className="px-3 py-1 rounded bg-[#e6ebf1] text-[#1D5C5C]"
+              className="text-neutral-300 text-xs px-2"
             >
-              ...
+              {page}
             </span>
           )
         )}
+      </div>
 
-        {/* Next Button */}
+      <div className="flex items-center gap-4">
         <button
           onClick={handleNext}
-          className="bg-[#e6ebf1] text-[#1D5C5C] cursor-pointer px-2 py-1 rounded"
           disabled={currentPage === totalPages}
+          className="group flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 disabled:opacity-20 transition-all hover:text-primary"
         >
-          &gt;
+          <span className="hidden sm:inline">Next</span>
+          <div className="w-10 h-10 rounded-full border border-neutral-100 flex items-center justify-center group-hover:border-primary transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
         </button>
       </div>
     </div>

@@ -211,7 +211,7 @@ export default function DiscoverResults({
   // Memoize the grid classes to prevent unnecessary recalculations
   const gridClasses = useMemo(() => {
     return `grid grid-cols-1 sm:grid-cols-2 ${isOpen ? 'xl:grid-cols-3' : 'xl:grid-cols-4'
-      } max-h-[90vh] overflow-y-scroll scrollbar-hide gap-4 mb-14`;
+      } max-h-[90vh] overflow-y-scroll scrollbar-hide gap-10 mb-20`;
   }, [isOpen]);
 
   return (
@@ -223,16 +223,15 @@ export default function DiscoverResults({
             Object.keys(activeFilters).some(
               (key) => activeFilters[key] && activeFilters[key] !== ''
             )) && (
-              <div className="mb-12">
-                <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 mb-2">
+              <div className="mb-14 pt-4 border-t border-neutral-50">
+                <p className="text-[10px] uppercase tracking-[0.4em] font-bold text-primary mb-4">
                   {searchQuery
                     ? `Results for "${searchQuery}"`
-                    : 'Filtered Selection'}
-                </h2>
-                <p className="text-2xl font-light text-neutral-900 uppercase">
-                  {filteredListings.length}{' '}
-                  <span className="font-bold">{filteredListings.length === 1 ? 'Spaces' : 'Spaces'}</span> available
+                    : 'Refined Selection'}
                 </p>
+                <h2 className="text-3xl font-light text-neutral-900 uppercase tracking-tight">
+                  <span className="font-bold">{filteredListings.length}</span> {filteredListings.length === 1 ? 'Exquisite Space' : 'Exquisite Spaces'}
+                </h2>
               </div>
             )}
 

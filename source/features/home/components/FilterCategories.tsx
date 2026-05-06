@@ -181,46 +181,27 @@ const FilterCategories: React.FC = () => {
         </div>
       )}
 
-      <div className="flex items-center gap-10 min-w-max">
+      <div className="flex items-center gap-6 min-w-max pb-4 pt-2">
         <div
           key="all"
-          className={`flex flex-col items-center text-center cursor-pointer transition-all duration-300 min-w-[70px] group ${
-            !activeFilters.propertyType ? 'opacity-100' : 'opacity-60 hover:opacity-100'
+          className={`flex items-center gap-3 px-6 py-3 rounded-full cursor-pointer transition-all duration-500 group ${
+            !activeFilters.propertyType 
+              ? 'bg-secondary text-white shadow-xl shadow-secondary/20 scale-105' 
+              : 'bg-neutral-50 text-neutral-400 hover:bg-neutral-100'
           }`}
           onClick={() => handleCategoryClick('')}
         >
-          <div
-            className={`relative p-3 rounded-xl transition-all duration-300 mb-2 ${
-              !activeFilters.propertyType 
-                ? 'bg-primary shadow-premium scale-110' 
-                : 'bg-neutral-100 group-hover:bg-neutral-200'
+          <img
+            src={'/other-icons/otherFilterIcon.png'}
+            alt={'All'}
+            loading="lazy"
+            className={`w-4 h-4 object-contain transition-all duration-300 ${
+              !activeFilters.propertyType
+                ? 'filter brightness-0 invert'
+                : 'filter grayscale opacity-50 group-hover:opacity-100'
             }`}
-          >
-            <img
-              src={'/other-icons/otherFilterIcon.png'}
-              alt={'All'}
-              loading="lazy"
-              className={`w-[24px] h-[24px] object-contain transition-all duration-300 ${
-                !activeFilters.propertyType
-                  ? 'filter brightness-0 invert'
-                  : 'filter grayscale'
-              }`}
-            />
-            {categoryCounts.all > 0 && (
-              <span className={`absolute -top-2 -right-2 text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold border-2 border-white shadow-sm transition-all duration-300 ${
-                !activeFilters.propertyType ? 'bg-secondary text-white' : 'bg-primary text-white'
-              }`}>
-                {categoryCounts.all}
-              </span>
-            )}
-          </div>
-          <p
-            className={`text-xs tracking-tight transition-all duration-300 ${
-              !activeFilters.propertyType 
-                ? 'text-primary font-bold' 
-                : 'text-neutral-500 font-medium'
-            }`}
-          >
+          />
+          <p className="text-[10px] uppercase tracking-[0.2em] font-bold">
             All
           </p>
         </div>
@@ -231,57 +212,42 @@ const FilterCategories: React.FC = () => {
             icon: { fileUrl: string };
             name: string;
           }) => {
-            // Check if this filter is currently active
             const isActive = activeFilters.propertyType === propertyType._id;
-
-            // Use the pre-calculated count from categoryCounts
             const count = categoryCounts[propertyType._id] || 0;
 
             return (
               <div
                 key={propertyType._id}
-                className={`flex flex-col items-center text-center cursor-pointer transition-all duration-300 min-w-[80px] group ${
-                  isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'
+                className={`flex items-center gap-3 px-6 py-3 rounded-full cursor-pointer transition-all duration-500 group relative ${
+                  isActive 
+                    ? 'bg-primary text-white shadow-xl shadow-primary/20 scale-105' 
+                    : 'bg-neutral-50 text-neutral-400 hover:bg-neutral-100'
                 }`}
                 onClick={() => handleCategoryClick(propertyType._id)}
               >
-          <div
-            className={`relative p-3 rounded-full transition-all duration-500 mb-3 ${
-              isActive 
-                ? 'bg-primary shadow-premium scale-110' 
-                : 'bg-neutral-50 group-hover:bg-neutral-100'
-            }`}
-          >
-            <img
-              src={
-                propertyType.icon?.fileUrl ||
-                '/icons/default-property.svg'
-              }
-              alt={propertyType.name}
-              loading="lazy"
-              className={`w-5 h-5 object-contain transition-all duration-300 ${
-                isActive
-                  ? 'filter brightness-0 invert'
-                  : 'filter grayscale opacity-40 group-hover:opacity-100'
-              }`}
-            />
-            {count > 0 && (
-              <span className={`absolute -top-1 -right-1 text-[8px] rounded-full w-4 h-4 flex items-center justify-center font-bold border border-white shadow-sm transition-all duration-300 ${
-                isActive ? 'bg-secondary text-white' : 'bg-primary text-white'
-              }`}>
-                {count}
-              </span>
-            )}
-          </div>
-          <p
-            className={`text-[9px] uppercase tracking-[0.2em] transition-all duration-300 ${
-              isActive 
-                ? 'text-primary font-bold' 
-                : 'text-neutral-400 font-medium group-hover:text-neutral-900'
-            }`}
-          >
-            {propertyType.name}
-          </p>
+                <img
+                  src={
+                    propertyType.icon?.fileUrl ||
+                    '/icons/default-property.svg'
+                  }
+                  alt={propertyType.name}
+                  loading="lazy"
+                  className={`w-4 h-4 object-contain transition-all duration-300 ${
+                    isActive
+                      ? 'filter brightness-0 invert'
+                      : 'filter grayscale opacity-50 group-hover:opacity-100'
+                  }`}
+                />
+                <p className="text-[10px] uppercase tracking-[0.2em] font-bold whitespace-nowrap">
+                  {propertyType.name}
+                </p>
+                {count > 0 && (
+                  <span className={`flex items-center justify-center text-[8px] font-bold px-1.5 py-0.5 rounded-full border transition-all duration-300 ${
+                    isActive ? 'bg-white text-primary border-white' : 'bg-neutral-200 text-neutral-500 border-neutral-200'
+                  }`}>
+                    {count}
+                  </span>
+                )}
               </div>
             );
           }

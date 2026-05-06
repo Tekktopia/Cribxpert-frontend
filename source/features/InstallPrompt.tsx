@@ -25,8 +25,8 @@ export function InstallPrompt() {
       navigator.standalone === true;
     if (isStandalone) return;
 
-    const dismissed = localStorage.getItem('installPromptDismissed');
-    if (dismissed && Date.now() < parseInt(dismissed)) return;
+    const choiceMade = localStorage.getItem('notificationChoiceMade');
+    if (choiceMade === 'true') return;
 
     const userAgent = navigator.userAgent;
     const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
@@ -55,7 +55,7 @@ export function InstallPrompt() {
       }
     } else {
       setPlatform('desktop');
-      if (Notification.permission === 'granted') return;
+      if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
       setShowPrompt(true);
     }
   }, []);
@@ -67,7 +67,7 @@ export function InstallPrompt() {
       if (outcome === 'accepted') setShowPrompt(false);
       setDeferredPrompt(null);
     }
-    localStorage.setItem('installPromptDismissed', (Date.now() + 1000 * 60 * 60 * 24).toString());
+    localStorage.setItem('notificationChoiceMade', 'true');
     setShowPrompt(false);
   };
 
@@ -78,57 +78,66 @@ export function InstallPrompt() {
         body: 'You will now receive updates from Cribxpert.',
       });
     }
-    localStorage.setItem('installPromptDismissed', (Date.now() + 1000 * 60 * 60 * 24).toString());
+    localStorage.setItem('notificationChoiceMade', 'true');
     setShowPrompt(false);
   };
 
   const handleDismiss = () => {
-    localStorage.setItem('installPromptDismissed', (Date.now() + 1000 * 60 * 60 * 24).toString());
+    localStorage.setItem('notificationChoiceMade', 'true');
     setShowPrompt(false);
   };
 
   if (!showPrompt) return null;
 
-  const sharedCardClass = 'w-full max-w-md rounded-t-2xl bg-white/95 backdrop-blur-sm p-6 shadow-2xl border-t border-gray-200 animate-slide-up';
+  const sharedCardClass = 'w-full max-w-md bg-white p-8 shadow-2xl border border-neutral-100 animate-slide-up';
 
   // Desktop notifications prompt
   if (platform === 'desktop') {
     return (
-      <div className="fixed inset-x-0 bottom-0 z-50 flex items-end justify-center">
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={handleDismiss} />
+      <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+        <div className="absolute inset-0 bg-neutral-900/40 backdrop-blur-sm animate-fade-in" onClick={handleDismiss} />
         <div className={sharedCardClass + ' relative'}>
           <button
             onClick={handleDismiss}
-            className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition"
+            className="absolute right-6 top-6 text-neutral-400 hover:text-neutral-900 transition-colors"
             aria-label="Close"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
-              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          
+          <div className="text-center mb-8">
+            <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-primary mb-6">
+              Stay Connected
+            </p>
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-neutral-50 flex items-center justify-center text-primary">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900">Enable Notifications</h3>
-            <p className="mt-2 text-gray-600 text-sm">
-              Stay updated with the latest from Cribxpert. Get alerts about new listings, messages, and more.
+            <h3 className="text-2xl font-light tracking-tight text-neutral-900 mb-3 uppercase">
+              Enable <span className="font-medium">Notifications</span>
+            </h3>
+            <p className="text-neutral-500 text-sm leading-relaxed max-w-[280px] mx-auto">
+              Stay updated with the latest from Cribxpert. Get real-time alerts about new listings and messages.
             </p>
           </div>
-          <button
-            onClick={handleEnableNotifications}
-            className="mb-2 w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 py-3.5 font-semibold text-white shadow-md hover:shadow-lg transform transition hover:-translate-y-0.5 active:translate-y-0"
-          >
-            Enable Notifications
-          </button>
-          <button
-            onClick={handleDismiss}
-            className="w-full rounded-xl bg-gray-100 py-3 font-medium text-gray-700 transition hover:bg-gray-200"
-          >
-            Maybe later
-          </button>
+          
+          <div className="space-y-3">
+            <button
+              onClick={handleEnableNotifications}
+              className="w-full bg-primary text-white py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold shadow-lg shadow-primary/20 hover:bg-neutral-900 transition-all hover:-translate-y-0.5 active:translate-y-0"
+            >
+              Allow Notifications
+            </button>
+            <button
+              onClick={handleDismiss}
+              className="w-full border border-neutral-100 text-neutral-400 py-3 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-neutral-50 transition-colors"
+            >
+              No, Thank you
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -136,47 +145,52 @@ export function InstallPrompt() {
 
   // Mobile install prompt (iOS / Android)
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 flex items-end justify-center">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={handleDismiss} />
-      <div className={sharedCardClass + ' relative'}>
+    <div className="fixed inset-x-0 bottom-0 z-[100] flex items-end justify-center">
+      <div className="absolute inset-0 bg-neutral-900/40 backdrop-blur-sm animate-fade-in" onClick={handleDismiss} />
+      <div className={sharedCardClass + ' relative rounded-t-[2.5rem]'}>
         <button
           onClick={handleDismiss}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition"
+          className="absolute right-6 top-6 text-neutral-400 hover:text-neutral-900 transition-colors"
           aria-label="Close"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <div className="text-center mb-6">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
-            <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.75m-1.5.75a6.01 6.01 0 00-1.5-.75m4.5-4.5a8.25 8.25 0 00-12 0m12 0A9 9 0 103.516 9.516 9 9 0 0012 18z" />
+        <div className="text-center mb-8">
+          <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-primary mb-6">
+            Mobile Experience
+          </p>
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-neutral-50 flex items-center justify-center text-primary">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.75m-1.5.75a6.01 6.01 0 00-1.5-.75m4.5-4.5a8.25 8.25 0 00-12 0m12 0A9 9 0 103.516 9.516 9 9 0 0012 18z" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-gray-900">Install App</h3>
-          <p className="mt-2 text-gray-600 text-sm">
-            Keep Cribxpert on your home screen – install the app for a faster, seamless experience right from your home screen.
+          <h3 className="text-2xl font-light tracking-tight text-neutral-900 mb-3 uppercase">
+            Install <span className="font-medium">App</span>
+          </h3>
+          <p className="text-neutral-500 text-sm leading-relaxed max-w-[280px] mx-auto">
+            Keep Cribxpert on your home screen for a faster, more seamless luxury experience.
           </p>
         </div>
 
         {/* iOS – always manual instructions */}
         {platform === 'ios' && (
-          <div className="mb-6 space-y-4 bg-gray-50 rounded-xl p-4">
-            <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">1</span>
-              <span className="text-gray-700">Tap the Share button</span>
+          <div className="mb-8 space-y-4 bg-neutral-50 rounded-2xl p-6 border border-neutral-100">
+            <div className="flex items-center gap-4">
+              <span className="flex items-center justify-center w-8 h-8 bg-white border border-neutral-100 text-primary rounded-full text-xs font-bold shadow-sm">1</span>
+              <span className="text-sm text-neutral-600">Tap the <span className="font-medium">Share</span> button</span>
               <span className="ml-auto text-xl">📤</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">2</span>
-              <span className="text-gray-700">Scroll and tap <strong>Add to Home Screen</strong></span>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center justify-center w-8 h-8 bg-white border border-neutral-100 text-primary rounded-full text-xs font-bold shadow-sm">2</span>
+              <span className="text-sm text-neutral-600">Select <span className="font-medium">Add to Home Screen</span></span>
               <span className="ml-auto text-xl">➕</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">3</span>
-              <span className="text-gray-700">Tap <strong>Add</strong> to install</span>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center justify-center w-8 h-8 bg-white border border-neutral-100 text-primary rounded-full text-xs font-bold shadow-sm">3</span>
+              <span className="text-sm text-neutral-600">Tap <span className="font-medium">Add</span> to install</span>
             </div>
           </div>
         )}
@@ -186,36 +200,46 @@ export function InstallPrompt() {
           deferredPrompt ? (
             <button
               onClick={handleInstallClick}
-              className="mb-2 w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 py-3.5 font-semibold text-white shadow-md hover:shadow-lg transform transition hover:-translate-y-0.5 active:translate-y-0"
+              className="mb-4 w-full bg-primary text-white py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold shadow-lg shadow-primary/20 hover:bg-neutral-900 transition-all hover:-translate-y-0.5 active:translate-y-0"
             >
-              Install App
+              Install Application
             </button>
           ) : (
-            <div className="mb-6 space-y-4 bg-gray-50 rounded-xl p-4">
-              <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">1</span>
-                <span className="text-gray-700">Tap the menu (⋮) icon</span>
+            <div className="mb-8 space-y-4 bg-neutral-50 rounded-2xl p-6 border border-neutral-100">
+              <div className="flex items-center gap-4">
+                <span className="flex items-center justify-center w-8 h-8 bg-white border border-neutral-100 text-primary rounded-full text-xs font-bold shadow-sm">1</span>
+                <span className="text-sm text-neutral-600">Tap the menu <span className="font-medium">(⋮)</span> icon</span>
                 <span className="ml-auto text-xl">⋮</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">2</span>
-                <span className="text-gray-700">Select <strong>Install app</strong> or <strong>Add to Home screen</strong></span>
+              <div className="flex items-center gap-4">
+                <span className="flex items-center justify-center w-8 h-8 bg-white border border-neutral-100 text-primary rounded-full text-xs font-bold shadow-sm">2</span>
+                <span className="text-sm text-neutral-600">Select <span className="font-medium">Install app</span></span>
                 <span className="ml-auto text-xl">📲</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">3</span>
-                <span className="text-gray-700">Confirm installation</span>
+              <div className="flex items-center gap-4">
+                <span className="flex items-center justify-center w-8 h-8 bg-white border border-neutral-100 text-primary rounded-full text-xs font-bold shadow-sm">3</span>
+                <span className="text-sm text-neutral-600">Confirm installation</span>
               </div>
             </div>
           )
         )}
 
-        <button
-          onClick={handleDismiss}
-          className="w-full rounded-xl bg-gray-100 py-3 font-medium text-gray-700 transition hover:bg-gray-200"
-        >
-          Maybe later
-        </button>
+        <div className="space-y-3">
+          {platform === 'ios' && (
+             <button
+             onClick={handleDismiss}
+             className="w-full bg-primary text-white py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold shadow-lg shadow-primary/20 hover:bg-neutral-900 transition-all hover:-translate-y-0.5 active:translate-y-0"
+           >
+             Got it
+           </button>
+          )}
+          <button
+            onClick={handleDismiss}
+            className="w-full border border-neutral-100 text-neutral-400 py-3 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-neutral-50 transition-colors"
+          >
+            Maybe later
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -37,6 +37,11 @@ export default {
           light: '#D4AF37',
           DEFAULT: '#C18B3F',
           dark: '#A67C00',
+        },
+        'luxury-green': {
+          DEFAULT: '#1D5C5C',
+          light: '#2A7A7A',
+          dark: '#144141',
         }
       },
       boxShadow: {
