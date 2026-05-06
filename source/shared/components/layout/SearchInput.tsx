@@ -28,6 +28,7 @@ interface SearchInputProps {
   autoFocus?: boolean;
   showSuggestions?: boolean;
   maxSuggestions?: number;
+  isWhite?: boolean;
 }
 
 export type { SearchInputProps };
@@ -40,6 +41,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   autoFocus = false,
   showSuggestions = true,
   maxSuggestions = 6,
+  isWhite = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState(initialValue);
   const [isSearching, setIsSearching] = useState(false);
@@ -360,7 +362,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={() => { if (searchQuery.trim() && suggestions.length > 0) setShowDropdown(true); }}
           disabled={isSearching}
-          className="w-full h-[48px] border border-[#CCCCCC99]/60 rounded-[12px] px-4 pr-16 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1d5c5c]/20 focus:border-[#1d5c5c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`w-full h-[48px] rounded-[12px] px-4 pr-16 text-[14px] focus:outline-none focus:ring-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
+            isWhite 
+              ? 'bg-white/10 border-white/30 text-white placeholder-white/60 focus:bg-white/20 focus:ring-white/20 focus:border-white' 
+              : 'bg-white border-[#CCCCCC99]/60 text-neutral-900 placeholder-neutral-400 focus:ring-primary/20 focus:border-primary'
+          }`}
           placeholder={placeholder}
           autoComplete="off"
         />
@@ -369,7 +375,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-12 top-1/2 transform -translate-y-1/2 p-1 text-[#999999] hover:text-[#1d5c5c] transition-colors"
+            className={`absolute right-12 top-1/2 transform -translate-y-1/2 p-1 transition-colors ${
+              isWhite ? 'text-white/60 hover:text-white' : 'text-neutral-400 hover:text-primary'
+            }`}
             aria-label="Clear search"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -381,7 +389,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
         <button
           type="submit"
           disabled={isSearching || !searchQuery.trim()}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-[#999999] hover:text-[#1d5c5c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+            isWhite ? 'text-white/60 hover:text-white' : 'text-neutral-400 hover:text-primary'
+          }`}
           aria-label="Search"
         >
           {isSearching ? (

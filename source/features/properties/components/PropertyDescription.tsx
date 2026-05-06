@@ -18,19 +18,16 @@ const PropertyDescription: React.FC<PropertyDescriptionProps> = ({
       : `${description.substring(0, maxLength)}...`;
 
   return (
-    <section className="py-4 sm:py-6">
-      <h3 className="font-medium text-lg sm:text-xl text-[#050505] mb-3 sm:mb-4">
-        About this property
-      </h3>
-      <p className="mb-4 sm:mb-5 text-sm sm:text-[14px] md:text-base text-[#313131] font-[400] leading-6 sm:leading-7">
+    <section className="py-6">
+      <p className="mb-8 text-neutral-600 text-sm md:text-base leading-relaxed tracking-wide">
         {displayText}
       </p>
       {shouldTruncate && (
         <button
-          className="text-[#6F6F6F] font-[400] text-sm sm:text-[14px] hover:text-[#050505] transition-colors"
+          className="text-neutral-900 font-bold text-[10px] uppercase tracking-[0.3em] hover:text-primary transition-colors border-b border-neutral-200 pb-1"
           onClick={() => setExpanded(!expanded)}
         >
-          {expanded ? 'see less' : 'see more'}
+          {expanded ? 'Show Less' : 'Show Full Description'}
         </button>
       )}
     </section>

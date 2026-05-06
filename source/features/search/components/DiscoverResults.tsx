@@ -215,23 +215,23 @@ export default function DiscoverResults({
   }, [isOpen]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-1">
-        <div className="mt-8 w-full max-w-none px-4">
+        <div className="mt-8 w-full max-w-none">
           {/* Search results header */}
           {(searchQuery ||
             Object.keys(activeFilters).some(
               (key) => activeFilters[key] && activeFilters[key] !== ''
             )) && (
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              <div className="mb-12">
+                <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 mb-2">
                   {searchQuery
-                    ? `Search Results for "${searchQuery}"`
-                    : 'Filtered Results'}
+                    ? `Results for "${searchQuery}"`
+                    : 'Filtered Selection'}
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-2xl font-light text-neutral-900 uppercase">
                   {filteredListings.length}{' '}
-                  {filteredListings.length === 1 ? 'property' : 'properties'} found
+                  <span className="font-bold">{filteredListings.length === 1 ? 'Spaces' : 'Spaces'}</span> available
                 </p>
               </div>
             )}

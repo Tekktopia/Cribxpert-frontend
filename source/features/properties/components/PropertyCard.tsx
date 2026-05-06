@@ -143,7 +143,7 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
   return (
     <Link to={`/propertydetail/${propertySlug}`} className="block w-full h-full">
       <div
-        className={`w-full h-full ${minWidth} hover:cursor-pointer rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 max-w-full flex flex-col`}
+        className={`w-full h-full ${minWidth} hover:cursor-pointer rounded-xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-300 bg-white group flex flex-col`}
       >
         {/* Image Carousel - compact aspect and max height so images don't dominate the card */}
         <div className="relative overflow-hidden">
@@ -219,12 +219,12 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
           <div className="absolute top-3 right-3 z-20">
             {isSavedProperty ? (
               <FaHeart
-                className="w-6 h-6 text-[#1D5C5C]"
+                className="w-6 h-6 text-primary drop-shadow-md"
                 onClick={handleIconToggle}
               />
             ) : (
               <CiHeart
-                className="w-6 h-6 text-white drop-shadow-md"
+                className="w-6 h-6 text-white drop-shadow-xl"
                 onClick={handleIconToggle}
               />
             )}
@@ -245,30 +245,30 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
         <div className="p-3 sm:p-4 flex flex-col flex-1 min-w-0">
           {/* Property Name */}
           <div className="mb-2 sm:mb-3 min-w-0">
-            <h3 className="font-medium text-base sm:text-lg leading-tight mb-1 truncate" title={name}>{name}</h3>
-            <p className="text-xs sm:text-sm text-gray-600 line-clamp-3">{description}</p>
+            <h3 className="font-semibold text-lg sm:text-xl leading-tight mb-1 truncate text-neutral-900 group-hover:text-primary transition-colors" title={name}>{name}</h3>
+            <p className="text-xs sm:text-sm text-neutral-500 line-clamp-2">{description}</p>
           </div>
 
           {/* Property Tags Row */}
           <div className="flex items-center flex-wrap gap-2 sm:gap-4 mb-2 sm:mb-3 min-w-0">
             {/* Property Type Tag */}
             {propertyType && (
-              <span className="bg-[#1D5C5C] text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+              <span className="bg-primary/10 text-primary text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
                 {propertyType}
               </span>
             )}
 
             {/* Bedroom Tag */}
-            <span className="bg-[#1D5C5C] text-white text-xs sm:text-xs px-2 py-1 rounded whitespace-nowrap">
-              {bedrooms} Bedroom{bedrooms !== 1 ? 's' : ''}
+            <span className="bg-neutral-100 text-neutral-600 text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full">
+              {bedrooms} {bedrooms !== 1 ? 'Beds' : 'Bed'}
             </span>
 
             {/* Rating - Only show if rating exists and is greater than 0 */}
             {rating && rating > 0 ? (
               <div className="flex items-center">
-                <span className="bg-[#A58207] text-white text-xs px-1.5 sm:px-2 py-0.5 rounded gap-1 flex items-center">
-                  <FaStar className="text-yellow-500 text-xs" />
-                  <span className="text-xs">{rating}</span>
+                <span className="bg-secondary/10 text-secondary text-xs px-2 py-1 rounded-full gap-1 flex items-center font-bold">
+                  <FaStar className="text-secondary text-xs" />
+                  <span>{rating}</span>
                 </span>
               </div>
             ) : null}
@@ -304,13 +304,13 @@ const PropertyListingCard: React.FC<PropertyListingCardProps> = ({
           </div>
 
           {/* Price */}
-          <div className="mt-auto pt-2">
-            <span className="text-[#1D5C5C] font-bold text-base sm:text-lg">
+          <div className="mt-auto pt-4 flex items-baseline gap-1">
+            <span className="text-primary font-bold text-xl">
               ₦{(Number(price) + Number(cleaningFee)).toLocaleString()}
             </span>
-            <span className="text-gray-500 text-xs sm:text-sm">/night</span>
-            <p className="text-gray-400 text-xs mt-0.5">Accommodation fee · excl. taxes & fees</p>
+            <span className="text-neutral-500 text-sm">/ night</span>
           </div>
+          <p className="text-neutral-400 text-[10px] mt-1 italic">Incl. cleaning fee · excl. taxes</p>
         </div>
       </div>
     </Link>

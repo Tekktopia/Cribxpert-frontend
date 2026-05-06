@@ -14,15 +14,16 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <section className="py-15">
+      <section className="">
         {/* Hero Section */}
         <HeroSection />
 
         {/* Filter Section - Made sticky */}
         <FilterSection />
 
-        {/* Listings Section with Loading/Empty States */}
-        <ListingsSection isLoading={isLoading} />
+        <div className="content-container">
+          <ListingsSection isLoading={isLoading} />
+        </div>
       </section>
     </div>
   );

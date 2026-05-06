@@ -17,8 +17,8 @@ import { calculatePricing } from '@/utils/pricingUtils';
 // Import our new components
 import PropertyGallery from '@/features/properties/components/PropertyGallery';
 import PropertyHeader from '@/features/properties/components/PropertyHeader';
-import PropertyOverview from '@/features/properties/components/PropertyOverview';
 import PropertyDescription from '@/features/properties/components/PropertyDescription';
+import HouseLayout from '@/features/properties/components/HouseLayout';
 import PropertyRules, { Rule } from '@/features/properties/components/PropertyRules';
 import PropertyPolicies from '@/features/properties/components/PropertyPolicies';
 import PropertyRatings from '@/features/properties/components/PropertyRatings';
@@ -26,6 +26,7 @@ import CustomerReviews from '@/features/properties/components/CustomerReviews';
 import LeaveReviewForm from '@/features/properties/components/LeaveReviewForm';
 import SimilarProperties from '@/features/properties/components/SimilarProperties';
 import useAlert from '@/hooks/useAlert';
+import Footer from '@/shared/components/layout/Footer';
 
 // Import mock data from utility files
 import {
@@ -255,11 +256,21 @@ const PropertyDetail = () => {
 
   // Show loading or not found message if no property
   if (!property) {
+    // If listings are still loading, show a loading state instead of "not found"
+    if (listings.length === 0) {
+      return (
+        <section className="max-w-screen-2xl mx-auto overflow-hidden min-h-screen flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full"></div>
+            <p className="text-neutral-500 font-medium">Loading premium space...</p>
+          </div>
+        </section>
+      );
+    }
+
     return (
-      <section className="max-w-screen-xl mx-auto overflow-hidden">
-        <div className="flex justify-center items-center h-[60vh] mt-[130px]">
-          <p className="text-xl text-gray-500">Property not found</p>
-        </div>
+      <section className="max-w-screen-2xl mx-auto overflow-hidden min-h-[70vh] flex items-center justify-center">
+        <p className="text-xl text-neutral-500">Property not found</p>
       </section>
     );
   }
@@ -314,65 +325,120 @@ const PropertyDetail = () => {
 
 
   return (
-    <section className="max-w-screen-xl mx-auto overflow-hidden">
-      {/* Property Gallery Component */}
-      <PropertyGallery images={propertyImages} propertyName={property.name} />
-      {/* Property Header Component */}
-      <PropertyHeader />
-      {/* Property Overview Component */}
-      <PropertyOverview />
-      <section className="py-4 sm:py-6 px-4 sm:px-10">
+    <section className="w-full overflow-hidden bg-white min-h-screen">
+      <div className="content-container pt-12 pb-24">
+        {/* Navigation / Breadcrumbs */}
+        <div className="flex justify-between items-center mb-12 py-4 border-y border-neutral-100">
+          <div className="flex gap-4 text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400">
+            <span className="cursor-pointer hover:text-primary transition-colors" onClick={() => navigate('/')}>Main</span>
+            <span>/</span>
+            <span className="cursor-pointer hover:text-primary transition-colors" onClick={() => navigate('/discover')}>Discover</span>
+            <span>/</span>
+            <span className="text-primary">Project Details</span>
+          </div>
+          <div className="flex gap-8 text-[10px] uppercase tracking-[0.3em] font-bold">
+            <button className="flex items-center gap-2 hover:text-primary transition-colors group" onClick={() => navigate(-1)}>
+              <span className="group-hover:-translate-x-1 transition-transform">←</span> Back
+            </button>
+            <button className="flex items-center gap-2 hover:text-primary transition-colors group">
+              Next <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Cinematic Title */}
+        <div className="mb-12">
+          <h1 className="text-3xl md:text-5xl font-light uppercase tracking-tighter text-neutral-900 leading-none">
+            {property.name.split(' ').length > 2 
+              ? <>{property.name.split(' ').slice(0, 2).join(' ')} <span className="font-bold">№{property._id.slice(-2)}</span></>
+              : <>{property.name} <span className="font-bold">№{property._id.slice(-2)}</span></>
+            }
+          </h1>
+        </div>
+
+        {/* Property Gallery Component - Hero Image */}
+        <PropertyGallery images={propertyImages} propertyName={property.name} />
+
+        {/* House Layout Component - Specs and Floor Plan */}
+        <HouseLayout />
+
+        <section className="py-12">
         <div className="flex flex-col lg:flex-row justify-around gap-6 lg:gap-8">
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-3/5">
+            <h2 className="text-2xl font-light tracking-tight text-neutral-900 mb-6 uppercase">
+              The atmosphere <br/> <span className="font-medium">of a comfortable life</span>
+            </h2>
             {/* Description Component */}
             <PropertyDescription description={property.description} />
 
             {/* Amenities Available Section */}
-            <div className="mt-2 sm:mt-4">
-              <h3 className="text-[#050505] font-[500] text-lg sm:text-xl mb-4 sm:mb-5">
-                Amenities Available
+            <div className="mt-16">
+              <h3 className="text-xs uppercase tracking-[0.2em] text-neutral-400 font-bold mb-8 border-b border-neutral-100 pb-4">
+                Amenities & Features
               </h3>
               <AmenitiesSection />
             </div>
           </div>
 
-          <div className="w-full lg:w-1/2">
-            <div className="">
+          <div className="w-full lg:w-2/5">
+            <div className="sticky top-32">
               {isOwner ? (
-                <div className="w-full max-w-[480px] lg:ml-auto bg-white border border-[#E6E6E6] rounded-lg p-5 text-center">
-                  <div className="py-8">
-                    <p className="text-[#1D5C5C] font-semibold text-[16px] mb-2">
-                      This is your listing
+                <div className="w-full bg-white border border-neutral-100 p-8 text-center shadow-sm">
+                  <div className="py-4">
+                    <p className="text-primary font-bold uppercase tracking-widest text-xs mb-4">
+                      Host Controls
                     </p>
-                    <p className="text-[#6F6F6F] text-[14px]">
-                      You cannot book your own property.
+                    <p className="text-neutral-500 text-sm">
+                      You are viewing your own luxury listing.
                     </p>
                   </div>
                 </div>
               ) : isExpired ? (
-                <div className="w-full max-w-[480px] lg:ml-auto bg-white border border-[#E6E6E6] rounded-lg p-5 text-center">
-                  <div className="py-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-[#999] mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <p className="text-[#313131] font-semibold text-[16px] mb-2">
-                      No Longer Available
+                <div className="w-full bg-white border border-neutral-100 p-8 text-center shadow-sm">
+                  <div className="py-4">
+                    <p className="text-primary font-bold uppercase tracking-widest text-xs mb-4">
+                      Archived Listing
                     </p>
-                    <p className="text-[#6F6F6F] text-[14px]">
-                      This listing's availability period has ended and can no longer be booked.
+                    <p className="text-neutral-500 text-sm">
+                      This premium space is currently unavailable.
                     </p>
                   </div>
                 </div>
               ) : (
-                <BookingForm
-                  property={property}
-                  onBookingSubmit={handleBookingSubmit}
-                  isLoggedIn={currentUser !== null}
-                />
+                <div className="shadow-2xl shadow-neutral-100">
+                  <BookingForm
+                    property={property}
+                    onBookingSubmit={handleBookingSubmit}
+                    isLoggedIn={currentUser !== null}
+                  />
+                </div>
               )}
             </div>
           </div>
-        </div>{' '}
+        </div>
+        
+        {/* Extra Visual Section: "Notice every detail" */}
+        <div className="mt-16 pt-16 border-t border-neutral-100">
+          <h2 className="text-2xl font-light tracking-tight text-neutral-900 mb-8 uppercase">
+            Notice <span className="font-medium">every detail</span>
+          </h2>
+          <div className="aspect-video relative overflow-hidden bg-neutral-100 group cursor-pointer">
+            <img 
+              src={propertyImages[1] || propertyImages[0]} 
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+              alt="Feature details"
+            />
+            <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-16 pt-16 border-t border-neutral-100">
+          <PropertyHeader />
+        </div>
         {/* House Rules Component */}
         <PropertyRules rules={mappedRules} /> {/* Policies Component */}
         <PropertyPolicies
@@ -380,11 +446,16 @@ const PropertyDetail = () => {
           cancellationPeriods={CANCELLATION_PERIODS}
         />
         {/* Ratings and Reviews Section */}
-        <div className="py-6 sm:py-8 px-4 md:px-10">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div className="py-12">
+          <div className="flex flex-col lg:flex-row gap-12">
             <div className="w-full lg:w-1/2">
-              <h2 className="text-lg sm:text-[20px] text-[#040404] font-[500] mb-4 sm:mb-6">
-                Verified Ratings {calculateRatings.totalRatings > 0 && `(${calculateRatings.totalRatings})`}
+              <h2 className="text-2xl font-light tracking-tight text-neutral-900 mb-12 uppercase">
+                Verified <span className="font-bold">Ratings</span>
+                {calculateRatings.totalRatings > 0 && (
+                  <span className="text-neutral-300 font-light ml-4 normal-case tracking-normal">
+                    ({calculateRatings.totalRatings} Reviews)
+                  </span>
+                )}
               </h2>
               {/* Ratings Component */}
               <PropertyRatings
@@ -421,6 +492,10 @@ const PropertyDetail = () => {
           similarProperties={similarProperties}
         />
       </section>
+      </div>
+
+      {/* Footer */}
+      <Footer />
     </section>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '@/shared/components/OptimizedImage';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 interface HeroProps {
   images: string[];
@@ -13,6 +12,7 @@ interface HeroProps {
   showArrows?: boolean;
   showDots?: boolean;
   overlayOpacity?: number;
+  fullHeight?: boolean;
 }
 
 const Hero: React.FC<HeroProps> = ({
@@ -22,9 +22,9 @@ const Hero: React.FC<HeroProps> = ({
   buttonText,
   buttonLink,
   interval = 5000,
-  showArrows = true,
   showDots = true,
-  overlayOpacity = 50,
+  overlayOpacity = 60,
+  fullHeight = true,
 }) => {
   // State for tracking current image index and loaded state
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -57,7 +57,7 @@ const Hero: React.FC<HeroProps> = ({
   }, []);
 
   return (
-    <div className="relative w-full h-[50vh] xl:h-[80vh] overflow-hidden">
+    <div className={`relative w-full overflow-hidden premium-transition ${fullHeight ? 'h-screen' : 'h-[60vh] lg:h-[80vh]'}`}>
       {/* Better image handling with individual images instead of background */}
       {images.map((image, index) => (
         <div 
@@ -91,65 +91,39 @@ const Hero: React.FC<HeroProps> = ({
         style={{ opacity: overlayOpacity / 100 }}
       ></div>
 
-      {/* Content */}
-      <div className="relative z-20 flex flex-col items-center justify-center h-full text-center text-white px-4">
-        <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-[#E6E6E6] mb-4 max-w-3xl">
-          {title}
-        </h1>
-        <p className="text-sm sm:text-base font-medium text-[#E6E6E6] mb-6">
-          {subtitle}
-        </p>
-        <Link to={buttonLink}>
-          <button className="bg-primary hover:bg-hoverColor transition-colors px-6 py-2 rounded-md text-white text-sm md:text-base">
-            {buttonText}
-          </button>
-        </Link>
+      {/* Content - Bottom Left */}
+      <div className="absolute inset-0 z-20 flex flex-col justify-end items-start h-full text-left text-white px-[2%] pb-24">
+        <div className="max-w-4xl">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic mb-6 leading-[1.1] tracking-tight">
+            {title}
+          </h1>
+          <p className="text-base sm:text-lg font-medium text-neutral-100/80 mb-10 max-w-xl leading-relaxed uppercase tracking-[0.3em] text-[11px]">
+            {subtitle}
+          </p>
+          <Link to={buttonLink}>
+            <button className="premium-transition border border-white/50 text-white px-10 py-3.5 rounded-full text-[9px] uppercase tracking-[0.4em] font-bold hover:bg-white hover:text-neutral-900 shadow-premium hover:shadow-premium-hover">
+              {buttonText}
+            </button>
+          </Link>
+        </div>
       </div>
 
-      {/* Carousel Navigation Dots - Optimized */}
+      {/* Carousel Navigation Dashes - Bottom Right */}
       {showDots && images.length > 1 && (
-        <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
+        <div className="absolute bottom-12 right-[4%] z-20 flex gap-4">
           {images.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-2.5 h-2.5 hover:cursor-pointer rounded-full transition-all ${
+              className={`h-[2px] transition-all duration-500 hover:cursor-pointer ${
                 currentImageIndex === index
-                  ? 'bg-white scale-125'
-                  : 'bg-white/50'
+                  ? 'w-12 bg-white'
+                  : 'w-8 bg-white/30 hover:bg-white/60'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
-      )}
-
-      {/* Left/Right Navigation Arrows with improved accessibility and icons */}
-      {showArrows && images.length > 1 && (
-        <>
-          <button
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-10 h-10 rounded-full z-20 flex items-center justify-center"
-            onClick={() =>
-              setCurrentImageIndex((prev) =>
-                prev === 0 ? images.length - 1 : prev - 1
-              )
-            }
-            aria-label="Previous slide"
-          >
-            <FaChevronLeft size={16} />
-          </button>
-          <button
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white w-10 h-10 rounded-full z-20 flex items-center justify-center"
-            onClick={() =>
-              setCurrentImageIndex((prev) =>
-                prev === images.length - 1 ? 0 : prev + 1
-              )
-            }
-            aria-label="Next slide"
-          >
-            <FaChevronRight size={16} />
-          </button>
-        </>
       )}
     </div>
   );

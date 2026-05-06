@@ -8,9 +8,10 @@ interface IconNavigationProps {
   isHostMode: boolean;
   onToggleHostMode: () => void;
   isAuthenticated: boolean;
+  isWhite?: boolean;
 }
 
-const IconNavigation: React.FC<IconNavigationProps> = ({ isHostMode, onToggleHostMode, isAuthenticated }) => {
+const IconNavigation: React.FC<IconNavigationProps> = ({ isHostMode, onToggleHostMode, isAuthenticated, isWhite = false }) => {
   const navigate = useNavigate();
   const unreadCount = useSelector((state: RootState) => state.notification.unreadCount);
 
@@ -61,34 +62,37 @@ const IconNavigation: React.FC<IconNavigationProps> = ({ isHostMode, onToggleHos
   ];
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-8">
       {iconNavItems.map((item, index) => (
         <NavLink
           to={item.route}
           key={index}
           className={({ isActive }) =>
-            `flex flex-col  items-center gap-1 cursor-pointer transition-colors group ${isActive ? 'text-[#1d5c5c]' : 'text-[#999999] hover:text-[#1d5c5c]'
+            `flex flex-col items-center gap-1 cursor-pointer transition-all duration-300 group ${
+              isActive 
+                ? (isWhite ? 'text-white' : 'text-primary') 
+                : (isWhite ? 'text-white/60 hover:text-white' : 'text-neutral-400 hover:text-primary')
             }`
           }
         >
           {item.icon}
-          <span className="text-[12px] font-medium">{item.label}</span>
+          <span className="text-[11px] font-bold uppercase tracking-wider">{item.label}</span>
         </NavLink>
       ))}
       <button
         onClick={handleHostToggle}
         className={`
-    text-[13px] font-medium px-4 py-1.5 
-    rounded-full transition-all duration-200
-    whitespace-nowrap border
-    ${isHostMode
-            ? 'bg-[#1d5c5c] text-white border-[#1d5c5c]'
-            : 'bg-white text-[#1d5c5c] border-[#1d5c5c]'
+          text-[12px] font-bold px-5 py-2 uppercase tracking-wide
+          rounded-full transition-all duration-300
+          whitespace-nowrap border-2
+          ${isHostMode
+            ? (isWhite ? 'bg-white text-primary border-white' : 'bg-primary text-white border-primary')
+            : (isWhite ? 'bg-transparent text-white border-white hover:bg-white hover:text-primary' : 'bg-white text-primary border-primary hover:bg-primary hover:text-white')
           }
-    hover:text-hoverColor hover:border-hoverColor hover:bg-white
-  `}
+          shadow-premium
+        `}
       >
-        {isHostMode ? 'Switch to Guest' : 'Switch to Host'}
+        {isHostMode ? 'Guest Mode' : 'Host Mode'}
       </button>
     </div>
   );

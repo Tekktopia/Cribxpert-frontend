@@ -1,7 +1,7 @@
 import { BiMenu, BiX } from 'react-icons/bi';
 import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   selectCurrentUser,
   selectIsAuthenticated,
@@ -21,6 +21,9 @@ const Header: React.FC = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   const [isHostMode, setIsHostMode] = useState(false);
   const navigate = useNavigate();
@@ -55,10 +58,12 @@ const Header: React.FC = () => {
 
   // Control header visibility based on scroll direction
   const controlNavbar = useCallback(() => {
-    // For mobile devices - if menu is open, don't hide header
-    if (isOpen) return;
-
     const currentScrollY = window.scrollY;
+    
+    // Transparency logic
+    setIsScrolled(currentScrollY > 50);
+
+    if (isOpen) return;
 
     if (currentScrollY <= 100) {
       // Always show at top of page
@@ -86,28 +91,39 @@ const Header: React.FC = () => {
   return (
     <section className="overflow-hidden w-full">
       <header
-        className={`fixed w-full left-0 right-0 z-50 border-b border-b-[#CCCCCC80]/50 bg-white shadow-sm transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'
-          }`}
+        className={`fixed w-full left-0 right-0 z-50 transition-all duration-500 ${
+          visible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+        } ${
+          isScrolled || !isHomePage 
+            ? 'glass-morphism shadow-premium py-0' 
+            : 'bg-transparent border-none py-2'
+        }`}
       >
-        <div className="lg:container mx-auto">
+        <div className="content-container">
           {/* Navigation Bar */}
-          <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 px-4 md:px-8 py-3">
+          <nav className="hidden md:flex flex-wrap items-center justify-between gap-4 py-3">
             {/* Logo */}
             <div className="w-auto">
-              <Logo />
+              <Logo isWhite={!isScrolled && isHomePage} />
             </div>
 
             {/* Search Input */}
-            <SearchInput />
+            <SearchInput isWhite={!isScrolled && isHomePage} />
 
-            {/* Icons Section */}
-            <div className="w-full lg:w-auto justify-between flex flex-row gap-6 py-3">
-              <IconNavigation
-                isHostMode={isHostMode}
-                onToggleHostMode={toggleHostMode}
-                isAuthenticated={isAuthenticated}
-              />
-              <div className="w-[28px] border-l border-[#CCCCCC]/30"></div>
+            {/* Action Section */}
+            <div className="w-full lg:w-auto flex flex-row items-center gap-6 py-3">
+              {/* Icons Section - Restricted to authenticated users */}
+              {isAuthenticated && (
+                <>
+                  <IconNavigation
+                    isHostMode={isHostMode}
+                    onToggleHostMode={toggleHostMode}
+                    isAuthenticated={isAuthenticated}
+                    isWhite={!isScrolled && isHomePage}
+                  />
+                  <div className={`w-[28px] border-l h-6 ${!isScrolled && isHomePage ? 'border-white/20' : 'border-neutral-100'}`}></div>
+                </>
+              )}
 
               {/* Conditional rendering based on authentication status */}
               {isAuthenticated ? (
@@ -120,7 +136,7 @@ const Header: React.FC = () => {
                   onToggleHostMode={toggleHostMode}
                 />
               ) : (
-                <AuthButtons />
+                <AuthButtons isWhite={!isScrolled && isHomePage} />
               )}
             </div>
           </nav>
@@ -137,10 +153,14 @@ const Header: React.FC = () => {
             )}
           </div>
 
-          {/* Navigation Menu for Desktop */}
-          <div className="hidden md:flex px-4 md:px-8 py-4">
-            <MainNavigation isHostMode={isHostMode} />
-          </div>
+          {/* Navigation Menu for Desktop - ONLY for authenticated users */}
+          {isAuthenticated && (
+            <div className={`hidden md:flex py-4 transition-all duration-500 ${
+              isScrolled || !isHomePage ? 'border-t border-neutral-100/50' : 'border-t border-white/20'
+            }`}>
+              <MainNavigation isHostMode={isHostMode} />
+            </div>
+          )}
 
           {/* Mobile Menu with Profile/Auth */}
           <MobileMenu
@@ -162,7 +182,9 @@ const Header: React.FC = () => {
 
 // Create a header spacer component to use where needed
 export const HeaderSpacer: React.FC = () => {
-  return <div className="h-[60px] md:h-[200px] lg:h-[125px]"></div>;
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  // Adjusted height based on whether the sub-nav is visible
+  return <div className={`transition-all duration-300 ${isAuthenticated ? 'h-[140px] md:h-[200px] lg:h-[135px]' : 'h-[70px] md:h-[80px] lg:h-[80px]'}`}></div>;
 };
 
 export default Header;

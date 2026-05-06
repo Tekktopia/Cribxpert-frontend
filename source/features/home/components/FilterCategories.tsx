@@ -173,50 +173,52 @@ const FilterCategories: React.FC = () => {
   }
 
   return (
-    <div className="w-full mx-auto bg-white overflow-x-auto py-2 scrollbar-hide max-w-screen relative">
+    <div className="w-full bg-white overflow-x-auto py-6 scrollbar-hide border-b border-neutral-100 content-container relative">
       {/* Show filtering indicator if needed */}
       {isFilteringListings && (
-        <div className="absolute right-4 top-2">
-          <div className="animate-spin h-4 w-4 border-2 border-[#1D5C5C] border-t-transparent rounded-full"></div>
+        <div className="absolute right-8 top-2">
+          <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
         </div>
       )}
 
-      <div className="flex items-center gap-6 min-w-max px-4">
+      <div className="flex items-center gap-10 min-w-max">
         <div
           key="all"
-          className={`flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:scale-105 ${
-            !activeFilters.propertyType ? 'scale-110 transition-transform' : ''
+          className={`flex flex-col items-center text-center cursor-pointer transition-all duration-300 min-w-[70px] group ${
+            !activeFilters.propertyType ? 'opacity-100' : 'opacity-60 hover:opacity-100'
           }`}
           onClick={() => handleCategoryClick('')}
         >
           <div
-            className={`relative p-2 rounded-full transition-colors duration-200 ${
+            className={`relative p-3 rounded-xl transition-all duration-300 mb-2 ${
               !activeFilters.propertyType 
-                ? 'bg-[#1D5C5C]/10' 
-                : 'hover:bg-[#1D5C5C]/5'
+                ? 'bg-primary shadow-premium scale-110' 
+                : 'bg-neutral-100 group-hover:bg-neutral-200'
             }`}
           >
             <img
               src={'/other-icons/otherFilterIcon.png'}
               alt={'All'}
               loading="lazy"
-              className={`w-[24px] h-[24px] object-contain transition-all duration-200 ${
+              className={`w-[24px] h-[24px] object-contain transition-all duration-300 ${
                 !activeFilters.propertyType
-                  ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                  : ''
+                  ? 'filter brightness-0 invert'
+                  : 'filter grayscale'
               }`}
             />
             {categoryCounts.all > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className={`absolute -top-2 -right-2 text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold border-2 border-white shadow-sm transition-all duration-300 ${
+                !activeFilters.propertyType ? 'bg-secondary text-white' : 'bg-primary text-white'
+              }`}>
                 {categoryCounts.all}
               </span>
             )}
           </div>
           <p
-            className={`text-[14px] font-[400] transition-colors duration-200 ${
+            className={`text-xs tracking-tight transition-all duration-300 ${
               !activeFilters.propertyType 
-                ? 'text-[#1D5C5C] font-medium' 
-                : 'text-[#999999] hover:text-primary'
+                ? 'text-primary font-bold' 
+                : 'text-neutral-500 font-medium'
             }`}
           >
             All
@@ -238,46 +240,48 @@ const FilterCategories: React.FC = () => {
             return (
               <div
                 key={propertyType._id}
-                className={`flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:scale-105 ${
-                  isActive ? 'scale-110 transition-transform' : ''
+                className={`flex flex-col items-center text-center cursor-pointer transition-all duration-300 min-w-[80px] group ${
+                  isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'
                 }`}
                 onClick={() => handleCategoryClick(propertyType._id)}
               >
-                <div
-                  className={`relative p-2 rounded-full transition-colors duration-200 ${
-                    isActive 
-                      ? 'bg-[#1D5C5C]/10' 
-                      : 'hover:bg-[#1D5C5C]/5'
-                  }`}
-                >
-                  <img
-                    src={
-                      propertyType.icon?.fileUrl ||
-                      '/icons/default-property.svg'
-                    }
-                    alt={propertyType.name}
-                    loading="lazy"
-                    className={`w-[24px] h-[24px] object-contain transition-all duration-200 ${
-                      isActive
-                        ? 'filter invert-[15%] sepia-[100%] saturate-[3000%] hue-rotate-[195deg] brightness-[75%]'
-                        : 'hover:filter hover:invert-[15%] hover:sepia-[100%] hover:saturate-[3000%] hover:hue-rotate-[195deg] hover:brightness-[75%]'
-                    }`}
-                  />
-                  {count > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-[#1D5C5C] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {count}
-                    </span>
-                  )}
-                </div>
-                <p
-                  className={`text-[14px] font-[400] transition-colors duration-200 ${
-                    isActive 
-                      ? 'text-[#1D5C5C] font-medium' 
-                      : 'text-[#999999] hover:text-primary'
-                  }`}
-                >
-                  {propertyType.name}
-                </p>
+          <div
+            className={`relative p-3 rounded-full transition-all duration-500 mb-3 ${
+              isActive 
+                ? 'bg-primary shadow-premium scale-110' 
+                : 'bg-neutral-50 group-hover:bg-neutral-100'
+            }`}
+          >
+            <img
+              src={
+                propertyType.icon?.fileUrl ||
+                '/icons/default-property.svg'
+              }
+              alt={propertyType.name}
+              loading="lazy"
+              className={`w-5 h-5 object-contain transition-all duration-300 ${
+                isActive
+                  ? 'filter brightness-0 invert'
+                  : 'filter grayscale opacity-40 group-hover:opacity-100'
+              }`}
+            />
+            {count > 0 && (
+              <span className={`absolute -top-1 -right-1 text-[8px] rounded-full w-4 h-4 flex items-center justify-center font-bold border border-white shadow-sm transition-all duration-300 ${
+                isActive ? 'bg-secondary text-white' : 'bg-primary text-white'
+              }`}>
+                {count}
+              </span>
+            )}
+          </div>
+          <p
+            className={`text-[9px] uppercase tracking-[0.2em] transition-all duration-300 ${
+              isActive 
+                ? 'text-primary font-bold' 
+                : 'text-neutral-400 font-medium group-hover:text-neutral-900'
+            }`}
+          >
+            {propertyType.name}
+          </p>
               </div>
             );
           }

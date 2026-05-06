@@ -101,30 +101,30 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
   }
 
   return (
-    <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white border border-[#E6E6E6] rounded-lg shadow-sm">
-      <h3 className="text-base sm:text-lg font-medium text-[#040404] mb-4 sm:mb-6">
+    <div className="mt-8 p-8 bg-neutral-50/50 border border-neutral-100">
+      <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold text-neutral-400 mb-8 border-b border-neutral-100 pb-4">
         Leave a Review
       </h3>
 
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Rating Section */}
         <div>
-          <label className="block text-sm font-medium text-[#040404] mb-3">
+          <label className="block text-[11px] font-bold uppercase tracking-widest text-neutral-900 mb-4">
             Add Your Rating
           </label>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 type="button"
                 onClick={() => setRating(star)}
-                className="focus:outline-none"
+                className="focus:outline-none transition-transform hover:scale-110"
               >
                 <svg
                   className={`w-6 h-6 ${
                     star <= rating
-                      ? 'text-[#006073] fill-current'
-                      : 'text-[#E6E6E6]'
+                      ? 'text-primary fill-current'
+                      : 'text-neutral-200'
                   }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -144,15 +144,15 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
 
         {/* Review Text Area */}
         <div>
-          <label className="block text-sm font-medium text-[#040404] mb-2">
-            Write a review
+          <label className="block text-[11px] font-bold uppercase tracking-widest text-neutral-900 mb-3">
+            Your Review
           </label>
           <textarea
             value={review}
             onChange={(e) => setReview(e.target.value)}
-            rows={4}
-            className="w-full px-3 py-2 border border-[#E6E6E6] rounded-md focus:outline-none focus:ring-2 focus:ring-[#006073] focus:border-transparent resize-none"
-            placeholder="enter your review here..."
+            rows={5}
+            className="w-full px-4 py-4 bg-white border border-neutral-100 text-[13px] tracking-wide focus:ring-1 focus:ring-primary/20 outline-none resize-none transition-all"
+            placeholder="Share your experience here..."
           />
         </div>
 
@@ -160,9 +160,9 @@ const LeaveReviewForm: React.FC<LeaveReviewFormProps> = ({
         <button
           type="submit"
           disabled={isSubmitting || rating === 0 || !review.trim()}
-          className="w-full bg-[#006073] text-white py-3 px-6 rounded-md hover:bg-[#004d5a] transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="w-full bg-primary text-white py-4 rounded-full text-[10px] uppercase tracking-[0.3em] font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:bg-neutral-200 disabled:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Your Review'}
+          {isSubmitting ? 'Submitting...' : 'Post Your Review'}
         </button>
       </form>
     </div>
